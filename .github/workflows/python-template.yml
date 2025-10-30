@@ -1,0 +1,51 @@
+name: Python CI Template
+
+on:
+  workflow_call:
+    inputs:
+      project_dir:
+        description: 'Project directory to run CI on'
+        required: true
+        type: string
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Read Python version
+      id: python_version
+      working-directory: ${{ inputs.project_dir }}
+      run: echo "version=$(cat .python-version)" >> $GITHUB_OUTPUT
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: ${{ steps.python_version.outputs.version }}
+
+    - name: Install uv
+      run: pip install uv
+
+    - name: Install dependencies
+      working-directory: ${{ inputs.project_dir }}
+      run: uv sync --all-groups
+
+    - name: Run linter (pylint)
+      working-directory: ${{ inputs.project_dir }}
+      run: .venv/bin/pylint src/
+
+    - name: Check formatting (black)
+      working-directory: ${{ inputs.project_dir }}
+      run: |
+        .venv/bin/black --check .
+        if [ $? -ne 0 ]; then
+          echo "Code is not properly formatted. Run 'black .' to fix."
+          exit 1
+        fi
+
+    - name: Run tests (pytest)
+      working-directory: ${{ inputs.project_dir }}
+      run: .venv/bin/pytest

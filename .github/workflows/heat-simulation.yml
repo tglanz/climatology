@@ -1,0 +1,14 @@
+name: Heat Simulation
+
+on:
+  push:
+    paths:
+      - 'heat-simulation/**'
+      - '.github/workflows/heat-simulation.yml'
+      - '.github/workflows/python-template.yml'
+
+jobs:
+  ci:
+    uses: ./.github/workflows/python-template.yml
+    with:
+      project_dir: heat-simulation
