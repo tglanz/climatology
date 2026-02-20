@@ -94,6 +94,8 @@ $$\mathcal{L} = \mathcal{L}_{data} + \mathcal{L}_{PDE}$$
 - Output: solution $u(x, t)$
 - Learns a single solution instance, must retrain for new parameters or conditions
 
+> Raissi, M., Perdikaris, P. & Karniadakis, G.E. (2019). *J. Comput. Phys.*, 378, 686--707. [DOI](https://doi.org/10.1016/j.jcp.2018.10.045)
+
 ### DeepONet (Lu et al., 2019)
 
 Learns a nonlinear operator mapping input functions to output functions, based on the universal approximation theorem for operators. Consists of a branch network (encodes the input function) and a trunk network (encodes the query location).
@@ -102,6 +104,8 @@ Learns a nonlinear operator mapping input functions to output functions, based o
 - Output: the solution at the query point
 - Generalizes across input functions without retraining
 
+> Lu, L., Jin, P. & Karniadakis, G.E. (2019). [arXiv:1910.03193](https://arxiv.org/abs/1910.03193)
+
 ### FNO (Li et al., 2020)
 
 Parameterizes the integral kernel in Fourier space. Alternates between Fourier-domain convolutions (global) and pointwise nonlinearities (local), learning resolution-invariant operator mappings.
@@ -109,6 +113,8 @@ Parameterizes the integral kernel in Fourier space. Alternates between Fourier-d
 - Input: discretized input function on a grid
 - Output: discretized output function on a grid
 - Resolution-invariant: can train on coarse grids, evaluate on fine grids
+
+> Li, Z. et al. (2020). [arXiv:2010.08895](https://arxiv.org/abs/2010.08895)
 
 ### PINO (Li et al., 2021)
 
@@ -120,10 +126,24 @@ $$\mathcal{L} = \mathcal{L}_{data} + \mathcal{L}_{PDE}$$
 - Inherits physical consistency from PINNs
 - Requires less data than FNO, less retraining than PINNs
 
-## 3. Research Directions
+> Li, Z. et al. (2021). [arXiv:2111.03794](https://arxiv.org/abs/2111.03794)
+
+## 4. Research Directions
 
 <!-- Potential thesis topics and applications -->
 
-## 4. Summary
+## 5. Summary
 
 <!-- Key takeaways -->
+
+---
+
+## References
+
+1. Raissi, M., Perdikaris, P. & Karniadakis, G.E. (2019). Physics-informed neural networks. *J. Comput. Phys.*, 378, 686--707. [DOI](https://doi.org/10.1016/j.jcp.2018.10.045)
+2. Lu, L., Jin, P. & Karniadakis, G.E. (2019). DeepONet: Learning nonlinear operators. [arXiv:1910.03193](https://arxiv.org/abs/1910.03193)
+3. Li, Z. et al. (2020). Neural Operator: Graph Kernel Network for PDEs. [arXiv:2003.03485](https://arxiv.org/abs/2003.03485)
+4. Li, Z. et al. (2020). Fourier Neural Operator for Parametric PDEs. [arXiv:2010.08895](https://arxiv.org/abs/2010.08895)
+5. Li, Z. et al. (2021). Neural Operator: Learning Maps Between Function Spaces. [arXiv:2108.08481](https://arxiv.org/abs/2108.08481)
+6. Li, Z. et al. (2021). Physics-Informed Neural Operator for Learning PDEs. [arXiv:2111.03794](https://arxiv.org/abs/2111.03794)
+7. Sahin et al. (2024). AI for PDEs in Computational Mechanics: A Review. [arXiv:2410.19843](https://arxiv.org/abs/2410.19843)
