@@ -65,7 +65,7 @@ graph LR
     NN -.-> RIGHT["Data-Driven<br>(no physics)"]
 ```
 
-## 3. Operator Learning for PDEs
+## 3. Neural Network for PDEs
 
 ### Overview
 
@@ -74,7 +74,7 @@ Several methods have been proposed for solving PDEs with neural networks.
 **Maziar Raissi et al.** introduced *Physics-Informed Neural Networks* (PINNs, 2019), 
 encoding known physics directly into the loss function.
 
-In parallel, the field of operator learning emerged, aiming to learn solution operators 
+In parallel, the field of **operator learning** emerged, aiming to learn solution operators 
 rather than individual solutions. Two independent lines of work developed:
 
 - **Lu Lu et al.** proposed *DeepONet* (2021), grounded in the universal approximation 
