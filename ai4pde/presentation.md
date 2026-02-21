@@ -65,23 +65,27 @@ graph LR
     NN -.-> RIGHT["Data-Driven<br>(no physics)"]
 ```
 
-## 3. Methods Overview
+## 3. Operator Learning for PDEs
 
-### Development Timeline
+### Overview
 
-Two lines of work emerged independently:
+Several methods have been proposed for solving PDEs with neural networks.
 
-- **PINNs** (Raissi et al., 2019) -- embed PDE constraints into the loss function of a neural network
-- **DeepONet** (Lu et al., 2019) -- learn operators between function spaces, grounded in the universal approximation theorem for operators
+**Maziar Raissi et al.** introduced *Physics-Informed Neural Networks* (PINNs, 2019), 
+encoding known physics directly into the loss function.
 
-In parallel, Li et al. developed the **Neural Operator** framework, parameterizing operators via learned integral kernels:
+In parallel, the field of operator learning emerged, aiming to learn solution operators 
+rather than individual solutions. Two independent lines of work developed:
 
-1. **Graph Kernel Network** (Li et al., 2020) -- first attempt at learning PDE solution operators, using graph-based kernels
-2. **FNO** (Li et al., 2020) -- breakthrough: parameterize the kernel in Fourier space, achieving resolution invariance
-3. **PINO** (Li et al., 2021) -- combine FNO with physics-informed losses, bridging operator learning and PINNs
-
-An open direction is **physics-aware kernels**: rather than learning the kernel entirely from data, encode known physical structure (symmetries, conservation laws, Green's functions) directly into the kernel parameterization.
-
+- **Lu Lu et al.** proposed *DeepONet* (2021), grounded in the universal approximation 
+  theorem for operators (Chen & Chen, 1995)
+- **Nikola Kovachki, Zongyi Li et al.** developed the *Neural Operator* framework, 
+  learning operators via parameterized integral kernels. Starting with concrete 
+  implementations and later formalizing the unifying theory:
+  - *GKN* (2020) — first attempt at operator learning for PDEs, using graph-based kernels
+  - *FNO* (2020) — parameterize the kernel in Fourier space, enabling resolution invariance
+  - *Neural Operator* (2021) — unifying theoretical framework
+  - *PINO* (2021) — applies physics-informed losses to FNO, grounding it with physical constraints
 ---
 
 ### PINN (Raissi et al., 2019)
