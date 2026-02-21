@@ -67,7 +67,7 @@ graph LR
 
 ## 3. Neural Network for PDEs
 
-### Overview
+### Timeline
 
 Several methods have been proposed for solving PDEs with neural networks.
 
