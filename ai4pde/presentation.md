@@ -110,6 +110,20 @@ Learns a nonlinear operator mapping input functions to output functions, based o
 
 > Lu, L., Jin, P. & Karniadakis, G.E. (2019). [arXiv:1910.03193](https://arxiv.org/abs/1910.03193)
 
+### Neural Operator (Kovachki, Li et al., 2021)
+
+Provides the unifying theoretical framework for operator learning via parameterized 
+integral kernels. GKN and FNO are specific instantiations of this framework, differing 
+in their kernel parameterization.
+
+$$(\mathcal{K}(\phi)v_t)(x) = \int_D \kappa(x, y, a(x), a(y); \phi)\, v_t(y)\, dy$$
+
+- The kernel $\kappa$ is learned and can be parameterized in different ways (graph, Fourier, etc.)
+- Proven to be a universal approximator for operators between function spaces
+- Resolution-invariant by construction
+
+> Kovachki, N., Li, Z. et al. (2021). Neural Operator: Learning Maps Between Function Spaces. [arXiv:2108.08481](https://arxiv.org/abs/2108.08481)
+
 ### FNO (Li et al., 2020)
 
 Parameterizes the integral kernel in Fourier space. Alternates between Fourier-domain convolutions (global) and pointwise nonlinearities (local), learning resolution-invariant operator mappings.
