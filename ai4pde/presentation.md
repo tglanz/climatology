@@ -146,9 +146,18 @@ $$\mathcal{L} = \mathcal{L}_{data} + \mathcal{L}_{PDE}$$
 
 > Li, Z. et al. (2021). [arXiv:2111.03794](https://arxiv.org/abs/2111.03794)
 
-## 4. Research Directions
+## 4. Potential Research Topics
 
-<!-- Potential thesis topics and applications -->
+**Parameter Generalization in Neural Operators**
+
+Do physics-informed losses (PINO) improve generalization to unseen PDE parameters compared to data-driven operator learning (FNO)?
+
+*Approach:* Synthesize simulation data across a grid of $(\beta, \nu)$ values, train FNO and PINO on a subset, and compare generalization to held-out parameter combinations.
+
+*Open questions:*
+- Which architectures? FNO and PINO, or include DeepONet as well?
+- Is a single PDE sufficient for a CS contribution, or should multiple PDEs be tested?
+- What is the right generalization metric — pointwise error, or something physics-aware?
 
 ## 5. Summary
 
