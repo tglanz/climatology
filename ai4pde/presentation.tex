@@ -4,7 +4,8 @@
 \usepackage{amsmath,amssymb}
 \usepackage{graphicx}
 \usepackage{tikz}
-\usepackage{booktabs}
+\usetikzlibrary{positioning}
+\usepackage{hyperref}
 
 \title{ML / Climatology}
 \subtitle{AI Methods for Partial Differential Equations}
@@ -40,14 +41,10 @@
     \column{0.45\textwidth}
     \begin{itemize}
       \item $\beta$ -- meridional gradient of the Coriolis parameter
-      \item $\nu$ -- viscosity coefficient ($Re = UL / \nu$)
+      \item $\nu$ -- viscosity coefficient, inversely related to Reynolds
+        number: $Re = \frac{UL}{\nu}$
     \end{itemize}
   \end{columns}
-
-  \vfill
-  \begin{center}
-    \includegraphics[width=0.25\textwidth]{system.png}
-  \end{center}
 
 \end{frame}
 
@@ -65,26 +62,27 @@
 
   \begin{center}
     \begin{tikzpicture}[
-      node distance=1.8cm,
-      every node/.style={
-        draw, rounded corners, minimum height=1cm, minimum width=2cm,
-        text centered, font=\small
+      node distance=1.5cm,
+      box/.style={
+        draw, rounded corners, minimum height=0.8cm, minimum width=1.5cm,
+        align=center, font=\footnotesize
       },
+      lbl/.style={draw=none, font=\scriptsize\itshape},
       arr/.style={thick, -}
     ]
-      \node (sim)  {Simulation\\(FDM/FEM)};
-      \node (pinn) [right of=sim,  node distance=2.5cm] {PINN};
-      \node (pino) [right of=pinn, node distance=2.5cm] {PINO};
-      \node (no)   [right of=pino, node distance=2.5cm] {Neural Operator\\(FNO, DeepONet)};
-      \node (nn)   [right of=no,   node distance=2.5cm] {Standard NN};
+      \node[box] (sim)  {Simulation\\(FDM/FEM)};
+      \node[box, right=0.8cm of sim]  (pinn) {PINN};
+      \node[box, right=0.8cm of pinn] (pino) {PINO};
+      \node[box, right=0.8cm of pino] (no)   {Neural Operator\\(FNO, DeepONet)};
+      \node[box, right=0.8cm of no]   (nn)   {Standard NN};
 
       \draw[arr] (sim)  -- (pinn);
       \draw[arr] (pinn) -- (pino);
       \draw[arr] (pino) -- (no);
       \draw[arr] (no)   -- (nn);
 
-      \node[draw=none, above=0.5cm of sim,  font=\footnotesize\itshape] {Physics-based (no data)};
-      \node[draw=none, above=0.5cm of nn,   font=\footnotesize\itshape] {Data-driven (no physics)};
+      \node[lbl, above=0.4cm of sim] {Physics-based (no data)};
+      \node[lbl, above=0.4cm of nn]  {Data-driven (no physics)};
     \end{tikzpicture}
   \end{center}
 
@@ -93,25 +91,34 @@
 %----------------------------------------------------------------------
 \begin{frame}{Development Timeline}
 
-  Two independent lines of work:
+  \footnotesize
+  Two lines of work emerged independently:
 
-  \begin{itemize}
-    \item \textbf{PINNs} (Raissi et al., 2019) -- embed PDE constraints into the loss function
-    \item \textbf{DeepONet} (Lu et al., 2019) -- learn operators between function spaces
+  \begin{itemize}\setlength\itemsep{0.1em}
+    \item \textbf{PINNs} (Raissi et al., 2019) -- embed PDE constraints into
+      the loss function of a neural network
+    \item \textbf{DeepONet} (Lu et al., 2019) -- learn operators between
+      function spaces, grounded in the universal approximation theorem for
+      operators
   \end{itemize}
 
-  \vspace{0.5em}
-  In parallel, Li et al.\ developed the \textbf{Neural Operator} framework:
+  \vspace{0.2em}
+  In parallel, Li et al.\ developed the \textbf{Neural Operator} framework,
+  parameterizing operators via learned integral kernels:
 
-  \begin{enumerate}
-    \item \textbf{Graph Kernel Network} (2020) -- first attempt at PDE solution operators
-    \item \textbf{FNO} (2020) -- breakthrough: kernel in Fourier space, resolution invariance
-    \item \textbf{PINO} (2021) -- combine FNO with physics-informed losses
+  \begin{enumerate}\setlength\itemsep{0.1em}
+    \item \textbf{Graph Kernel Network} (2020) -- first attempt at learning PDE
+      solution operators, using graph-based kernels
+    \item \textbf{FNO} (2020) -- breakthrough: parameterize the kernel in
+      Fourier space, achieving resolution invariance
+    \item \textbf{PINO} (2021) -- combine FNO with physics-informed losses,
+      bridging operator learning and PINNs
   \end{enumerate}
 
-  \vspace{0.5em}
-  Open direction: \textbf{physics-aware kernels} -- encode known physical
-  structure (symmetries, conservation laws, Green's functions) into the kernel
+  \vspace{0.2em}
+  Open direction: \textbf{physics-aware kernels} -- rather than learning the
+  kernel entirely from data, encode known physical structure (symmetries,
+  conservation laws, Green's functions) directly into the kernel
   parameterization.
 
 \end{frame}
@@ -119,8 +126,9 @@
 %----------------------------------------------------------------------
 \begin{frame}{PINN}
 
-  A neural network trained to satisfy the PDE directly. The loss penalizes
-  residuals of the governing equation at collocation points.
+  A neural network trained to satisfy the PDE directly. The loss function
+  penalizes residuals of the governing equation at collocation points,
+  requiring no simulation data.
 
   \begin{equation*}
     \mathcal{L} = \mathcal{L}_{\text{data}} + \mathcal{L}_{\text{PDE}}
@@ -129,29 +137,34 @@
   \begin{itemize}
     \item Input: coordinates $(x, t)$
     \item Output: solution $u(x, t)$
-    \item Learns a single solution instance; must retrain for new parameters
+    \item Learns a single solution instance, must retrain for new parameters
+      or conditions
   \end{itemize}
 
   \vfill
-  \hfill{\footnotesize Raissi, Perdikaris \& Karniadakis, \textit{J.\ Comput.\ Phys.}, 2019}
+  \hfill{\footnotesize Raissi, Perdikaris \& Karniadakis,
+    \textit{J.\ Comput.\ Phys.}, 378, 686--707, 2019.
+    \href{https://doi.org/10.1016/j.jcp.2018.10.045}{DOI}}
 
 \end{frame}
 
 %----------------------------------------------------------------------
 \begin{frame}{DeepONet}
 
-  Learns a nonlinear operator mapping input functions to output functions.
-  Branch network encodes the input function; trunk network encodes the query
-  location.
+  Learns a nonlinear operator mapping input functions to output functions,
+  based on the universal approximation theorem for operators. Consists of a
+  branch network (encodes the input function) and a trunk network (encodes
+  the query location).
 
   \begin{itemize}
-    \item Input: a function (e.g., initial condition) + query coordinates
+    \item Input: a function (e.g., initial condition) and query coordinates
     \item Output: the solution at the query point
     \item Generalizes across input functions without retraining
   \end{itemize}
 
   \vfill
-  \hfill{\footnotesize Lu, Jin \& Karniadakis, \textit{arXiv:1910.03193}, 2019}
+  \hfill{\footnotesize Lu, Jin \& Karniadakis, 2019.
+    \href{https://arxiv.org/abs/1910.03193}{arXiv:1910.03193}}
 
 \end{frame}
 
@@ -159,16 +172,19 @@
 \begin{frame}{FNO -- Fourier Neural Operator}
 
   Parameterizes the integral kernel in Fourier space. Alternates between
-  Fourier-domain convolutions (global) and pointwise nonlinearities (local).
+  Fourier-domain convolutions (global) and pointwise nonlinearities (local),
+  learning resolution-invariant operator mappings.
 
   \begin{itemize}
     \item Input: discretized input function on a grid
     \item Output: discretized output function on a grid
-    \item Resolution-invariant: train on coarse grids, evaluate on fine grids
+    \item Resolution-invariant: can train on coarse grids, evaluate on fine
+      grids
   \end{itemize}
 
   \vfill
-  \hfill{\footnotesize Li et al., \textit{arXiv:2010.08895}, 2020}
+  \hfill{\footnotesize Li et al., 2020.
+    \href{https://arxiv.org/abs/2010.08895}{arXiv:2010.08895}}
 
 \end{frame}
 
@@ -176,7 +192,8 @@
 \begin{frame}{PINO -- Physics-Informed Neural Operator}
 
   Combines the operator learning framework of FNO with the physics-informed
-  loss of PINNs. Reduces the amount of simulation data needed.
+  loss of PINNs. Trained on both data and PDE residuals, reducing the amount
+  of simulation data needed.
 
   \begin{equation*}
     \mathcal{L} = \mathcal{L}_{\text{data}} + \mathcal{L}_{\text{PDE}}
@@ -189,7 +206,8 @@
   \end{itemize}
 
   \vfill
-  \hfill{\footnotesize Li et al., \textit{arXiv:2111.03794}, 2021}
+  \hfill{\footnotesize Li et al., 2021.
+    \href{https://arxiv.org/abs/2111.03794}{arXiv:2111.03794}}
 
 \end{frame}
 
@@ -198,26 +216,33 @@
 
   \footnotesize
   \begin{enumerate}
-    \item Raissi, M., Perdikaris, P. \& Karniadakis, G.E. (2019).
-      Physics-informed neural networks. \textit{J.\ Comput.\ Phys.}, 378, 686--707.
+    \item Raissi, M., Perdikaris, P.\ \& Karniadakis, G.E.\ (2019).
+      Physics-informed neural networks.
+      \textit{J.\ Comput.\ Phys.}, 378, 686--707.
 
-    \item Lu, L., Jin, P. \& Karniadakis, G.E. (2019).
-      DeepONet: Learning nonlinear operators. \textit{arXiv:1910.03193}.
+    \item Lu, L., Jin, P.\ \& Karniadakis, G.E.\ (2019).
+      DeepONet: Learning nonlinear operators.
+      \textit{arXiv:1910.03193}.
 
-    \item Li, Z. et al. (2020).
-      Neural Operator: Graph Kernel Network for PDEs. \textit{arXiv:2003.03485}.
+    \item Li, Z.\ et al.\ (2020).
+      Neural Operator: Graph Kernel Network for PDEs.
+      \textit{arXiv:2003.03485}.
 
-    \item Li, Z. et al. (2020).
-      Fourier Neural Operator for Parametric PDEs. \textit{arXiv:2010.08895}.
+    \item Li, Z.\ et al.\ (2020).
+      Fourier Neural Operator for Parametric PDEs.
+      \textit{arXiv:2010.08895}.
 
-    \item Li, Z. et al. (2021).
-      Neural Operator: Learning Maps Between Function Spaces. \textit{arXiv:2108.08481}.
+    \item Li, Z.\ et al.\ (2021).
+      Neural Operator: Learning Maps Between Function Spaces.
+      \textit{arXiv:2108.08481}.
 
-    \item Li, Z. et al. (2021).
-      Physics-Informed Neural Operator for Learning PDEs. \textit{arXiv:2111.03794}.
+    \item Li, Z.\ et al.\ (2021).
+      Physics-Informed Neural Operator for Learning PDEs.
+      \textit{arXiv:2111.03794}.
 
-    \item Sahin et al. (2024).
-      AI for PDEs in Computational Mechanics: A Review. \textit{arXiv:2410.19843}.
+    \item Sahin et al.\ (2024).
+      AI for PDEs in Computational Mechanics: A Review.
+      \textit{arXiv:2410.19843}.
   \end{enumerate}
 
 \end{frame}
