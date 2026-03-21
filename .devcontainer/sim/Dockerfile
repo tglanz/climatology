@@ -17,9 +17,9 @@ WORKDIR /home/ubuntu
 
 RUN curl -fsSL https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-Linux-x86_64.sh \
     -o /tmp/miniforge.sh \
-    && bash /tmp/miniforge.sh -b -p /home/$USERNAME/miniforge3 \
+    && bash /tmp/miniforge.sh -b -p /home/ubuntu/miniforge3 \
     && rm /tmp/miniforge.sh
 
-ENV PATH="/home/$USERNAME/miniforge3/bin:$PATH"
+ENV PATH="/home/ubuntu/miniforge3/bin:$PATH"
 
 RUN conda init zsh
