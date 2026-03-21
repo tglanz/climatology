@@ -3,8 +3,10 @@ FROM ubuntu:24.04
 ENV DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    curl git wget ca-certificates zsh tmux ripgrep fd-find fzf \
-    && rm -rf /var/lib/apt/lists/*
+    curl git wget ca-certificates zsh tmux ripgrep fd-find fzf sudo gh \
+    && rm -rf /var/lib/apt/lists/* \
+    && echo "ubuntu ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/ubuntu \
+    && chmod 0440 /etc/sudoers.d/ubuntu
 
 RUN curl -fsSL https://deb.nodesource.com/setup_22.x | bash - \
     && apt-get install -y nodejs \

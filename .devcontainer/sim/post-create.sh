@@ -3,5 +3,7 @@ set -e
 
 bash .devcontainer/common/post-create.sh
 
-conda env create -f ci/environment-py3.12_frozen.yml
-conda run -n isca_env pip install -e src/extra/python
+git submodule update --init --recursive
+
+conda env create -f submodules/isca/ci/environment-py3.12_frozen.yml
+conda run -n isca_env pip install -e submodules/isca/src/extra/python

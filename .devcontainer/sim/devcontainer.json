@@ -6,7 +6,7 @@
   },
   "remoteUser": "ubuntu",
   "remoteEnv": {
-    "GFDL_BASE": "${containerWorkspaceFolder}",
+    "GFDL_BASE": "${containerWorkspaceFolder}/submodules/isca",
     "GFDL_ENV": "ubuntu_conda",
     "GFDL_WORK": "${containerWorkspaceFolder}/.isca_work",
     "GFDL_DATA": "${containerWorkspaceFolder}/.isca_data"
@@ -24,7 +24,8 @@
       ],
       "settings": {
         "terminal.integrated.defaultProfile.linux": "zsh",
-        "python.defaultInterpreterPath": "/home/dev/miniforge3/envs/isca_env/bin/python"
+        "python.defaultInterpreterPath": "/home/ubuntu/miniforge3/envs/isca_env/bin/python",
+        "vim.enable": true
       }
     }
   }

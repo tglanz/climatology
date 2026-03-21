@@ -15,11 +15,30 @@ the sphere:
 
 $$\frac{\partial \zeta}{\partial t} + \mathbf{u} \cdot \nabla(\zeta + f) = D(\zeta) + S$$
 
-where $\zeta$ is [relative vorticity](#vorticity), $f$ is the [Coriolis parameter](#coriolis-parameter),
-$D(\zeta)$ is [spectral hyperdiffusion](#spectral-hyperdiffusion), and $S$ is the
-[stochastic stirring](#stochastic-stirring) forcing. The model is [non-divergent](#non-divergent-flow)
-by construction: the wind field is derived from a [streamfunction](#streamfunction) $\psi$
-such that $\zeta = \nabla^2 \psi$.
+**Variables and terms:**
+
+| Symbol | Name | Description |
+|---|---|---|
+| $\zeta$ | [Relative vorticity](#vorticity) | The local rotation of the fluid relative to Earth's surface (s$^{-1}$). This is the primary prognostic variable -- the quantity the model steps forward in time. |
+| $t$ | Time | Continuous time (s). |
+| $\frac{\partial \zeta}{\partial t}$ | Local tendency | Rate of change of vorticity at a fixed point in space. The model computes this from the right-hand side and advances it with the [leapfrog scheme](#leapfrog-scheme). |
+| $\mathbf{u} = (u, v)$ | Horizontal velocity | Zonal ($u$, eastward) and meridional ($v$, northward) wind components (m s$^{-1}$). Derived at each step from $\zeta$ via the [streamfunction](#streamfunction). |
+| $\nabla$ | Horizontal gradient operator | $\nabla = (\partial/\partial x,\, \partial/\partial y)$ on the sphere. |
+| $\mathbf{u} \cdot \nabla(\zeta + f)$ | Advection of absolute vorticity | The transport of [absolute vorticity](#vorticity) $\zeta + f$ by the flow. This is the nonlinear term: it moves vorticity around without creating or destroying it, and it drives the formation of jets and eddies. |
+| $f = 2\Omega\sin\phi$ | [Coriolis parameter](#coriolis-parameter) | Planetary vorticity at latitude $\phi$. It varies with latitude but not with time, so $\nabla f = \partial f/\partial y \neq 0$ -- this latitudinal gradient is what allows Rossby waves to exist. |
+| $\zeta + f$ | Absolute vorticity | Total vorticity of a fluid parcel including Earth's rotation. Conserved following a parcel when $D = 0$ and $S = 0$. |
+| $D(\zeta)$ | [Spectral hyperdiffusion](#spectral-hyperdiffusion) | A scale-selective dissipation operator that removes energy from the smallest resolved scales. Necessary to prevent grid-scale noise from accumulating. |
+| $S$ | [Stochastic stirring](#stochastic-stirring) | A spatially localized, temporally correlated random forcing applied in spectral space. Represents the injection of vorticity by processes not explicitly modeled (e.g., baroclinic instability). |
+
+The left-hand side $\frac{\partial \zeta}{\partial t} + \mathbf{u} \cdot \nabla(\zeta + f)$ is
+the material derivative of absolute vorticity -- the rate of change following a fluid parcel.
+In the absence of forcing and dissipation ($D = S = 0$), this equals zero, meaning absolute
+vorticity is conserved along parcel trajectories. This conservation law is what constrains
+the large-scale flow and drives the Rossby wave dynamics the model is designed to study.
+
+The model is [non-divergent](#non-divergent-flow) by construction: the wind field is derived
+from a [streamfunction](#streamfunction) $\psi$ such that $\zeta = \nabla^2 \psi$, meaning
+only one scalar field is needed to describe the full flow.
 
 Time integration uses a [leapfrog scheme](#leapfrog-scheme) with a
 [Robert-Asselin filter](#robert-asselin-filter).
@@ -48,25 +67,85 @@ exp/test_cases/barotropic_vorticity_equation/barotropic_vor_eq_stirring_test.py
 
 ---
 
+## Setup and Installation
+
+For full installation instructions see https://execlim.github.io/Isca/.
+
+> If running inside the `sim` devcontainer, steps 1-3 below are handled automatically
+> at container creation: the conda environment is created, the `isca` Python package is
+> installed, and all environment variables are set. Skip directly to step 4 to verify.
+
+### 1. Create the Isca conda environment
+
+```bash
+conda env create -f submodules/isca/ci/environment-py.yml
+conda activate isca_env
+```
+
+This installs all required dependencies: `gfortran`, `openmpi`, `netcdf-fortran`,
+`numpy`, `xarray`, `pandas`, `f90nml`, `jinja2`, `sh`, and `tqdm`.
+
+### 2. Install the Isca Python package
+
+```bash
+cd submodules/isca/src/extra/python
+pip install -e .
+```
+
+The `-e` flag installs in editable mode: changes to the source are immediately
+reflected without reinstalling.
+
+### 3. Set required environment variables
+
+Add these to your `~/.bashrc` so they persist across sessions:
+
+```bash
+# Root of the Isca source tree
+export GFDL_BASE=/path/to/climatology/submodules/isca
+
+# Selects the compiler env file from $GFDL_BASE/src/extra/env/
+# 'ubuntu_conda' is appropriate for Linux + conda + gfortran
+export GFDL_ENV=ubuntu_conda
+
+# Where compiled binaries and run directories are written
+export GFDL_WORK=/path/to/isca_work
+
+# Where completed run output is stored
+export GFDL_DATA=/path/to/isca_data
+```
+
+Then reload:
+
+```bash
+source ~/.bashrc
+```
+
+`GFDL_BASE` and `GFDL_ENV` are required at import time by the `isca` Python package.
+`GFDL_WORK` and `GFDL_DATA` control where compiled code and model output land.
+
+The env files in `$GFDL_BASE/src/extra/env/` set compiler variables (`F90=mpifort`,
+`CC=mpicc`) and the Makefile template. For HPC clusters a different env file is
+typically needed -- see `src/extra/env/` for available options.
+
+### 4. Verify
+
+```bash
+python -c "from isca import BarotropicCodeBase; print('OK')"
+```
+
+---
+
 ## Running the Test Case
 
-Prerequisites: Isca installed with `$GFDL_BASE` and `$GFDL_ENV` set. See
-https://execlim.github.io/Isca/ for environment setup.
+The experiment script is at `sim/example_barotropic_stirring.py`. Run it with:
 
-```python
-from isca import BarotropicCodeBase, Experiment, Namelist, DiagTable, GFDL_BASE
-
-cb  = BarotropicCodeBase.from_directory(GFDL_BASE)
-exp = Experiment('my_barotropic_run', codebase=cb)
-
-# ... configure exp.namelist and exp.diag_table (see sections below) ...
-
-if __name__ == '__main__':
-    cb.compile()
-    exp.run(1, use_restart=False, num_cores=8)
-    for i in range(2, 121):
-        exp.run(i, num_cores=8)
+```bash
+conda activate isca_env
+python sim/example_barotropic_stirring.py
 ```
+
+The script automatically detects the number of available CPUs and rounds down to the
+nearest power of 2 (the requirement imposed by Isca's MPI domain decomposition).
 
 `cb.compile()` compiles to `$GFDL_WORK/codebase`. Subsequent runs reuse the compiled
 binary unless recompilation is requested.
@@ -249,6 +328,90 @@ diag.add_field('barotropic_diagnostics', 'eddy_vor', time_avg=True)
 diag.add_field('stirring_mod',           'stirring', time_avg=True)
 
 exp.diag_table = diag
+```
+
+---
+
+## Inspecting Output
+
+Output is written to `$GFDL_DATA/<experiment_name>/` as NetCDF files, one per segment.
+For the example script the path is:
+
+```
+$GFDL_DATA/barotropic_stirring/run0001/atmos_monthly.nc
+$GFDL_DATA/barotropic_stirring/run0002/atmos_monthly.nc
+...
+```
+
+### Quick inspection with ncdump
+
+`ncdump` (provided by the `netcdf-bin` package) lets you inspect a file without writing
+any code.
+
+```bash
+# Show dimensions, variables, and global attributes
+ncdump -h $GFDL_DATA/barotropic_stirring/run0001/atmos_monthly.nc
+
+# Dump values of a specific variable
+ncdump -v vor $GFDL_DATA/barotropic_stirring/run0001/atmos_monthly.nc
+```
+
+### Loading with xarray
+
+xarray is the standard way to work with Isca output in Python. It understands NetCDF
+dimensions and coordinates natively.
+
+```python
+import xarray as xr
+import os
+
+data_dir = os.path.join(os.environ['GFDL_DATA'], 'barotropic_stirring')
+
+# Load a single segment
+ds = xr.open_dataset(f'{data_dir}/run0001/atmos_monthly.nc')
+print(ds)
+
+# Load all segments at once along the time dimension
+ds = xr.open_mfdataset(f'{data_dir}/run*/atmos_monthly.nc', combine='by_coords')
+```
+
+The dataset will have dimensions `(time, lat, lon)` and variables matching what was
+registered in the `DiagTable`.
+
+### Basic plots with matplotlib
+
+```python
+import matplotlib.pyplot as plt
+
+# Time-mean relative vorticity
+vor_mean = ds['vor'].mean('time')
+
+fig, ax = plt.subplots()
+vor_mean.plot(ax=ax, cmap='RdBu_r')
+ax.set_title('Time-mean relative vorticity')
+plt.show()
+
+# Zonal-mean zonal wind evolution over time
+u_zonal = ds['ucomp'].mean('lon')
+u_zonal.plot(x='time', y='lat', cmap='RdBu_r')
+plt.show()
+```
+
+### Checking for problems
+
+Before analysing results it is worth verifying the output is physically reasonable:
+
+```python
+import numpy as np
+
+# Vorticity should be O(1e-5) to O(1e-4) s^-1 in mid-latitudes
+print(ds['vor'].max().values, ds['vor'].min().values)
+
+# NaN values indicate the model blew up
+assert not ds['vor'].isnull().any(), "NaN detected in vorticity output"
+
+# delta_u shows how much the zonal-mean wind has changed from the initial state
+ds['delta_u'].mean('lon').plot(x='time', y='lat')
 ```
 
 ---
