@@ -22,12 +22,3 @@ RUN groupadd --gid $USER_GID $USERNAME \
 
 USER $USERNAME
 WORKDIR /home/$USERNAME
-
-RUN curl -fsSL https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-Linux-x86_64.sh \
-    -o /tmp/miniforge.sh \
-    && bash /tmp/miniforge.sh -b -p /home/$USERNAME/miniforge3 \
-    && rm /tmp/miniforge.sh
-
-ENV PATH="/home/$USERNAME/miniforge3/bin:$PATH"
-
-RUN conda init zsh

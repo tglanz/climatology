@@ -1,13 +1,6 @@
 {
   "name": "sim",
-  "build": {
-    "dockerfile": "Dockerfile",
-    "args": {
-      "USERNAME": "dev",
-      "USER_UID": "1000",
-      "USER_GID": "1000"
-    }
-  },
+  "build": { "dockerfile": "Dockerfile" },
   "remoteUser": "dev",
   "remoteEnv": {
     "ANTHROPIC_API_KEY": "${localEnv:ANTHROPIC_API_KEY}",
@@ -16,7 +9,7 @@
     "GFDL_WORK": "${containerWorkspaceFolder}/.isca_work",
     "GFDL_DATA": "${containerWorkspaceFolder}/.isca_data"
   },
-  "postCreateCommand": "bash .devcontainer/sim/postcreate.sh",
+  "postCreateCommand": "bash .devcontainer/sim/post-create.sh",
   "customizations": {
     "vscode": {
       "extensions": [
