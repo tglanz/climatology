@@ -5,9 +5,6 @@
     "context": ".."
   },
   "remoteUser": "ubuntu",
-  "remoteEnv": {
-    "ANTHROPIC_API_KEY": "${localEnv:ANTHROPIC_API_KEY}"
-  },
   "postCreateCommand": "bash .devcontainer/ml/post-create.sh",
   "customizations": {
     "vscode": {

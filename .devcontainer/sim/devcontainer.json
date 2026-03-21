@@ -6,7 +6,6 @@
   },
   "remoteUser": "ubuntu",
   "remoteEnv": {
-    "ANTHROPIC_API_KEY": "${localEnv:ANTHROPIC_API_KEY}",
     "GFDL_BASE": "${containerWorkspaceFolder}",
     "GFDL_ENV": "ubuntu_conda",
     "GFDL_WORK": "${containerWorkspaceFolder}/.isca_work",

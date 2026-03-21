@@ -1,0 +1,3 @@
+[submodule "submodules/isca"]
+	path = submodules/isca
+	url = https://github.com/ExeClim/Isca
