@@ -17,7 +17,8 @@
         "ms-python.vscode-pylance",
         "fortran-lang.linter-gfortran",
         "extractions.fortran-intellisense",
-        "eamodio.gitlens"
+        "eamodio.gitlens",
+        "vscodevim.vim"
       ],
       "settings": {
         "terminal.integrated.defaultProfile.linux": "zsh",

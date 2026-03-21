@@ -11,7 +11,8 @@
       "extensions": [
         "ms-python.python",
         "ms-python.vscode-pylance",
-        "eamodio.gitlens"
+        "eamodio.gitlens",
+        "vscodevim.vim"
       ],
       "settings": {
         "terminal.integrated.defaultProfile.linux": "zsh"
