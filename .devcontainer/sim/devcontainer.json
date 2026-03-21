@@ -1,0 +1,35 @@
+{
+  "name": "sim",
+  "build": {
+    "dockerfile": "Dockerfile",
+    "args": {
+      "USERNAME": "dev",
+      "USER_UID": "1000",
+      "USER_GID": "1000"
+    }
+  },
+  "remoteUser": "dev",
+  "remoteEnv": {
+    "ANTHROPIC_API_KEY": "${localEnv:ANTHROPIC_API_KEY}",
+    "GFDL_BASE": "${containerWorkspaceFolder}",
+    "GFDL_ENV": "ubuntu_conda",
+    "GFDL_WORK": "${containerWorkspaceFolder}/.isca_work",
+    "GFDL_DATA": "${containerWorkspaceFolder}/.isca_data"
+  },
+  "postCreateCommand": "bash .devcontainer/sim/postcreate.sh",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-python.python",
+        "ms-python.vscode-pylance",
+        "fortran-lang.linter-gfortran",
+        "extractions.fortran-intellisense",
+        "eamodio.gitlens"
+      ],
+      "settings": {
+        "terminal.integrated.defaultProfile.linux": "zsh",
+        "python.defaultInterpreterPath": "/home/dev/miniforge3/envs/isca_env/bin/python"
+      }
+    }
+  }
+}

@@ -159,6 +159,17 @@ Do physics-informed losses (PINO) improve generalization to unseen PDE parameter
 - Is a single PDE sufficient for a CS contribution, or should multiple PDEs be tested?
 - What is the right generalization metric — pointwise error, or something physics-aware?
 
+**Zero-Shot Super-Resolution: Does Physics-Constrained Training Improve Resolution Transfer?**
+
+Jiang et al. (2024) showed that FNO can perform zero-shot super-resolution for atmospheric downscaling (train at 4km, evaluate at 1km), and that a physics-constrained loss improves results. But it is unclear whether the physics loss improves the learned dynamics or merely acts as regularization.
+
+*Approach:* Train FNO, FNO + physics loss, and PINO on the barotropic vorticity equation at a coarse resolution. Evaluate at 2x, 4x, 8x finer resolutions. Compare how each degrades as the resolution gap increases.
+
+*Open questions:*
+- Does the physics-informed loss degrade more gracefully with larger resolution gaps?
+- How does this compare to simply adding more training data at the original resolution?
+- Is there a resolution gap beyond which zero-shot transfer breaks down regardless of the loss?
+
 ## 5. Summary
 
 <!-- Key takeaways -->
@@ -174,3 +185,4 @@ Do physics-informed losses (PINO) improve generalization to unseen PDE parameter
 5. Li, Z. et al. (2021). Neural Operator: Learning Maps Between Function Spaces. [arXiv:2108.08481](https://arxiv.org/abs/2108.08481)
 6. Li, Z. et al. (2021). Physics-Informed Neural Operator for Learning PDEs. [arXiv:2111.03794](https://arxiv.org/abs/2111.03794)
 7. Sahin et al. (2024). AI for PDEs in Computational Mechanics: A Review. [arXiv:2410.19843](https://arxiv.org/abs/2410.19843)
+8. Jiang, Z. et al. (2024). Fourier Neural Operator for Large-Eddy Simulation of Atmospheric Boundary Layer Turbulence. *J. Adv. Model. Earth Syst.*, 16. [DOI](https://doi.org/10.1029/2024MS004394)
