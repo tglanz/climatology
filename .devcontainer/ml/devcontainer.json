@@ -1,7 +1,7 @@
 {
   "name": "ml",
   "build": { "dockerfile": "Dockerfile" },
-  "remoteUser": "dev",
+  "remoteUser": "ubuntu",
   "remoteEnv": {
     "ANTHROPIC_API_KEY": "${localEnv:ANTHROPIC_API_KEY}"
   },

@@ -12,13 +12,5 @@ RUN curl -fsSL https://deb.nodesource.com/setup_22.x | bash - \
 
 RUN npm install -g @anthropic-ai/claude-code
 
-ARG USERNAME=dev
-ARG USER_UID=1000
-ARG USER_GID=1000
-
-RUN groupadd --force --gid $USER_GID $USERNAME \
-    && useradd --uid $USER_UID --gid $USER_GID -m $USERNAME \
-    && chsh -s /bin/zsh $USERNAME
-
-USER $USERNAME
-WORKDIR /home/$USERNAME
+USER ubuntu
+WORKDIR /home/ubuntu
