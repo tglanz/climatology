@@ -389,6 +389,10 @@ Before proceeding, I want to verify:
 - **Stay organized** - Even experiments benefit from structure
 - **Correctness over speed** - But don't over-engineer
 
+## Conversation Conventions
+
+- **Trailing `&`**: Any request ending with `&` should be run as a background task using `run_in_background: true` on the Agent tool, so progress is visible via `/tasks`.
+
 ## Reminders
 
 - Re-read project documentation when switching contexts
