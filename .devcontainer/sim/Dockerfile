@@ -3,7 +3,7 @@ FROM ubuntu:24.04
 ENV DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    curl git wget ca-certificates zsh tmux ripgrep fd-find fzf make sudo build-essential gnupg \
+    curl git wget ca-certificates zsh tmux ripgrep fd-find fzf make sudo build-essential gnupg unzip \
     netcdf-bin htop gh \
     && rm -rf /var/lib/apt/lists/* \
     && echo "ubuntu ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/ubuntu \
