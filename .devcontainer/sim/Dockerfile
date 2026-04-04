@@ -6,11 +6,9 @@ ARG NVIM_HOME=/opt/nvim
 ARG MINIFORGE_HOME=/home/ubuntu/miniforge3
 
 ENV DEBIAN_FRONTEND=noninteractive
-ENV TERM=xterm-256color
-ENV LS_COLORS="di=1;36:ln=35:so=32:pi=33:ex=31:bd=34;46:cd=34;43:su=30;41:sg=30;46:tw=30;42:ow=30;43"
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    curl git wget ca-certificates zsh tmux ripgrep fd-find fzf make sudo build-essential gnupg unzip \
+    curl git wget ca-certificates zsh tmux ripgrep fd-find fzf make sudo build-essential gnupg unzip less bat \
     netcdf-bin htop gh \
     && rm -rf /var/lib/apt/lists/* \
     && echo "ubuntu ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/ubuntu \
@@ -41,7 +39,10 @@ USER ubuntu
 WORKDIR /home/ubuntu
 
 COPY common/setup-oh-my-zsh.sh /tmp/setup-oh-my-zsh.sh
-RUN bash /tmp/setup-oh-my-zsh.sh
+RUN bash /tmp/setup-oh-my-zsh.sh \
+    && echo 'export TERM=xterm-256color' >> ~/.zshrc \
+    && echo 'export LS_COLORS="di=1;36:ln=35:so=32:pi=33:ex=31:bd=34;46:cd=34;43:su=30;41:sg=30;46:tw=30;42:ow=30;43"' >> ~/.zshrc \
+    && echo 'alias bat=batcat' >> ~/.zshrc
 
 RUN curl -fsSL https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-Linux-x86_64.sh \
     -o /tmp/miniforge.sh \
