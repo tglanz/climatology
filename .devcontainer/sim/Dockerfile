@@ -6,6 +6,7 @@ ARG NVIM_HOME=/opt/nvim
 ARG MINIFORGE_HOME=/home/ubuntu/miniforge3
 
 ENV DEBIAN_FRONTEND=noninteractive
+ENV TERM=xterm-256color
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
     curl git wget ca-certificates zsh tmux ripgrep fd-find fzf make sudo build-essential gnupg unzip \

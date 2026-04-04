@@ -1,6 +1,7 @@
 FROM ubuntu:24.04
 
 ENV DEBIAN_FRONTEND=noninteractive
+ENV TERM=xterm-256color
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
     curl git wget ca-certificates zsh tmux ripgrep fd-find fzf sudo gh \
