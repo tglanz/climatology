@@ -12,7 +12,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     netcdf-bin htop gh \
     && rm -rf /var/lib/apt/lists/* \
     && echo "ubuntu ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/ubuntu \
-    && chmod 0440 /etc/sudoers.d/ubuntu
+    && chmod 0440 /etc/sudoers.d/ubuntu \
+    && chsh -s /usr/bin/zsh ubuntu
 
 RUN mkdir -p /etc/apt/keyrings \
     && curl -fsSL https://repo.charm.sh/apt/gpg.key | gpg --dearmor -o /etc/apt/keyrings/charm.gpg \
@@ -24,7 +25,9 @@ RUN curl -fsSL https://deb.nodesource.com/setup_22.x | bash - \
     && apt-get install -y nodejs \
     && rm -rf /var/lib/apt/lists/*
 
-RUN npm install -g @anthropic-ai/claude-code
+RUN npm install -g @anthropic-ai/claude-code \
+    # Required by the nvim tree-sitter plugin
+    tree-sitter-cli
 
 COPY common/install-nvim.sh /tmp/install-nvim.sh
 RUN bash /tmp/install-nvim.sh
@@ -34,6 +37,9 @@ RUN echo "PATH=$PATH" >> /etc/environment
 
 USER ubuntu
 WORKDIR /home/ubuntu
+
+COPY common/setup-oh-my-zsh.sh /tmp/setup-oh-my-zsh.sh
+RUN bash /tmp/setup-oh-my-zsh.sh
 
 RUN curl -fsSL https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-Linux-x86_64.sh \
     -o /tmp/miniforge.sh \
