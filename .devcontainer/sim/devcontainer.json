@@ -22,6 +22,7 @@
       "extensions": [
         "ms-python.python",
         "ms-python.vscode-pylance",
+        "ms-python.vscode-python-envs",
         "fortran-lang.linter-gfortran",
         "extractions.fortran-intellisense",
         "eamodio.gitlens",
@@ -30,6 +31,11 @@
       "settings": {
         "terminal.integrated.defaultProfile.linux": "zsh",
         "python.defaultInterpreterPath": "/home/ubuntu/miniforge3/envs/isca_env/bin/python",
+        "python.analysis.extraPaths": [
+          "${containerWorkspaceFolder}/submodules/isca/src/extra/python"
+        ],
+        "python-envs.defaultEnvManager": "ms-python.python:conda",
+        "python-envs.defaultPackageManager": "ms-python.python:conda",
         "vim.enable": true
       }
     }
