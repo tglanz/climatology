@@ -3,5 +3,7 @@
 *.egg-info
 .ipynb_checkpoints
 
+log.txt
+
 .isca_work
 .isca_data
