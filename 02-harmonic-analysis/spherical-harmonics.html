@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Partial Differential Equations – Global Physical Climatology</title>
+<title>7&nbsp; Spherical Harmonics – Global Physical Climatology</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -33,8 +33,8 @@ ul.task-list li input[type="checkbox"] {
 <script src="../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../">
-<link href="../04-geophysical-fluid-dynamics/index.html" rel="next">
-<link href="../02-harmonic-analysis/spherical-harmonics.html" rel="prev">
+<link href="../03-pdes/index.html" rel="next">
+<link href="../02-harmonic-analysis/fourier-transform.html" rel="prev">
 <script src="../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="../site_libs/quarto-html/popper.min.js"></script>
@@ -73,6 +73,35 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 </head>
 
@@ -85,7 +114,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../03-pdes/index.html">Partial Differential Equations</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../02-harmonic-analysis/index.html">Harmonic Analysis</a></li><li class="breadcrumb-item"><a href="../02-harmonic-analysis/spherical-harmonics.html"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Spherical Harmonics</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -174,7 +203,7 @@ ul.task-list li input[type="checkbox"] {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../02-harmonic-analysis/spherical-harmonics.html" class="sidebar-item-text sidebar-link">
+  <a href="../02-harmonic-analysis/spherical-harmonics.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Spherical Harmonics</span></span></a>
   </div>
 </li>
@@ -197,15 +226,26 @@ ul.task-list li input[type="checkbox"] {
 </nav>
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#motivation" id="toc-motivation" class="nav-link active" data-scroll-target="#motivation"><span class="header-section-number">7.1</span> Motivation</a></li>
+  <li><a href="#definition" id="toc-definition" class="nav-link" data-scroll-target="#definition"><span class="header-section-number">7.2</span> Definition</a></li>
+  <li><a href="#orthogonality-and-completeness" id="toc-orthogonality-and-completeness" class="nav-link" data-scroll-target="#orthogonality-and-completeness"><span class="header-section-number">7.3</span> Orthogonality and Completeness</a></li>
+  <li><a href="#low-degree-examples" id="toc-low-degree-examples" class="nav-link" data-scroll-target="#low-degree-examples"><span class="header-section-number">7.4</span> Low-degree Examples</a></li>
+  <li><a href="#addition-theorem" id="toc-addition-theorem" class="nav-link" data-scroll-target="#addition-theorem"><span class="header-section-number">7.5</span> Addition Theorem</a></li>
+  <li><a href="#convolution-on-s2" id="toc-convolution-on-s2" class="nav-link" data-scroll-target="#convolution-on-s2"><span class="header-section-number">7.6</span> Convolution on <span class="math inline">\(S^2\)</span></a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default">
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../02-harmonic-analysis/index.html">Harmonic Analysis</a></li><li class="breadcrumb-item"><a href="../02-harmonic-analysis/spherical-harmonics.html"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Spherical Harmonics</span></a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title">Partial Differential Equations</h1>
+<h1 class="title"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Spherical Harmonics</span></h1>
 </div>
 
 
@@ -222,9 +262,56 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<p>Focuses on the Laplace and Poisson equations, and their solution via Green’s functions. The Green’s function encodes how a differential operator responds to a point source - it is the theoretical object that the GSNO is designed to learn. On the sphere, the Green’s function for the Laplace-Beltrami operator is expressed in terms of the spherical harmonics from the previous chapter. Understanding what a Green’s function is, and why it solves PDEs, is the direct prerequisite for understanding what the GSNO is doing at a conceptual level.</p>
+<section id="motivation" class="level2" data-number="7.1">
+<h2 data-number="7.1" class="anchored" data-anchor-id="motivation"><span class="header-section-number">7.1</span> Motivation</h2>
+<p>On the interval <span class="math inline">\([-\pi, \pi]\)</span>, the functions <span class="math inline">\(e^{inx}\)</span> are the eigenfunctions of <span class="math inline">\(\frac{d^2}{dx^2}\)</span>: they satisfy <span class="math inline">\(\frac{d^2}{dx^2} e^{inx} = -n^2 e^{inx}\)</span>. The Fourier series is an eigenfunction expansion of this operator.</p>
+<p>On the sphere <span class="math inline">\(S^2\)</span>, the analogous operator is the Laplace-Beltrami operator <span class="math inline">\(\Delta_{S^2}\)</span> (derived in the spherical coordinates section). The spherical harmonics are its eigenfunctions, and they play the role of <span class="math inline">\(e^{inx}\)</span> on the sphere.</p>
+<hr>
+</section>
+<section id="definition" class="level2" data-number="7.2">
+<h2 data-number="7.2" class="anchored" data-anchor-id="definition"><span class="header-section-number">7.2</span> Definition</h2>
+<p>In spherical coordinates <span class="math inline">\((\theta, \phi)\)</span> with <span class="math inline">\(\theta \in [0,\pi]\)</span> (colatitude) and <span class="math inline">\(\phi \in [0, 2\pi)\)</span> (longitude), the spherical harmonics are</p>
+<p><span class="math display">\[Y_l^m(\theta, \phi) = \sqrt{\frac{(2l+1)}{4\pi}\frac{(l-m)!}{(l+m)!}}\, P_l^m(\cos\theta)\, e^{im\phi},\]</span></p>
+<p>where <span class="math inline">\(l = 0, 1, 2, \ldots\)</span> is the degree, <span class="math inline">\(m = -l, \ldots, l\)</span> is the order, and <span class="math inline">\(P_l^m\)</span> are the associated Legendre polynomials. There are <span class="math inline">\(2l+1\)</span> harmonics of each degree, and infinitely many degrees.</p>
+<p><strong>Eigenvalue equation.</strong> The spherical harmonics satisfy</p>
+<p><span class="math display">\[\Delta_{S^2} Y_l^m = -l(l+1)\, Y_l^m.\]</span></p>
+<p>The eigenvalue <span class="math inline">\(-l(l+1)\)</span> depends only on degree <span class="math inline">\(l\)</span>, not order <span class="math inline">\(m\)</span>: each eigenspace has dimension <span class="math inline">\(2l+1\)</span>.</p>
+<hr>
+</section>
+<section id="orthogonality-and-completeness" class="level2" data-number="7.3">
+<h2 data-number="7.3" class="anchored" data-anchor-id="orthogonality-and-completeness"><span class="header-section-number">7.3</span> Orthogonality and Completeness</h2>
+<p>The spherical harmonics form an orthonormal basis for <span class="math inline">\(L^2(S^2)\)</span>:</p>
+<p><span class="math display">\[\int_{S^2} Y_l^m(\theta,\phi)\, \overline{Y_{l'}^{m'}(\theta,\phi)}\, d\Omega = \delta_{ll'}\delta_{mm'},\]</span></p>
+<p>where <span class="math inline">\(d\Omega = \sin\theta\, d\theta\, d\phi\)</span> is the solid angle element. Any <span class="math inline">\(f \in L^2(S^2)\)</span> expands as</p>
+<p><span class="math display">\[f(\theta,\phi) = \sum_{l=0}^{\infty}\sum_{m=-l}^{l} \hat{f}_l^m\, Y_l^m(\theta,\phi), \qquad \hat{f}_l^m = \int_{S^2} f(\theta,\phi)\, \overline{Y_l^m(\theta,\phi)}\, d\Omega.\]</span></p>
+<p>This is the spherical harmonic transform, the analogue of the Fourier series on <span class="math inline">\(S^2\)</span>.</p>
+<p><strong>Parseval:</strong></p>
+<p><span class="math display">\[\int_{S^2} |f|^2\, d\Omega = \sum_{l,m} |\hat{f}_l^m|^2.\]</span></p>
+<hr>
+</section>
+<section id="low-degree-examples" class="level2" data-number="7.4">
+<h2 data-number="7.4" class="anchored" data-anchor-id="low-degree-examples"><span class="header-section-number">7.4</span> Low-degree Examples</h2>
+<ul>
+<li><span class="math inline">\(Y_0^0 = \frac{1}{\sqrt{4\pi}}\)</span>: constant function, <span class="math inline">\(l=0\)</span>.</li>
+<li><span class="math inline">\(Y_1^0 = \sqrt{\frac{3}{4\pi}}\cos\theta\)</span>: proportional to <span class="math inline">\(z/r\)</span>, the north-south dipole.</li>
+<li><span class="math inline">\(Y_1^{\pm 1} = \mp\sqrt{\frac{3}{8\pi}}\sin\theta\, e^{\pm i\phi}\)</span>: equatorial dipoles.</li>
+</ul>
+<p>Degree <span class="math inline">\(l\)</span> harmonics oscillate <span class="math inline">\(l\)</span> times across the sphere. High <span class="math inline">\(l\)</span> corresponds to small-scale features; low <span class="math inline">\(l\)</span> to large-scale structure.</p>
+<hr>
+</section>
+<section id="addition-theorem" class="level2" data-number="7.5">
+<h2 data-number="7.5" class="anchored" data-anchor-id="addition-theorem"><span class="header-section-number">7.5</span> Addition Theorem</h2>
+<p>For any two directions <span class="math inline">\(\hat{\mathbf{r}}, \hat{\mathbf{r}}' \in S^2\)</span> with angle <span class="math inline">\(\gamma\)</span> between them:</p>
+<p><span class="math display">\[P_l(\cos\gamma) = \frac{4\pi}{2l+1}\sum_{m=-l}^{l} Y_l^m(\hat{\mathbf{r}})\, \overline{Y_l^m(\hat{\mathbf{r}}')},\]</span></p>
+<p>where <span class="math inline">\(P_l\)</span> is the Legendre polynomial of degree <span class="math inline">\(l\)</span>. This identity is used to express rotationally symmetric kernels (such as Green’s functions on <span class="math inline">\(S^2\)</span>) in terms of spherical harmonics.</p>
+<hr>
+</section>
+<section id="convolution-on-s2" class="level2" data-number="7.6">
+<h2 data-number="7.6" class="anchored" data-anchor-id="convolution-on-s2"><span class="header-section-number">7.6</span> Convolution on <span class="math inline">\(S^2\)</span></h2>
+<p>A rotationally symmetric kernel <span class="math inline">\(K(\hat{\mathbf{r}} \cdot \hat{\mathbf{r}}')\)</span> (depending only on the angle between two points) acts by convolution on the sphere. By the addition theorem, convolution with such a kernel is diagonal in the spherical harmonic basis: each coefficient <span class="math inline">\(\hat{f}_l^m\)</span> is multiplied by a degree-dependent factor <span class="math inline">\(\hat{K}_l\)</span>. This diagonalization property underlies both spectral numerical methods and the GSNO architecture.</p>
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
@@ -629,13 +716,13 @@ ul.task-list li input[type="checkbox"] {
   </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="../02-harmonic-analysis/spherical-harmonics.html" class="pagination-link" aria-label="Spherical Harmonics">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Spherical Harmonics</span></span>
+      <a href="../02-harmonic-analysis/fourier-transform.html" class="pagination-link" aria-label="Fourier Transform">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Fourier Transform</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../04-geophysical-fluid-dynamics/index.html" class="pagination-link" aria-label="Geophysical Fluid Dynamics">
-        <span class="nav-page-text">Geophysical Fluid Dynamics</span> <i class="bi bi-arrow-right-short"></i>
+      <a href="../03-pdes/index.html" class="pagination-link" aria-label="Partial Differential Equations">
+        <span class="nav-page-text">Partial Differential Equations</span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
