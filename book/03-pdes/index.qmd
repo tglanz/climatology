@@ -1,0 +1,3 @@
+# Partial Differential Equations
+
+Focuses on the Laplace and Poisson equations, and their solution via Green's functions. The Green's function encodes how a differential operator responds to a point source - it is the theoretical object that the GSNO is designed to learn. On the sphere, the Green's function for the Laplace-Beltrami operator is expressed in terms of the spherical harmonics from the previous chapter. Understanding what a Green's function is, and why it solves PDEs, is the direct prerequisite for understanding what the GSNO is doing at a conceptual level.

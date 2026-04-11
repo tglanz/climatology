@@ -1,0 +1,22 @@
+{
+  "name": "book",
+  "build": {
+    "dockerfile": "Dockerfile",
+    "context": ".."
+  },
+  "remoteUser": "ubuntu",
+  "postCreateCommand": "bash .devcontainer/book/post-create.sh",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "quarto.quarto",
+        "eamodio.gitlens",
+        "vscodevim.vim"
+      ],
+      "settings": {
+        "terminal.integrated.defaultProfile.linux": "zsh",
+        "vim.enable": true
+      }
+    }
+  }
+}

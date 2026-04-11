@@ -1,0 +1,3 @@
+# Neural Operators
+
+Covers the machine learning framework for learning mappings between function spaces rather than between finite-dimensional vectors. Introduces the Fourier Neural Operator (FNO) as the foundational architecture - it applies learned convolutions in the Fourier domain, directly leveraging the harmonic analysis from chapter 2. Then introduces the Green's Spherical Neural Operator (GSNO), which replaces the Fourier basis with spherical harmonics and frames the learned map as approximating a Green's function on $S^2$ - connecting chapters 2, 3, and 4 into a single model. This is the destination the book has been building toward.

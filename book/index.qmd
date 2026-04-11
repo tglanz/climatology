@@ -1,0 +1,3 @@
+# Preface {.unnumbered}
+
+This book covers global physical climatology and machine learning approaches including PINNs and Neural Operators.

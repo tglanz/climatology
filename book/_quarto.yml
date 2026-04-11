@@ -1,0 +1,18 @@
+project:
+  type: book
+  output-dir: _site
+
+book:
+  title: "Global Physical Climatology"
+  author: "Tal Glanzman"
+  chapters:
+    - index.qmd
+    - 01-vector-calculus/index.qmd
+    - 02-harmonic-analysis/index.qmd
+    - 03-pdes/index.qmd
+    - 04-geophysical-fluid-dynamics/index.qmd
+    - 05-neural-operators/index.qmd
+
+format:
+  html:
+    theme: cosmo

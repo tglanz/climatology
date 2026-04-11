@@ -1,0 +1,3 @@
+# Vector Calculus
+
+Builds the differential operator vocabulary used throughout the book - gradient, divergence, curl, and the Laplacian. Covers the integral theorems (Green's, Stokes') that underpin the Green's function approach to PDEs. This language is the substrate everything else is written in: vorticity is curl, the BVE involves the Laplacian, and the GSNO is defined through a Green's function - none of that is legible without this chapter.
