@@ -71,3 +71,75 @@ $$X_k = \sum_{n=0}^{N-1} x_n\, e^{-2\pi i kn/N}, \qquad k = 0, \ldots, N-1.$$
 The Fast Fourier Transform (FFT) computes the DFT in $O(N\log N)$ rather than $O(N^2)$. The convolution theorem holds exactly for the DFT, making the FFT the computational backbone of spectral methods and the Fourier Neural Operator.
 
 *Further reading: @Kreyszig2011aem, Sec. 11.9 (DFT and FFT); @BruntonKutz2022, Sec. 2.2 (FFT and applications in data-driven methods).*
+
+---
+
+## Key Identities: Derivations
+
+All derivations below use the convention $\hat{f}(\xi) = \int_{-\infty}^{\infty} f(x)\, e^{-2\pi i\xi x}\, dx$.
+
+### Derivative Property
+
+**Claim.** $\mathcal{F}[f^{(n)}](\xi) = (2\pi i\xi)^n \hat{f}(\xi)$.
+
+**Derivation (n=1).** Integrate by parts, assuming $f(x) \to 0$ as $|x| \to \infty$:
+
+$$\mathcal{F}[f'](\xi) = \int_{-\infty}^{\infty} f'(x)\, e^{-2\pi i\xi x}\, dx = \underbrace{\left[f(x) e^{-2\pi i\xi x}\right]_{-\infty}^{\infty}}_{= 0} + 2\pi i\xi \int_{-\infty}^{\infty} f(x)\, e^{-2\pi i\xi x}\, dx = 2\pi i\xi\, \hat{f}(\xi).$$
+
+Applying the same identity $n$ times gives the general result. Differentiation in the spatial domain is multiplication by $2\pi i\xi$ in the frequency domain, converting a differential operator into an algebraic one.
+
+---
+
+### Convolution Theorem
+
+**Claim.** $\mathcal{F}[f * g](\xi) = \hat{f}(\xi)\cdot\hat{g}(\xi)$.
+
+**Derivation.** Write out the transform of the convolution and swap the order of integration (Fubini):
+
+$$\mathcal{F}[f * g](\xi) = \int_{-\infty}^{\infty} \left(\int_{-\infty}^{\infty} f(y)\, g(x-y)\, dy\right) e^{-2\pi i\xi x}\, dx = \int_{-\infty}^{\infty} f(y) \left(\int_{-\infty}^{\infty} g(x-y)\, e^{-2\pi i\xi x}\, dx\right) dy.$$
+
+Substitute $u = x - y$ in the inner integral ($du = dx$, $x = u + y$):
+
+$$= \int_{-\infty}^{\infty} f(y) \left(\int_{-\infty}^{\infty} g(u)\, e^{-2\pi i\xi(u+y)}\, du\right) dy = \int_{-\infty}^{\infty} f(y)\, e^{-2\pi i\xi y}\, dy \cdot \int_{-\infty}^{\infty} g(u)\, e^{-2\pi i\xi u}\, du = \hat{f}(\xi)\cdot\hat{g}(\xi).$$
+
+The reverse direction also holds: pointwise multiplication in frequency corresponds to convolution in space, $\mathcal{F}^{-1}[\hat{f}\cdot\hat{g}] = f * g$. This is the basis for the FNO: learned filters applied in the frequency domain correspond to convolution operators in the spatial domain.
+
+---
+
+### Gaussian Identity
+
+**Claim.** For $a > 0$: $\mathcal{F}[e^{-\pi a x^2}](\xi) = a^{-1/2}\, e^{-\pi \xi^2/a}$.
+
+In particular, $\mathcal{F}[e^{-\pi x^2}] = e^{-\pi\xi^2}$: the standard Gaussian is a fixed point of the Fourier transform.
+
+**Derivation.** Let $I(\xi) = \int_{-\infty}^{\infty} e^{-\pi a x^2} e^{-2\pi i\xi x}\, dx$. Complete the square in the exponent:
+
+$$-\pi a x^2 - 2\pi i\xi x = -\pi a\!\left(x + \frac{i\xi}{a}\right)^2 - \frac{\pi\xi^2}{a}.$$
+
+Factoring out the $\xi$-dependent constant:
+
+$$I(\xi) = e^{-\pi\xi^2/a} \int_{-\infty}^{\infty} e^{-\pi a(x + i\xi/a)^2}\, dx.$$
+
+The substitution $u = \sqrt{a}(x + i\xi/a)$ (shifting the contour in the complex plane, justified by analyticity) gives $du = \sqrt{a}\, dx$ and:
+
+$$I(\xi) = e^{-\pi\xi^2/a} \cdot \frac{1}{\sqrt{a}} \int_{-\infty}^{\infty} e^{-\pi u^2}\, du = \frac{e^{-\pi\xi^2/a}}{\sqrt{a}},$$
+
+using the Gaussian integral $\int_{-\infty}^{\infty} e^{-\pi u^2}\, du = 1$.
+
+The Gaussian plays a central role in analysis because it is maximally concentrated simultaneously in space and frequency (saturating the uncertainty principle), and because it is self-dual under the Fourier transform.
+
+---
+
+### Dirac Delta
+
+The Dirac delta $\delta(x)$ is the distribution satisfying $\int_{-\infty}^{\infty} \delta(x)\, f(x)\, dx = f(0)$ for any test function $f$.
+
+**Claim.** $\mathcal{F}[\delta](\xi) = 1$ and $\mathcal{F}[1](\xi) = \delta(\xi)$.
+
+**Derivation of $\mathcal{F}[\delta] = 1$.**
+
+$$\hat{\delta}(\xi) = \int_{-\infty}^{\infty} \delta(x)\, e^{-2\pi i\xi x}\, dx = e^{-2\pi i\xi \cdot 0} = 1.$$
+
+A point mass in space has equal energy at all frequencies - a flat spectrum. This is the distributional analogue of the impulse response: the Green's function of a differential operator $L$ is the function $G$ satisfying $LG = \delta$, and in frequency space this becomes $\hat{L}(\xi)\hat{G}(\xi) = 1$, so $\hat{G}(\xi) = 1/\hat{L}(\xi)$.
+
+**Shifted delta.** $\mathcal{F}[\delta(\cdot - a)](\xi) = e^{-2\pi i\xi a}$. A pure spatial shift is a linear phase in frequency.

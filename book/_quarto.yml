@@ -11,10 +11,12 @@ book:
       chapters:
         - 01-vector-calculus/operators.qmd
         - 01-vector-calculus/integrals.qmd
+        - 01-vector-calculus/change-of-variables.qmd
         - 01-vector-calculus/theorems.qmd
         - 01-vector-calculus/spherical.qmd
     - part: 02-harmonic-analysis/index.qmd
       chapters:
+        - 02-harmonic-analysis/function-spaces.qmd
         - 02-harmonic-analysis/fourier-series.qmd
         - 02-harmonic-analysis/fourier-transform.qmd
         - 02-harmonic-analysis/spherical-harmonics.qmd

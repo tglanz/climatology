@@ -1,0 +1,157 @@
+# Function Spaces
+
+Before Fourier series or spherical harmonics can be stated precisely, we need the ambient space in which they live and the notion of convergence they satisfy. This section develops that theory abstractly. Fourier series and spherical harmonics are then special cases of a single general structure: an orthonormal basis for a Hilbert space.
+
+---
+
+## Vector Spaces
+
+**Definition.** A vector space over $\mathbb{R}$ (or $\mathbb{C}$) is a set $V$ equipped with addition and scalar multiplication satisfying the usual axioms (commutativity, associativity, distributivity, identity, inverses).
+
+The central examples here are spaces of functions:
+
+- $C([a,b])$: continuous functions on $[a,b]$, with pointwise operations.
+- $C^k([a,b])$: $k$-times continuously differentiable functions.
+- $\mathcal{P}_n$: polynomials of degree at most $n$.
+- $L^2([a,b])$: square-integrable functions (defined below).
+
+Unlike $\mathbb{R}^n$, these spaces are infinite-dimensional: no finite set of functions spans all of them.
+
+---
+
+## Norms and $L^p$ Spaces
+
+**Definition.** A norm on a vector space $V$ is a function $\|\cdot\| : V \to [0,\infty)$ satisfying:
+
+1. $\|f\| = 0$ iff $f = 0$.
+2. $\|\alpha f\| = |\alpha|\|f\|$.
+3. $\|f + g\| \leq \|f\| + \|g\|$ (triangle inequality).
+
+A normed space is a vector space equipped with a norm.
+
+**Definition.** For $1 \leq p < \infty$, the $L^p$ space on a domain $\Omega$ is
+
+$$L^p(\Omega) = \left\{ f : \Omega \to \mathbb{C} \;\Big|\; \int_\Omega |f(x)|^p\, dx < \infty \right\},$$
+
+with norm $\|f\|_p = \left(\int_\Omega |f|^p\, dx\right)^{1/p}$. Functions equal almost everywhere are identified.
+
+The case $p = 2$ is by far the most important for harmonic analysis:
+
+$$L^2(\Omega) = \left\{ f : \Omega \to \mathbb{C} \;\Big|\; \int_\Omega |f(x)|^2\, dx < \infty \right\}, \quad \|f\|_2 = \left(\int_\Omega |f|^2\right)^{1/2}.$$
+
+$L^2$ is the natural space for energy: $\|f\|_2^2$ is the total "energy" of $f$.
+
+*Further reading: @Kreyszig2011aem, Sec. 11.5 (function spaces in the context of Sturm-Liouville); @Evans2010pde, Appendix E ($L^p$ spaces).*
+
+---
+
+## Inner Product Spaces
+
+**Definition.** An inner product on a vector space $V$ is a map $\langle\cdot,\cdot\rangle : V \times V \to \mathbb{C}$ satisfying:
+
+1. $\langle f, f\rangle \geq 0$, with $\langle f,f\rangle = 0$ iff $f = 0$.
+2. $\langle f, g\rangle = \overline{\langle g, f\rangle}$ (conjugate symmetry).
+3. $\langle \alpha f + \beta g, h\rangle = \alpha\langle f,h\rangle + \beta\langle g,h\rangle$ (linearity in first argument).
+
+The inner product induces a norm: $\|f\| = \sqrt{\langle f,f\rangle}$.
+
+**On $L^2(\Omega)$:**
+
+$$\langle f, g\rangle = \int_\Omega f(x)\,\overline{g(x)}\, dx.$$
+
+**Cauchy-Schwarz inequality.** For any $f, g \in V$:
+
+$$|\langle f, g\rangle| \leq \|f\|\,\|g\|.$$
+
+Equality holds iff $f$ and $g$ are proportional. This is the generalization of the dot product inequality $|\mathbf{u}\cdot\mathbf{v}| \leq |\mathbf{u}||\mathbf{v}|$ to infinite dimensions.
+
+*Further reading: @Kreyszig2011aem, Sec. 11.5.*
+
+---
+
+## Hilbert Spaces
+
+A normed space is **complete** if every Cauchy sequence converges to an element of the space. Completeness is the key property that allows infinite series to be controlled.
+
+**Definition.** A **Hilbert space** is a complete inner product space.
+
+**Key example.** $L^2(\Omega)$ is a Hilbert space. This is not obvious: it requires showing that limits of $L^2$-Cauchy sequences are again in $L^2$. The pointwise limit of a sequence of $L^2$ functions need not be the $L^2$ limit.
+
+$C([a,b])$ with the $L^2$ norm is an inner product space but is not complete (the limit of a Cauchy sequence of continuous functions can be discontinuous). Completing it gives $L^2([a,b])$.
+
+**Intuition.** A Hilbert space is an infinite-dimensional generalization of $\mathbb{R}^n$ with dot product. Virtually all geometric intuitions from $\mathbb{R}^n$ carry over: projections, angles, decompositions into orthogonal components.
+
+*Further reading: @Evans2010pde, Appendix E; @Kreyszig2011aem, Sec. 11.6.*
+
+---
+
+## Orthogonality
+
+**Definition.** $f, g \in V$ are **orthogonal** if $\langle f, g\rangle = 0$, written $f \perp g$. A set $\{e_n\}$ is:
+
+- **Orthogonal** if $\langle e_n, e_m\rangle = 0$ for $n \neq m$.
+- **Orthonormal** if additionally $\langle e_n, e_n\rangle = 1$ for all $n$.
+
+**Pythagorean theorem.** If $f \perp g$, then $\|f + g\|^2 = \|f\|^2 + \|g\|^2$.
+
+More generally, for a finite orthonormal set $\{e_1, \ldots, e_N\}$ and coefficients $c_n = \langle f, e_n\rangle$:
+
+$$\left\|f - \sum_{n=1}^N c_n e_n\right\|^2 = \|f\|^2 - \sum_{n=1}^N |c_n|^2.$$
+
+The partial sum $\sum c_n e_n$ is the orthogonal projection of $f$ onto $\text{span}\{e_1,\ldots,e_N\}$, and is the best approximation to $f$ in that subspace.
+
+**Gram-Schmidt process.** Any countable linearly independent set $\{f_n\}$ can be orthonormalized: set $e_1 = f_1/\|f_1\|$, then iteratively subtract the projection onto the span of previous $e_k$ and normalize.
+
+---
+
+## Orthonormal Bases and Fourier Coefficients
+
+**Definition.** An orthonormal set $\{e_n\}_{n=1}^\infty$ in a Hilbert space $H$ is an **orthonormal basis** (or complete orthonormal system) if the only element orthogonal to every $e_n$ is zero:
+
+$$\langle f, e_n\rangle = 0 \text{ for all } n \implies f = 0.$$
+
+Equivalently, $\{e_n\}$ is an ONB iff every $f \in H$ expands as
+
+$$f = \sum_{n=1}^\infty \langle f, e_n\rangle\, e_n,$$
+
+where the sum converges in the norm of $H$ (not necessarily pointwise). The coefficients $\hat{f}_n = \langle f, e_n\rangle$ are the **generalized Fourier coefficients** of $f$ with respect to $\{e_n\}$.
+
+**Bessel's inequality.** For any ONS (not necessarily a basis) and any $f \in H$:
+
+$$\sum_n |\langle f, e_n\rangle|^2 \leq \|f\|^2.$$
+
+**Parseval's identity.** If $\{e_n\}$ is an ONB:
+
+$$\sum_n |\langle f, e_n\rangle|^2 = \|f\|^2.$$
+
+Parseval says the ONB is "complete": no energy is lost in the decomposition. It is equivalent to the ONB condition.
+
+*Further reading: @Kreyszig2011aem, Sec. 11.6 (generalized Fourier series, Parseval); @Evans2010pde, Appendix E.*
+
+---
+
+## Sturm-Liouville Theory
+
+Orthogonal function families do not arise by accident. They are the eigenfunctions of self-adjoint differential operators - a general principle captured by Sturm-Liouville theory.
+
+**The Sturm-Liouville problem.** On $[a,b]$, with weight function $w(x) > 0$:
+
+$$-\frac{d}{dx}\!\left(p(x)\frac{df}{dx}\right) + q(x)f = \lambda\, w(x)\, f, \qquad \text{(with boundary conditions)}.$$
+
+**Theorem.** Under mild regularity conditions, the Sturm-Liouville problem has:
+
+1. A countable set of real eigenvalues $\lambda_1 \leq \lambda_2 \leq \cdots \to \infty$.
+2. Eigenfunctions $\{f_n\}$ that are orthogonal in the weighted $L^2$ space with inner product $\langle f, g\rangle_w = \int_a^b f(x)\overline{g(x)}\, w(x)\, dx$.
+3. The eigenfunctions form a complete orthonormal basis for $L^2_w([a,b])$.
+
+**Connection to specific bases:**
+
+| Problem | Operator | Eigenfunctions |
+|---|---|---|
+| $-f'' = \lambda f$ on $[-\pi,\pi]$, periodic BC | $-\frac{d^2}{dx^2}$ | $e^{inx}$, Fourier basis |
+| Legendre's equation on $[-1,1]$ | specific $p,q,w$ | Legendre polynomials $P_l$ |
+| $-\Delta_{S^2} f = \lambda f$ on $S^2$ | $-\Delta_{S^2}$ | Spherical harmonics $Y_l^m$ |
+
+All three families are instances of the same theorem. The Fourier series and spherical harmonic expansion are both eigenfunction expansions of self-adjoint operators in Hilbert spaces.
+
+*Further reading: @Kreyszig2011aem, Sec. 11.5 (Sturm-Liouville problems and orthogonal functions) and Sec. 12.10 (spherical harmonics as the Sturm-Liouville problem on $S^2$).*

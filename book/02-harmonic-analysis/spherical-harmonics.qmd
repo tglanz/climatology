@@ -1,10 +1,6 @@
 # Spherical Harmonics
 
-## Motivation
-
-On the interval $[-\pi, \pi]$, the functions $e^{inx}$ are the eigenfunctions of $\frac{d^2}{dx^2}$: they satisfy $\frac{d^2}{dx^2} e^{inx} = -n^2 e^{inx}$. The Fourier series is an eigenfunction expansion of this operator.
-
-On the sphere $S^2$, the analogous operator is the Laplace-Beltrami operator $\Delta_{S^2}$ (derived in the spherical coordinates section). The spherical harmonics are its eigenfunctions, and they play the role of $e^{inx}$ on the sphere.
+The spherical harmonics are the eigenfunctions of the Laplace-Beltrami operator $\Delta_{S^2}$ on $S^2$, playing the role of $e^{inx}$ on the sphere. They are the instance of the Sturm-Liouville framework (see the function spaces section) for the operator $-\Delta_{S^2}$ with the standard $L^2(S^2)$ inner product.
 
 ---
 
@@ -28,19 +24,15 @@ The eigenvalue $-l(l+1)$ depends only on degree $l$, not order $m$: each eigensp
 
 ## Orthogonality and Completeness
 
-The spherical harmonics form an orthonormal basis for $L^2(S^2)$:
+The $\{Y_l^m\}$ form an ONB for $L^2(S^2)$ in the sense of the function spaces section. The specific orthonormality relation is
 
 $$\int_{S^2} Y_l^m(\theta,\phi)\, \overline{Y_{l'}^{m'}(\theta,\phi)}\, d\Omega = \delta_{ll'}\delta_{mm'},$$
 
-where $d\Omega = \sin\theta\, d\theta\, d\phi$ is the solid angle element. Any $f \in L^2(S^2)$ expands as
+where $d\Omega = \sin\theta\, d\theta\, d\phi$. The expansion and Parseval identity follow from the general ONB theory:
 
-$$f(\theta,\phi) = \sum_{l=0}^{\infty}\sum_{m=-l}^{l} \hat{f}_l^m\, Y_l^m(\theta,\phi), \qquad \hat{f}_l^m = \int_{S^2} f(\theta,\phi)\, \overline{Y_l^m(\theta,\phi)}\, d\Omega.$$
+$$f(\theta,\phi) = \sum_{l=0}^{\infty}\sum_{m=-l}^{l} \hat{f}_l^m\, Y_l^m(\theta,\phi), \qquad \hat{f}_l^m = \int_{S^2} f\, \overline{Y_l^m}\, d\Omega, \qquad \int_{S^2} |f|^2\, d\Omega = \sum_{l,m} |\hat{f}_l^m|^2.$$
 
 This is the spherical harmonic transform, the analogue of the Fourier series on $S^2$.
-
-**Parseval:**
-
-$$\int_{S^2} |f|^2\, d\Omega = \sum_{l,m} |\hat{f}_l^m|^2.$$
 
 *Further reading: @Kreyszig2011aem, Sec. 12.11 (orthogonality of Legendre polynomials, basis for the expansion).*
 
@@ -73,3 +65,35 @@ where $P_l$ is the Legendre polynomial of degree $l$. This identity is used to e
 A rotationally symmetric kernel $K(\hat{\mathbf{r}} \cdot \hat{\mathbf{r}}')$ (depending only on the angle between two points) acts by convolution on the sphere. By the addition theorem, convolution with such a kernel is diagonal in the spherical harmonic basis: each coefficient $\hat{f}_l^m$ is multiplied by a degree-dependent factor $\hat{K}_l$. This diagonalization property underlies both spectral numerical methods and the GSNO architecture.
 
 *Further reading: @Tang2025gsno (GSNO paper, Sec. 2-3, where this diagonalization is the direct basis for the architecture); @Bonev2023sfno (Sec. 2, spherical harmonic convolution in the SFNO).*
+
+---
+
+## Worked Example: Expanding $\cos^2\theta$
+
+Expand $f(\theta, \phi) = \cos^2\theta$ in spherical harmonics.
+
+Since $f$ is independent of $\phi$, only $m = 0$ terms appear. Write $\cos^2\theta$ in terms of Legendre polynomials using the identity $P_2(t) = \frac{1}{2}(3t^2 - 1)$, so $t^2 = \frac{1}{3}(2P_2(t) + 1)$:
+
+$$\cos^2\theta = \frac{1}{3}(2P_2(\cos\theta) + P_0(\cos\theta)).$$
+
+Converting to spherical harmonics with $Y_l^0 = \sqrt{\frac{2l+1}{4\pi}} P_l(\cos\theta)$:
+
+$$P_0(\cos\theta) = \sqrt{4\pi}\, Y_0^0, \qquad P_2(\cos\theta) = \sqrt{\frac{4\pi}{5}}\, Y_2^0.$$
+
+Substituting:
+
+$$\cos^2\theta = \frac{\sqrt{4\pi}}{3}\, Y_0^0 + \frac{2}{3}\sqrt{\frac{4\pi}{5}}\, Y_2^0.$$
+
+Only $l = 0$ and $l = 2$ components are nonzero. This is expected: $\cos^2\theta$ is a degree-2 polynomial in $\cos\theta$, and the $l$-th spherical harmonic captures exactly degree-$l$ angular structure.
+
+---
+
+## Worked Example: Verifying the Eigenvalue Equation
+
+Verify $\Delta_{S^2} Y_1^0 = -2\, Y_1^0$ directly, where $Y_1^0(\theta,\phi) = \sqrt{3/4\pi}\cos\theta$.
+
+Since $Y_1^0$ is independent of $\phi$, the $\partial_\phi^2$ term vanishes:
+
+$$\Delta_{S^2} Y_1^0 = \frac{1}{\sin\theta}\frac{\partial}{\partial\theta}\!\left(\sin\theta\frac{\partial}{\partial\theta}\sqrt{\frac{3}{4\pi}}\cos\theta\right) = \sqrt{\frac{3}{4\pi}}\frac{1}{\sin\theta}\frac{\partial}{\partial\theta}(-\sin^2\theta) = \sqrt{\frac{3}{4\pi}}\frac{-2\sin\theta\cos\theta}{\sin\theta} = -2\,Y_1^0.$$
+
+This confirms $\Delta_{S^2} Y_1^0 = -l(l+1)\, Y_1^0 = -1\cdot 2\, Y_1^0$.

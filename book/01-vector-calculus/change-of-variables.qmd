@@ -1,0 +1,63 @@
+# Change of Variables
+
+When an integral is computed over a domain that is not naturally aligned with Cartesian coordinates, a change of variables can simplify the computation. The Jacobian determinant (defined in the operators section) is the key quantity that accounts for the local volume distortion introduced by the coordinate map.
+
+---
+
+## General Theorem
+
+Let $\mathbf{G} : U \to V$ be a smooth, invertible map between open sets $U, V \subset \mathbb{R}^n$, with $\mathbf{x} = \mathbf{G}(\mathbf{u})$. Then
+
+$$\int_V f(\mathbf{x})\, d\mathbf{x} = \int_U f(\mathbf{G}(\mathbf{u}))\, |\det J_\mathbf{G}(\mathbf{u})|\, d\mathbf{u},$$
+
+where $J_\mathbf{G}$ is the Jacobian of $\mathbf{G}$. The factor $|\det J_\mathbf{G}|$ converts the volume element $d\mathbf{u}$ in the new coordinates to the corresponding volume element $d\mathbf{x}$ in the original coordinates.
+
+**1D case.** For $x = g(u)$ with $g$ monotone:
+
+$$\int_a^b f(x)\, dx = \int_{g^{-1}(a)}^{g^{-1}(b)} f(g(u))\, |g'(u)|\, du.$$
+
+The factor $|g'(u)|$ is the 1D Jacobian determinant.
+
+*Further reading: @Kreyszig2011aem, Sec. 10.7 (change of variables in double and triple integrals).*
+
+---
+
+## Polar Coordinates in 2D
+
+The polar coordinate map is $\mathbf{G}(r, \theta) = (r\cos\theta, r\sin\theta)$, so
+
+$$J_\mathbf{G} = \begin{pmatrix} \cos\theta & -r\sin\theta \\ \sin\theta & r\cos\theta \end{pmatrix}, \qquad \det J_\mathbf{G} = r\cos^2\theta + r\sin^2\theta = r.$$
+
+The area element transforms as $dA = r\, dr\, d\theta$.
+
+**Example.** Compute $I = \iint_D e^{-(x^2 + y^2)}\, dA$ over the unit disk $D = \{x^2 + y^2 \leq 1\}$.
+
+In polar coordinates $x^2 + y^2 = r^2$ and the disk becomes $r \in [0,1]$, $\theta \in [0, 2\pi)$:
+
+$$I = \int_0^{2\pi}\int_0^1 e^{-r^2}\, r\, dr\, d\theta = 2\pi \int_0^1 r e^{-r^2}\, dr = 2\pi \left[-\tfrac{1}{2}e^{-r^2}\right]_0^1 = \pi(1 - e^{-1}).$$
+
+---
+
+## Spherical Coordinates in 3D
+
+As derived in the spherical coordinates section, the Jacobian determinant of the spherical coordinate map $(r, \theta, \phi) \mapsto (x, y, z)$ is $\det J = r^2\sin\theta$, giving the volume element
+
+$$dV = r^2\sin\theta\, dr\, d\theta\, d\phi.$$
+
+**Example 1: Volume of a ball.** Let $B_R = \{|\mathbf{x}| \leq R\}$. Then
+
+$$\text{Vol}(B_R) = \int_0^{2\pi}\int_0^{\pi}\int_0^R r^2\sin\theta\, dr\, d\theta\, d\phi = 2\pi \cdot 2 \cdot \frac{R^3}{3} = \frac{4\pi R^3}{3}.$$
+
+**Example 2: Surface area of the unit sphere.** Setting $r = 1$ constant, the area element on $S^2$ is $d\Omega = \sin\theta\, d\theta\, d\phi$:
+
+$$\text{Area}(S^2) = \int_0^{2\pi}\int_0^{\pi} \sin\theta\, d\theta\, d\phi = 2\pi \cdot 2 = 4\pi.$$
+
+**Example 3: Gaussian integral in 3D.** Compute $I = \iiint_{\mathbb{R}^3} e^{-r^2}\, dV$:
+
+$$I = \int_0^{2\pi} d\phi \int_0^{\pi} \sin\theta\, d\theta \int_0^{\infty} e^{-r^2} r^2\, dr = 4\pi \int_0^{\infty} r^2 e^{-r^2}\, dr.$$
+
+Using $\int_0^\infty r^2 e^{-r^2}\, dr = \frac{\sqrt{\pi}}{4}$:
+
+$$I = 4\pi \cdot \frac{\sqrt{\pi}}{4} = \pi^{3/2}.$$
+
+This equals $\left(\int_{-\infty}^{\infty} e^{-x^2}\, dx\right)^3 = (\sqrt{\pi})^3$, confirming consistency with the 1D Gaussian integral.
