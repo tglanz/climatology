@@ -1,3 +1,9 @@
 # Harmonic Analysis
 
 Develops Fourier analysis and its generalization to spherical harmonics. Fourier series and transforms introduce the idea of decomposing functions into orthogonal bases - a tool that reappears in the Fourier Neural Operator (FNO), in spectral numerical methods, and in the solution of PDEs on flat domains. Spherical harmonics extend this to the sphere $S^2$, forming the natural basis for functions on a globe. They appear again as eigenfunctions of the Laplace-Beltrami operator in the PDEs chapter, as the spectral basis in the GFD chapter, and as the structural foundation of the GSNO. This chapter is built once so every later chapter can use it without interruption.
+
+Sections:
+
+- Fourier Series: orthogonal function bases, Fourier coefficients, Parseval's theorem, convergence.
+- Fourier Transform: continuous transform, key properties (shift, derivative, convolution theorem), DFT and FFT.
+- Spherical Harmonics: eigenfunctions of $\Delta_{S^2}$, orthonormality, spherical harmonic transform, addition theorem, convolution on $S^2$.

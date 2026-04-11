@@ -1,0 +1,103 @@
+# Differential Operators
+
+Let $f : \mathbb{R}^3 \to \mathbb{R}$ be a scalar field and $\mathbf{F} : \mathbb{R}^3 \to \mathbb{R}^3$ a vector field with components $\mathbf{F} = (F_x, F_y, F_z)$.
+
+---
+
+## Gradient
+
+**Definition (scalar field).** The gradient of $f : \mathbb{R}^3 \to \mathbb{R}$ is the vector field
+
+$$\nabla f = \left(\frac{\partial f}{\partial x},\; \frac{\partial f}{\partial y},\; \frac{\partial f}{\partial z}\right).$$
+
+**Intuition.** $\nabla f(\mathbf{p})$ points in the direction of steepest increase of $f$ at $\mathbf{p}$. Its magnitude is the rate of change in that direction. Level sets of $f$ are everywhere perpendicular to $\nabla f$.
+
+**Example.** Let $f(x, y) = x^2 + y^2$. Then $\nabla f = (2x, 2y)$. At $\mathbf{p} = (1, 1)$: $\nabla f = (2, 2)$, pointing radially outward with magnitude $2\sqrt{2}$.
+
+**Definition (vector field).** The gradient of $\mathbf{F} : \mathbb{R}^n \to \mathbb{R}^m$ is the $m \times n$ tensor of partial derivatives
+
+$$(\nabla \mathbf{F})_{ij} = \frac{\partial F_i}{\partial x_j}.$$
+
+This is a second-order tensor (matrix). It maps a direction $\hat{\mathbf{u}}$ to the directional derivative $D_{\hat{\mathbf{u}}} \mathbf{F} = (\nabla \mathbf{F})\,\hat{\mathbf{u}}$, generalizing the scalar case.
+
+**Example.** Let $\mathbf{F}(x, y) = (x^2 + y,\; xy)$. Then
+
+$$\nabla \mathbf{F} = \begin{pmatrix} 2x & 1 \\ y & x \end{pmatrix}.$$
+
+At $\mathbf{p} = (1, 2)$: $\nabla \mathbf{F} = \begin{pmatrix} 2 & 1 \\ 2 & 1 \end{pmatrix}$.
+
+---
+
+## Jacobian
+
+**Definition.** For $\mathbf{F} : \mathbb{R}^n \to \mathbb{R}^m$, the Jacobian matrix $J_\mathbf{F}$ is identical to $\nabla \mathbf{F}$:
+
+$$J_\mathbf{F} = \begin{pmatrix} \dfrac{\partial F_1}{\partial x_1} & \cdots & \dfrac{\partial F_1}{\partial x_n} \\ \vdots & \ddots & \vdots \\ \dfrac{\partial F_m}{\partial x_1} & \cdots & \dfrac{\partial F_m}{\partial x_n} \end{pmatrix}.$$
+
+The Jacobian is the best linear approximation to $\mathbf{F}$ at a point: $\mathbf{F}(\mathbf{p} + \mathbf{h}) \approx \mathbf{F}(\mathbf{p}) + J_\mathbf{F}(\mathbf{p})\,\mathbf{h}$.
+
+**Jacobian determinant.** For square $\mathbf{F} : \mathbb{R}^n \to \mathbb{R}^n$, $\det(J_\mathbf{F})$ measures local volume scaling under $\mathbf{F}$. It appears in the change-of-variables formula:
+
+$$\int_{\mathbf{F}(V)} g(\mathbf{y})\, d\mathbf{y} = \int_V g(\mathbf{F}(\mathbf{x}))\,|\det J_\mathbf{F}(\mathbf{x})|\, d\mathbf{x}.$$
+
+**Example.** The map to spherical coordinates $\mathbf{F}(r, \theta, \phi) = (r\sin\theta\cos\phi,\; r\sin\theta\sin\phi,\; r\cos\theta)$ has
+
+$$\det(J_\mathbf{F}) = r^2 \sin\theta,$$
+
+giving the volume element $dV = r^2\sin\theta\, dr\, d\theta\, d\phi$.
+
+---
+
+## Directional Derivative
+
+**Definition.** The directional derivative of $f$ at $\mathbf{p}$ along unit vector $\hat{\mathbf{u}}$ is
+
+$$D_{\hat{\mathbf{u}}} f(\mathbf{p}) = \nabla f(\mathbf{p}) \cdot \hat{\mathbf{u}}.$$
+
+This is the rate of change of $f$ along $\hat{\mathbf{u}}$. The gradient is the unique direction that maximizes $D_{\hat{\mathbf{u}}} f$, with maximum value $|\nabla f(\mathbf{p})|$.
+
+---
+
+## Divergence
+
+**Definition.** The divergence of $\mathbf{F}$ is the scalar field
+
+$$\nabla \cdot \mathbf{F} = \frac{\partial F_x}{\partial x} + \frac{\partial F_y}{\partial y} + \frac{\partial F_z}{\partial z}.$$
+
+**Intuition.** $\nabla \cdot \mathbf{F}(\mathbf{p})$ measures the net outward flux of $\mathbf{F}$ per unit volume at $\mathbf{p}$. Positive divergence indicates a local source; negative indicates a sink; zero indicates incompressibility.
+
+**Example.** Let $\mathbf{F}(x, y, z) = (x, y, z)$ (radial expansion). Then
+
+$$\nabla \cdot \mathbf{F} = 1 + 1 + 1 = 3.$$
+
+Uniform positive divergence everywhere: every point is a source.
+
+---
+
+## Curl
+
+**Definition.** The curl of $\mathbf{F}$ is the vector field
+
+$$\nabla \times \mathbf{F} = \begin{vmatrix} \hat{\mathbf{x}} & \hat{\mathbf{y}} & \hat{\mathbf{z}} \\ \partial_x & \partial_y & \partial_z \\ F_x & F_y & F_z \end{vmatrix} = \left(\frac{\partial F_z}{\partial y} - \frac{\partial F_y}{\partial z},\; \frac{\partial F_x}{\partial z} - \frac{\partial F_z}{\partial x},\; \frac{\partial F_y}{\partial x} - \frac{\partial F_x}{\partial y}\right).$$
+
+**Intuition.** $\nabla \times \mathbf{F}(\mathbf{p})$ measures the infinitesimal rotation of $\mathbf{F}$ at $\mathbf{p}$. Its direction is the axis of rotation (right-hand rule); its magnitude is twice the angular velocity. A field with $\nabla \times \mathbf{F} = \mathbf{0}$ everywhere is called irrotational.
+
+**Example.** Let $\mathbf{F}(x, y, z) = (-y, x, 0)$, solid-body rotation in the $xy$-plane. Then
+
+$$\nabla \times \mathbf{F} = \left(0 - 0,\; 0 - 0,\; 1 - (-1)\right) = (0, 0, 2).$$
+
+The rotation axis is $+\hat{\mathbf{z}}$ with angular velocity $1$.
+
+---
+
+## Laplacian
+
+**Definition.** The Laplacian of $f$ is
+
+$$\nabla^2 f = \nabla \cdot (\nabla f) = \frac{\partial^2 f}{\partial x^2} + \frac{\partial^2 f}{\partial y^2} + \frac{\partial^2 f}{\partial z^2}.$$
+
+For a vector field, the Laplacian acts component-wise: $\nabla^2 \mathbf{F} = (\nabla^2 F_x, \nabla^2 F_y, \nabla^2 F_z)$.
+
+**Intuition.** $\nabla^2 f(\mathbf{p})$ is proportional to the difference between $f(\mathbf{p})$ and the average of $f$ over an infinitesimal sphere centered at $\mathbf{p}$. It governs diffusion, electrostatics, and fluid flow. The equation $\nabla^2 f = 0$ (Laplace equation) characterizes fields with no local sources or sinks.
+
+**Example.** Let $f(x, y) = x^2 - y^2$. Then $\nabla^2 f = 2 - 2 = 0$: this function satisfies the Laplace equation.

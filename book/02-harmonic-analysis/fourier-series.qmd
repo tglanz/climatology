@@ -1,0 +1,48 @@
+# Fourier Series
+
+## Orthogonal Functions
+
+Let $L^2([a,b])$ denote the space of square-integrable functions on $[a,b]$, with inner product
+
+$$\langle f, g \rangle = \int_a^b f(x)\, \overline{g(x)}\, dx.$$
+
+A set of functions $\{\phi_n\}$ is orthogonal if $\langle \phi_n, \phi_m \rangle = 0$ for $n \neq m$, and orthonormal if additionally $\langle \phi_n, \phi_n \rangle = 1$. An orthonormal set is a basis if every $f \in L^2([a,b])$ can be written as
+
+$$f = \sum_n \langle f, \phi_n \rangle\, \phi_n.$$
+
+The coefficients $\langle f, \phi_n \rangle$ are unique, and the representation converges in $L^2$ (in the sense $\|f - \sum_{n=1}^N \langle f, \phi_n \rangle \phi_n\|^2 \to 0$).
+
+---
+
+## Fourier Series
+
+On $[-\pi, \pi]$, the functions $\phi_n(x) = \frac{1}{\sqrt{2\pi}} e^{inx}$, $n \in \mathbb{Z}$, form an orthonormal basis for $L^2([-\pi, \pi])$.
+
+**Definition.** The Fourier series of $f \in L^2([-\pi, \pi])$ is
+
+$$f(x) = \sum_{n=-\infty}^{\infty} c_n\, e^{inx}, \qquad c_n = \frac{1}{2\pi}\int_{-\pi}^{\pi} f(x)\, e^{-inx}\, dx.$$
+
+The $c_n$ are the Fourier coefficients. The series converges in $L^2$; pointwise convergence requires additional regularity on $f$.
+
+**Real form.** For real $f$, writing $e^{inx} = \cos(nx) + i\sin(nx)$ gives
+
+$$f(x) = \frac{a_0}{2} + \sum_{n=1}^{\infty} \bigl(a_n \cos(nx) + b_n \sin(nx)\bigr),$$
+
+where $a_n = \frac{1}{\pi}\int_{-\pi}^{\pi} f(x)\cos(nx)\, dx$ and $b_n = \frac{1}{\pi}\int_{-\pi}^{\pi} f(x)\sin(nx)\, dx$.
+
+**Parseval's theorem.** Energy is preserved between the function and its coefficients:
+
+$$\frac{1}{2\pi}\int_{-\pi}^{\pi} |f(x)|^2\, dx = \sum_{n=-\infty}^{\infty} |c_n|^2.$$
+
+**Example.** Let $f(x) = x$ on $[-\pi, \pi]$. Then $a_n = 0$ (odd function, cosines vanish) and $b_n = \frac{2(-1)^{n+1}}{n}$, giving
+
+$$x = 2\sum_{n=1}^{\infty} \frac{(-1)^{n+1}}{n}\sin(nx) = 2\left(\sin x - \frac{\sin 2x}{2} + \frac{\sin 3x}{3} - \cdots\right).$$
+
+---
+
+## Convergence
+
+For $f \in L^2$, the Fourier series converges in mean square but need not converge pointwise everywhere. Key results:
+
+- If $f$ is piecewise smooth, the series converges to $f(x)$ at continuity points and to $\frac{1}{2}[f(x^+) + f(x^-)]$ at jump discontinuities (Gibbs phenomenon near jumps).
+- If $f \in C^k$, then $|c_n| = O(n^{-k})$: smoother functions have faster-decaying coefficients.

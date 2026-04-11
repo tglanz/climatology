@@ -1,0 +1,29 @@
+# Integral Theorems
+
+## Green's Theorem
+
+Let $D \subset \mathbb{R}^2$ be a bounded region with piecewise smooth positively oriented boundary $\partial D$. For $P, Q \in C^1(\bar{D})$:
+
+$$\oint_{\partial D} \bigl(P\, dx + Q\, dy\bigr) = \iint_D \left(\frac{\partial Q}{\partial x} - \frac{\partial P}{\partial y}\right) dA.$$
+
+With $\mathbf{F} = (P, Q, 0)$, the right side is $\iint_D (\nabla \times \mathbf{F}) \cdot \hat{\mathbf{z}} \, dA$. Green's theorem is the two-dimensional special case of Stokes' theorem.
+
+---
+
+## Stokes' Theorem
+
+Let $S \subset \mathbb{R}^3$ be an oriented surface with piecewise smooth boundary $\partial S$, oriented by the right-hand rule relative to $\hat{\mathbf{n}}$. For $\mathbf{F} \in C^1(S)$:
+
+$$\oint_{\partial S} \mathbf{F} \cdot d\mathbf{r} = \iint_S (\nabla \times \mathbf{F}) \cdot d\mathbf{S}.$$
+
+The circulation of $\mathbf{F}$ around the boundary equals the flux of its curl through the surface.
+
+---
+
+## Divergence Theorem
+
+Let $V \subset \mathbb{R}^3$ be a bounded region with piecewise smooth outward-oriented boundary $\partial V$. For $\mathbf{F} \in C^1(\bar{V})$:
+
+$$\iint_{\partial V} \mathbf{F} \cdot d\mathbf{S} = \iiint_V \nabla \cdot \mathbf{F} \, dV.$$
+
+The total outward flux through the boundary equals the integral of the divergence over the volume. This theorem is central to the derivation of Green's identities, which underpin Green's functions in the PDEs chapter.

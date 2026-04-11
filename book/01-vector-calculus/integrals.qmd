@@ -1,0 +1,45 @@
+# Integrals
+
+## Line Integral
+
+Let $C$ be a smooth curve parametrized by $\mathbf{r}(t)$, $t \in [a, b]$.
+
+**Scalar form:**
+
+$$\int_C f \, ds = \int_a^b f(\mathbf{r}(t))\, |\mathbf{r}'(t)|\, dt.$$
+
+**Vector form (work):**
+
+$$\int_C \mathbf{F} \cdot d\mathbf{r} = \int_a^b \mathbf{F}(\mathbf{r}(t)) \cdot \mathbf{r}'(t)\, dt.$$
+
+**Example.** Let $\mathbf{F} = (y, 0)$ and $C$ the segment from $(0,0)$ to $(1,1)$ parametrized as $\mathbf{r}(t) = (t, t)$, $t \in [0,1]$. Then $\mathbf{r}'(t) = (1,1)$ and $\mathbf{F}(\mathbf{r}(t)) = (t, 0)$, so
+
+$$\int_C \mathbf{F} \cdot d\mathbf{r} = \int_0^1 t \, dt = \frac{1}{2}.$$
+
+---
+
+## Surface Integral
+
+Let $S$ be an oriented surface with unit normal $\hat{\mathbf{n}}$ and area element $dS$.
+
+**Scalar form:**
+
+$$\iint_S f \, dS.$$
+
+**Flux form:**
+
+$$\iint_S \mathbf{F} \cdot d\mathbf{S} = \iint_S \mathbf{F} \cdot \hat{\mathbf{n}} \, dS.$$
+
+**Example.** Let $\mathbf{F} = (0, 0, 1)$ and $S$ the unit disk in the $xy$-plane with $\hat{\mathbf{n}} = (0, 0, 1)$. Then $\mathbf{F} \cdot \hat{\mathbf{n}} = 1$ everywhere, so the flux is
+
+$$\iint_S dS = \pi.$$
+
+---
+
+## Volume Integral
+
+$$\iiint_V f \, dV = \iiint_V f(x, y, z)\, dx\, dy\, dz.$$
+
+**Example.** $f(x,y,z) = z$ over the unit cube $[0,1]^3$:
+
+$$\iiint_{[0,1]^3} z \, dV = \int_0^1 z \, dz = \frac{1}{2}.$$

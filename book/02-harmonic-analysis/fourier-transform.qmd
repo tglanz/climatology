@@ -1,0 +1,65 @@
+# Fourier Transform
+
+## Definition
+
+The Fourier transform extends Fourier series to functions on $\mathbb{R}$, replacing the discrete sum over frequencies with a continuous integral.
+
+**Definition.** For $f \in L^1(\mathbb{R})$, the Fourier transform is
+
+$$\hat{f}(\xi) = \int_{-\infty}^{\infty} f(x)\, e^{-2\pi i \xi x}\, dx.$$
+
+The inverse Fourier transform recovers $f$ from $\hat{f}$:
+
+$$f(x) = \int_{-\infty}^{\infty} \hat{f}(\xi)\, e^{2\pi i \xi x}\, d\xi.$$
+
+$\hat{f}(\xi)$ is the amplitude of the frequency component $\xi$ in $f$. The transform is well-defined and invertible for $f \in L^2(\mathbb{R})$ (Plancherel theorem).
+
+**Alternative convention.** With angular frequency $\omega = 2\pi\xi$:
+
+$$\hat{f}(\omega) = \int_{-\infty}^{\infty} f(x)\, e^{-i\omega x}\, dx, \qquad f(x) = \frac{1}{2\pi}\int_{-\infty}^{\infty} \hat{f}(\omega)\, e^{i\omega x}\, d\omega.$$
+
+Both conventions are standard; the choice affects normalization factors.
+
+---
+
+## Key Properties
+
+Let $\mathcal{F}[f] = \hat{f}$.
+
+**Linearity:** $\mathcal{F}[\alpha f + \beta g] = \alpha\hat{f} + \beta\hat{g}$.
+
+**Shift:** $\mathcal{F}[f(x - a)](\xi) = e^{-2\pi i \xi a}\hat{f}(\xi)$. Shifting in space is multiplication by a phase in frequency.
+
+**Derivative:** $\mathcal{F}[f^{(n)}](\xi) = (2\pi i \xi)^n \hat{f}(\xi)$. Differentiation in space is multiplication by $i\xi$ in frequency. This is the key property that converts differential equations into algebraic equations.
+
+**Convolution theorem:** For $(f * g)(x) = \int f(y)\, g(x-y)\, dy$:
+
+$$\mathcal{F}[f * g] = \hat{f} \cdot \hat{g}.$$
+
+Convolution in the spatial domain is pointwise multiplication in the frequency domain.
+
+**Parseval / Plancherel:**
+
+$$\int_{-\infty}^{\infty} |f(x)|^2\, dx = \int_{-\infty}^{\infty} |\hat{f}(\xi)|^2\, d\xi.$$
+
+---
+
+## Differential Equations via Fourier Transform
+
+The derivative property makes the Fourier transform a natural tool for solving linear PDEs with constant coefficients. Applying $\mathcal{F}$ converts $\partial_x \to 2\pi i\xi$, turning a PDE into an algebraic equation in frequency space.
+
+**Example.** Solve $f'(x) + af(x) = g(x)$ on $\mathbb{R}$. Taking the Fourier transform:
+
+$$(2\pi i\xi + a)\hat{f}(\xi) = \hat{g}(\xi) \implies \hat{f}(\xi) = \frac{\hat{g}(\xi)}{2\pi i\xi + a}.$$
+
+Inverting gives $f = \mathcal{F}^{-1}[\hat{g}/(2\pi i\xi + a)]$. This solution is a convolution $f = g * h$ where $h = \mathcal{F}^{-1}[1/(2\pi i\xi + a)]$ is the impulse response - the Green's function of the operator $\partial_x + a$.
+
+---
+
+## Discrete Fourier Transform
+
+For a finite sequence $x_0, \ldots, x_{N-1}$, the Discrete Fourier Transform (DFT) is
+
+$$X_k = \sum_{n=0}^{N-1} x_n\, e^{-2\pi i kn/N}, \qquad k = 0, \ldots, N-1.$$
+
+The Fast Fourier Transform (FFT) computes the DFT in $O(N\log N)$ rather than $O(N^2)$. The convolution theorem holds exactly for the DFT, making the FFT the computational backbone of spectral methods and the Fourier Neural Operator.

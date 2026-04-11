@@ -7,11 +7,23 @@ book:
   author: "Tal Glanzman"
   chapters:
     - index.qmd
-    - 01-vector-calculus/index.qmd
-    - 02-harmonic-analysis/index.qmd
-    - 03-pdes/index.qmd
-    - 04-geophysical-fluid-dynamics/index.qmd
-    - 05-neural-operators/index.qmd
+    - part: 01-vector-calculus/index.qmd
+      chapters:
+        - 01-vector-calculus/operators.qmd
+        - 01-vector-calculus/integrals.qmd
+        - 01-vector-calculus/theorems.qmd
+        - 01-vector-calculus/spherical.qmd
+    - part: 02-harmonic-analysis/index.qmd
+      chapters:
+        - 02-harmonic-analysis/fourier-series.qmd
+        - 02-harmonic-analysis/fourier-transform.qmd
+        - 02-harmonic-analysis/spherical-harmonics.qmd
+    - part: 03-pdes/index.qmd
+      chapters: []
+    - part: 04-geophysical-fluid-dynamics/index.qmd
+      chapters: []
+    - part: 05-neural-operators/index.qmd
+      chapters: []
 
 format:
   html:

@@ -1,0 +1,75 @@
+# Spherical Coordinates
+
+## Coordinate System
+
+Spherical coordinates $(r, \theta, \phi)$ relate to Cartesian coordinates by
+
+$$x = r\sin\theta\cos\phi, \quad y = r\sin\theta\sin\phi, \quad z = r\cos\theta,$$
+
+where $r \geq 0$ is the radial distance, $\theta \in [0, \pi]$ is the polar angle (colatitude, from the north pole), and $\phi \in [0, 2\pi)$ is the azimuthal angle (longitude). The orthonormal basis $(\hat{r}, \hat{\theta}, \hat{\phi})$ points in the directions of increasing $r$, $\theta$, $\phi$ respectively, and rotates with position.
+
+---
+
+## Scale Factors
+
+For an orthogonal curvilinear coordinate system $(q_1, q_2, q_3)$, the scale factors are
+
+$$h_i = \left|\frac{\partial \mathbf{r}}{\partial q_i}\right|,$$
+
+converting coordinate differentials to physical arc lengths: $ds_i = h_i\, dq_i$. The volume element is $dV = h_1 h_2 h_3\, dq_1\, dq_2\, dq_3$.
+
+For spherical coordinates, computing $\partial \mathbf{r}/\partial r$, $\partial \mathbf{r}/\partial \theta$, $\partial \mathbf{r}/\partial \phi$ and taking magnitudes gives
+
+$$h_r = 1, \qquad h_\theta = r, \qquad h_\phi = r\sin\theta,$$
+
+and hence $dV = r^2\sin\theta\, dr\, d\theta\, d\phi$, consistent with the Jacobian determinant from the operators section.
+
+---
+
+## General Operator Formulas for Orthogonal Curvilinear Coordinates
+
+For coordinates $(q_1, q_2, q_3)$ with scale factors $(h_1, h_2, h_3)$ and vector field $\mathbf{F} = F_1\hat{e}_1 + F_2\hat{e}_2 + F_3\hat{e}_3$:
+
+**Gradient:**
+$$\nabla f = \frac{1}{h_1}\frac{\partial f}{\partial q_1}\hat{e}_1 + \frac{1}{h_2}\frac{\partial f}{\partial q_2}\hat{e}_2 + \frac{1}{h_3}\frac{\partial f}{\partial q_3}\hat{e}_3.$$
+
+**Divergence:**
+$$\nabla \cdot \mathbf{F} = \frac{1}{h_1 h_2 h_3}\left[\frac{\partial(h_2 h_3 F_1)}{\partial q_1} + \frac{\partial(h_1 h_3 F_2)}{\partial q_2} + \frac{\partial(h_1 h_2 F_3)}{\partial q_3}\right].$$
+
+**Curl:**
+$$\nabla \times \mathbf{F} = \frac{1}{h_1 h_2 h_3} \begin{vmatrix} h_1\hat{e}_1 & h_2\hat{e}_2 & h_3\hat{e}_3 \\ \partial_{q_1} & \partial_{q_2} & \partial_{q_3} \\ h_1 F_1 & h_2 F_2 & h_3 F_3 \end{vmatrix}.$$
+
+**Laplacian:**
+$$\nabla^2 f = \frac{1}{h_1 h_2 h_3}\left[\frac{\partial}{\partial q_1}\!\left(\frac{h_2 h_3}{h_1}\frac{\partial f}{\partial q_1}\right) + \frac{\partial}{\partial q_2}\!\left(\frac{h_1 h_3}{h_2}\frac{\partial f}{\partial q_2}\right) + \frac{\partial}{\partial q_3}\!\left(\frac{h_1 h_2}{h_3}\frac{\partial f}{\partial q_3}\right)\right].$$
+
+---
+
+## Operators in Spherical Coordinates
+
+Substituting $(h_r, h_\theta, h_\phi) = (1, r, r\sin\theta)$:
+
+**Gradient:**
+$$\nabla f = \frac{\partial f}{\partial r}\hat{r} + \frac{1}{r}\frac{\partial f}{\partial \theta}\hat{\theta} + \frac{1}{r\sin\theta}\frac{\partial f}{\partial \phi}\hat{\phi}.$$
+
+**Divergence:**
+$$\nabla \cdot \mathbf{F} = \frac{1}{r^2}\frac{\partial(r^2 F_r)}{\partial r} + \frac{1}{r\sin\theta}\frac{\partial(\sin\theta\, F_\theta)}{\partial \theta} + \frac{1}{r\sin\theta}\frac{\partial F_\phi}{\partial \phi}.$$
+
+**Curl:**
+$$\nabla \times \mathbf{F} = \frac{1}{r\sin\theta}\!\left(\frac{\partial(\sin\theta\, F_\phi)}{\partial \theta} - \frac{\partial F_\theta}{\partial \phi}\right)\hat{r} + \frac{1}{r}\!\left(\frac{1}{\sin\theta}\frac{\partial F_r}{\partial \phi} - \frac{\partial(r F_\phi)}{\partial r}\right)\hat{\theta} + \frac{1}{r}\!\left(\frac{\partial(r F_\theta)}{\partial r} - \frac{\partial F_r}{\partial \theta}\right)\hat{\phi}.$$
+
+**Laplacian:**
+$$\nabla^2 f = \frac{1}{r^2}\frac{\partial}{\partial r}\!\left(r^2\frac{\partial f}{\partial r}\right) + \frac{1}{r^2\sin\theta}\frac{\partial}{\partial \theta}\!\left(\sin\theta\frac{\partial f}{\partial \theta}\right) + \frac{1}{r^2\sin^2\theta}\frac{\partial^2 f}{\partial \phi^2}.$$
+
+---
+
+## Laplace-Beltrami Operator on $S^2$
+
+On the unit sphere ($r = 1$, constant), only the angular part of the Laplacian survives. The Laplace-Beltrami operator is
+
+$$\Delta_{S^2} f = \frac{1}{\sin\theta}\frac{\partial}{\partial \theta}\!\left(\sin\theta\frac{\partial f}{\partial \theta}\right) + \frac{1}{\sin^2\theta}\frac{\partial^2 f}{\partial \phi^2}.$$
+
+The full Laplacian decomposes as
+
+$$\nabla^2 f = \frac{1}{r^2}\frac{\partial}{\partial r}\!\left(r^2\frac{\partial f}{\partial r}\right) + \frac{1}{r^2}\Delta_{S^2} f.$$
+
+$\Delta_{S^2}$ is the operator whose eigenfunctions are the spherical harmonics, and whose Green's function the GSNO is designed to approximate.
