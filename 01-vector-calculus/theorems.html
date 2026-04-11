@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>3&nbsp; Integral Theorems – Global Physical Climatology</title>
+<title>4&nbsp; Integral Theorems – Global Physical Climatology</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -34,7 +34,7 @@ ul.task-list li input[type="checkbox"] {
 <script src="../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../">
 <link href="../01-vector-calculus/spherical.html" rel="next">
-<link href="../01-vector-calculus/integrals.html" rel="prev">
+<link href="../01-vector-calculus/change-of-variables.html" rel="prev">
 <script src="../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="../site_libs/quarto-html/popper.min.js"></script>
@@ -114,7 +114,7 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../01-vector-calculus/index.html">Vector Calculus</a></li><li class="breadcrumb-item"><a href="../01-vector-calculus/theorems.html"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Integral Theorems</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../01-vector-calculus/index.html">Vector Calculus</a></li><li class="breadcrumb-item"><a href="../01-vector-calculus/theorems.html"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Integral Theorems</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -168,14 +168,20 @@ window.Quarto = {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="../01-vector-calculus/change-of-variables.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Change of Variables</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="../01-vector-calculus/theorems.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Integral Theorems</span></span></a>
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Integral Theorems</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../01-vector-calculus/spherical.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Spherical Coordinates</span></span></a>
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Spherical Coordinates</span></span></a>
   </div>
 </li>
       </ul>
@@ -191,20 +197,26 @@ window.Quarto = {
       <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="../02-harmonic-analysis/function-spaces.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Function Spaces</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="../02-harmonic-analysis/fourier-series.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Fourier Series</span></span></a>
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Fourier Series</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../02-harmonic-analysis/fourier-transform.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Fourier Transform</span></span></a>
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Fourier Transform</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../02-harmonic-analysis/spherical-harmonics.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Spherical Harmonics</span></span></a>
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Spherical Harmonics</span></span></a>
   </div>
 </li>
       </ul>
@@ -231,18 +243,18 @@ window.Quarto = {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#greens-theorem" id="toc-greens-theorem" class="nav-link active" data-scroll-target="#greens-theorem"><span class="header-section-number">3.1</span> Green’s Theorem</a></li>
-  <li><a href="#stokes-theorem" id="toc-stokes-theorem" class="nav-link" data-scroll-target="#stokes-theorem"><span class="header-section-number">3.2</span> Stokes’ Theorem</a></li>
-  <li><a href="#divergence-theorem" id="toc-divergence-theorem" class="nav-link" data-scroll-target="#divergence-theorem"><span class="header-section-number">3.3</span> Divergence Theorem</a></li>
+  <li><a href="#greens-theorem" id="toc-greens-theorem" class="nav-link active" data-scroll-target="#greens-theorem"><span class="header-section-number">4.1</span> Green’s Theorem</a></li>
+  <li><a href="#stokes-theorem" id="toc-stokes-theorem" class="nav-link" data-scroll-target="#stokes-theorem"><span class="header-section-number">4.2</span> Stokes’ Theorem</a></li>
+  <li><a href="#divergence-theorem" id="toc-divergence-theorem" class="nav-link" data-scroll-target="#divergence-theorem"><span class="header-section-number">4.3</span> Divergence Theorem</a></li>
   </ul>
 </nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../01-vector-calculus/index.html">Vector Calculus</a></li><li class="breadcrumb-item"><a href="../01-vector-calculus/theorems.html"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Integral Theorems</span></a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../01-vector-calculus/index.html">Vector Calculus</a></li><li class="breadcrumb-item"><a href="../01-vector-calculus/theorems.html"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Integral Theorems</span></a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Integral Theorems</span></h1>
+<h1 class="title"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Integral Theorems</span></h1>
 </div>
 
 
@@ -259,24 +271,24 @@ window.Quarto = {
 </header>
 
 
-<section id="greens-theorem" class="level2" data-number="3.1">
-<h2 data-number="3.1" class="anchored" data-anchor-id="greens-theorem"><span class="header-section-number">3.1</span> Green’s Theorem</h2>
+<section id="greens-theorem" class="level2" data-number="4.1">
+<h2 data-number="4.1" class="anchored" data-anchor-id="greens-theorem"><span class="header-section-number">4.1</span> Green’s Theorem</h2>
 <p>Let <span class="math inline">\(D \subset \mathbb{R}^2\)</span> be a bounded region with piecewise smooth positively oriented boundary <span class="math inline">\(\partial D\)</span>. For <span class="math inline">\(P, Q \in C^1(\bar{D})\)</span>:</p>
 <p><span class="math display">\[\oint_{\partial D} \bigl(P\, dx + Q\, dy\bigr) = \iint_D \left(\frac{\partial Q}{\partial x} - \frac{\partial P}{\partial y}\right) dA.\]</span></p>
 <p>With <span class="math inline">\(\mathbf{F} = (P, Q, 0)\)</span>, the right side is <span class="math inline">\(\iint_D (\nabla \times \mathbf{F}) \cdot \hat{\mathbf{z}} \, dA\)</span>. Green’s theorem is the two-dimensional special case of Stokes’ theorem.</p>
 <p><em>Further reading: <span class="citation" data-cites="Kreyszig2011aem">@Kreyszig2011aem</span>, Sec. 10.4.</em></p>
 <hr>
 </section>
-<section id="stokes-theorem" class="level2" data-number="3.2">
-<h2 data-number="3.2" class="anchored" data-anchor-id="stokes-theorem"><span class="header-section-number">3.2</span> Stokes’ Theorem</h2>
+<section id="stokes-theorem" class="level2" data-number="4.2">
+<h2 data-number="4.2" class="anchored" data-anchor-id="stokes-theorem"><span class="header-section-number">4.2</span> Stokes’ Theorem</h2>
 <p>Let <span class="math inline">\(S \subset \mathbb{R}^3\)</span> be an oriented surface with piecewise smooth boundary <span class="math inline">\(\partial S\)</span>, oriented by the right-hand rule relative to <span class="math inline">\(\hat{\mathbf{n}}\)</span>. For <span class="math inline">\(\mathbf{F} \in C^1(S)\)</span>:</p>
 <p><span class="math display">\[\oint_{\partial S} \mathbf{F} \cdot d\mathbf{r} = \iint_S (\nabla \times \mathbf{F}) \cdot d\mathbf{S}.\]</span></p>
 <p>The circulation of <span class="math inline">\(\mathbf{F}\)</span> around the boundary equals the flux of its curl through the surface.</p>
 <p><em>Further reading: <span class="citation" data-cites="Kreyszig2011aem">@Kreyszig2011aem</span>, Sec. 10.9.</em></p>
 <hr>
 </section>
-<section id="divergence-theorem" class="level2" data-number="3.3">
-<h2 data-number="3.3" class="anchored" data-anchor-id="divergence-theorem"><span class="header-section-number">3.3</span> Divergence Theorem</h2>
+<section id="divergence-theorem" class="level2" data-number="4.3">
+<h2 data-number="4.3" class="anchored" data-anchor-id="divergence-theorem"><span class="header-section-number">4.3</span> Divergence Theorem</h2>
 <p>Let <span class="math inline">\(V \subset \mathbb{R}^3\)</span> be a bounded region with piecewise smooth outward-oriented boundary <span class="math inline">\(\partial V\)</span>. For <span class="math inline">\(\mathbf{F} \in C^1(\bar{V})\)</span>:</p>
 <p><span class="math display">\[\iint_{\partial V} \mathbf{F} \cdot d\mathbf{S} = \iiint_V \nabla \cdot \mathbf{F} \, dV.\]</span></p>
 <p>The total outward flux through the boundary equals the integral of the divergence over the volume. This theorem is central to the derivation of Green’s identities, which underpin Green’s functions in the PDEs chapter.</p>
@@ -688,13 +700,13 @@ window.Quarto = {
   </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="../01-vector-calculus/integrals.html" class="pagination-link" aria-label="Integrals">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Integrals</span></span>
+      <a href="../01-vector-calculus/change-of-variables.html" class="pagination-link" aria-label="Change of Variables">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Change of Variables</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
       <a href="../01-vector-calculus/spherical.html" class="pagination-link" aria-label="Spherical Coordinates">
-        <span class="nav-page-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Spherical Coordinates</span></span> <i class="bi bi-arrow-right-short"></i>
+        <span class="nav-page-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Spherical Coordinates</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

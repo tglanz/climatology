@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>7&nbsp; Fourier Series – Global Physical Climatology</title>
+<title>3&nbsp; Change of Variables – Global Physical Climatology</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -33,8 +33,8 @@ ul.task-list li input[type="checkbox"] {
 <script src="../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../">
-<link href="../02-harmonic-analysis/fourier-transform.html" rel="next">
-<link href="../02-harmonic-analysis/function-spaces.html" rel="prev">
+<link href="../01-vector-calculus/theorems.html" rel="next">
+<link href="../01-vector-calculus/integrals.html" rel="prev">
 <script src="../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="../site_libs/quarto-html/popper.min.js"></script>
@@ -114,7 +114,7 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../02-harmonic-analysis/index.html">Harmonic Analysis</a></li><li class="breadcrumb-item"><a href="../02-harmonic-analysis/fourier-series.html"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Fourier Series</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../01-vector-calculus/index.html">Vector Calculus</a></li><li class="breadcrumb-item"><a href="../01-vector-calculus/change-of-variables.html"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Change of Variables</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -168,7 +168,7 @@ window.Quarto = {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../01-vector-calculus/change-of-variables.html" class="sidebar-item-text sidebar-link">
+  <a href="../01-vector-calculus/change-of-variables.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Change of Variables</span></span></a>
   </div>
 </li>
@@ -203,7 +203,7 @@ window.Quarto = {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../02-harmonic-analysis/fourier-series.html" class="sidebar-item-text sidebar-link active">
+  <a href="../02-harmonic-analysis/fourier-series.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Fourier Series</span></span></a>
   </div>
 </li>
@@ -243,18 +243,18 @@ window.Quarto = {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#definition-and-coefficients" id="toc-definition-and-coefficients" class="nav-link active" data-scroll-target="#definition-and-coefficients"><span class="header-section-number">7.1</span> Definition and Coefficients</a></li>
-  <li><a href="#convergence" id="toc-convergence" class="nav-link" data-scroll-target="#convergence"><span class="header-section-number">7.2</span> Convergence</a></li>
-  <li><a href="#worked-example-square-wave" id="toc-worked-example-square-wave" class="nav-link" data-scroll-target="#worked-example-square-wave"><span class="header-section-number">7.3</span> Worked Example: Square Wave</a></li>
+  <li><a href="#general-theorem" id="toc-general-theorem" class="nav-link active" data-scroll-target="#general-theorem"><span class="header-section-number">3.1</span> General Theorem</a></li>
+  <li><a href="#polar-coordinates-in-2d" id="toc-polar-coordinates-in-2d" class="nav-link" data-scroll-target="#polar-coordinates-in-2d"><span class="header-section-number">3.2</span> Polar Coordinates in 2D</a></li>
+  <li><a href="#spherical-coordinates-in-3d" id="toc-spherical-coordinates-in-3d" class="nav-link" data-scroll-target="#spherical-coordinates-in-3d"><span class="header-section-number">3.3</span> Spherical Coordinates in 3D</a></li>
   </ul>
 </nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../02-harmonic-analysis/index.html">Harmonic Analysis</a></li><li class="breadcrumb-item"><a href="../02-harmonic-analysis/fourier-series.html"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Fourier Series</span></a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../01-vector-calculus/index.html">Vector Calculus</a></li><li class="breadcrumb-item"><a href="../01-vector-calculus/change-of-variables.html"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Change of Variables</span></a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Fourier Series</span></h1>
+<h1 class="title"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Change of Variables</span></h1>
 </div>
 
 
@@ -271,43 +271,42 @@ window.Quarto = {
 </header>
 
 
-<p>The Fourier series is the concrete realization of the abstract ONB expansion from the function spaces section, applied to <span class="math inline">\(L^2([-\pi,\pi])\)</span>. The basis is the family of complex exponentials <span class="math inline">\(e^{inx}\)</span>, which are the eigenfunctions of <span class="math inline">\(-d^2/dx^2\)</span> with periodic boundary conditions - a Sturm-Liouville problem on <span class="math inline">\([-\pi,\pi]\)</span>.</p>
+<p>When an integral is computed over a domain that is not naturally aligned with Cartesian coordinates, a change of variables can simplify the computation. The Jacobian determinant (defined in the operators section) is the key quantity that accounts for the local volume distortion introduced by the coordinate map.</p>
 <hr>
-<section id="definition-and-coefficients" class="level2" data-number="7.1">
-<h2 data-number="7.1" class="anchored" data-anchor-id="definition-and-coefficients"><span class="header-section-number">7.1</span> Definition and Coefficients</h2>
-<p>The functions <span class="math inline">\(\phi_n(x) = \frac{1}{\sqrt{2\pi}} e^{inx}\)</span>, <span class="math inline">\(n \in \mathbb{Z}\)</span>, form an orthonormal basis for <span class="math inline">\(L^2([-\pi,\pi])\)</span> under the inner product <span class="math inline">\(\langle f,g\rangle = \int_{-\pi}^\pi f\bar{g}\, dx\)</span>.</p>
-<p><strong>Definition.</strong> The Fourier series of <span class="math inline">\(f \in L^2([-\pi, \pi])\)</span> is</p>
-<p><span class="math display">\[f(x) = \sum_{n=-\infty}^{\infty} c_n\, e^{inx}, \qquad c_n = \frac{1}{2\pi}\int_{-\pi}^{\pi} f(x)\, e^{-inx}\, dx.\]</span></p>
-<p>The <span class="math inline">\(c_n = \langle f, \phi_n\rangle\)</span> are the generalized Fourier coefficients from the abstract theory. The series converges in <span class="math inline">\(L^2\)</span>; Parseval’s identity gives <span class="math inline">\(\frac{1}{2\pi}\int_{-\pi}^\pi |f|^2\,dx = \sum_n |c_n|^2\)</span>.</p>
-<p><strong>Real form.</strong> For real <span class="math inline">\(f\)</span>, writing <span class="math inline">\(e^{inx} = \cos(nx) + i\sin(nx)\)</span>:</p>
-<p><span class="math display">\[f(x) = \frac{a_0}{2} + \sum_{n=1}^{\infty} \bigl(a_n \cos(nx) + b_n \sin(nx)\bigr),\]</span></p>
-<p>where <span class="math inline">\(a_n = \frac{1}{\pi}\int_{-\pi}^{\pi} f(x)\cos(nx)\, dx\)</span> and <span class="math inline">\(b_n = \frac{1}{\pi}\int_{-\pi}^{\pi} f(x)\sin(nx)\, dx\)</span>.</p>
-<p><strong>Example.</strong> Let <span class="math inline">\(f(x) = x\)</span> on <span class="math inline">\([-\pi, \pi]\)</span>. Then <span class="math inline">\(a_n = 0\)</span> (odd function) and <span class="math inline">\(b_n = \frac{2(-1)^{n+1}}{n}\)</span>:</p>
-<p><span class="math display">\[x = 2\sum_{n=1}^{\infty} \frac{(-1)^{n+1}}{n}\sin(nx) = 2\left(\sin x - \frac{\sin 2x}{2} + \frac{\sin 3x}{3} - \cdots\right).\]</span></p>
-<p><em>Further reading: <span class="citation" data-cites="Kreyszig2011aem">@Kreyszig2011aem</span>, Secs. 11.1-11.2; <span class="citation" data-cites="BruntonKutz2022">@BruntonKutz2022</span>, Sec. 2.1.</em></p>
+<section id="general-theorem" class="level2" data-number="3.1">
+<h2 data-number="3.1" class="anchored" data-anchor-id="general-theorem"><span class="header-section-number">3.1</span> General Theorem</h2>
+<p>Let <span class="math inline">\(\mathbf{G} : U \to V\)</span> be a smooth, invertible map between open sets <span class="math inline">\(U, V \subset \mathbb{R}^n\)</span>, with <span class="math inline">\(\mathbf{x} = \mathbf{G}(\mathbf{u})\)</span>. Then</p>
+<p><span class="math display">\[\int_V f(\mathbf{x})\, d\mathbf{x} = \int_U f(\mathbf{G}(\mathbf{u}))\, |\det J_\mathbf{G}(\mathbf{u})|\, d\mathbf{u},\]</span></p>
+<p>where <span class="math inline">\(J_\mathbf{G}\)</span> is the Jacobian of <span class="math inline">\(\mathbf{G}\)</span>. The factor <span class="math inline">\(|\det J_\mathbf{G}|\)</span> converts the volume element <span class="math inline">\(d\mathbf{u}\)</span> in the new coordinates to the corresponding volume element <span class="math inline">\(d\mathbf{x}\)</span> in the original coordinates.</p>
+<p><strong>1D case.</strong> For <span class="math inline">\(x = g(u)\)</span> with <span class="math inline">\(g\)</span> monotone:</p>
+<p><span class="math display">\[\int_a^b f(x)\, dx = \int_{g^{-1}(a)}^{g^{-1}(b)} f(g(u))\, |g'(u)|\, du.\]</span></p>
+<p>The factor <span class="math inline">\(|g'(u)|\)</span> is the 1D Jacobian determinant.</p>
+<p><em>Further reading: <span class="citation" data-cites="Kreyszig2011aem">@Kreyszig2011aem</span>, Sec. 10.7 (change of variables in double and triple integrals).</em></p>
 <hr>
 </section>
-<section id="convergence" class="level2" data-number="7.2">
-<h2 data-number="7.2" class="anchored" data-anchor-id="convergence"><span class="header-section-number">7.2</span> Convergence</h2>
-<p>For <span class="math inline">\(f \in L^2\)</span>, the Fourier series converges in mean square but need not converge pointwise everywhere. Key results:</p>
-<ul>
-<li>If <span class="math inline">\(f\)</span> is piecewise smooth, the series converges to <span class="math inline">\(f(x)\)</span> at continuity points and to <span class="math inline">\(\frac{1}{2}[f(x^+) + f(x^-)]\)</span> at jump discontinuities (Gibbs phenomenon near jumps).</li>
-<li>If <span class="math inline">\(f \in C^k\)</span>, then <span class="math inline">\(|c_n| = O(n^{-k})\)</span>: smoother functions have faster-decaying coefficients.</li>
-</ul>
-<p><em>Further reading: <span class="citation" data-cites="Kreyszig2011aem">@Kreyszig2011aem</span>, Sec. 11.1 (convergence discussion).</em></p>
+<section id="polar-coordinates-in-2d" class="level2" data-number="3.2">
+<h2 data-number="3.2" class="anchored" data-anchor-id="polar-coordinates-in-2d"><span class="header-section-number">3.2</span> Polar Coordinates in 2D</h2>
+<p>The polar coordinate map is <span class="math inline">\(\mathbf{G}(r, \theta) = (r\cos\theta, r\sin\theta)\)</span>, so</p>
+<p><span class="math display">\[J_\mathbf{G} = \begin{pmatrix} \cos\theta &amp; -r\sin\theta \\ \sin\theta &amp; r\cos\theta \end{pmatrix}, \qquad \det J_\mathbf{G} = r\cos^2\theta + r\sin^2\theta = r.\]</span></p>
+<p>The area element transforms as <span class="math inline">\(dA = r\, dr\, d\theta\)</span>.</p>
+<p><strong>Example.</strong> Compute <span class="math inline">\(I = \iint_D e^{-(x^2 + y^2)}\, dA\)</span> over the unit disk <span class="math inline">\(D = \{x^2 + y^2 \leq 1\}\)</span>.</p>
+<p>In polar coordinates <span class="math inline">\(x^2 + y^2 = r^2\)</span> and the disk becomes <span class="math inline">\(r \in [0,1]\)</span>, <span class="math inline">\(\theta \in [0, 2\pi)\)</span>:</p>
+<p><span class="math display">\[I = \int_0^{2\pi}\int_0^1 e^{-r^2}\, r\, dr\, d\theta = 2\pi \int_0^1 r e^{-r^2}\, dr = 2\pi \left[-\tfrac{1}{2}e^{-r^2}\right]_0^1 = \pi(1 - e^{-1}).\]</span></p>
 <hr>
 </section>
-<section id="worked-example-square-wave" class="level2" data-number="7.3">
-<h2 data-number="7.3" class="anchored" data-anchor-id="worked-example-square-wave"><span class="header-section-number">7.3</span> Worked Example: Square Wave</h2>
-<p>Let <span class="math inline">\(f\)</span> be the <span class="math inline">\(2\pi\)</span>-periodic square wave:</p>
-<p><span class="math display">\[f(x) = \begin{cases} 1 &amp; 0 &lt; x &lt; \pi \\ -1 &amp; -\pi &lt; x &lt; 0 \end{cases}.\]</span></p>
-<p>Since <span class="math inline">\(f\)</span> is odd, all cosine coefficients vanish: <span class="math inline">\(a_n = 0\)</span>. For the sine coefficients:</p>
-<p><span class="math display">\[b_n = \frac{1}{\pi}\int_{-\pi}^{\pi} f(x)\sin(nx)\, dx = \frac{2}{\pi}\int_0^{\pi}\sin(nx)\, dx = \frac{2}{\pi}\left[-\frac{\cos(nx)}{n}\right]_0^{\pi} = \frac{2}{n\pi}(1 - \cos(n\pi)).\]</span></p>
-<p>Since <span class="math inline">\(\cos(n\pi) = (-1)^n\)</span>:</p>
-<p><span class="math display">\[b_n = \frac{2}{n\pi}(1 - (-1)^n) = \begin{cases} 4/(n\pi) &amp; n \text{ odd} \\ 0 &amp; n \text{ even} \end{cases}.\]</span></p>
-<p>The Fourier series is</p>
-<p><span class="math display">\[f(x) = \frac{4}{\pi}\sum_{k=0}^{\infty} \frac{\sin((2k+1)x)}{2k+1} = \frac{4}{\pi}\left(\sin x + \frac{\sin 3x}{3} + \frac{\sin 5x}{5} + \cdots\right).\]</span></p>
-<p>The coefficients decay as <span class="math inline">\(O(1/n)\)</span>, consistent with <span class="math inline">\(f \in C^0\)</span> but <span class="math inline">\(f \notin C^1\)</span> (jump discontinuities). Near the jumps, the partial sums overshoot by approximately <span class="math inline">\(18\%\)</span> regardless of how many terms are included (Gibbs phenomenon).</p>
+<section id="spherical-coordinates-in-3d" class="level2" data-number="3.3">
+<h2 data-number="3.3" class="anchored" data-anchor-id="spherical-coordinates-in-3d"><span class="header-section-number">3.3</span> Spherical Coordinates in 3D</h2>
+<p>As derived in the spherical coordinates section, the Jacobian determinant of the spherical coordinate map <span class="math inline">\((r, \theta, \phi) \mapsto (x, y, z)\)</span> is <span class="math inline">\(\det J = r^2\sin\theta\)</span>, giving the volume element</p>
+<p><span class="math display">\[dV = r^2\sin\theta\, dr\, d\theta\, d\phi.\]</span></p>
+<p><strong>Example 1: Volume of a ball.</strong> Let <span class="math inline">\(B_R = \{|\mathbf{x}| \leq R\}\)</span>. Then</p>
+<p><span class="math display">\[\text{Vol}(B_R) = \int_0^{2\pi}\int_0^{\pi}\int_0^R r^2\sin\theta\, dr\, d\theta\, d\phi = 2\pi \cdot 2 \cdot \frac{R^3}{3} = \frac{4\pi R^3}{3}.\]</span></p>
+<p><strong>Example 2: Surface area of the unit sphere.</strong> Setting <span class="math inline">\(r = 1\)</span> constant, the area element on <span class="math inline">\(S^2\)</span> is <span class="math inline">\(d\Omega = \sin\theta\, d\theta\, d\phi\)</span>:</p>
+<p><span class="math display">\[\text{Area}(S^2) = \int_0^{2\pi}\int_0^{\pi} \sin\theta\, d\theta\, d\phi = 2\pi \cdot 2 = 4\pi.\]</span></p>
+<p><strong>Example 3: Gaussian integral in 3D.</strong> Compute <span class="math inline">\(I = \iiint_{\mathbb{R}^3} e^{-r^2}\, dV\)</span>:</p>
+<p><span class="math display">\[I = \int_0^{2\pi} d\phi \int_0^{\pi} \sin\theta\, d\theta \int_0^{\infty} e^{-r^2} r^2\, dr = 4\pi \int_0^{\infty} r^2 e^{-r^2}\, dr.\]</span></p>
+<p>Using <span class="math inline">\(\int_0^\infty r^2 e^{-r^2}\, dr = \frac{\sqrt{\pi}}{4}\)</span>:</p>
+<p><span class="math display">\[I = 4\pi \cdot \frac{\sqrt{\pi}}{4} = \pi^{3/2}.\]</span></p>
+<p>This equals <span class="math inline">\(\left(\int_{-\infty}^{\infty} e^{-x^2}\, dx\right)^3 = (\sqrt{\pi})^3\)</span>, confirming consistency with the 1D Gaussian integral.</p>
 
 
 </section>
@@ -715,13 +714,13 @@ window.Quarto = {
   </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="../02-harmonic-analysis/function-spaces.html" class="pagination-link" aria-label="Function Spaces">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Function Spaces</span></span>
+      <a href="../01-vector-calculus/integrals.html" class="pagination-link" aria-label="Integrals">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Integrals</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../02-harmonic-analysis/fourier-transform.html" class="pagination-link" aria-label="Fourier Transform">
-        <span class="nav-page-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Fourier Transform</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="../01-vector-calculus/theorems.html" class="pagination-link" aria-label="Integral Theorems">
+        <span class="nav-page-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Integral Theorems</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

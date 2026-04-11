@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>6&nbsp; Fourier Transform – Global Physical Climatology</title>
+<title>8&nbsp; Fourier Transform – Global Physical Climatology</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -114,7 +114,7 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../02-harmonic-analysis/index.html">Harmonic Analysis</a></li><li class="breadcrumb-item"><a href="../02-harmonic-analysis/fourier-transform.html"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Fourier Transform</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../02-harmonic-analysis/index.html">Harmonic Analysis</a></li><li class="breadcrumb-item"><a href="../02-harmonic-analysis/fourier-transform.html"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Fourier Transform</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -168,14 +168,20 @@ window.Quarto = {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="../01-vector-calculus/change-of-variables.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Change of Variables</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="../01-vector-calculus/theorems.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Integral Theorems</span></span></a>
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Integral Theorems</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../01-vector-calculus/spherical.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Spherical Coordinates</span></span></a>
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Spherical Coordinates</span></span></a>
   </div>
 </li>
       </ul>
@@ -191,20 +197,26 @@ window.Quarto = {
       <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="../02-harmonic-analysis/function-spaces.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Function Spaces</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="../02-harmonic-analysis/fourier-series.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Fourier Series</span></span></a>
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Fourier Series</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../02-harmonic-analysis/fourier-transform.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Fourier Transform</span></span></a>
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Fourier Transform</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../02-harmonic-analysis/spherical-harmonics.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Spherical Harmonics</span></span></a>
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Spherical Harmonics</span></span></a>
   </div>
 </li>
       </ul>
@@ -231,19 +243,26 @@ window.Quarto = {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#definition" id="toc-definition" class="nav-link active" data-scroll-target="#definition"><span class="header-section-number">6.1</span> Definition</a></li>
-  <li><a href="#key-properties" id="toc-key-properties" class="nav-link" data-scroll-target="#key-properties"><span class="header-section-number">6.2</span> Key Properties</a></li>
-  <li><a href="#differential-equations-via-fourier-transform" id="toc-differential-equations-via-fourier-transform" class="nav-link" data-scroll-target="#differential-equations-via-fourier-transform"><span class="header-section-number">6.3</span> Differential Equations via Fourier Transform</a></li>
-  <li><a href="#discrete-fourier-transform" id="toc-discrete-fourier-transform" class="nav-link" data-scroll-target="#discrete-fourier-transform"><span class="header-section-number">6.4</span> Discrete Fourier Transform</a></li>
+  <li><a href="#definition" id="toc-definition" class="nav-link active" data-scroll-target="#definition"><span class="header-section-number">8.1</span> Definition</a></li>
+  <li><a href="#key-properties" id="toc-key-properties" class="nav-link" data-scroll-target="#key-properties"><span class="header-section-number">8.2</span> Key Properties</a></li>
+  <li><a href="#differential-equations-via-fourier-transform" id="toc-differential-equations-via-fourier-transform" class="nav-link" data-scroll-target="#differential-equations-via-fourier-transform"><span class="header-section-number">8.3</span> Differential Equations via Fourier Transform</a></li>
+  <li><a href="#discrete-fourier-transform" id="toc-discrete-fourier-transform" class="nav-link" data-scroll-target="#discrete-fourier-transform"><span class="header-section-number">8.4</span> Discrete Fourier Transform</a></li>
+  <li><a href="#key-identities-derivations" id="toc-key-identities-derivations" class="nav-link" data-scroll-target="#key-identities-derivations"><span class="header-section-number">8.5</span> Key Identities: Derivations</a>
+  <ul class="collapse">
+  <li><a href="#derivative-property" id="toc-derivative-property" class="nav-link" data-scroll-target="#derivative-property"><span class="header-section-number">8.5.1</span> Derivative Property</a></li>
+  <li><a href="#convolution-theorem" id="toc-convolution-theorem" class="nav-link" data-scroll-target="#convolution-theorem"><span class="header-section-number">8.5.2</span> Convolution Theorem</a></li>
+  <li><a href="#gaussian-identity" id="toc-gaussian-identity" class="nav-link" data-scroll-target="#gaussian-identity"><span class="header-section-number">8.5.3</span> Gaussian Identity</a></li>
+  <li><a href="#dirac-delta" id="toc-dirac-delta" class="nav-link" data-scroll-target="#dirac-delta"><span class="header-section-number">8.5.4</span> Dirac Delta</a></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../02-harmonic-analysis/index.html">Harmonic Analysis</a></li><li class="breadcrumb-item"><a href="../02-harmonic-analysis/fourier-transform.html"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Fourier Transform</span></a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../02-harmonic-analysis/index.html">Harmonic Analysis</a></li><li class="breadcrumb-item"><a href="../02-harmonic-analysis/fourier-transform.html"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Fourier Transform</span></a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Fourier Transform</span></h1>
+<h1 class="title"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Fourier Transform</span></h1>
 </div>
 
 
@@ -260,8 +279,8 @@ window.Quarto = {
 </header>
 
 
-<section id="definition" class="level2" data-number="6.1">
-<h2 data-number="6.1" class="anchored" data-anchor-id="definition"><span class="header-section-number">6.1</span> Definition</h2>
+<section id="definition" class="level2" data-number="8.1">
+<h2 data-number="8.1" class="anchored" data-anchor-id="definition"><span class="header-section-number">8.1</span> Definition</h2>
 <p>The Fourier transform extends Fourier series to functions on <span class="math inline">\(\mathbb{R}\)</span>, replacing the discrete sum over frequencies with a continuous integral.</p>
 <p><strong>Definition.</strong> For <span class="math inline">\(f \in L^1(\mathbb{R})\)</span>, the Fourier transform is</p>
 <p><span class="math display">\[\hat{f}(\xi) = \int_{-\infty}^{\infty} f(x)\, e^{-2\pi i \xi x}\, dx.\]</span></p>
@@ -274,8 +293,8 @@ window.Quarto = {
 <p><em>Further reading: <span class="citation" data-cites="Kreyszig2011aem">@Kreyszig2011aem</span>, Sec. 11.7 (Fourier integral) and Sec. 11.9 (Fourier transform); <span class="citation" data-cites="BruntonKutz2022">@BruntonKutz2022</span>, Sec. 2.1.</em></p>
 <hr>
 </section>
-<section id="key-properties" class="level2" data-number="6.2">
-<h2 data-number="6.2" class="anchored" data-anchor-id="key-properties"><span class="header-section-number">6.2</span> Key Properties</h2>
+<section id="key-properties" class="level2" data-number="8.2">
+<h2 data-number="8.2" class="anchored" data-anchor-id="key-properties"><span class="header-section-number">8.2</span> Key Properties</h2>
 <p>Let <span class="math inline">\(\mathcal{F}[f] = \hat{f}\)</span>.</p>
 <p><strong>Linearity:</strong> <span class="math inline">\(\mathcal{F}[\alpha f + \beta g] = \alpha\hat{f} + \beta\hat{g}\)</span>.</p>
 <p><strong>Shift:</strong> <span class="math inline">\(\mathcal{F}[f(x - a)](\xi) = e^{-2\pi i \xi a}\hat{f}(\xi)\)</span>. Shifting in space is multiplication by a phase in frequency.</p>
@@ -288,8 +307,8 @@ window.Quarto = {
 <p><em>Further reading: <span class="citation" data-cites="Kreyszig2011aem">@Kreyszig2011aem</span>, Sec. 11.9 (properties and convolution theorem).</em></p>
 <hr>
 </section>
-<section id="differential-equations-via-fourier-transform" class="level2" data-number="6.3">
-<h2 data-number="6.3" class="anchored" data-anchor-id="differential-equations-via-fourier-transform"><span class="header-section-number">6.3</span> Differential Equations via Fourier Transform</h2>
+<section id="differential-equations-via-fourier-transform" class="level2" data-number="8.3">
+<h2 data-number="8.3" class="anchored" data-anchor-id="differential-equations-via-fourier-transform"><span class="header-section-number">8.3</span> Differential Equations via Fourier Transform</h2>
 <p>The derivative property makes the Fourier transform a natural tool for solving linear PDEs with constant coefficients. Applying <span class="math inline">\(\mathcal{F}\)</span> converts <span class="math inline">\(\partial_x \to 2\pi i\xi\)</span>, turning a PDE into an algebraic equation in frequency space.</p>
 <p><strong>Example.</strong> Solve <span class="math inline">\(f'(x) + af(x) = g(x)\)</span> on <span class="math inline">\(\mathbb{R}\)</span>. Taking the Fourier transform:</p>
 <p><span class="math display">\[(2\pi i\xi + a)\hat{f}(\xi) = \hat{g}(\xi) \implies \hat{f}(\xi) = \frac{\hat{g}(\xi)}{2\pi i\xi + a}.\]</span></p>
@@ -297,14 +316,60 @@ window.Quarto = {
 <p><em>Further reading: <span class="citation" data-cites="Evans2010pde">@Evans2010pde</span>, Ch. 4 (Fourier transform applied to PDEs, Green’s functions on <span class="math inline">\(\mathbb{R}^n\)</span>).</em></p>
 <hr>
 </section>
-<section id="discrete-fourier-transform" class="level2" data-number="6.4">
-<h2 data-number="6.4" class="anchored" data-anchor-id="discrete-fourier-transform"><span class="header-section-number">6.4</span> Discrete Fourier Transform</h2>
+<section id="discrete-fourier-transform" class="level2" data-number="8.4">
+<h2 data-number="8.4" class="anchored" data-anchor-id="discrete-fourier-transform"><span class="header-section-number">8.4</span> Discrete Fourier Transform</h2>
 <p>For a finite sequence <span class="math inline">\(x_0, \ldots, x_{N-1}\)</span>, the Discrete Fourier Transform (DFT) is</p>
 <p><span class="math display">\[X_k = \sum_{n=0}^{N-1} x_n\, e^{-2\pi i kn/N}, \qquad k = 0, \ldots, N-1.\]</span></p>
 <p>The Fast Fourier Transform (FFT) computes the DFT in <span class="math inline">\(O(N\log N)\)</span> rather than <span class="math inline">\(O(N^2)\)</span>. The convolution theorem holds exactly for the DFT, making the FFT the computational backbone of spectral methods and the Fourier Neural Operator.</p>
 <p><em>Further reading: <span class="citation" data-cites="Kreyszig2011aem">@Kreyszig2011aem</span>, Sec. 11.9 (DFT and FFT); <span class="citation" data-cites="BruntonKutz2022">@BruntonKutz2022</span>, Sec. 2.2 (FFT and applications in data-driven methods).</em></p>
+<hr>
+</section>
+<section id="key-identities-derivations" class="level2" data-number="8.5">
+<h2 data-number="8.5" class="anchored" data-anchor-id="key-identities-derivations"><span class="header-section-number">8.5</span> Key Identities: Derivations</h2>
+<p>All derivations below use the convention <span class="math inline">\(\hat{f}(\xi) = \int_{-\infty}^{\infty} f(x)\, e^{-2\pi i\xi x}\, dx\)</span>.</p>
+<section id="derivative-property" class="level3" data-number="8.5.1">
+<h3 data-number="8.5.1" class="anchored" data-anchor-id="derivative-property"><span class="header-section-number">8.5.1</span> Derivative Property</h3>
+<p><strong>Claim.</strong> <span class="math inline">\(\mathcal{F}[f^{(n)}](\xi) = (2\pi i\xi)^n \hat{f}(\xi)\)</span>.</p>
+<p><strong>Derivation (n=1).</strong> Integrate by parts, assuming <span class="math inline">\(f(x) \to 0\)</span> as <span class="math inline">\(|x| \to \infty\)</span>:</p>
+<p><span class="math display">\[\mathcal{F}[f'](\xi) = \int_{-\infty}^{\infty} f'(x)\, e^{-2\pi i\xi x}\, dx = \underbrace{\left[f(x) e^{-2\pi i\xi x}\right]_{-\infty}^{\infty}}_{= 0} + 2\pi i\xi \int_{-\infty}^{\infty} f(x)\, e^{-2\pi i\xi x}\, dx = 2\pi i\xi\, \hat{f}(\xi).\]</span></p>
+<p>Applying the same identity <span class="math inline">\(n\)</span> times gives the general result. Differentiation in the spatial domain is multiplication by <span class="math inline">\(2\pi i\xi\)</span> in the frequency domain, converting a differential operator into an algebraic one.</p>
+<hr>
+</section>
+<section id="convolution-theorem" class="level3" data-number="8.5.2">
+<h3 data-number="8.5.2" class="anchored" data-anchor-id="convolution-theorem"><span class="header-section-number">8.5.2</span> Convolution Theorem</h3>
+<p><strong>Claim.</strong> <span class="math inline">\(\mathcal{F}[f * g](\xi) = \hat{f}(\xi)\cdot\hat{g}(\xi)\)</span>.</p>
+<p><strong>Derivation.</strong> Write out the transform of the convolution and swap the order of integration (Fubini):</p>
+<p><span class="math display">\[\mathcal{F}[f * g](\xi) = \int_{-\infty}^{\infty} \left(\int_{-\infty}^{\infty} f(y)\, g(x-y)\, dy\right) e^{-2\pi i\xi x}\, dx = \int_{-\infty}^{\infty} f(y) \left(\int_{-\infty}^{\infty} g(x-y)\, e^{-2\pi i\xi x}\, dx\right) dy.\]</span></p>
+<p>Substitute <span class="math inline">\(u = x - y\)</span> in the inner integral (<span class="math inline">\(du = dx\)</span>, <span class="math inline">\(x = u + y\)</span>):</p>
+<p><span class="math display">\[= \int_{-\infty}^{\infty} f(y) \left(\int_{-\infty}^{\infty} g(u)\, e^{-2\pi i\xi(u+y)}\, du\right) dy = \int_{-\infty}^{\infty} f(y)\, e^{-2\pi i\xi y}\, dy \cdot \int_{-\infty}^{\infty} g(u)\, e^{-2\pi i\xi u}\, du = \hat{f}(\xi)\cdot\hat{g}(\xi).\]</span></p>
+<p>The reverse direction also holds: pointwise multiplication in frequency corresponds to convolution in space, <span class="math inline">\(\mathcal{F}^{-1}[\hat{f}\cdot\hat{g}] = f * g\)</span>. This is the basis for the FNO: learned filters applied in the frequency domain correspond to convolution operators in the spatial domain.</p>
+<hr>
+</section>
+<section id="gaussian-identity" class="level3" data-number="8.5.3">
+<h3 data-number="8.5.3" class="anchored" data-anchor-id="gaussian-identity"><span class="header-section-number">8.5.3</span> Gaussian Identity</h3>
+<p><strong>Claim.</strong> For <span class="math inline">\(a &gt; 0\)</span>: <span class="math inline">\(\mathcal{F}[e^{-\pi a x^2}](\xi) = a^{-1/2}\, e^{-\pi \xi^2/a}\)</span>.</p>
+<p>In particular, <span class="math inline">\(\mathcal{F}[e^{-\pi x^2}] = e^{-\pi\xi^2}\)</span>: the standard Gaussian is a fixed point of the Fourier transform.</p>
+<p><strong>Derivation.</strong> Let <span class="math inline">\(I(\xi) = \int_{-\infty}^{\infty} e^{-\pi a x^2} e^{-2\pi i\xi x}\, dx\)</span>. Complete the square in the exponent:</p>
+<p><span class="math display">\[-\pi a x^2 - 2\pi i\xi x = -\pi a\!\left(x + \frac{i\xi}{a}\right)^2 - \frac{\pi\xi^2}{a}.\]</span></p>
+<p>Factoring out the <span class="math inline">\(\xi\)</span>-dependent constant:</p>
+<p><span class="math display">\[I(\xi) = e^{-\pi\xi^2/a} \int_{-\infty}^{\infty} e^{-\pi a(x + i\xi/a)^2}\, dx.\]</span></p>
+<p>The substitution <span class="math inline">\(u = \sqrt{a}(x + i\xi/a)\)</span> (shifting the contour in the complex plane, justified by analyticity) gives <span class="math inline">\(du = \sqrt{a}\, dx\)</span> and:</p>
+<p><span class="math display">\[I(\xi) = e^{-\pi\xi^2/a} \cdot \frac{1}{\sqrt{a}} \int_{-\infty}^{\infty} e^{-\pi u^2}\, du = \frac{e^{-\pi\xi^2/a}}{\sqrt{a}},\]</span></p>
+<p>using the Gaussian integral <span class="math inline">\(\int_{-\infty}^{\infty} e^{-\pi u^2}\, du = 1\)</span>.</p>
+<p>The Gaussian plays a central role in analysis because it is maximally concentrated simultaneously in space and frequency (saturating the uncertainty principle), and because it is self-dual under the Fourier transform.</p>
+<hr>
+</section>
+<section id="dirac-delta" class="level3" data-number="8.5.4">
+<h3 data-number="8.5.4" class="anchored" data-anchor-id="dirac-delta"><span class="header-section-number">8.5.4</span> Dirac Delta</h3>
+<p>The Dirac delta <span class="math inline">\(\delta(x)\)</span> is the distribution satisfying <span class="math inline">\(\int_{-\infty}^{\infty} \delta(x)\, f(x)\, dx = f(0)\)</span> for any test function <span class="math inline">\(f\)</span>.</p>
+<p><strong>Claim.</strong> <span class="math inline">\(\mathcal{F}[\delta](\xi) = 1\)</span> and <span class="math inline">\(\mathcal{F}[1](\xi) = \delta(\xi)\)</span>.</p>
+<p><strong>Derivation of <span class="math inline">\(\mathcal{F}[\delta] = 1\)</span>.</strong></p>
+<p><span class="math display">\[\hat{\delta}(\xi) = \int_{-\infty}^{\infty} \delta(x)\, e^{-2\pi i\xi x}\, dx = e^{-2\pi i\xi \cdot 0} = 1.\]</span></p>
+<p>A point mass in space has equal energy at all frequencies - a flat spectrum. This is the distributional analogue of the impulse response: the Green’s function of a differential operator <span class="math inline">\(L\)</span> is the function <span class="math inline">\(G\)</span> satisfying <span class="math inline">\(LG = \delta\)</span>, and in frequency space this becomes <span class="math inline">\(\hat{L}(\xi)\hat{G}(\xi) = 1\)</span>, so <span class="math inline">\(\hat{G}(\xi) = 1/\hat{L}(\xi)\)</span>.</p>
+<p><strong>Shifted delta.</strong> <span class="math inline">\(\mathcal{F}[\delta(\cdot - a)](\xi) = e^{-2\pi i\xi a}\)</span>. A pure spatial shift is a linear phase in frequency.</p>
 
 
+</section>
 </section>
 
 </main> <!-- /main -->
@@ -711,12 +776,12 @@ window.Quarto = {
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
       <a href="../02-harmonic-analysis/fourier-series.html" class="pagination-link" aria-label="Fourier Series">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Fourier Series</span></span>
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Fourier Series</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
       <a href="../02-harmonic-analysis/spherical-harmonics.html" class="pagination-link" aria-label="Spherical Harmonics">
-        <span class="nav-page-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Spherical Harmonics</span></span> <i class="bi bi-arrow-right-short"></i>
+        <span class="nav-page-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Spherical Harmonics</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

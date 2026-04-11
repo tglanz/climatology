@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>7&nbsp; Fourier Series – Global Physical Climatology</title>
+<title>6&nbsp; Function Spaces – Global Physical Climatology</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -33,8 +33,8 @@ ul.task-list li input[type="checkbox"] {
 <script src="../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../">
-<link href="../02-harmonic-analysis/fourier-transform.html" rel="next">
-<link href="../02-harmonic-analysis/function-spaces.html" rel="prev">
+<link href="../02-harmonic-analysis/fourier-series.html" rel="next">
+<link href="../02-harmonic-analysis/index.html" rel="prev">
 <script src="../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="../site_libs/quarto-html/popper.min.js"></script>
@@ -114,7 +114,7 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../02-harmonic-analysis/index.html">Harmonic Analysis</a></li><li class="breadcrumb-item"><a href="../02-harmonic-analysis/fourier-series.html"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Fourier Series</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../02-harmonic-analysis/index.html">Harmonic Analysis</a></li><li class="breadcrumb-item"><a href="../02-harmonic-analysis/function-spaces.html"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Function Spaces</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -197,13 +197,13 @@ window.Quarto = {
       <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../02-harmonic-analysis/function-spaces.html" class="sidebar-item-text sidebar-link">
+  <a href="../02-harmonic-analysis/function-spaces.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Function Spaces</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../02-harmonic-analysis/fourier-series.html" class="sidebar-item-text sidebar-link active">
+  <a href="../02-harmonic-analysis/fourier-series.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Fourier Series</span></span></a>
   </div>
 </li>
@@ -243,18 +243,22 @@ window.Quarto = {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#definition-and-coefficients" id="toc-definition-and-coefficients" class="nav-link active" data-scroll-target="#definition-and-coefficients"><span class="header-section-number">7.1</span> Definition and Coefficients</a></li>
-  <li><a href="#convergence" id="toc-convergence" class="nav-link" data-scroll-target="#convergence"><span class="header-section-number">7.2</span> Convergence</a></li>
-  <li><a href="#worked-example-square-wave" id="toc-worked-example-square-wave" class="nav-link" data-scroll-target="#worked-example-square-wave"><span class="header-section-number">7.3</span> Worked Example: Square Wave</a></li>
+  <li><a href="#vector-spaces" id="toc-vector-spaces" class="nav-link active" data-scroll-target="#vector-spaces"><span class="header-section-number">6.1</span> Vector Spaces</a></li>
+  <li><a href="#norms-and-lp-spaces" id="toc-norms-and-lp-spaces" class="nav-link" data-scroll-target="#norms-and-lp-spaces"><span class="header-section-number">6.2</span> Norms and <span class="math inline">\(L^p\)</span> Spaces</a></li>
+  <li><a href="#inner-product-spaces" id="toc-inner-product-spaces" class="nav-link" data-scroll-target="#inner-product-spaces"><span class="header-section-number">6.3</span> Inner Product Spaces</a></li>
+  <li><a href="#hilbert-spaces" id="toc-hilbert-spaces" class="nav-link" data-scroll-target="#hilbert-spaces"><span class="header-section-number">6.4</span> Hilbert Spaces</a></li>
+  <li><a href="#orthogonality" id="toc-orthogonality" class="nav-link" data-scroll-target="#orthogonality"><span class="header-section-number">6.5</span> Orthogonality</a></li>
+  <li><a href="#orthonormal-bases-and-fourier-coefficients" id="toc-orthonormal-bases-and-fourier-coefficients" class="nav-link" data-scroll-target="#orthonormal-bases-and-fourier-coefficients"><span class="header-section-number">6.6</span> Orthonormal Bases and Fourier Coefficients</a></li>
+  <li><a href="#sturm-liouville-theory" id="toc-sturm-liouville-theory" class="nav-link" data-scroll-target="#sturm-liouville-theory"><span class="header-section-number">6.7</span> Sturm-Liouville Theory</a></li>
   </ul>
 </nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../02-harmonic-analysis/index.html">Harmonic Analysis</a></li><li class="breadcrumb-item"><a href="../02-harmonic-analysis/fourier-series.html"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Fourier Series</span></a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../02-harmonic-analysis/index.html">Harmonic Analysis</a></li><li class="breadcrumb-item"><a href="../02-harmonic-analysis/function-spaces.html"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Function Spaces</span></a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Fourier Series</span></h1>
+<h1 class="title"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Function Spaces</span></h1>
 </div>
 
 
@@ -271,43 +275,140 @@ window.Quarto = {
 </header>
 
 
-<p>The Fourier series is the concrete realization of the abstract ONB expansion from the function spaces section, applied to <span class="math inline">\(L^2([-\pi,\pi])\)</span>. The basis is the family of complex exponentials <span class="math inline">\(e^{inx}\)</span>, which are the eigenfunctions of <span class="math inline">\(-d^2/dx^2\)</span> with periodic boundary conditions - a Sturm-Liouville problem on <span class="math inline">\([-\pi,\pi]\)</span>.</p>
+<p>Before Fourier series or spherical harmonics can be stated precisely, we need the ambient space in which they live and the notion of convergence they satisfy. This section develops that theory abstractly. Fourier series and spherical harmonics are then special cases of a single general structure: an orthonormal basis for a Hilbert space.</p>
 <hr>
-<section id="definition-and-coefficients" class="level2" data-number="7.1">
-<h2 data-number="7.1" class="anchored" data-anchor-id="definition-and-coefficients"><span class="header-section-number">7.1</span> Definition and Coefficients</h2>
-<p>The functions <span class="math inline">\(\phi_n(x) = \frac{1}{\sqrt{2\pi}} e^{inx}\)</span>, <span class="math inline">\(n \in \mathbb{Z}\)</span>, form an orthonormal basis for <span class="math inline">\(L^2([-\pi,\pi])\)</span> under the inner product <span class="math inline">\(\langle f,g\rangle = \int_{-\pi}^\pi f\bar{g}\, dx\)</span>.</p>
-<p><strong>Definition.</strong> The Fourier series of <span class="math inline">\(f \in L^2([-\pi, \pi])\)</span> is</p>
-<p><span class="math display">\[f(x) = \sum_{n=-\infty}^{\infty} c_n\, e^{inx}, \qquad c_n = \frac{1}{2\pi}\int_{-\pi}^{\pi} f(x)\, e^{-inx}\, dx.\]</span></p>
-<p>The <span class="math inline">\(c_n = \langle f, \phi_n\rangle\)</span> are the generalized Fourier coefficients from the abstract theory. The series converges in <span class="math inline">\(L^2\)</span>; Parseval’s identity gives <span class="math inline">\(\frac{1}{2\pi}\int_{-\pi}^\pi |f|^2\,dx = \sum_n |c_n|^2\)</span>.</p>
-<p><strong>Real form.</strong> For real <span class="math inline">\(f\)</span>, writing <span class="math inline">\(e^{inx} = \cos(nx) + i\sin(nx)\)</span>:</p>
-<p><span class="math display">\[f(x) = \frac{a_0}{2} + \sum_{n=1}^{\infty} \bigl(a_n \cos(nx) + b_n \sin(nx)\bigr),\]</span></p>
-<p>where <span class="math inline">\(a_n = \frac{1}{\pi}\int_{-\pi}^{\pi} f(x)\cos(nx)\, dx\)</span> and <span class="math inline">\(b_n = \frac{1}{\pi}\int_{-\pi}^{\pi} f(x)\sin(nx)\, dx\)</span>.</p>
-<p><strong>Example.</strong> Let <span class="math inline">\(f(x) = x\)</span> on <span class="math inline">\([-\pi, \pi]\)</span>. Then <span class="math inline">\(a_n = 0\)</span> (odd function) and <span class="math inline">\(b_n = \frac{2(-1)^{n+1}}{n}\)</span>:</p>
-<p><span class="math display">\[x = 2\sum_{n=1}^{\infty} \frac{(-1)^{n+1}}{n}\sin(nx) = 2\left(\sin x - \frac{\sin 2x}{2} + \frac{\sin 3x}{3} - \cdots\right).\]</span></p>
-<p><em>Further reading: <span class="citation" data-cites="Kreyszig2011aem">@Kreyszig2011aem</span>, Secs. 11.1-11.2; <span class="citation" data-cites="BruntonKutz2022">@BruntonKutz2022</span>, Sec. 2.1.</em></p>
-<hr>
-</section>
-<section id="convergence" class="level2" data-number="7.2">
-<h2 data-number="7.2" class="anchored" data-anchor-id="convergence"><span class="header-section-number">7.2</span> Convergence</h2>
-<p>For <span class="math inline">\(f \in L^2\)</span>, the Fourier series converges in mean square but need not converge pointwise everywhere. Key results:</p>
+<section id="vector-spaces" class="level2" data-number="6.1">
+<h2 data-number="6.1" class="anchored" data-anchor-id="vector-spaces"><span class="header-section-number">6.1</span> Vector Spaces</h2>
+<p><strong>Definition.</strong> A vector space over <span class="math inline">\(\mathbb{R}\)</span> (or <span class="math inline">\(\mathbb{C}\)</span>) is a set <span class="math inline">\(V\)</span> equipped with addition and scalar multiplication satisfying the usual axioms (commutativity, associativity, distributivity, identity, inverses).</p>
+<p>The central examples here are spaces of functions:</p>
 <ul>
-<li>If <span class="math inline">\(f\)</span> is piecewise smooth, the series converges to <span class="math inline">\(f(x)\)</span> at continuity points and to <span class="math inline">\(\frac{1}{2}[f(x^+) + f(x^-)]\)</span> at jump discontinuities (Gibbs phenomenon near jumps).</li>
-<li>If <span class="math inline">\(f \in C^k\)</span>, then <span class="math inline">\(|c_n| = O(n^{-k})\)</span>: smoother functions have faster-decaying coefficients.</li>
+<li><span class="math inline">\(C([a,b])\)</span>: continuous functions on <span class="math inline">\([a,b]\)</span>, with pointwise operations.</li>
+<li><span class="math inline">\(C^k([a,b])\)</span>: <span class="math inline">\(k\)</span>-times continuously differentiable functions.</li>
+<li><span class="math inline">\(\mathcal{P}_n\)</span>: polynomials of degree at most <span class="math inline">\(n\)</span>.</li>
+<li><span class="math inline">\(L^2([a,b])\)</span>: square-integrable functions (defined below).</li>
 </ul>
-<p><em>Further reading: <span class="citation" data-cites="Kreyszig2011aem">@Kreyszig2011aem</span>, Sec. 11.1 (convergence discussion).</em></p>
+<p>Unlike <span class="math inline">\(\mathbb{R}^n\)</span>, these spaces are infinite-dimensional: no finite set of functions spans all of them.</p>
 <hr>
 </section>
-<section id="worked-example-square-wave" class="level2" data-number="7.3">
-<h2 data-number="7.3" class="anchored" data-anchor-id="worked-example-square-wave"><span class="header-section-number">7.3</span> Worked Example: Square Wave</h2>
-<p>Let <span class="math inline">\(f\)</span> be the <span class="math inline">\(2\pi\)</span>-periodic square wave:</p>
-<p><span class="math display">\[f(x) = \begin{cases} 1 &amp; 0 &lt; x &lt; \pi \\ -1 &amp; -\pi &lt; x &lt; 0 \end{cases}.\]</span></p>
-<p>Since <span class="math inline">\(f\)</span> is odd, all cosine coefficients vanish: <span class="math inline">\(a_n = 0\)</span>. For the sine coefficients:</p>
-<p><span class="math display">\[b_n = \frac{1}{\pi}\int_{-\pi}^{\pi} f(x)\sin(nx)\, dx = \frac{2}{\pi}\int_0^{\pi}\sin(nx)\, dx = \frac{2}{\pi}\left[-\frac{\cos(nx)}{n}\right]_0^{\pi} = \frac{2}{n\pi}(1 - \cos(n\pi)).\]</span></p>
-<p>Since <span class="math inline">\(\cos(n\pi) = (-1)^n\)</span>:</p>
-<p><span class="math display">\[b_n = \frac{2}{n\pi}(1 - (-1)^n) = \begin{cases} 4/(n\pi) &amp; n \text{ odd} \\ 0 &amp; n \text{ even} \end{cases}.\]</span></p>
-<p>The Fourier series is</p>
-<p><span class="math display">\[f(x) = \frac{4}{\pi}\sum_{k=0}^{\infty} \frac{\sin((2k+1)x)}{2k+1} = \frac{4}{\pi}\left(\sin x + \frac{\sin 3x}{3} + \frac{\sin 5x}{5} + \cdots\right).\]</span></p>
-<p>The coefficients decay as <span class="math inline">\(O(1/n)\)</span>, consistent with <span class="math inline">\(f \in C^0\)</span> but <span class="math inline">\(f \notin C^1\)</span> (jump discontinuities). Near the jumps, the partial sums overshoot by approximately <span class="math inline">\(18\%\)</span> regardless of how many terms are included (Gibbs phenomenon).</p>
+<section id="norms-and-lp-spaces" class="level2" data-number="6.2">
+<h2 data-number="6.2" class="anchored" data-anchor-id="norms-and-lp-spaces"><span class="header-section-number">6.2</span> Norms and <span class="math inline">\(L^p\)</span> Spaces</h2>
+<p><strong>Definition.</strong> A norm on a vector space <span class="math inline">\(V\)</span> is a function <span class="math inline">\(\|\cdot\| : V \to [0,\infty)\)</span> satisfying:</p>
+<ol type="1">
+<li><span class="math inline">\(\|f\| = 0\)</span> iff <span class="math inline">\(f = 0\)</span>.</li>
+<li><span class="math inline">\(\|\alpha f\| = |\alpha|\|f\|\)</span>.</li>
+<li><span class="math inline">\(\|f + g\| \leq \|f\| + \|g\|\)</span> (triangle inequality).</li>
+</ol>
+<p>A normed space is a vector space equipped with a norm.</p>
+<p><strong>Definition.</strong> For <span class="math inline">\(1 \leq p &lt; \infty\)</span>, the <span class="math inline">\(L^p\)</span> space on a domain <span class="math inline">\(\Omega\)</span> is</p>
+<p><span class="math display">\[L^p(\Omega) = \left\{ f : \Omega \to \mathbb{C} \;\Big|\; \int_\Omega |f(x)|^p\, dx &lt; \infty \right\},\]</span></p>
+<p>with norm <span class="math inline">\(\|f\|_p = \left(\int_\Omega |f|^p\, dx\right)^{1/p}\)</span>. Functions equal almost everywhere are identified.</p>
+<p>The case <span class="math inline">\(p = 2\)</span> is by far the most important for harmonic analysis:</p>
+<p><span class="math display">\[L^2(\Omega) = \left\{ f : \Omega \to \mathbb{C} \;\Big|\; \int_\Omega |f(x)|^2\, dx &lt; \infty \right\}, \quad \|f\|_2 = \left(\int_\Omega |f|^2\right)^{1/2}.\]</span></p>
+<p><span class="math inline">\(L^2\)</span> is the natural space for energy: <span class="math inline">\(\|f\|_2^2\)</span> is the total “energy” of <span class="math inline">\(f\)</span>.</p>
+<p><em>Further reading: <span class="citation" data-cites="Kreyszig2011aem">@Kreyszig2011aem</span>, Sec. 11.5 (function spaces in the context of Sturm-Liouville); <span class="citation" data-cites="Evans2010pde">@Evans2010pde</span>, Appendix E (<span class="math inline">\(L^p\)</span> spaces).</em></p>
+<hr>
+</section>
+<section id="inner-product-spaces" class="level2" data-number="6.3">
+<h2 data-number="6.3" class="anchored" data-anchor-id="inner-product-spaces"><span class="header-section-number">6.3</span> Inner Product Spaces</h2>
+<p><strong>Definition.</strong> An inner product on a vector space <span class="math inline">\(V\)</span> is a map <span class="math inline">\(\langle\cdot,\cdot\rangle : V \times V \to \mathbb{C}\)</span> satisfying:</p>
+<ol type="1">
+<li><span class="math inline">\(\langle f, f\rangle \geq 0\)</span>, with <span class="math inline">\(\langle f,f\rangle = 0\)</span> iff <span class="math inline">\(f = 0\)</span>.</li>
+<li><span class="math inline">\(\langle f, g\rangle = \overline{\langle g, f\rangle}\)</span> (conjugate symmetry).</li>
+<li><span class="math inline">\(\langle \alpha f + \beta g, h\rangle = \alpha\langle f,h\rangle + \beta\langle g,h\rangle\)</span> (linearity in first argument).</li>
+</ol>
+<p>The inner product induces a norm: <span class="math inline">\(\|f\| = \sqrt{\langle f,f\rangle}\)</span>.</p>
+<p><strong>On <span class="math inline">\(L^2(\Omega)\)</span>:</strong></p>
+<p><span class="math display">\[\langle f, g\rangle = \int_\Omega f(x)\,\overline{g(x)}\, dx.\]</span></p>
+<p><strong>Cauchy-Schwarz inequality.</strong> For any <span class="math inline">\(f, g \in V\)</span>:</p>
+<p><span class="math display">\[|\langle f, g\rangle| \leq \|f\|\,\|g\|.\]</span></p>
+<p>Equality holds iff <span class="math inline">\(f\)</span> and <span class="math inline">\(g\)</span> are proportional. This is the generalization of the dot product inequality <span class="math inline">\(|\mathbf{u}\cdot\mathbf{v}| \leq |\mathbf{u}||\mathbf{v}|\)</span> to infinite dimensions.</p>
+<p><em>Further reading: <span class="citation" data-cites="Kreyszig2011aem">@Kreyszig2011aem</span>, Sec. 11.5.</em></p>
+<hr>
+</section>
+<section id="hilbert-spaces" class="level2" data-number="6.4">
+<h2 data-number="6.4" class="anchored" data-anchor-id="hilbert-spaces"><span class="header-section-number">6.4</span> Hilbert Spaces</h2>
+<p>A normed space is <strong>complete</strong> if every Cauchy sequence converges to an element of the space. Completeness is the key property that allows infinite series to be controlled.</p>
+<p><strong>Definition.</strong> A <strong>Hilbert space</strong> is a complete inner product space.</p>
+<p><strong>Key example.</strong> <span class="math inline">\(L^2(\Omega)\)</span> is a Hilbert space. This is not obvious: it requires showing that limits of <span class="math inline">\(L^2\)</span>-Cauchy sequences are again in <span class="math inline">\(L^2\)</span>. The pointwise limit of a sequence of <span class="math inline">\(L^2\)</span> functions need not be the <span class="math inline">\(L^2\)</span> limit.</p>
+<p><span class="math inline">\(C([a,b])\)</span> with the <span class="math inline">\(L^2\)</span> norm is an inner product space but is not complete (the limit of a Cauchy sequence of continuous functions can be discontinuous). Completing it gives <span class="math inline">\(L^2([a,b])\)</span>.</p>
+<p><strong>Intuition.</strong> A Hilbert space is an infinite-dimensional generalization of <span class="math inline">\(\mathbb{R}^n\)</span> with dot product. Virtually all geometric intuitions from <span class="math inline">\(\mathbb{R}^n\)</span> carry over: projections, angles, decompositions into orthogonal components.</p>
+<p><em>Further reading: <span class="citation" data-cites="Evans2010pde">@Evans2010pde</span>, Appendix E; <span class="citation" data-cites="Kreyszig2011aem">@Kreyszig2011aem</span>, Sec. 11.6.</em></p>
+<hr>
+</section>
+<section id="orthogonality" class="level2" data-number="6.5">
+<h2 data-number="6.5" class="anchored" data-anchor-id="orthogonality"><span class="header-section-number">6.5</span> Orthogonality</h2>
+<p><strong>Definition.</strong> <span class="math inline">\(f, g \in V\)</span> are <strong>orthogonal</strong> if <span class="math inline">\(\langle f, g\rangle = 0\)</span>, written <span class="math inline">\(f \perp g\)</span>. A set <span class="math inline">\(\{e_n\}\)</span> is:</p>
+<ul>
+<li><strong>Orthogonal</strong> if <span class="math inline">\(\langle e_n, e_m\rangle = 0\)</span> for <span class="math inline">\(n \neq m\)</span>.</li>
+<li><strong>Orthonormal</strong> if additionally <span class="math inline">\(\langle e_n, e_n\rangle = 1\)</span> for all <span class="math inline">\(n\)</span>.</li>
+</ul>
+<p><strong>Pythagorean theorem.</strong> If <span class="math inline">\(f \perp g\)</span>, then <span class="math inline">\(\|f + g\|^2 = \|f\|^2 + \|g\|^2\)</span>.</p>
+<p>More generally, for a finite orthonormal set <span class="math inline">\(\{e_1, \ldots, e_N\}\)</span> and coefficients <span class="math inline">\(c_n = \langle f, e_n\rangle\)</span>:</p>
+<p><span class="math display">\[\left\|f - \sum_{n=1}^N c_n e_n\right\|^2 = \|f\|^2 - \sum_{n=1}^N |c_n|^2.\]</span></p>
+<p>The partial sum <span class="math inline">\(\sum c_n e_n\)</span> is the orthogonal projection of <span class="math inline">\(f\)</span> onto <span class="math inline">\(\text{span}\{e_1,\ldots,e_N\}\)</span>, and is the best approximation to <span class="math inline">\(f\)</span> in that subspace.</p>
+<p><strong>Gram-Schmidt process.</strong> Any countable linearly independent set <span class="math inline">\(\{f_n\}\)</span> can be orthonormalized: set <span class="math inline">\(e_1 = f_1/\|f_1\|\)</span>, then iteratively subtract the projection onto the span of previous <span class="math inline">\(e_k\)</span> and normalize.</p>
+<hr>
+</section>
+<section id="orthonormal-bases-and-fourier-coefficients" class="level2" data-number="6.6">
+<h2 data-number="6.6" class="anchored" data-anchor-id="orthonormal-bases-and-fourier-coefficients"><span class="header-section-number">6.6</span> Orthonormal Bases and Fourier Coefficients</h2>
+<p><strong>Definition.</strong> An orthonormal set <span class="math inline">\(\{e_n\}_{n=1}^\infty\)</span> in a Hilbert space <span class="math inline">\(H\)</span> is an <strong>orthonormal basis</strong> (or complete orthonormal system) if the only element orthogonal to every <span class="math inline">\(e_n\)</span> is zero:</p>
+<p><span class="math display">\[\langle f, e_n\rangle = 0 \text{ for all } n \implies f = 0.\]</span></p>
+<p>Equivalently, <span class="math inline">\(\{e_n\}\)</span> is an ONB iff every <span class="math inline">\(f \in H\)</span> expands as</p>
+<p><span class="math display">\[f = \sum_{n=1}^\infty \langle f, e_n\rangle\, e_n,\]</span></p>
+<p>where the sum converges in the norm of <span class="math inline">\(H\)</span> (not necessarily pointwise). The coefficients <span class="math inline">\(\hat{f}_n = \langle f, e_n\rangle\)</span> are the <strong>generalized Fourier coefficients</strong> of <span class="math inline">\(f\)</span> with respect to <span class="math inline">\(\{e_n\}\)</span>.</p>
+<p><strong>Bessel’s inequality.</strong> For any ONS (not necessarily a basis) and any <span class="math inline">\(f \in H\)</span>:</p>
+<p><span class="math display">\[\sum_n |\langle f, e_n\rangle|^2 \leq \|f\|^2.\]</span></p>
+<p><strong>Parseval’s identity.</strong> If <span class="math inline">\(\{e_n\}\)</span> is an ONB:</p>
+<p><span class="math display">\[\sum_n |\langle f, e_n\rangle|^2 = \|f\|^2.\]</span></p>
+<p>Parseval says the ONB is “complete”: no energy is lost in the decomposition. It is equivalent to the ONB condition.</p>
+<p><em>Further reading: <span class="citation" data-cites="Kreyszig2011aem">@Kreyszig2011aem</span>, Sec. 11.6 (generalized Fourier series, Parseval); <span class="citation" data-cites="Evans2010pde">@Evans2010pde</span>, Appendix E.</em></p>
+<hr>
+</section>
+<section id="sturm-liouville-theory" class="level2" data-number="6.7">
+<h2 data-number="6.7" class="anchored" data-anchor-id="sturm-liouville-theory"><span class="header-section-number">6.7</span> Sturm-Liouville Theory</h2>
+<p>Orthogonal function families do not arise by accident. They are the eigenfunctions of self-adjoint differential operators - a general principle captured by Sturm-Liouville theory.</p>
+<p><strong>The Sturm-Liouville problem.</strong> On <span class="math inline">\([a,b]\)</span>, with weight function <span class="math inline">\(w(x) &gt; 0\)</span>:</p>
+<p><span class="math display">\[-\frac{d}{dx}\!\left(p(x)\frac{df}{dx}\right) + q(x)f = \lambda\, w(x)\, f, \qquad \text{(with boundary conditions)}.\]</span></p>
+<p><strong>Theorem.</strong> Under mild regularity conditions, the Sturm-Liouville problem has:</p>
+<ol type="1">
+<li>A countable set of real eigenvalues <span class="math inline">\(\lambda_1 \leq \lambda_2 \leq \cdots \to \infty\)</span>.</li>
+<li>Eigenfunctions <span class="math inline">\(\{f_n\}\)</span> that are orthogonal in the weighted <span class="math inline">\(L^2\)</span> space with inner product <span class="math inline">\(\langle f, g\rangle_w = \int_a^b f(x)\overline{g(x)}\, w(x)\, dx\)</span>.</li>
+<li>The eigenfunctions form a complete orthonormal basis for <span class="math inline">\(L^2_w([a,b])\)</span>.</li>
+</ol>
+<p><strong>Connection to specific bases:</strong></p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Problem</th>
+<th>Operator</th>
+<th>Eigenfunctions</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><span class="math inline">\(-f'' = \lambda f\)</span> on <span class="math inline">\([-\pi,\pi]\)</span>, periodic BC</td>
+<td><span class="math inline">\(-\frac{d^2}{dx^2}\)</span></td>
+<td><span class="math inline">\(e^{inx}\)</span>, Fourier basis</td>
+</tr>
+<tr class="even">
+<td>Legendre’s equation on <span class="math inline">\([-1,1]\)</span></td>
+<td>specific <span class="math inline">\(p,q,w\)</span></td>
+<td>Legendre polynomials <span class="math inline">\(P_l\)</span></td>
+</tr>
+<tr class="odd">
+<td><span class="math inline">\(-\Delta_{S^2} f = \lambda f\)</span> on <span class="math inline">\(S^2\)</span></td>
+<td><span class="math inline">\(-\Delta_{S^2}\)</span></td>
+<td>Spherical harmonics <span class="math inline">\(Y_l^m\)</span></td>
+</tr>
+</tbody>
+</table>
+<p>All three families are instances of the same theorem. The Fourier series and spherical harmonic expansion are both eigenfunction expansions of self-adjoint operators in Hilbert spaces.</p>
+<p><em>Further reading: <span class="citation" data-cites="Kreyszig2011aem">@Kreyszig2011aem</span>, Sec. 11.5 (Sturm-Liouville problems and orthogonal functions) and Sec. 12.10 (spherical harmonics as the Sturm-Liouville problem on <span class="math inline">\(S^2\)</span>).</em></p>
 
 
 </section>
@@ -715,13 +816,13 @@ window.Quarto = {
   </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="../02-harmonic-analysis/function-spaces.html" class="pagination-link" aria-label="Function Spaces">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Function Spaces</span></span>
+      <a href="../02-harmonic-analysis/index.html" class="pagination-link" aria-label="Harmonic Analysis">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Harmonic Analysis</span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../02-harmonic-analysis/fourier-transform.html" class="pagination-link" aria-label="Fourier Transform">
-        <span class="nav-page-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Fourier Transform</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="../02-harmonic-analysis/fourier-series.html" class="pagination-link" aria-label="Fourier Series">
+        <span class="nav-page-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Fourier Series</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

@@ -119,91 +119,135 @@
     ]
   },
   {
-    "objectID": "01-vector-calculus/theorems.html",
-    "href": "01-vector-calculus/theorems.html",
-    "title": "3  Integral Theorems",
+    "objectID": "01-vector-calculus/change-of-variables.html",
+    "href": "01-vector-calculus/change-of-variables.html",
+    "title": "3  Change of Variables",
     "section": "",
-    "text": "3.1 Green’s Theorem\nLet \\(D \\subset \\mathbb{R}^2\\) be a bounded region with piecewise smooth positively oriented boundary \\(\\partial D\\). For \\(P, Q \\in C^1(\\bar{D})\\):\n\\[\\oint_{\\partial D} \\bigl(P\\, dx + Q\\, dy\\bigr) = \\iint_D \\left(\\frac{\\partial Q}{\\partial x} - \\frac{\\partial P}{\\partial y}\\right) dA.\\]\nWith \\(\\mathbf{F} = (P, Q, 0)\\), the right side is \\(\\iint_D (\\nabla \\times \\mathbf{F}) \\cdot \\hat{\\mathbf{z}} \\, dA\\). Green’s theorem is the two-dimensional special case of Stokes’ theorem.\nFurther reading: @Kreyszig2011aem, Sec. 10.4.",
+    "text": "3.1 General Theorem\nWhen an integral is computed over a domain that is not naturally aligned with Cartesian coordinates, a change of variables can simplify the computation. The Jacobian determinant (defined in the operators section) is the key quantity that accounts for the local volume distortion introduced by the coordinate map.\nLet \\(\\mathbf{G} : U \\to V\\) be a smooth, invertible map between open sets \\(U, V \\subset \\mathbb{R}^n\\), with \\(\\mathbf{x} = \\mathbf{G}(\\mathbf{u})\\). Then\n\\[\\int_V f(\\mathbf{x})\\, d\\mathbf{x} = \\int_U f(\\mathbf{G}(\\mathbf{u}))\\, |\\det J_\\mathbf{G}(\\mathbf{u})|\\, d\\mathbf{u},\\]\nwhere \\(J_\\mathbf{G}\\) is the Jacobian of \\(\\mathbf{G}\\). The factor \\(|\\det J_\\mathbf{G}|\\) converts the volume element \\(d\\mathbf{u}\\) in the new coordinates to the corresponding volume element \\(d\\mathbf{x}\\) in the original coordinates.\n1D case. For \\(x = g(u)\\) with \\(g\\) monotone:\n\\[\\int_a^b f(x)\\, dx = \\int_{g^{-1}(a)}^{g^{-1}(b)} f(g(u))\\, |g'(u)|\\, du.\\]\nThe factor \\(|g'(u)|\\) is the 1D Jacobian determinant.\nFurther reading: @Kreyszig2011aem, Sec. 10.7 (change of variables in double and triple integrals).",
     "crumbs": [
       "Vector Calculus",
-      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Integral Theorems</span>"
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Change of Variables</span>"
+    ]
+  },
+  {
+    "objectID": "01-vector-calculus/change-of-variables.html#polar-coordinates-in-2d",
+    "href": "01-vector-calculus/change-of-variables.html#polar-coordinates-in-2d",
+    "title": "3  Change of Variables",
+    "section": "3.2 Polar Coordinates in 2D",
+    "text": "3.2 Polar Coordinates in 2D\nThe polar coordinate map is \\(\\mathbf{G}(r, \\theta) = (r\\cos\\theta, r\\sin\\theta)\\), so\n\\[J_\\mathbf{G} = \\begin{pmatrix} \\cos\\theta & -r\\sin\\theta \\\\ \\sin\\theta & r\\cos\\theta \\end{pmatrix}, \\qquad \\det J_\\mathbf{G} = r\\cos^2\\theta + r\\sin^2\\theta = r.\\]\nThe area element transforms as \\(dA = r\\, dr\\, d\\theta\\).\nExample. Compute \\(I = \\iint_D e^{-(x^2 + y^2)}\\, dA\\) over the unit disk \\(D = \\{x^2 + y^2 \\leq 1\\}\\).\nIn polar coordinates \\(x^2 + y^2 = r^2\\) and the disk becomes \\(r \\in [0,1]\\), \\(\\theta \\in [0, 2\\pi)\\):\n\\[I = \\int_0^{2\\pi}\\int_0^1 e^{-r^2}\\, r\\, dr\\, d\\theta = 2\\pi \\int_0^1 r e^{-r^2}\\, dr = 2\\pi \\left[-\\tfrac{1}{2}e^{-r^2}\\right]_0^1 = \\pi(1 - e^{-1}).\\]",
+    "crumbs": [
+      "Vector Calculus",
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Change of Variables</span>"
+    ]
+  },
+  {
+    "objectID": "01-vector-calculus/change-of-variables.html#spherical-coordinates-in-3d",
+    "href": "01-vector-calculus/change-of-variables.html#spherical-coordinates-in-3d",
+    "title": "3  Change of Variables",
+    "section": "3.3 Spherical Coordinates in 3D",
+    "text": "3.3 Spherical Coordinates in 3D\nAs derived in the spherical coordinates section, the Jacobian determinant of the spherical coordinate map \\((r, \\theta, \\phi) \\mapsto (x, y, z)\\) is \\(\\det J = r^2\\sin\\theta\\), giving the volume element\n\\[dV = r^2\\sin\\theta\\, dr\\, d\\theta\\, d\\phi.\\]\nExample 1: Volume of a ball. Let \\(B_R = \\{|\\mathbf{x}| \\leq R\\}\\). Then\n\\[\\text{Vol}(B_R) = \\int_0^{2\\pi}\\int_0^{\\pi}\\int_0^R r^2\\sin\\theta\\, dr\\, d\\theta\\, d\\phi = 2\\pi \\cdot 2 \\cdot \\frac{R^3}{3} = \\frac{4\\pi R^3}{3}.\\]\nExample 2: Surface area of the unit sphere. Setting \\(r = 1\\) constant, the area element on \\(S^2\\) is \\(d\\Omega = \\sin\\theta\\, d\\theta\\, d\\phi\\):\n\\[\\text{Area}(S^2) = \\int_0^{2\\pi}\\int_0^{\\pi} \\sin\\theta\\, d\\theta\\, d\\phi = 2\\pi \\cdot 2 = 4\\pi.\\]\nExample 3: Gaussian integral in 3D. Compute \\(I = \\iiint_{\\mathbb{R}^3} e^{-r^2}\\, dV\\):\n\\[I = \\int_0^{2\\pi} d\\phi \\int_0^{\\pi} \\sin\\theta\\, d\\theta \\int_0^{\\infty} e^{-r^2} r^2\\, dr = 4\\pi \\int_0^{\\infty} r^2 e^{-r^2}\\, dr.\\]\nUsing \\(\\int_0^\\infty r^2 e^{-r^2}\\, dr = \\frac{\\sqrt{\\pi}}{4}\\):\n\\[I = 4\\pi \\cdot \\frac{\\sqrt{\\pi}}{4} = \\pi^{3/2}.\\]\nThis equals \\(\\left(\\int_{-\\infty}^{\\infty} e^{-x^2}\\, dx\\right)^3 = (\\sqrt{\\pi})^3\\), confirming consistency with the 1D Gaussian integral.",
+    "crumbs": [
+      "Vector Calculus",
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Change of Variables</span>"
+    ]
+  },
+  {
+    "objectID": "01-vector-calculus/theorems.html",
+    "href": "01-vector-calculus/theorems.html",
+    "title": "4  Integral Theorems",
+    "section": "",
+    "text": "4.1 Green’s Theorem\nLet \\(D \\subset \\mathbb{R}^2\\) be a bounded region with piecewise smooth positively oriented boundary \\(\\partial D\\). For \\(P, Q \\in C^1(\\bar{D})\\):\n\\[\\oint_{\\partial D} \\bigl(P\\, dx + Q\\, dy\\bigr) = \\iint_D \\left(\\frac{\\partial Q}{\\partial x} - \\frac{\\partial P}{\\partial y}\\right) dA.\\]\nWith \\(\\mathbf{F} = (P, Q, 0)\\), the right side is \\(\\iint_D (\\nabla \\times \\mathbf{F}) \\cdot \\hat{\\mathbf{z}} \\, dA\\). Green’s theorem is the two-dimensional special case of Stokes’ theorem.\nFurther reading: @Kreyszig2011aem, Sec. 10.4.",
+    "crumbs": [
+      "Vector Calculus",
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Integral Theorems</span>"
     ]
   },
   {
     "objectID": "01-vector-calculus/theorems.html#stokes-theorem",
     "href": "01-vector-calculus/theorems.html#stokes-theorem",
-    "title": "3  Integral Theorems",
-    "section": "3.2 Stokes’ Theorem",
-    "text": "3.2 Stokes’ Theorem\nLet \\(S \\subset \\mathbb{R}^3\\) be an oriented surface with piecewise smooth boundary \\(\\partial S\\), oriented by the right-hand rule relative to \\(\\hat{\\mathbf{n}}\\). For \\(\\mathbf{F} \\in C^1(S)\\):\n\\[\\oint_{\\partial S} \\mathbf{F} \\cdot d\\mathbf{r} = \\iint_S (\\nabla \\times \\mathbf{F}) \\cdot d\\mathbf{S}.\\]\nThe circulation of \\(\\mathbf{F}\\) around the boundary equals the flux of its curl through the surface.\nFurther reading: @Kreyszig2011aem, Sec. 10.9.",
+    "title": "4  Integral Theorems",
+    "section": "4.2 Stokes’ Theorem",
+    "text": "4.2 Stokes’ Theorem\nLet \\(S \\subset \\mathbb{R}^3\\) be an oriented surface with piecewise smooth boundary \\(\\partial S\\), oriented by the right-hand rule relative to \\(\\hat{\\mathbf{n}}\\). For \\(\\mathbf{F} \\in C^1(S)\\):\n\\[\\oint_{\\partial S} \\mathbf{F} \\cdot d\\mathbf{r} = \\iint_S (\\nabla \\times \\mathbf{F}) \\cdot d\\mathbf{S}.\\]\nThe circulation of \\(\\mathbf{F}\\) around the boundary equals the flux of its curl through the surface.\nFurther reading: @Kreyszig2011aem, Sec. 10.9.",
     "crumbs": [
       "Vector Calculus",
-      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Integral Theorems</span>"
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Integral Theorems</span>"
     ]
   },
   {
     "objectID": "01-vector-calculus/theorems.html#divergence-theorem",
     "href": "01-vector-calculus/theorems.html#divergence-theorem",
-    "title": "3  Integral Theorems",
-    "section": "3.3 Divergence Theorem",
-    "text": "3.3 Divergence Theorem\nLet \\(V \\subset \\mathbb{R}^3\\) be a bounded region with piecewise smooth outward-oriented boundary \\(\\partial V\\). For \\(\\mathbf{F} \\in C^1(\\bar{V})\\):\n\\[\\iint_{\\partial V} \\mathbf{F} \\cdot d\\mathbf{S} = \\iiint_V \\nabla \\cdot \\mathbf{F} \\, dV.\\]\nThe total outward flux through the boundary equals the integral of the divergence over the volume. This theorem is central to the derivation of Green’s identities, which underpin Green’s functions in the PDEs chapter.\nFurther reading: @Kreyszig2011aem, Sec. 10.7; @Evans2010pde, Appendix C.2 (Green’s identities as a direct corollary).",
+    "title": "4  Integral Theorems",
+    "section": "4.3 Divergence Theorem",
+    "text": "4.3 Divergence Theorem\nLet \\(V \\subset \\mathbb{R}^3\\) be a bounded region with piecewise smooth outward-oriented boundary \\(\\partial V\\). For \\(\\mathbf{F} \\in C^1(\\bar{V})\\):\n\\[\\iint_{\\partial V} \\mathbf{F} \\cdot d\\mathbf{S} = \\iiint_V \\nabla \\cdot \\mathbf{F} \\, dV.\\]\nThe total outward flux through the boundary equals the integral of the divergence over the volume. This theorem is central to the derivation of Green’s identities, which underpin Green’s functions in the PDEs chapter.\nFurther reading: @Kreyszig2011aem, Sec. 10.7; @Evans2010pde, Appendix C.2 (Green’s identities as a direct corollary).",
     "crumbs": [
       "Vector Calculus",
-      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Integral Theorems</span>"
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Integral Theorems</span>"
     ]
   },
   {
     "objectID": "01-vector-calculus/spherical.html",
     "href": "01-vector-calculus/spherical.html",
-    "title": "4  Spherical Coordinates",
+    "title": "5  Spherical Coordinates",
     "section": "",
-    "text": "4.1 Coordinate System\nSpherical coordinates \\((r, \\theta, \\phi)\\) relate to Cartesian coordinates by\n\\[x = r\\sin\\theta\\cos\\phi, \\quad y = r\\sin\\theta\\sin\\phi, \\quad z = r\\cos\\theta,\\]\nwhere \\(r \\geq 0\\) is the radial distance, \\(\\theta \\in [0, \\pi]\\) is the polar angle (colatitude, from the north pole), and \\(\\phi \\in [0, 2\\pi)\\) is the azimuthal angle (longitude). The orthonormal basis \\((\\hat{r}, \\hat{\\theta}, \\hat{\\phi})\\) points in the directions of increasing \\(r\\), \\(\\theta\\), \\(\\phi\\) respectively, and rotates with position.",
+    "text": "5.1 Coordinate System\nSpherical coordinates \\((r, \\theta, \\phi)\\) relate to Cartesian coordinates by\n\\[x = r\\sin\\theta\\cos\\phi, \\quad y = r\\sin\\theta\\sin\\phi, \\quad z = r\\cos\\theta,\\]\nwhere \\(r \\geq 0\\) is the radial distance, \\(\\theta \\in [0, \\pi]\\) is the polar angle (colatitude, from the north pole), and \\(\\phi \\in [0, 2\\pi)\\) is the azimuthal angle (longitude). The orthonormal basis \\((\\hat{r}, \\hat{\\theta}, \\hat{\\phi})\\) points in the directions of increasing \\(r\\), \\(\\theta\\), \\(\\phi\\) respectively, and rotates with position.",
     "crumbs": [
       "Vector Calculus",
-      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Spherical Coordinates</span>"
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Spherical Coordinates</span>"
     ]
   },
   {
     "objectID": "01-vector-calculus/spherical.html#scale-factors",
     "href": "01-vector-calculus/spherical.html#scale-factors",
-    "title": "4  Spherical Coordinates",
-    "section": "4.2 Scale Factors",
-    "text": "4.2 Scale Factors\nFor an orthogonal curvilinear coordinate system \\((q_1, q_2, q_3)\\), the scale factors are\n\\[h_i = \\left|\\frac{\\partial \\mathbf{r}}{\\partial q_i}\\right|,\\]\nconverting coordinate differentials to physical arc lengths: \\(ds_i = h_i\\, dq_i\\). The volume element is \\(dV = h_1 h_2 h_3\\, dq_1\\, dq_2\\, dq_3\\).\nFor spherical coordinates, computing \\(\\partial \\mathbf{r}/\\partial r\\), \\(\\partial \\mathbf{r}/\\partial \\theta\\), \\(\\partial \\mathbf{r}/\\partial \\phi\\) and taking magnitudes gives\n\\[h_r = 1, \\qquad h_\\theta = r, \\qquad h_\\phi = r\\sin\\theta,\\]\nand hence \\(dV = r^2\\sin\\theta\\, dr\\, d\\theta\\, d\\phi\\), consistent with the Jacobian determinant from the operators section.\nFurther reading: @Kreyszig2011aem, Sec. 10.7 (spherical volume element in the context of triple integrals).",
+    "title": "5  Spherical Coordinates",
+    "section": "5.2 Scale Factors",
+    "text": "5.2 Scale Factors\nFor an orthogonal curvilinear coordinate system \\((q_1, q_2, q_3)\\), the scale factors are\n\\[h_i = \\left|\\frac{\\partial \\mathbf{r}}{\\partial q_i}\\right|,\\]\nconverting coordinate differentials to physical arc lengths: \\(ds_i = h_i\\, dq_i\\). The volume element is \\(dV = h_1 h_2 h_3\\, dq_1\\, dq_2\\, dq_3\\).\nFor spherical coordinates, computing \\(\\partial \\mathbf{r}/\\partial r\\), \\(\\partial \\mathbf{r}/\\partial \\theta\\), \\(\\partial \\mathbf{r}/\\partial \\phi\\) and taking magnitudes gives\n\\[h_r = 1, \\qquad h_\\theta = r, \\qquad h_\\phi = r\\sin\\theta,\\]\nand hence \\(dV = r^2\\sin\\theta\\, dr\\, d\\theta\\, d\\phi\\), consistent with the Jacobian determinant from the operators section.\nFurther reading: @Kreyszig2011aem, Sec. 10.7 (spherical volume element in the context of triple integrals).",
     "crumbs": [
       "Vector Calculus",
-      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Spherical Coordinates</span>"
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Spherical Coordinates</span>"
     ]
   },
   {
     "objectID": "01-vector-calculus/spherical.html#general-operator-formulas-for-orthogonal-curvilinear-coordinates",
     "href": "01-vector-calculus/spherical.html#general-operator-formulas-for-orthogonal-curvilinear-coordinates",
-    "title": "4  Spherical Coordinates",
-    "section": "4.3 General Operator Formulas for Orthogonal Curvilinear Coordinates",
-    "text": "4.3 General Operator Formulas for Orthogonal Curvilinear Coordinates\nFor coordinates \\((q_1, q_2, q_3)\\) with scale factors \\((h_1, h_2, h_3)\\) and vector field \\(\\mathbf{F} = F_1\\hat{e}_1 + F_2\\hat{e}_2 + F_3\\hat{e}_3\\):\nGradient: \\[\\nabla f = \\frac{1}{h_1}\\frac{\\partial f}{\\partial q_1}\\hat{e}_1 + \\frac{1}{h_2}\\frac{\\partial f}{\\partial q_2}\\hat{e}_2 + \\frac{1}{h_3}\\frac{\\partial f}{\\partial q_3}\\hat{e}_3.\\]\nDivergence: \\[\\nabla \\cdot \\mathbf{F} = \\frac{1}{h_1 h_2 h_3}\\left[\\frac{\\partial(h_2 h_3 F_1)}{\\partial q_1} + \\frac{\\partial(h_1 h_3 F_2)}{\\partial q_2} + \\frac{\\partial(h_1 h_2 F_3)}{\\partial q_3}\\right].\\]\nCurl: \\[\\nabla \\times \\mathbf{F} = \\frac{1}{h_1 h_2 h_3} \\begin{vmatrix} h_1\\hat{e}_1 & h_2\\hat{e}_2 & h_3\\hat{e}_3 \\\\ \\partial_{q_1} & \\partial_{q_2} & \\partial_{q_3} \\\\ h_1 F_1 & h_2 F_2 & h_3 F_3 \\end{vmatrix}.\\]\nLaplacian: \\[\\nabla^2 f = \\frac{1}{h_1 h_2 h_3}\\left[\\frac{\\partial}{\\partial q_1}\\!\\left(\\frac{h_2 h_3}{h_1}\\frac{\\partial f}{\\partial q_1}\\right) + \\frac{\\partial}{\\partial q_2}\\!\\left(\\frac{h_1 h_3}{h_2}\\frac{\\partial f}{\\partial q_2}\\right) + \\frac{\\partial}{\\partial q_3}\\!\\left(\\frac{h_1 h_2}{h_3}\\frac{\\partial f}{\\partial q_3}\\right)\\right].\\]\nFurther reading: @Kreyszig2011aem, Sec. 9.7-9.9 (operators in Cartesian); the general curvilinear derivation via scale factors is covered more fully in @Taylor2005mechanics, Ch. 16 (curvilinear coordinates).",
+    "title": "5  Spherical Coordinates",
+    "section": "5.3 General Operator Formulas for Orthogonal Curvilinear Coordinates",
+    "text": "5.3 General Operator Formulas for Orthogonal Curvilinear Coordinates\nFor coordinates \\((q_1, q_2, q_3)\\) with scale factors \\((h_1, h_2, h_3)\\) and vector field \\(\\mathbf{F} = F_1\\hat{e}_1 + F_2\\hat{e}_2 + F_3\\hat{e}_3\\):\nGradient: \\[\\nabla f = \\frac{1}{h_1}\\frac{\\partial f}{\\partial q_1}\\hat{e}_1 + \\frac{1}{h_2}\\frac{\\partial f}{\\partial q_2}\\hat{e}_2 + \\frac{1}{h_3}\\frac{\\partial f}{\\partial q_3}\\hat{e}_3.\\]\nDivergence: \\[\\nabla \\cdot \\mathbf{F} = \\frac{1}{h_1 h_2 h_3}\\left[\\frac{\\partial(h_2 h_3 F_1)}{\\partial q_1} + \\frac{\\partial(h_1 h_3 F_2)}{\\partial q_2} + \\frac{\\partial(h_1 h_2 F_3)}{\\partial q_3}\\right].\\]\nCurl: \\[\\nabla \\times \\mathbf{F} = \\frac{1}{h_1 h_2 h_3} \\begin{vmatrix} h_1\\hat{e}_1 & h_2\\hat{e}_2 & h_3\\hat{e}_3 \\\\ \\partial_{q_1} & \\partial_{q_2} & \\partial_{q_3} \\\\ h_1 F_1 & h_2 F_2 & h_3 F_3 \\end{vmatrix}.\\]\nLaplacian: \\[\\nabla^2 f = \\frac{1}{h_1 h_2 h_3}\\left[\\frac{\\partial}{\\partial q_1}\\!\\left(\\frac{h_2 h_3}{h_1}\\frac{\\partial f}{\\partial q_1}\\right) + \\frac{\\partial}{\\partial q_2}\\!\\left(\\frac{h_1 h_3}{h_2}\\frac{\\partial f}{\\partial q_2}\\right) + \\frac{\\partial}{\\partial q_3}\\!\\left(\\frac{h_1 h_2}{h_3}\\frac{\\partial f}{\\partial q_3}\\right)\\right].\\]\nFurther reading: @Kreyszig2011aem, Sec. 9.7-9.9 (operators in Cartesian); the general curvilinear derivation via scale factors is covered more fully in @Taylor2005mechanics, Ch. 16 (curvilinear coordinates).",
     "crumbs": [
       "Vector Calculus",
-      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Spherical Coordinates</span>"
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Spherical Coordinates</span>"
     ]
   },
   {
     "objectID": "01-vector-calculus/spherical.html#operators-in-spherical-coordinates",
     "href": "01-vector-calculus/spherical.html#operators-in-spherical-coordinates",
-    "title": "4  Spherical Coordinates",
-    "section": "4.4 Operators in Spherical Coordinates",
-    "text": "4.4 Operators in Spherical Coordinates\nSubstituting \\((h_r, h_\\theta, h_\\phi) = (1, r, r\\sin\\theta)\\):\nGradient: \\[\\nabla f = \\frac{\\partial f}{\\partial r}\\hat{r} + \\frac{1}{r}\\frac{\\partial f}{\\partial \\theta}\\hat{\\theta} + \\frac{1}{r\\sin\\theta}\\frac{\\partial f}{\\partial \\phi}\\hat{\\phi}.\\]\nDivergence: \\[\\nabla \\cdot \\mathbf{F} = \\frac{1}{r^2}\\frac{\\partial(r^2 F_r)}{\\partial r} + \\frac{1}{r\\sin\\theta}\\frac{\\partial(\\sin\\theta\\, F_\\theta)}{\\partial \\theta} + \\frac{1}{r\\sin\\theta}\\frac{\\partial F_\\phi}{\\partial \\phi}.\\]\nCurl: \\[\\nabla \\times \\mathbf{F} = \\frac{1}{r\\sin\\theta}\\!\\left(\\frac{\\partial(\\sin\\theta\\, F_\\phi)}{\\partial \\theta} - \\frac{\\partial F_\\theta}{\\partial \\phi}\\right)\\hat{r} + \\frac{1}{r}\\!\\left(\\frac{1}{\\sin\\theta}\\frac{\\partial F_r}{\\partial \\phi} - \\frac{\\partial(r F_\\phi)}{\\partial r}\\right)\\hat{\\theta} + \\frac{1}{r}\\!\\left(\\frac{\\partial(r F_\\theta)}{\\partial r} - \\frac{\\partial F_r}{\\partial \\theta}\\right)\\hat{\\phi}.\\]\nLaplacian: \\[\\nabla^2 f = \\frac{1}{r^2}\\frac{\\partial}{\\partial r}\\!\\left(r^2\\frac{\\partial f}{\\partial r}\\right) + \\frac{1}{r^2\\sin\\theta}\\frac{\\partial}{\\partial \\theta}\\!\\left(\\sin\\theta\\frac{\\partial f}{\\partial \\theta}\\right) + \\frac{1}{r^2\\sin^2\\theta}\\frac{\\partial^2 f}{\\partial \\phi^2}.\\]",
+    "title": "5  Spherical Coordinates",
+    "section": "5.4 Operators in Spherical Coordinates",
+    "text": "5.4 Operators in Spherical Coordinates\nSubstituting \\((h_r, h_\\theta, h_\\phi) = (1, r, r\\sin\\theta)\\):\nGradient: \\[\\nabla f = \\frac{\\partial f}{\\partial r}\\hat{r} + \\frac{1}{r}\\frac{\\partial f}{\\partial \\theta}\\hat{\\theta} + \\frac{1}{r\\sin\\theta}\\frac{\\partial f}{\\partial \\phi}\\hat{\\phi}.\\]\nDivergence: \\[\\nabla \\cdot \\mathbf{F} = \\frac{1}{r^2}\\frac{\\partial(r^2 F_r)}{\\partial r} + \\frac{1}{r\\sin\\theta}\\frac{\\partial(\\sin\\theta\\, F_\\theta)}{\\partial \\theta} + \\frac{1}{r\\sin\\theta}\\frac{\\partial F_\\phi}{\\partial \\phi}.\\]\nCurl: \\[\\nabla \\times \\mathbf{F} = \\frac{1}{r\\sin\\theta}\\!\\left(\\frac{\\partial(\\sin\\theta\\, F_\\phi)}{\\partial \\theta} - \\frac{\\partial F_\\theta}{\\partial \\phi}\\right)\\hat{r} + \\frac{1}{r}\\!\\left(\\frac{1}{\\sin\\theta}\\frac{\\partial F_r}{\\partial \\phi} - \\frac{\\partial(r F_\\phi)}{\\partial r}\\right)\\hat{\\theta} + \\frac{1}{r}\\!\\left(\\frac{\\partial(r F_\\theta)}{\\partial r} - \\frac{\\partial F_r}{\\partial \\theta}\\right)\\hat{\\phi}.\\]\nLaplacian: \\[\\nabla^2 f = \\frac{1}{r^2}\\frac{\\partial}{\\partial r}\\!\\left(r^2\\frac{\\partial f}{\\partial r}\\right) + \\frac{1}{r^2\\sin\\theta}\\frac{\\partial}{\\partial \\theta}\\!\\left(\\sin\\theta\\frac{\\partial f}{\\partial \\theta}\\right) + \\frac{1}{r^2\\sin^2\\theta}\\frac{\\partial^2 f}{\\partial \\phi^2}.\\]",
     "crumbs": [
       "Vector Calculus",
-      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Spherical Coordinates</span>"
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Spherical Coordinates</span>"
     ]
   },
   {
     "objectID": "01-vector-calculus/spherical.html#laplace-beltrami-operator-on-s2",
     "href": "01-vector-calculus/spherical.html#laplace-beltrami-operator-on-s2",
-    "title": "4  Spherical Coordinates",
-    "section": "4.5 Laplace-Beltrami Operator on \\(S^2\\)",
-    "text": "4.5 Laplace-Beltrami Operator on \\(S^2\\)\nOn the unit sphere (\\(r = 1\\), constant), only the angular part of the Laplacian survives. The Laplace-Beltrami operator is\n\\[\\Delta_{S^2} f = \\frac{1}{\\sin\\theta}\\frac{\\partial}{\\partial \\theta}\\!\\left(\\sin\\theta\\frac{\\partial f}{\\partial \\theta}\\right) + \\frac{1}{\\sin^2\\theta}\\frac{\\partial^2 f}{\\partial \\phi^2}.\\]\nThe full Laplacian decomposes as\n\\[\\nabla^2 f = \\frac{1}{r^2}\\frac{\\partial}{\\partial r}\\!\\left(r^2\\frac{\\partial f}{\\partial r}\\right) + \\frac{1}{r^2}\\Delta_{S^2} f.\\]\n\\(\\Delta_{S^2}\\) is the operator whose eigenfunctions are the spherical harmonics, and whose Green’s function the GSNO is designed to approximate.\nFurther reading: @Kreyszig2011aem, Sec. 12.10 (Laplace’s equation in spherical coordinates and the derivation of the spherical Laplacian); @Evans2010pde, Appendix C (notation and operator identities).",
+    "title": "5  Spherical Coordinates",
+    "section": "5.5 Laplace-Beltrami Operator on \\(S^2\\)",
+    "text": "5.5 Laplace-Beltrami Operator on \\(S^2\\)\nOn the unit sphere (\\(r = 1\\), constant), only the angular part of the Laplacian survives. The Laplace-Beltrami operator is\n\\[\\Delta_{S^2} f = \\frac{1}{\\sin\\theta}\\frac{\\partial}{\\partial \\theta}\\!\\left(\\sin\\theta\\frac{\\partial f}{\\partial \\theta}\\right) + \\frac{1}{\\sin^2\\theta}\\frac{\\partial^2 f}{\\partial \\phi^2}.\\]\nThe full Laplacian decomposes as\n\\[\\nabla^2 f = \\frac{1}{r^2}\\frac{\\partial}{\\partial r}\\!\\left(r^2\\frac{\\partial f}{\\partial r}\\right) + \\frac{1}{r^2}\\Delta_{S^2} f.\\]\n\\(\\Delta_{S^2}\\) is the operator whose eigenfunctions are the spherical harmonics, and whose Green’s function the GSNO is designed to approximate.\nFurther reading: @Kreyszig2011aem, Sec. 12.10 (Laplace’s equation in spherical coordinates and the derivation of the spherical Laplacian); @Evans2010pde, Appendix C (notation and operator identities).",
     "crumbs": [
       "Vector Calculus",
-      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Spherical Coordinates</span>"
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Spherical Coordinates</span>"
+    ]
+  },
+  {
+    "objectID": "01-vector-calculus/spherical.html#worked-examples",
+    "href": "01-vector-calculus/spherical.html#worked-examples",
+    "title": "5  Spherical Coordinates",
+    "section": "5.6 Worked Examples",
+    "text": "5.6 Worked Examples\nGradient of a radial function. Compute \\(\\nabla(r^2)\\) in spherical coordinates.\n\\(f = r^2\\) depends only on \\(r\\), so \\(\\partial f/\\partial\\theta = \\partial f/\\partial\\phi = 0\\):\n\\[\\nabla(r^2) = \\frac{\\partial(r^2)}{\\partial r}\\hat{r} = 2r\\hat{r}.\\]\nConsistent with the Cartesian result \\(\\nabla(x^2+y^2+z^2) = 2(x,y,z)\\).\n\nDivergence of a radial vector field. Let \\(\\mathbf{F} = r^2\\hat{r}\\). Compute \\(\\nabla \\cdot \\mathbf{F}\\).\nOnly the radial term contributes:\n\\[\\nabla \\cdot \\mathbf{F} = \\frac{1}{r^2}\\frac{\\partial(r^2 \\cdot r^2)}{\\partial r} = \\frac{1}{r^2}\\frac{\\partial r^4}{\\partial r} = \\frac{4r^3}{r^2} = 4r.\\]\n\nFundamental solution of Laplace’s equation. Show \\(\\nabla^2(1/r) = 0\\) for \\(r \\neq 0\\).\n\\[\\nabla^2\\!\\left(\\frac{1}{r}\\right) = \\frac{1}{r^2}\\frac{d}{dr}\\!\\left(r^2 \\frac{d}{dr}\\frac{1}{r}\\right) = \\frac{1}{r^2}\\frac{d}{dr}\\!\\left(-1\\right) = 0.\\]\n\\(1/r\\) is the fundamental solution of the Laplace equation in \\(\\mathbb{R}^3\\) - the Green’s function for \\(-\\nabla^2\\). Its angular average over any sphere centered at the origin is \\(1/r\\), constant on each sphere, which is why it is rotationally symmetric and satisfies \\(\\Delta_{S^2}(1/r) = 0\\) trivially (no angular dependence).\n\nSolid angle integral. Compute \\(\\int_{S^2} \\cos^2\\theta\\, d\\Omega\\).\n\\[\\int_{S^2} \\cos^2\\theta\\, d\\Omega = \\int_0^{2\\pi} d\\phi \\int_0^{\\pi} \\cos^2\\theta\\sin\\theta\\, d\\theta = 2\\pi \\int_{-1}^{1} u^2\\, du = 2\\pi \\cdot \\frac{2}{3} = \\frac{4\\pi}{3}.\\]\nThe mean value of \\(\\cos^2\\theta\\) over \\(S^2\\) is \\(\\frac{1}{3}\\), consistent with isotropy: \\(\\langle x^2\\rangle = \\langle y^2\\rangle = \\langle z^2\\rangle = \\langle r^2\\rangle / 3\\).",
+    "crumbs": [
+      "Vector Calculus",
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Spherical Coordinates</span>"
     ]
   },
   {
@@ -217,146 +261,256 @@
     ]
   },
   {
-    "objectID": "02-harmonic-analysis/fourier-series.html",
-    "href": "02-harmonic-analysis/fourier-series.html",
-    "title": "5  Fourier Series",
+    "objectID": "02-harmonic-analysis/function-spaces.html",
+    "href": "02-harmonic-analysis/function-spaces.html",
+    "title": "6  Function Spaces",
     "section": "",
-    "text": "5.1 Orthogonal Functions\nLet \\(L^2([a,b])\\) denote the space of square-integrable functions on \\([a,b]\\), with inner product\n\\[\\langle f, g \\rangle = \\int_a^b f(x)\\, \\overline{g(x)}\\, dx.\\]\nA set of functions \\(\\{\\phi_n\\}\\) is orthogonal if \\(\\langle \\phi_n, \\phi_m \\rangle = 0\\) for \\(n \\neq m\\), and orthonormal if additionally \\(\\langle \\phi_n, \\phi_n \\rangle = 1\\). An orthonormal set is a basis if every \\(f \\in L^2([a,b])\\) can be written as\n\\[f = \\sum_n \\langle f, \\phi_n \\rangle\\, \\phi_n.\\]\nThe coefficients \\(\\langle f, \\phi_n \\rangle\\) are unique, and the representation converges in \\(L^2\\) (in the sense \\(\\|f - \\sum_{n=1}^N \\langle f, \\phi_n \\rangle \\phi_n\\|^2 \\to 0\\)).\nFurther reading: @Kreyszig2011aem, Secs. 11.5-11.6 (Sturm-Liouville problems and generalized Fourier series).",
+    "text": "6.1 Vector Spaces\nBefore Fourier series or spherical harmonics can be stated precisely, we need the ambient space in which they live and the notion of convergence they satisfy. This section develops that theory abstractly. Fourier series and spherical harmonics are then special cases of a single general structure: an orthonormal basis for a Hilbert space.\nDefinition. A vector space over \\(\\mathbb{R}\\) (or \\(\\mathbb{C}\\)) is a set \\(V\\) equipped with addition and scalar multiplication satisfying the usual axioms (commutativity, associativity, distributivity, identity, inverses).\nThe central examples here are spaces of functions:\nUnlike \\(\\mathbb{R}^n\\), these spaces are infinite-dimensional: no finite set of functions spans all of them.",
     "crumbs": [
       "Harmonic Analysis",
-      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Fourier Series</span>"
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Function Spaces</span>"
     ]
   },
   {
-    "objectID": "02-harmonic-analysis/fourier-series.html#fourier-series",
-    "href": "02-harmonic-analysis/fourier-series.html#fourier-series",
-    "title": "5  Fourier Series",
-    "section": "5.2 Fourier Series",
-    "text": "5.2 Fourier Series\nOn \\([-\\pi, \\pi]\\), the functions \\(\\phi_n(x) = \\frac{1}{\\sqrt{2\\pi}} e^{inx}\\), \\(n \\in \\mathbb{Z}\\), form an orthonormal basis for \\(L^2([-\\pi, \\pi])\\).\nDefinition. The Fourier series of \\(f \\in L^2([-\\pi, \\pi])\\) is\n\\[f(x) = \\sum_{n=-\\infty}^{\\infty} c_n\\, e^{inx}, \\qquad c_n = \\frac{1}{2\\pi}\\int_{-\\pi}^{\\pi} f(x)\\, e^{-inx}\\, dx.\\]\nThe \\(c_n\\) are the Fourier coefficients. The series converges in \\(L^2\\); pointwise convergence requires additional regularity on \\(f\\).\nReal form. For real \\(f\\), writing \\(e^{inx} = \\cos(nx) + i\\sin(nx)\\) gives\n\\[f(x) = \\frac{a_0}{2} + \\sum_{n=1}^{\\infty} \\bigl(a_n \\cos(nx) + b_n \\sin(nx)\\bigr),\\]\nwhere \\(a_n = \\frac{1}{\\pi}\\int_{-\\pi}^{\\pi} f(x)\\cos(nx)\\, dx\\) and \\(b_n = \\frac{1}{\\pi}\\int_{-\\pi}^{\\pi} f(x)\\sin(nx)\\, dx\\).\nParseval’s theorem. Energy is preserved between the function and its coefficients:\n\\[\\frac{1}{2\\pi}\\int_{-\\pi}^{\\pi} |f(x)|^2\\, dx = \\sum_{n=-\\infty}^{\\infty} |c_n|^2.\\]\nExample. Let \\(f(x) = x\\) on \\([-\\pi, \\pi]\\). Then \\(a_n = 0\\) (odd function, cosines vanish) and \\(b_n = \\frac{2(-1)^{n+1}}{n}\\), giving\n\\[x = 2\\sum_{n=1}^{\\infty} \\frac{(-1)^{n+1}}{n}\\sin(nx) = 2\\left(\\sin x - \\frac{\\sin 2x}{2} + \\frac{\\sin 3x}{3} - \\cdots\\right).\\]\nFurther reading: @Kreyszig2011aem, Secs. 11.1-11.2 (Fourier series, real form, even/odd functions); @BruntonKutz2022, Sec. 2.1 (Fourier series in the context of data-driven methods).",
+    "objectID": "02-harmonic-analysis/function-spaces.html#vector-spaces",
+    "href": "02-harmonic-analysis/function-spaces.html#vector-spaces",
+    "title": "6  Function Spaces",
+    "section": "",
+    "text": "\\(C([a,b])\\): continuous functions on \\([a,b]\\), with pointwise operations.\n\\(C^k([a,b])\\): \\(k\\)-times continuously differentiable functions.\n\\(\\mathcal{P}_n\\): polynomials of degree at most \\(n\\).\n\\(L^2([a,b])\\): square-integrable functions (defined below).",
     "crumbs": [
       "Harmonic Analysis",
-      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Fourier Series</span>"
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Function Spaces</span>"
+    ]
+  },
+  {
+    "objectID": "02-harmonic-analysis/function-spaces.html#norms-and-lp-spaces",
+    "href": "02-harmonic-analysis/function-spaces.html#norms-and-lp-spaces",
+    "title": "6  Function Spaces",
+    "section": "6.2 Norms and \\(L^p\\) Spaces",
+    "text": "6.2 Norms and \\(L^p\\) Spaces\nDefinition. A norm on a vector space \\(V\\) is a function \\(\\|\\cdot\\| : V \\to [0,\\infty)\\) satisfying:\n\n\\(\\|f\\| = 0\\) iff \\(f = 0\\).\n\\(\\|\\alpha f\\| = |\\alpha|\\|f\\|\\).\n\\(\\|f + g\\| \\leq \\|f\\| + \\|g\\|\\) (triangle inequality).\n\nA normed space is a vector space equipped with a norm.\nDefinition. For \\(1 \\leq p &lt; \\infty\\), the \\(L^p\\) space on a domain \\(\\Omega\\) is\n\\[L^p(\\Omega) = \\left\\{ f : \\Omega \\to \\mathbb{C} \\;\\Big|\\; \\int_\\Omega |f(x)|^p\\, dx &lt; \\infty \\right\\},\\]\nwith norm \\(\\|f\\|_p = \\left(\\int_\\Omega |f|^p\\, dx\\right)^{1/p}\\). Functions equal almost everywhere are identified.\nThe case \\(p = 2\\) is by far the most important for harmonic analysis:\n\\[L^2(\\Omega) = \\left\\{ f : \\Omega \\to \\mathbb{C} \\;\\Big|\\; \\int_\\Omega |f(x)|^2\\, dx &lt; \\infty \\right\\}, \\quad \\|f\\|_2 = \\left(\\int_\\Omega |f|^2\\right)^{1/2}.\\]\n\\(L^2\\) is the natural space for energy: \\(\\|f\\|_2^2\\) is the total “energy” of \\(f\\).\nFurther reading: @Kreyszig2011aem, Sec. 11.5 (function spaces in the context of Sturm-Liouville); @Evans2010pde, Appendix E (\\(L^p\\) spaces).",
+    "crumbs": [
+      "Harmonic Analysis",
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Function Spaces</span>"
+    ]
+  },
+  {
+    "objectID": "02-harmonic-analysis/function-spaces.html#inner-product-spaces",
+    "href": "02-harmonic-analysis/function-spaces.html#inner-product-spaces",
+    "title": "6  Function Spaces",
+    "section": "6.3 Inner Product Spaces",
+    "text": "6.3 Inner Product Spaces\nDefinition. An inner product on a vector space \\(V\\) is a map \\(\\langle\\cdot,\\cdot\\rangle : V \\times V \\to \\mathbb{C}\\) satisfying:\n\n\\(\\langle f, f\\rangle \\geq 0\\), with \\(\\langle f,f\\rangle = 0\\) iff \\(f = 0\\).\n\\(\\langle f, g\\rangle = \\overline{\\langle g, f\\rangle}\\) (conjugate symmetry).\n\\(\\langle \\alpha f + \\beta g, h\\rangle = \\alpha\\langle f,h\\rangle + \\beta\\langle g,h\\rangle\\) (linearity in first argument).\n\nThe inner product induces a norm: \\(\\|f\\| = \\sqrt{\\langle f,f\\rangle}\\).\nOn \\(L^2(\\Omega)\\):\n\\[\\langle f, g\\rangle = \\int_\\Omega f(x)\\,\\overline{g(x)}\\, dx.\\]\nCauchy-Schwarz inequality. For any \\(f, g \\in V\\):\n\\[|\\langle f, g\\rangle| \\leq \\|f\\|\\,\\|g\\|.\\]\nEquality holds iff \\(f\\) and \\(g\\) are proportional. This is the generalization of the dot product inequality \\(|\\mathbf{u}\\cdot\\mathbf{v}| \\leq |\\mathbf{u}||\\mathbf{v}|\\) to infinite dimensions.\nFurther reading: @Kreyszig2011aem, Sec. 11.5.",
+    "crumbs": [
+      "Harmonic Analysis",
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Function Spaces</span>"
+    ]
+  },
+  {
+    "objectID": "02-harmonic-analysis/function-spaces.html#hilbert-spaces",
+    "href": "02-harmonic-analysis/function-spaces.html#hilbert-spaces",
+    "title": "6  Function Spaces",
+    "section": "6.4 Hilbert Spaces",
+    "text": "6.4 Hilbert Spaces\nA normed space is complete if every Cauchy sequence converges to an element of the space. Completeness is the key property that allows infinite series to be controlled.\nDefinition. A Hilbert space is a complete inner product space.\nKey example. \\(L^2(\\Omega)\\) is a Hilbert space. This is not obvious: it requires showing that limits of \\(L^2\\)-Cauchy sequences are again in \\(L^2\\). The pointwise limit of a sequence of \\(L^2\\) functions need not be the \\(L^2\\) limit.\n\\(C([a,b])\\) with the \\(L^2\\) norm is an inner product space but is not complete (the limit of a Cauchy sequence of continuous functions can be discontinuous). Completing it gives \\(L^2([a,b])\\).\nIntuition. A Hilbert space is an infinite-dimensional generalization of \\(\\mathbb{R}^n\\) with dot product. Virtually all geometric intuitions from \\(\\mathbb{R}^n\\) carry over: projections, angles, decompositions into orthogonal components.\nFurther reading: @Evans2010pde, Appendix E; @Kreyszig2011aem, Sec. 11.6.",
+    "crumbs": [
+      "Harmonic Analysis",
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Function Spaces</span>"
+    ]
+  },
+  {
+    "objectID": "02-harmonic-analysis/function-spaces.html#orthogonality",
+    "href": "02-harmonic-analysis/function-spaces.html#orthogonality",
+    "title": "6  Function Spaces",
+    "section": "6.5 Orthogonality",
+    "text": "6.5 Orthogonality\nDefinition. \\(f, g \\in V\\) are orthogonal if \\(\\langle f, g\\rangle = 0\\), written \\(f \\perp g\\). A set \\(\\{e_n\\}\\) is:\n\nOrthogonal if \\(\\langle e_n, e_m\\rangle = 0\\) for \\(n \\neq m\\).\nOrthonormal if additionally \\(\\langle e_n, e_n\\rangle = 1\\) for all \\(n\\).\n\nPythagorean theorem. If \\(f \\perp g\\), then \\(\\|f + g\\|^2 = \\|f\\|^2 + \\|g\\|^2\\).\nMore generally, for a finite orthonormal set \\(\\{e_1, \\ldots, e_N\\}\\) and coefficients \\(c_n = \\langle f, e_n\\rangle\\):\n\\[\\left\\|f - \\sum_{n=1}^N c_n e_n\\right\\|^2 = \\|f\\|^2 - \\sum_{n=1}^N |c_n|^2.\\]\nThe partial sum \\(\\sum c_n e_n\\) is the orthogonal projection of \\(f\\) onto \\(\\text{span}\\{e_1,\\ldots,e_N\\}\\), and is the best approximation to \\(f\\) in that subspace.\nGram-Schmidt process. Any countable linearly independent set \\(\\{f_n\\}\\) can be orthonormalized: set \\(e_1 = f_1/\\|f_1\\|\\), then iteratively subtract the projection onto the span of previous \\(e_k\\) and normalize.",
+    "crumbs": [
+      "Harmonic Analysis",
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Function Spaces</span>"
+    ]
+  },
+  {
+    "objectID": "02-harmonic-analysis/function-spaces.html#orthonormal-bases-and-fourier-coefficients",
+    "href": "02-harmonic-analysis/function-spaces.html#orthonormal-bases-and-fourier-coefficients",
+    "title": "6  Function Spaces",
+    "section": "6.6 Orthonormal Bases and Fourier Coefficients",
+    "text": "6.6 Orthonormal Bases and Fourier Coefficients\nDefinition. An orthonormal set \\(\\{e_n\\}_{n=1}^\\infty\\) in a Hilbert space \\(H\\) is an orthonormal basis (or complete orthonormal system) if the only element orthogonal to every \\(e_n\\) is zero:\n\\[\\langle f, e_n\\rangle = 0 \\text{ for all } n \\implies f = 0.\\]\nEquivalently, \\(\\{e_n\\}\\) is an ONB iff every \\(f \\in H\\) expands as\n\\[f = \\sum_{n=1}^\\infty \\langle f, e_n\\rangle\\, e_n,\\]\nwhere the sum converges in the norm of \\(H\\) (not necessarily pointwise). The coefficients \\(\\hat{f}_n = \\langle f, e_n\\rangle\\) are the generalized Fourier coefficients of \\(f\\) with respect to \\(\\{e_n\\}\\).\nBessel’s inequality. For any ONS (not necessarily a basis) and any \\(f \\in H\\):\n\\[\\sum_n |\\langle f, e_n\\rangle|^2 \\leq \\|f\\|^2.\\]\nParseval’s identity. If \\(\\{e_n\\}\\) is an ONB:\n\\[\\sum_n |\\langle f, e_n\\rangle|^2 = \\|f\\|^2.\\]\nParseval says the ONB is “complete”: no energy is lost in the decomposition. It is equivalent to the ONB condition.\nFurther reading: @Kreyszig2011aem, Sec. 11.6 (generalized Fourier series, Parseval); @Evans2010pde, Appendix E.",
+    "crumbs": [
+      "Harmonic Analysis",
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Function Spaces</span>"
+    ]
+  },
+  {
+    "objectID": "02-harmonic-analysis/function-spaces.html#sturm-liouville-theory",
+    "href": "02-harmonic-analysis/function-spaces.html#sturm-liouville-theory",
+    "title": "6  Function Spaces",
+    "section": "6.7 Sturm-Liouville Theory",
+    "text": "6.7 Sturm-Liouville Theory\nOrthogonal function families do not arise by accident. They are the eigenfunctions of self-adjoint differential operators - a general principle captured by Sturm-Liouville theory.\nThe Sturm-Liouville problem. On \\([a,b]\\), with weight function \\(w(x) &gt; 0\\):\n\\[-\\frac{d}{dx}\\!\\left(p(x)\\frac{df}{dx}\\right) + q(x)f = \\lambda\\, w(x)\\, f, \\qquad \\text{(with boundary conditions)}.\\]\nTheorem. Under mild regularity conditions, the Sturm-Liouville problem has:\n\nA countable set of real eigenvalues \\(\\lambda_1 \\leq \\lambda_2 \\leq \\cdots \\to \\infty\\).\nEigenfunctions \\(\\{f_n\\}\\) that are orthogonal in the weighted \\(L^2\\) space with inner product \\(\\langle f, g\\rangle_w = \\int_a^b f(x)\\overline{g(x)}\\, w(x)\\, dx\\).\nThe eigenfunctions form a complete orthonormal basis for \\(L^2_w([a,b])\\).\n\nConnection to specific bases:\n\n\n\n\n\n\n\n\nProblem\nOperator\nEigenfunctions\n\n\n\n\n\\(-f'' = \\lambda f\\) on \\([-\\pi,\\pi]\\), periodic BC\n\\(-\\frac{d^2}{dx^2}\\)\n\\(e^{inx}\\), Fourier basis\n\n\nLegendre’s equation on \\([-1,1]\\)\nspecific \\(p,q,w\\)\nLegendre polynomials \\(P_l\\)\n\n\n\\(-\\Delta_{S^2} f = \\lambda f\\) on \\(S^2\\)\n\\(-\\Delta_{S^2}\\)\nSpherical harmonics \\(Y_l^m\\)\n\n\n\nAll three families are instances of the same theorem. The Fourier series and spherical harmonic expansion are both eigenfunction expansions of self-adjoint operators in Hilbert spaces.\nFurther reading: @Kreyszig2011aem, Sec. 11.5 (Sturm-Liouville problems and orthogonal functions) and Sec. 12.10 (spherical harmonics as the Sturm-Liouville problem on \\(S^2\\)).",
+    "crumbs": [
+      "Harmonic Analysis",
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Function Spaces</span>"
+    ]
+  },
+  {
+    "objectID": "02-harmonic-analysis/fourier-series.html",
+    "href": "02-harmonic-analysis/fourier-series.html",
+    "title": "7  Fourier Series",
+    "section": "",
+    "text": "7.1 Definition and Coefficients\nThe Fourier series is the concrete realization of the abstract ONB expansion from the function spaces section, applied to \\(L^2([-\\pi,\\pi])\\). The basis is the family of complex exponentials \\(e^{inx}\\), which are the eigenfunctions of \\(-d^2/dx^2\\) with periodic boundary conditions - a Sturm-Liouville problem on \\([-\\pi,\\pi]\\).\nThe functions \\(\\phi_n(x) = \\frac{1}{\\sqrt{2\\pi}} e^{inx}\\), \\(n \\in \\mathbb{Z}\\), form an orthonormal basis for \\(L^2([-\\pi,\\pi])\\) under the inner product \\(\\langle f,g\\rangle = \\int_{-\\pi}^\\pi f\\bar{g}\\, dx\\).\nDefinition. The Fourier series of \\(f \\in L^2([-\\pi, \\pi])\\) is\n\\[f(x) = \\sum_{n=-\\infty}^{\\infty} c_n\\, e^{inx}, \\qquad c_n = \\frac{1}{2\\pi}\\int_{-\\pi}^{\\pi} f(x)\\, e^{-inx}\\, dx.\\]\nThe \\(c_n = \\langle f, \\phi_n\\rangle\\) are the generalized Fourier coefficients from the abstract theory. The series converges in \\(L^2\\); Parseval’s identity gives \\(\\frac{1}{2\\pi}\\int_{-\\pi}^\\pi |f|^2\\,dx = \\sum_n |c_n|^2\\).\nReal form. For real \\(f\\), writing \\(e^{inx} = \\cos(nx) + i\\sin(nx)\\):\n\\[f(x) = \\frac{a_0}{2} + \\sum_{n=1}^{\\infty} \\bigl(a_n \\cos(nx) + b_n \\sin(nx)\\bigr),\\]\nwhere \\(a_n = \\frac{1}{\\pi}\\int_{-\\pi}^{\\pi} f(x)\\cos(nx)\\, dx\\) and \\(b_n = \\frac{1}{\\pi}\\int_{-\\pi}^{\\pi} f(x)\\sin(nx)\\, dx\\).\nExample. Let \\(f(x) = x\\) on \\([-\\pi, \\pi]\\). Then \\(a_n = 0\\) (odd function) and \\(b_n = \\frac{2(-1)^{n+1}}{n}\\):\n\\[x = 2\\sum_{n=1}^{\\infty} \\frac{(-1)^{n+1}}{n}\\sin(nx) = 2\\left(\\sin x - \\frac{\\sin 2x}{2} + \\frac{\\sin 3x}{3} - \\cdots\\right).\\]\nFurther reading: @Kreyszig2011aem, Secs. 11.1-11.2; @BruntonKutz2022, Sec. 2.1.",
+    "crumbs": [
+      "Harmonic Analysis",
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Fourier Series</span>"
     ]
   },
   {
     "objectID": "02-harmonic-analysis/fourier-series.html#convergence",
     "href": "02-harmonic-analysis/fourier-series.html#convergence",
-    "title": "5  Fourier Series",
-    "section": "5.3 Convergence",
-    "text": "5.3 Convergence\nFor \\(f \\in L^2\\), the Fourier series converges in mean square but need not converge pointwise everywhere. Key results:\n\nIf \\(f\\) is piecewise smooth, the series converges to \\(f(x)\\) at continuity points and to \\(\\frac{1}{2}[f(x^+) + f(x^-)]\\) at jump discontinuities (Gibbs phenomenon near jumps).\nIf \\(f \\in C^k\\), then \\(|c_n| = O(n^{-k})\\): smoother functions have faster-decaying coefficients.\n\nFurther reading: @Kreyszig2011aem, Sec. 11.1 (convergence discussion).",
+    "title": "7  Fourier Series",
+    "section": "7.2 Convergence",
+    "text": "7.2 Convergence\nFor \\(f \\in L^2\\), the Fourier series converges in mean square but need not converge pointwise everywhere. Key results:\n\nIf \\(f\\) is piecewise smooth, the series converges to \\(f(x)\\) at continuity points and to \\(\\frac{1}{2}[f(x^+) + f(x^-)]\\) at jump discontinuities (Gibbs phenomenon near jumps).\nIf \\(f \\in C^k\\), then \\(|c_n| = O(n^{-k})\\): smoother functions have faster-decaying coefficients.\n\nFurther reading: @Kreyszig2011aem, Sec. 11.1 (convergence discussion).",
     "crumbs": [
       "Harmonic Analysis",
-      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Fourier Series</span>"
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Fourier Series</span>"
+    ]
+  },
+  {
+    "objectID": "02-harmonic-analysis/fourier-series.html#worked-example-square-wave",
+    "href": "02-harmonic-analysis/fourier-series.html#worked-example-square-wave",
+    "title": "7  Fourier Series",
+    "section": "7.3 Worked Example: Square Wave",
+    "text": "7.3 Worked Example: Square Wave\nLet \\(f\\) be the \\(2\\pi\\)-periodic square wave:\n\\[f(x) = \\begin{cases} 1 & 0 &lt; x &lt; \\pi \\\\ -1 & -\\pi &lt; x &lt; 0 \\end{cases}.\\]\nSince \\(f\\) is odd, all cosine coefficients vanish: \\(a_n = 0\\). For the sine coefficients:\n\\[b_n = \\frac{1}{\\pi}\\int_{-\\pi}^{\\pi} f(x)\\sin(nx)\\, dx = \\frac{2}{\\pi}\\int_0^{\\pi}\\sin(nx)\\, dx = \\frac{2}{\\pi}\\left[-\\frac{\\cos(nx)}{n}\\right]_0^{\\pi} = \\frac{2}{n\\pi}(1 - \\cos(n\\pi)).\\]\nSince \\(\\cos(n\\pi) = (-1)^n\\):\n\\[b_n = \\frac{2}{n\\pi}(1 - (-1)^n) = \\begin{cases} 4/(n\\pi) & n \\text{ odd} \\\\ 0 & n \\text{ even} \\end{cases}.\\]\nThe Fourier series is\n\\[f(x) = \\frac{4}{\\pi}\\sum_{k=0}^{\\infty} \\frac{\\sin((2k+1)x)}{2k+1} = \\frac{4}{\\pi}\\left(\\sin x + \\frac{\\sin 3x}{3} + \\frac{\\sin 5x}{5} + \\cdots\\right).\\]\nThe coefficients decay as \\(O(1/n)\\), consistent with \\(f \\in C^0\\) but \\(f \\notin C^1\\) (jump discontinuities). Near the jumps, the partial sums overshoot by approximately \\(18\\%\\) regardless of how many terms are included (Gibbs phenomenon).",
+    "crumbs": [
+      "Harmonic Analysis",
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Fourier Series</span>"
     ]
   },
   {
     "objectID": "02-harmonic-analysis/fourier-transform.html",
     "href": "02-harmonic-analysis/fourier-transform.html",
-    "title": "6  Fourier Transform",
+    "title": "8  Fourier Transform",
     "section": "",
-    "text": "6.1 Definition\nThe Fourier transform extends Fourier series to functions on \\(\\mathbb{R}\\), replacing the discrete sum over frequencies with a continuous integral.\nDefinition. For \\(f \\in L^1(\\mathbb{R})\\), the Fourier transform is\n\\[\\hat{f}(\\xi) = \\int_{-\\infty}^{\\infty} f(x)\\, e^{-2\\pi i \\xi x}\\, dx.\\]\nThe inverse Fourier transform recovers \\(f\\) from \\(\\hat{f}\\):\n\\[f(x) = \\int_{-\\infty}^{\\infty} \\hat{f}(\\xi)\\, e^{2\\pi i \\xi x}\\, d\\xi.\\]\n\\(\\hat{f}(\\xi)\\) is the amplitude of the frequency component \\(\\xi\\) in \\(f\\). The transform is well-defined and invertible for \\(f \\in L^2(\\mathbb{R})\\) (Plancherel theorem).\nAlternative convention. With angular frequency \\(\\omega = 2\\pi\\xi\\):\n\\[\\hat{f}(\\omega) = \\int_{-\\infty}^{\\infty} f(x)\\, e^{-i\\omega x}\\, dx, \\qquad f(x) = \\frac{1}{2\\pi}\\int_{-\\infty}^{\\infty} \\hat{f}(\\omega)\\, e^{i\\omega x}\\, d\\omega.\\]\nBoth conventions are standard; the choice affects normalization factors.\nFurther reading: @Kreyszig2011aem, Sec. 11.7 (Fourier integral) and Sec. 11.9 (Fourier transform); @BruntonKutz2022, Sec. 2.1.",
+    "text": "8.1 Definition\nThe Fourier transform extends Fourier series to functions on \\(\\mathbb{R}\\), replacing the discrete sum over frequencies with a continuous integral.\nDefinition. For \\(f \\in L^1(\\mathbb{R})\\), the Fourier transform is\n\\[\\hat{f}(\\xi) = \\int_{-\\infty}^{\\infty} f(x)\\, e^{-2\\pi i \\xi x}\\, dx.\\]\nThe inverse Fourier transform recovers \\(f\\) from \\(\\hat{f}\\):\n\\[f(x) = \\int_{-\\infty}^{\\infty} \\hat{f}(\\xi)\\, e^{2\\pi i \\xi x}\\, d\\xi.\\]\n\\(\\hat{f}(\\xi)\\) is the amplitude of the frequency component \\(\\xi\\) in \\(f\\). The transform is well-defined and invertible for \\(f \\in L^2(\\mathbb{R})\\) (Plancherel theorem).\nAlternative convention. With angular frequency \\(\\omega = 2\\pi\\xi\\):\n\\[\\hat{f}(\\omega) = \\int_{-\\infty}^{\\infty} f(x)\\, e^{-i\\omega x}\\, dx, \\qquad f(x) = \\frac{1}{2\\pi}\\int_{-\\infty}^{\\infty} \\hat{f}(\\omega)\\, e^{i\\omega x}\\, d\\omega.\\]\nBoth conventions are standard; the choice affects normalization factors.\nFurther reading: @Kreyszig2011aem, Sec. 11.7 (Fourier integral) and Sec. 11.9 (Fourier transform); @BruntonKutz2022, Sec. 2.1.",
     "crumbs": [
       "Harmonic Analysis",
-      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Fourier Transform</span>"
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>Fourier Transform</span>"
     ]
   },
   {
     "objectID": "02-harmonic-analysis/fourier-transform.html#key-properties",
     "href": "02-harmonic-analysis/fourier-transform.html#key-properties",
-    "title": "6  Fourier Transform",
-    "section": "6.2 Key Properties",
-    "text": "6.2 Key Properties\nLet \\(\\mathcal{F}[f] = \\hat{f}\\).\nLinearity: \\(\\mathcal{F}[\\alpha f + \\beta g] = \\alpha\\hat{f} + \\beta\\hat{g}\\).\nShift: \\(\\mathcal{F}[f(x - a)](\\xi) = e^{-2\\pi i \\xi a}\\hat{f}(\\xi)\\). Shifting in space is multiplication by a phase in frequency.\nDerivative: \\(\\mathcal{F}[f^{(n)}](\\xi) = (2\\pi i \\xi)^n \\hat{f}(\\xi)\\). Differentiation in space is multiplication by \\(i\\xi\\) in frequency. This is the key property that converts differential equations into algebraic equations.\nConvolution theorem: For \\((f * g)(x) = \\int f(y)\\, g(x-y)\\, dy\\):\n\\[\\mathcal{F}[f * g] = \\hat{f} \\cdot \\hat{g}.\\]\nConvolution in the spatial domain is pointwise multiplication in the frequency domain.\nParseval / Plancherel:\n\\[\\int_{-\\infty}^{\\infty} |f(x)|^2\\, dx = \\int_{-\\infty}^{\\infty} |\\hat{f}(\\xi)|^2\\, d\\xi.\\]\nFurther reading: @Kreyszig2011aem, Sec. 11.9 (properties and convolution theorem).",
+    "title": "8  Fourier Transform",
+    "section": "8.2 Key Properties",
+    "text": "8.2 Key Properties\nLet \\(\\mathcal{F}[f] = \\hat{f}\\).\nLinearity: \\(\\mathcal{F}[\\alpha f + \\beta g] = \\alpha\\hat{f} + \\beta\\hat{g}\\).\nShift: \\(\\mathcal{F}[f(x - a)](\\xi) = e^{-2\\pi i \\xi a}\\hat{f}(\\xi)\\). Shifting in space is multiplication by a phase in frequency.\nDerivative: \\(\\mathcal{F}[f^{(n)}](\\xi) = (2\\pi i \\xi)^n \\hat{f}(\\xi)\\). Differentiation in space is multiplication by \\(i\\xi\\) in frequency. This is the key property that converts differential equations into algebraic equations.\nConvolution theorem: For \\((f * g)(x) = \\int f(y)\\, g(x-y)\\, dy\\):\n\\[\\mathcal{F}[f * g] = \\hat{f} \\cdot \\hat{g}.\\]\nConvolution in the spatial domain is pointwise multiplication in the frequency domain.\nParseval / Plancherel:\n\\[\\int_{-\\infty}^{\\infty} |f(x)|^2\\, dx = \\int_{-\\infty}^{\\infty} |\\hat{f}(\\xi)|^2\\, d\\xi.\\]\nFurther reading: @Kreyszig2011aem, Sec. 11.9 (properties and convolution theorem).",
     "crumbs": [
       "Harmonic Analysis",
-      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Fourier Transform</span>"
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>Fourier Transform</span>"
     ]
   },
   {
     "objectID": "02-harmonic-analysis/fourier-transform.html#differential-equations-via-fourier-transform",
     "href": "02-harmonic-analysis/fourier-transform.html#differential-equations-via-fourier-transform",
-    "title": "6  Fourier Transform",
-    "section": "6.3 Differential Equations via Fourier Transform",
-    "text": "6.3 Differential Equations via Fourier Transform\nThe derivative property makes the Fourier transform a natural tool for solving linear PDEs with constant coefficients. Applying \\(\\mathcal{F}\\) converts \\(\\partial_x \\to 2\\pi i\\xi\\), turning a PDE into an algebraic equation in frequency space.\nExample. Solve \\(f'(x) + af(x) = g(x)\\) on \\(\\mathbb{R}\\). Taking the Fourier transform:\n\\[(2\\pi i\\xi + a)\\hat{f}(\\xi) = \\hat{g}(\\xi) \\implies \\hat{f}(\\xi) = \\frac{\\hat{g}(\\xi)}{2\\pi i\\xi + a}.\\]\nInverting gives \\(f = \\mathcal{F}^{-1}[\\hat{g}/(2\\pi i\\xi + a)]\\). This solution is a convolution \\(f = g * h\\) where \\(h = \\mathcal{F}^{-1}[1/(2\\pi i\\xi + a)]\\) is the impulse response - the Green’s function of the operator \\(\\partial_x + a\\).\nFurther reading: @Evans2010pde, Ch. 4 (Fourier transform applied to PDEs, Green’s functions on \\(\\mathbb{R}^n\\)).",
+    "title": "8  Fourier Transform",
+    "section": "8.3 Differential Equations via Fourier Transform",
+    "text": "8.3 Differential Equations via Fourier Transform\nThe derivative property makes the Fourier transform a natural tool for solving linear PDEs with constant coefficients. Applying \\(\\mathcal{F}\\) converts \\(\\partial_x \\to 2\\pi i\\xi\\), turning a PDE into an algebraic equation in frequency space.\nExample. Solve \\(f'(x) + af(x) = g(x)\\) on \\(\\mathbb{R}\\). Taking the Fourier transform:\n\\[(2\\pi i\\xi + a)\\hat{f}(\\xi) = \\hat{g}(\\xi) \\implies \\hat{f}(\\xi) = \\frac{\\hat{g}(\\xi)}{2\\pi i\\xi + a}.\\]\nInverting gives \\(f = \\mathcal{F}^{-1}[\\hat{g}/(2\\pi i\\xi + a)]\\). This solution is a convolution \\(f = g * h\\) where \\(h = \\mathcal{F}^{-1}[1/(2\\pi i\\xi + a)]\\) is the impulse response - the Green’s function of the operator \\(\\partial_x + a\\).\nFurther reading: @Evans2010pde, Ch. 4 (Fourier transform applied to PDEs, Green’s functions on \\(\\mathbb{R}^n\\)).",
     "crumbs": [
       "Harmonic Analysis",
-      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Fourier Transform</span>"
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>Fourier Transform</span>"
     ]
   },
   {
     "objectID": "02-harmonic-analysis/fourier-transform.html#discrete-fourier-transform",
     "href": "02-harmonic-analysis/fourier-transform.html#discrete-fourier-transform",
-    "title": "6  Fourier Transform",
-    "section": "6.4 Discrete Fourier Transform",
-    "text": "6.4 Discrete Fourier Transform\nFor a finite sequence \\(x_0, \\ldots, x_{N-1}\\), the Discrete Fourier Transform (DFT) is\n\\[X_k = \\sum_{n=0}^{N-1} x_n\\, e^{-2\\pi i kn/N}, \\qquad k = 0, \\ldots, N-1.\\]\nThe Fast Fourier Transform (FFT) computes the DFT in \\(O(N\\log N)\\) rather than \\(O(N^2)\\). The convolution theorem holds exactly for the DFT, making the FFT the computational backbone of spectral methods and the Fourier Neural Operator.\nFurther reading: @Kreyszig2011aem, Sec. 11.9 (DFT and FFT); @BruntonKutz2022, Sec. 2.2 (FFT and applications in data-driven methods).",
+    "title": "8  Fourier Transform",
+    "section": "8.4 Discrete Fourier Transform",
+    "text": "8.4 Discrete Fourier Transform\nFor a finite sequence \\(x_0, \\ldots, x_{N-1}\\), the Discrete Fourier Transform (DFT) is\n\\[X_k = \\sum_{n=0}^{N-1} x_n\\, e^{-2\\pi i kn/N}, \\qquad k = 0, \\ldots, N-1.\\]\nThe Fast Fourier Transform (FFT) computes the DFT in \\(O(N\\log N)\\) rather than \\(O(N^2)\\). The convolution theorem holds exactly for the DFT, making the FFT the computational backbone of spectral methods and the Fourier Neural Operator.\nFurther reading: @Kreyszig2011aem, Sec. 11.9 (DFT and FFT); @BruntonKutz2022, Sec. 2.2 (FFT and applications in data-driven methods).",
     "crumbs": [
       "Harmonic Analysis",
-      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Fourier Transform</span>"
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>Fourier Transform</span>"
+    ]
+  },
+  {
+    "objectID": "02-harmonic-analysis/fourier-transform.html#key-identities-derivations",
+    "href": "02-harmonic-analysis/fourier-transform.html#key-identities-derivations",
+    "title": "8  Fourier Transform",
+    "section": "8.5 Key Identities: Derivations",
+    "text": "8.5 Key Identities: Derivations\nAll derivations below use the convention \\(\\hat{f}(\\xi) = \\int_{-\\infty}^{\\infty} f(x)\\, e^{-2\\pi i\\xi x}\\, dx\\).\n\n8.5.1 Derivative Property\nClaim. \\(\\mathcal{F}[f^{(n)}](\\xi) = (2\\pi i\\xi)^n \\hat{f}(\\xi)\\).\nDerivation (n=1). Integrate by parts, assuming \\(f(x) \\to 0\\) as \\(|x| \\to \\infty\\):\n\\[\\mathcal{F}[f'](\\xi) = \\int_{-\\infty}^{\\infty} f'(x)\\, e^{-2\\pi i\\xi x}\\, dx = \\underbrace{\\left[f(x) e^{-2\\pi i\\xi x}\\right]_{-\\infty}^{\\infty}}_{= 0} + 2\\pi i\\xi \\int_{-\\infty}^{\\infty} f(x)\\, e^{-2\\pi i\\xi x}\\, dx = 2\\pi i\\xi\\, \\hat{f}(\\xi).\\]\nApplying the same identity \\(n\\) times gives the general result. Differentiation in the spatial domain is multiplication by \\(2\\pi i\\xi\\) in the frequency domain, converting a differential operator into an algebraic one.\n\n\n\n8.5.2 Convolution Theorem\nClaim. \\(\\mathcal{F}[f * g](\\xi) = \\hat{f}(\\xi)\\cdot\\hat{g}(\\xi)\\).\nDerivation. Write out the transform of the convolution and swap the order of integration (Fubini):\n\\[\\mathcal{F}[f * g](\\xi) = \\int_{-\\infty}^{\\infty} \\left(\\int_{-\\infty}^{\\infty} f(y)\\, g(x-y)\\, dy\\right) e^{-2\\pi i\\xi x}\\, dx = \\int_{-\\infty}^{\\infty} f(y) \\left(\\int_{-\\infty}^{\\infty} g(x-y)\\, e^{-2\\pi i\\xi x}\\, dx\\right) dy.\\]\nSubstitute \\(u = x - y\\) in the inner integral (\\(du = dx\\), \\(x = u + y\\)):\n\\[= \\int_{-\\infty}^{\\infty} f(y) \\left(\\int_{-\\infty}^{\\infty} g(u)\\, e^{-2\\pi i\\xi(u+y)}\\, du\\right) dy = \\int_{-\\infty}^{\\infty} f(y)\\, e^{-2\\pi i\\xi y}\\, dy \\cdot \\int_{-\\infty}^{\\infty} g(u)\\, e^{-2\\pi i\\xi u}\\, du = \\hat{f}(\\xi)\\cdot\\hat{g}(\\xi).\\]\nThe reverse direction also holds: pointwise multiplication in frequency corresponds to convolution in space, \\(\\mathcal{F}^{-1}[\\hat{f}\\cdot\\hat{g}] = f * g\\). This is the basis for the FNO: learned filters applied in the frequency domain correspond to convolution operators in the spatial domain.\n\n\n\n8.5.3 Gaussian Identity\nClaim. For \\(a &gt; 0\\): \\(\\mathcal{F}[e^{-\\pi a x^2}](\\xi) = a^{-1/2}\\, e^{-\\pi \\xi^2/a}\\).\nIn particular, \\(\\mathcal{F}[e^{-\\pi x^2}] = e^{-\\pi\\xi^2}\\): the standard Gaussian is a fixed point of the Fourier transform.\nDerivation. Let \\(I(\\xi) = \\int_{-\\infty}^{\\infty} e^{-\\pi a x^2} e^{-2\\pi i\\xi x}\\, dx\\). Complete the square in the exponent:\n\\[-\\pi a x^2 - 2\\pi i\\xi x = -\\pi a\\!\\left(x + \\frac{i\\xi}{a}\\right)^2 - \\frac{\\pi\\xi^2}{a}.\\]\nFactoring out the \\(\\xi\\)-dependent constant:\n\\[I(\\xi) = e^{-\\pi\\xi^2/a} \\int_{-\\infty}^{\\infty} e^{-\\pi a(x + i\\xi/a)^2}\\, dx.\\]\nThe substitution \\(u = \\sqrt{a}(x + i\\xi/a)\\) (shifting the contour in the complex plane, justified by analyticity) gives \\(du = \\sqrt{a}\\, dx\\) and:\n\\[I(\\xi) = e^{-\\pi\\xi^2/a} \\cdot \\frac{1}{\\sqrt{a}} \\int_{-\\infty}^{\\infty} e^{-\\pi u^2}\\, du = \\frac{e^{-\\pi\\xi^2/a}}{\\sqrt{a}},\\]\nusing the Gaussian integral \\(\\int_{-\\infty}^{\\infty} e^{-\\pi u^2}\\, du = 1\\).\nThe Gaussian plays a central role in analysis because it is maximally concentrated simultaneously in space and frequency (saturating the uncertainty principle), and because it is self-dual under the Fourier transform.\n\n\n\n8.5.4 Dirac Delta\nThe Dirac delta \\(\\delta(x)\\) is the distribution satisfying \\(\\int_{-\\infty}^{\\infty} \\delta(x)\\, f(x)\\, dx = f(0)\\) for any test function \\(f\\).\nClaim. \\(\\mathcal{F}[\\delta](\\xi) = 1\\) and \\(\\mathcal{F}[1](\\xi) = \\delta(\\xi)\\).\nDerivation of \\(\\mathcal{F}[\\delta] = 1\\).\n\\[\\hat{\\delta}(\\xi) = \\int_{-\\infty}^{\\infty} \\delta(x)\\, e^{-2\\pi i\\xi x}\\, dx = e^{-2\\pi i\\xi \\cdot 0} = 1.\\]\nA point mass in space has equal energy at all frequencies - a flat spectrum. This is the distributional analogue of the impulse response: the Green’s function of a differential operator \\(L\\) is the function \\(G\\) satisfying \\(LG = \\delta\\), and in frequency space this becomes \\(\\hat{L}(\\xi)\\hat{G}(\\xi) = 1\\), so \\(\\hat{G}(\\xi) = 1/\\hat{L}(\\xi)\\).\nShifted delta. \\(\\mathcal{F}[\\delta(\\cdot - a)](\\xi) = e^{-2\\pi i\\xi a}\\). A pure spatial shift is a linear phase in frequency.",
+    "crumbs": [
+      "Harmonic Analysis",
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>Fourier Transform</span>"
     ]
   },
   {
     "objectID": "02-harmonic-analysis/spherical-harmonics.html",
     "href": "02-harmonic-analysis/spherical-harmonics.html",
-    "title": "7  Spherical Harmonics",
+    "title": "9  Spherical Harmonics",
     "section": "",
-    "text": "7.1 Motivation\nOn the interval \\([-\\pi, \\pi]\\), the functions \\(e^{inx}\\) are the eigenfunctions of \\(\\frac{d^2}{dx^2}\\): they satisfy \\(\\frac{d^2}{dx^2} e^{inx} = -n^2 e^{inx}\\). The Fourier series is an eigenfunction expansion of this operator.\nOn the sphere \\(S^2\\), the analogous operator is the Laplace-Beltrami operator \\(\\Delta_{S^2}\\) (derived in the spherical coordinates section). The spherical harmonics are its eigenfunctions, and they play the role of \\(e^{inx}\\) on the sphere.",
+    "text": "9.1 Definition\nThe spherical harmonics are the eigenfunctions of the Laplace-Beltrami operator \\(\\Delta_{S^2}\\) on \\(S^2\\), playing the role of \\(e^{inx}\\) on the sphere. They are the instance of the Sturm-Liouville framework (see the function spaces section) for the operator \\(-\\Delta_{S^2}\\) with the standard \\(L^2(S^2)\\) inner product.\nIn spherical coordinates \\((\\theta, \\phi)\\) with \\(\\theta \\in [0,\\pi]\\) (colatitude) and \\(\\phi \\in [0, 2\\pi)\\) (longitude), the spherical harmonics are\n\\[Y_l^m(\\theta, \\phi) = \\sqrt{\\frac{(2l+1)}{4\\pi}\\frac{(l-m)!}{(l+m)!}}\\, P_l^m(\\cos\\theta)\\, e^{im\\phi},\\]\nwhere \\(l = 0, 1, 2, \\ldots\\) is the degree, \\(m = -l, \\ldots, l\\) is the order, and \\(P_l^m\\) are the associated Legendre polynomials. There are \\(2l+1\\) harmonics of each degree, and infinitely many degrees.\nEigenvalue equation. The spherical harmonics satisfy\n\\[\\Delta_{S^2} Y_l^m = -l(l+1)\\, Y_l^m.\\]\nThe eigenvalue \\(-l(l+1)\\) depends only on degree \\(l\\), not order \\(m\\): each eigenspace has dimension \\(2l+1\\).\nFurther reading: @Kreyszig2011aem, Secs. 12.10-12.11 (Laplace’s equation in spherical coordinates, Legendre polynomials, and associated Legendre functions).",
     "crumbs": [
       "Harmonic Analysis",
-      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Spherical Harmonics</span>"
-    ]
-  },
-  {
-    "objectID": "02-harmonic-analysis/spherical-harmonics.html#definition",
-    "href": "02-harmonic-analysis/spherical-harmonics.html#definition",
-    "title": "7  Spherical Harmonics",
-    "section": "7.2 Definition",
-    "text": "7.2 Definition\nIn spherical coordinates \\((\\theta, \\phi)\\) with \\(\\theta \\in [0,\\pi]\\) (colatitude) and \\(\\phi \\in [0, 2\\pi)\\) (longitude), the spherical harmonics are\n\\[Y_l^m(\\theta, \\phi) = \\sqrt{\\frac{(2l+1)}{4\\pi}\\frac{(l-m)!}{(l+m)!}}\\, P_l^m(\\cos\\theta)\\, e^{im\\phi},\\]\nwhere \\(l = 0, 1, 2, \\ldots\\) is the degree, \\(m = -l, \\ldots, l\\) is the order, and \\(P_l^m\\) are the associated Legendre polynomials. There are \\(2l+1\\) harmonics of each degree, and infinitely many degrees.\nEigenvalue equation. The spherical harmonics satisfy\n\\[\\Delta_{S^2} Y_l^m = -l(l+1)\\, Y_l^m.\\]\nThe eigenvalue \\(-l(l+1)\\) depends only on degree \\(l\\), not order \\(m\\): each eigenspace has dimension \\(2l+1\\).\nFurther reading: @Kreyszig2011aem, Secs. 12.10-12.11 (Laplace’s equation in spherical coordinates, Legendre polynomials, and associated Legendre functions).",
-    "crumbs": [
-      "Harmonic Analysis",
-      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Spherical Harmonics</span>"
+      "<span class='chapter-number'>9</span>  <span class='chapter-title'>Spherical Harmonics</span>"
     ]
   },
   {
     "objectID": "02-harmonic-analysis/spherical-harmonics.html#orthogonality-and-completeness",
     "href": "02-harmonic-analysis/spherical-harmonics.html#orthogonality-and-completeness",
-    "title": "7  Spherical Harmonics",
-    "section": "7.3 Orthogonality and Completeness",
-    "text": "7.3 Orthogonality and Completeness\nThe spherical harmonics form an orthonormal basis for \\(L^2(S^2)\\):\n\\[\\int_{S^2} Y_l^m(\\theta,\\phi)\\, \\overline{Y_{l'}^{m'}(\\theta,\\phi)}\\, d\\Omega = \\delta_{ll'}\\delta_{mm'},\\]\nwhere \\(d\\Omega = \\sin\\theta\\, d\\theta\\, d\\phi\\) is the solid angle element. Any \\(f \\in L^2(S^2)\\) expands as\n\\[f(\\theta,\\phi) = \\sum_{l=0}^{\\infty}\\sum_{m=-l}^{l} \\hat{f}_l^m\\, Y_l^m(\\theta,\\phi), \\qquad \\hat{f}_l^m = \\int_{S^2} f(\\theta,\\phi)\\, \\overline{Y_l^m(\\theta,\\phi)}\\, d\\Omega.\\]\nThis is the spherical harmonic transform, the analogue of the Fourier series on \\(S^2\\).\nParseval:\n\\[\\int_{S^2} |f|^2\\, d\\Omega = \\sum_{l,m} |\\hat{f}_l^m|^2.\\]\nFurther reading: @Kreyszig2011aem, Sec. 12.11 (orthogonality of Legendre polynomials, basis for the expansion).",
+    "title": "9  Spherical Harmonics",
+    "section": "9.2 Orthogonality and Completeness",
+    "text": "9.2 Orthogonality and Completeness\nThe \\(\\{Y_l^m\\}\\) form an ONB for \\(L^2(S^2)\\) in the sense of the function spaces section. The specific orthonormality relation is\n\\[\\int_{S^2} Y_l^m(\\theta,\\phi)\\, \\overline{Y_{l'}^{m'}(\\theta,\\phi)}\\, d\\Omega = \\delta_{ll'}\\delta_{mm'},\\]\nwhere \\(d\\Omega = \\sin\\theta\\, d\\theta\\, d\\phi\\). The expansion and Parseval identity follow from the general ONB theory:\n\\[f(\\theta,\\phi) = \\sum_{l=0}^{\\infty}\\sum_{m=-l}^{l} \\hat{f}_l^m\\, Y_l^m(\\theta,\\phi), \\qquad \\hat{f}_l^m = \\int_{S^2} f\\, \\overline{Y_l^m}\\, d\\Omega, \\qquad \\int_{S^2} |f|^2\\, d\\Omega = \\sum_{l,m} |\\hat{f}_l^m|^2.\\]\nThis is the spherical harmonic transform, the analogue of the Fourier series on \\(S^2\\).\nFurther reading: @Kreyszig2011aem, Sec. 12.11 (orthogonality of Legendre polynomials, basis for the expansion).",
     "crumbs": [
       "Harmonic Analysis",
-      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Spherical Harmonics</span>"
+      "<span class='chapter-number'>9</span>  <span class='chapter-title'>Spherical Harmonics</span>"
     ]
   },
   {
     "objectID": "02-harmonic-analysis/spherical-harmonics.html#low-degree-examples",
     "href": "02-harmonic-analysis/spherical-harmonics.html#low-degree-examples",
-    "title": "7  Spherical Harmonics",
-    "section": "7.4 Low-degree Examples",
-    "text": "7.4 Low-degree Examples\n\n\\(Y_0^0 = \\frac{1}{\\sqrt{4\\pi}}\\): constant function, \\(l=0\\).\n\\(Y_1^0 = \\sqrt{\\frac{3}{4\\pi}}\\cos\\theta\\): proportional to \\(z/r\\), the north-south dipole.\n\\(Y_1^{\\pm 1} = \\mp\\sqrt{\\frac{3}{8\\pi}}\\sin\\theta\\, e^{\\pm i\\phi}\\): equatorial dipoles.\n\nDegree \\(l\\) harmonics oscillate \\(l\\) times across the sphere. High \\(l\\) corresponds to small-scale features; low \\(l\\) to large-scale structure.",
+    "title": "9  Spherical Harmonics",
+    "section": "9.3 Low-degree Examples",
+    "text": "9.3 Low-degree Examples\n\n\\(Y_0^0 = \\frac{1}{\\sqrt{4\\pi}}\\): constant function, \\(l=0\\).\n\\(Y_1^0 = \\sqrt{\\frac{3}{4\\pi}}\\cos\\theta\\): proportional to \\(z/r\\), the north-south dipole.\n\\(Y_1^{\\pm 1} = \\mp\\sqrt{\\frac{3}{8\\pi}}\\sin\\theta\\, e^{\\pm i\\phi}\\): equatorial dipoles.\n\nDegree \\(l\\) harmonics oscillate \\(l\\) times across the sphere. High \\(l\\) corresponds to small-scale features; low \\(l\\) to large-scale structure.",
     "crumbs": [
       "Harmonic Analysis",
-      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Spherical Harmonics</span>"
+      "<span class='chapter-number'>9</span>  <span class='chapter-title'>Spherical Harmonics</span>"
     ]
   },
   {
     "objectID": "02-harmonic-analysis/spherical-harmonics.html#addition-theorem",
     "href": "02-harmonic-analysis/spherical-harmonics.html#addition-theorem",
-    "title": "7  Spherical Harmonics",
-    "section": "7.5 Addition Theorem",
-    "text": "7.5 Addition Theorem\nFor any two directions \\(\\hat{\\mathbf{r}}, \\hat{\\mathbf{r}}' \\in S^2\\) with angle \\(\\gamma\\) between them:\n\\[P_l(\\cos\\gamma) = \\frac{4\\pi}{2l+1}\\sum_{m=-l}^{l} Y_l^m(\\hat{\\mathbf{r}})\\, \\overline{Y_l^m(\\hat{\\mathbf{r}}')},\\]\nwhere \\(P_l\\) is the Legendre polynomial of degree \\(l\\). This identity is used to express rotationally symmetric kernels (such as Green’s functions on \\(S^2\\)) in terms of spherical harmonics.\nFurther reading: @Kreyszig2011aem, Sec. 12.11 (Legendre polynomials and their properties).",
+    "title": "9  Spherical Harmonics",
+    "section": "9.4 Addition Theorem",
+    "text": "9.4 Addition Theorem\nFor any two directions \\(\\hat{\\mathbf{r}}, \\hat{\\mathbf{r}}' \\in S^2\\) with angle \\(\\gamma\\) between them:\n\\[P_l(\\cos\\gamma) = \\frac{4\\pi}{2l+1}\\sum_{m=-l}^{l} Y_l^m(\\hat{\\mathbf{r}})\\, \\overline{Y_l^m(\\hat{\\mathbf{r}}')},\\]\nwhere \\(P_l\\) is the Legendre polynomial of degree \\(l\\). This identity is used to express rotationally symmetric kernels (such as Green’s functions on \\(S^2\\)) in terms of spherical harmonics.\nFurther reading: @Kreyszig2011aem, Sec. 12.11 (Legendre polynomials and their properties).",
     "crumbs": [
       "Harmonic Analysis",
-      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Spherical Harmonics</span>"
+      "<span class='chapter-number'>9</span>  <span class='chapter-title'>Spherical Harmonics</span>"
     ]
   },
   {
     "objectID": "02-harmonic-analysis/spherical-harmonics.html#convolution-on-s2",
     "href": "02-harmonic-analysis/spherical-harmonics.html#convolution-on-s2",
-    "title": "7  Spherical Harmonics",
-    "section": "7.6 Convolution on \\(S^2\\)",
-    "text": "7.6 Convolution on \\(S^2\\)\nA rotationally symmetric kernel \\(K(\\hat{\\mathbf{r}} \\cdot \\hat{\\mathbf{r}}')\\) (depending only on the angle between two points) acts by convolution on the sphere. By the addition theorem, convolution with such a kernel is diagonal in the spherical harmonic basis: each coefficient \\(\\hat{f}_l^m\\) is multiplied by a degree-dependent factor \\(\\hat{K}_l\\). This diagonalization property underlies both spectral numerical methods and the GSNO architecture.\nFurther reading: @Tang2025gsno (GSNO paper, Sec. 2-3, where this diagonalization is the direct basis for the architecture); @Bonev2023sfno (Sec. 2, spherical harmonic convolution in the SFNO).",
+    "title": "9  Spherical Harmonics",
+    "section": "9.5 Convolution on \\(S^2\\)",
+    "text": "9.5 Convolution on \\(S^2\\)\nA rotationally symmetric kernel \\(K(\\hat{\\mathbf{r}} \\cdot \\hat{\\mathbf{r}}')\\) (depending only on the angle between two points) acts by convolution on the sphere. By the addition theorem, convolution with such a kernel is diagonal in the spherical harmonic basis: each coefficient \\(\\hat{f}_l^m\\) is multiplied by a degree-dependent factor \\(\\hat{K}_l\\). This diagonalization property underlies both spectral numerical methods and the GSNO architecture.\nFurther reading: @Tang2025gsno (GSNO paper, Sec. 2-3, where this diagonalization is the direct basis for the architecture); @Bonev2023sfno (Sec. 2, spherical harmonic convolution in the SFNO).",
     "crumbs": [
       "Harmonic Analysis",
-      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Spherical Harmonics</span>"
+      "<span class='chapter-number'>9</span>  <span class='chapter-title'>Spherical Harmonics</span>"
+    ]
+  },
+  {
+    "objectID": "02-harmonic-analysis/spherical-harmonics.html#worked-example-expanding-cos2theta",
+    "href": "02-harmonic-analysis/spherical-harmonics.html#worked-example-expanding-cos2theta",
+    "title": "9  Spherical Harmonics",
+    "section": "9.6 Worked Example: Expanding \\(\\cos^2\\theta\\)",
+    "text": "9.6 Worked Example: Expanding \\(\\cos^2\\theta\\)\nExpand \\(f(\\theta, \\phi) = \\cos^2\\theta\\) in spherical harmonics.\nSince \\(f\\) is independent of \\(\\phi\\), only \\(m = 0\\) terms appear. Write \\(\\cos^2\\theta\\) in terms of Legendre polynomials using the identity \\(P_2(t) = \\frac{1}{2}(3t^2 - 1)\\), so \\(t^2 = \\frac{1}{3}(2P_2(t) + 1)\\):\n\\[\\cos^2\\theta = \\frac{1}{3}(2P_2(\\cos\\theta) + P_0(\\cos\\theta)).\\]\nConverting to spherical harmonics with \\(Y_l^0 = \\sqrt{\\frac{2l+1}{4\\pi}} P_l(\\cos\\theta)\\):\n\\[P_0(\\cos\\theta) = \\sqrt{4\\pi}\\, Y_0^0, \\qquad P_2(\\cos\\theta) = \\sqrt{\\frac{4\\pi}{5}}\\, Y_2^0.\\]\nSubstituting:\n\\[\\cos^2\\theta = \\frac{\\sqrt{4\\pi}}{3}\\, Y_0^0 + \\frac{2}{3}\\sqrt{\\frac{4\\pi}{5}}\\, Y_2^0.\\]\nOnly \\(l = 0\\) and \\(l = 2\\) components are nonzero. This is expected: \\(\\cos^2\\theta\\) is a degree-2 polynomial in \\(\\cos\\theta\\), and the \\(l\\)-th spherical harmonic captures exactly degree-\\(l\\) angular structure.",
+    "crumbs": [
+      "Harmonic Analysis",
+      "<span class='chapter-number'>9</span>  <span class='chapter-title'>Spherical Harmonics</span>"
+    ]
+  },
+  {
+    "objectID": "02-harmonic-analysis/spherical-harmonics.html#worked-example-verifying-the-eigenvalue-equation",
+    "href": "02-harmonic-analysis/spherical-harmonics.html#worked-example-verifying-the-eigenvalue-equation",
+    "title": "9  Spherical Harmonics",
+    "section": "9.7 Worked Example: Verifying the Eigenvalue Equation",
+    "text": "9.7 Worked Example: Verifying the Eigenvalue Equation\nVerify \\(\\Delta_{S^2} Y_1^0 = -2\\, Y_1^0\\) directly, where \\(Y_1^0(\\theta,\\phi) = \\sqrt{3/4\\pi}\\cos\\theta\\).\nSince \\(Y_1^0\\) is independent of \\(\\phi\\), the \\(\\partial_\\phi^2\\) term vanishes:\n\\[\\Delta_{S^2} Y_1^0 = \\frac{1}{\\sin\\theta}\\frac{\\partial}{\\partial\\theta}\\!\\left(\\sin\\theta\\frac{\\partial}{\\partial\\theta}\\sqrt{\\frac{3}{4\\pi}}\\cos\\theta\\right) = \\sqrt{\\frac{3}{4\\pi}}\\frac{1}{\\sin\\theta}\\frac{\\partial}{\\partial\\theta}(-\\sin^2\\theta) = \\sqrt{\\frac{3}{4\\pi}}\\frac{-2\\sin\\theta\\cos\\theta}{\\sin\\theta} = -2\\,Y_1^0.\\]\nThis confirms \\(\\Delta_{S^2} Y_1^0 = -l(l+1)\\, Y_1^0 = -1\\cdot 2\\, Y_1^0\\).",
+    "crumbs": [
+      "Harmonic Analysis",
+      "<span class='chapter-number'>9</span>  <span class='chapter-title'>Spherical Harmonics</span>"
     ]
   },
   {
