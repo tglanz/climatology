@@ -1,0 +1,62 @@
+[
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Global Physical Climatology",
+    "section": "",
+    "text": "Preface\nThis book covers global physical climatology and machine learning approaches including PINNs and Neural Operators.",
+    "crumbs": [
+      "Preface"
+    ]
+  },
+  {
+    "objectID": "01-vector-calculus/index.html",
+    "href": "01-vector-calculus/index.html",
+    "title": "1  Vector Calculus",
+    "section": "",
+    "text": "Builds the differential operator vocabulary used throughout the book - gradient, divergence, curl, and the Laplacian. Covers the integral theorems (Green’s, Stokes’) that underpin the Green’s function approach to PDEs. This language is the substrate everything else is written in: vorticity is curl, the BVE involves the Laplacian, and the GSNO is defined through a Green’s function - none of that is legible without this chapter.",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Vector Calculus</span>"
+    ]
+  },
+  {
+    "objectID": "02-harmonic-analysis/index.html",
+    "href": "02-harmonic-analysis/index.html",
+    "title": "2  Harmonic Analysis",
+    "section": "",
+    "text": "Develops Fourier analysis and its generalization to spherical harmonics. Fourier series and transforms introduce the idea of decomposing functions into orthogonal bases - a tool that reappears in the Fourier Neural Operator (FNO), in spectral numerical methods, and in the solution of PDEs on flat domains. Spherical harmonics extend this to the sphere \\(S^2\\), forming the natural basis for functions on a globe. They appear again as eigenfunctions of the Laplace-Beltrami operator in the PDEs chapter, as the spectral basis in the GFD chapter, and as the structural foundation of the GSNO. This chapter is built once so every later chapter can use it without interruption.",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Harmonic Analysis</span>"
+    ]
+  },
+  {
+    "objectID": "03-pdes/index.html",
+    "href": "03-pdes/index.html",
+    "title": "3  Partial Differential Equations",
+    "section": "",
+    "text": "Focuses on the Laplace and Poisson equations, and their solution via Green’s functions. The Green’s function encodes how a differential operator responds to a point source - it is the theoretical object that the GSNO is designed to learn. On the sphere, the Green’s function for the Laplace-Beltrami operator is expressed in terms of the spherical harmonics from the previous chapter. Understanding what a Green’s function is, and why it solves PDEs, is the direct prerequisite for understanding what the GSNO is doing at a conceptual level.",
+    "crumbs": [
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Partial Differential Equations</span>"
+    ]
+  },
+  {
+    "objectID": "04-geophysical-fluid-dynamics/index.html",
+    "href": "04-geophysical-fluid-dynamics/index.html",
+    "title": "4  Geophysical Fluid Dynamics",
+    "section": "",
+    "text": "Introduces the physical system the model will be applied to. Covers the rotating-Earth framework - the Coriolis parameter, the \\(f\\)- and \\(\\beta\\)-plane approximations, and Rossby waves as the dominant large-scale atmospheric wave mode. Derives the Conservation of Potential Vorticity and the Barotropic Vorticity Equation (BVE), which is the PDE the GSNO will be trained to solve. Without this chapter the model is a black box; with it, the architecture choices and the choice of Green’s function make physical sense.",
+    "crumbs": [
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Geophysical Fluid Dynamics</span>"
+    ]
+  },
+  {
+    "objectID": "05-neural-operators/index.html",
+    "href": "05-neural-operators/index.html",
+    "title": "5  Neural Operators",
+    "section": "",
+    "text": "Covers the machine learning framework for learning mappings between function spaces rather than between finite-dimensional vectors. Introduces the Fourier Neural Operator (FNO) as the foundational architecture - it applies learned convolutions in the Fourier domain, directly leveraging the harmonic analysis from chapter 2. Then introduces the Green’s Spherical Neural Operator (GSNO), which replaces the Fourier basis with spherical harmonics and frames the learned map as approximating a Green’s function on \\(S^2\\) - connecting chapters 2, 3, and 4 into a single model. This is the destination the book has been building toward.",
+    "crumbs": [
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Neural Operators</span>"
+    ]
+  }
+]
