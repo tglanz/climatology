@@ -266,6 +266,7 @@ window.Quarto = {
 <p>A set of functions <span class="math inline">\(\{\phi_n\}\)</span> is orthogonal if <span class="math inline">\(\langle \phi_n, \phi_m \rangle = 0\)</span> for <span class="math inline">\(n \neq m\)</span>, and orthonormal if additionally <span class="math inline">\(\langle \phi_n, \phi_n \rangle = 1\)</span>. An orthonormal set is a basis if every <span class="math inline">\(f \in L^2([a,b])\)</span> can be written as</p>
 <p><span class="math display">\[f = \sum_n \langle f, \phi_n \rangle\, \phi_n.\]</span></p>
 <p>The coefficients <span class="math inline">\(\langle f, \phi_n \rangle\)</span> are unique, and the representation converges in <span class="math inline">\(L^2\)</span> (in the sense <span class="math inline">\(\|f - \sum_{n=1}^N \langle f, \phi_n \rangle \phi_n\|^2 \to 0\)</span>).</p>
+<p><em>Further reading: <span class="citation" data-cites="Kreyszig2011aem">@Kreyszig2011aem</span>, Secs. 11.5-11.6 (Sturm-Liouville problems and generalized Fourier series).</em></p>
 <hr>
 </section>
 <section id="fourier-series" class="level2" data-number="5.2">
@@ -281,6 +282,7 @@ window.Quarto = {
 <p><span class="math display">\[\frac{1}{2\pi}\int_{-\pi}^{\pi} |f(x)|^2\, dx = \sum_{n=-\infty}^{\infty} |c_n|^2.\]</span></p>
 <p><strong>Example.</strong> Let <span class="math inline">\(f(x) = x\)</span> on <span class="math inline">\([-\pi, \pi]\)</span>. Then <span class="math inline">\(a_n = 0\)</span> (odd function, cosines vanish) and <span class="math inline">\(b_n = \frac{2(-1)^{n+1}}{n}\)</span>, giving</p>
 <p><span class="math display">\[x = 2\sum_{n=1}^{\infty} \frac{(-1)^{n+1}}{n}\sin(nx) = 2\left(\sin x - \frac{\sin 2x}{2} + \frac{\sin 3x}{3} - \cdots\right).\]</span></p>
+<p><em>Further reading: <span class="citation" data-cites="Kreyszig2011aem">@Kreyszig2011aem</span>, Secs. 11.1-11.2 (Fourier series, real form, even/odd functions); <span class="citation" data-cites="BruntonKutz2022">@BruntonKutz2022</span>, Sec. 2.1 (Fourier series in the context of data-driven methods).</em></p>
 <hr>
 </section>
 <section id="convergence" class="level2" data-number="5.3">
@@ -290,6 +292,7 @@ window.Quarto = {
 <li>If <span class="math inline">\(f\)</span> is piecewise smooth, the series converges to <span class="math inline">\(f(x)\)</span> at continuity points and to <span class="math inline">\(\frac{1}{2}[f(x^+) + f(x^-)]\)</span> at jump discontinuities (Gibbs phenomenon near jumps).</li>
 <li>If <span class="math inline">\(f \in C^k\)</span>, then <span class="math inline">\(|c_n| = O(n^{-k})\)</span>: smoother functions have faster-decaying coefficients.</li>
 </ul>
+<p><em>Further reading: <span class="citation" data-cites="Kreyszig2011aem">@Kreyszig2011aem</span>, Sec. 11.1 (convergence discussion).</em></p>
 
 
 </section>

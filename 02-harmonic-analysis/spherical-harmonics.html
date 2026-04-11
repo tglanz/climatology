@@ -276,6 +276,7 @@ window.Quarto = {
 <p><strong>Eigenvalue equation.</strong> The spherical harmonics satisfy</p>
 <p><span class="math display">\[\Delta_{S^2} Y_l^m = -l(l+1)\, Y_l^m.\]</span></p>
 <p>The eigenvalue <span class="math inline">\(-l(l+1)\)</span> depends only on degree <span class="math inline">\(l\)</span>, not order <span class="math inline">\(m\)</span>: each eigenspace has dimension <span class="math inline">\(2l+1\)</span>.</p>
+<p><em>Further reading: <span class="citation" data-cites="Kreyszig2011aem">@Kreyszig2011aem</span>, Secs. 12.10-12.11 (Laplace’s equation in spherical coordinates, Legendre polynomials, and associated Legendre functions).</em></p>
 <hr>
 </section>
 <section id="orthogonality-and-completeness" class="level2" data-number="7.3">
@@ -287,6 +288,7 @@ window.Quarto = {
 <p>This is the spherical harmonic transform, the analogue of the Fourier series on <span class="math inline">\(S^2\)</span>.</p>
 <p><strong>Parseval:</strong></p>
 <p><span class="math display">\[\int_{S^2} |f|^2\, d\Omega = \sum_{l,m} |\hat{f}_l^m|^2.\]</span></p>
+<p><em>Further reading: <span class="citation" data-cites="Kreyszig2011aem">@Kreyszig2011aem</span>, Sec. 12.11 (orthogonality of Legendre polynomials, basis for the expansion).</em></p>
 <hr>
 </section>
 <section id="low-degree-examples" class="level2" data-number="7.4">
@@ -304,11 +306,13 @@ window.Quarto = {
 <p>For any two directions <span class="math inline">\(\hat{\mathbf{r}}, \hat{\mathbf{r}}' \in S^2\)</span> with angle <span class="math inline">\(\gamma\)</span> between them:</p>
 <p><span class="math display">\[P_l(\cos\gamma) = \frac{4\pi}{2l+1}\sum_{m=-l}^{l} Y_l^m(\hat{\mathbf{r}})\, \overline{Y_l^m(\hat{\mathbf{r}}')},\]</span></p>
 <p>where <span class="math inline">\(P_l\)</span> is the Legendre polynomial of degree <span class="math inline">\(l\)</span>. This identity is used to express rotationally symmetric kernels (such as Green’s functions on <span class="math inline">\(S^2\)</span>) in terms of spherical harmonics.</p>
+<p><em>Further reading: <span class="citation" data-cites="Kreyszig2011aem">@Kreyszig2011aem</span>, Sec. 12.11 (Legendre polynomials and their properties).</em></p>
 <hr>
 </section>
 <section id="convolution-on-s2" class="level2" data-number="7.6">
 <h2 data-number="7.6" class="anchored" data-anchor-id="convolution-on-s2"><span class="header-section-number">7.6</span> Convolution on <span class="math inline">\(S^2\)</span></h2>
 <p>A rotationally symmetric kernel <span class="math inline">\(K(\hat{\mathbf{r}} \cdot \hat{\mathbf{r}}')\)</span> (depending only on the angle between two points) acts by convolution on the sphere. By the addition theorem, convolution with such a kernel is diagonal in the spherical harmonic basis: each coefficient <span class="math inline">\(\hat{f}_l^m\)</span> is multiplied by a degree-dependent factor <span class="math inline">\(\hat{K}_l\)</span>. This diagonalization property underlies both spectral numerical methods and the GSNO architecture.</p>
+<p><em>Further reading: <span class="citation" data-cites="Tang2025gsno">@Tang2025gsno</span> (GSNO paper, Sec. 2-3, where this diagonalization is the direct basis for the architecture); <span class="citation" data-cites="Bonev2023sfno">@Bonev2023sfno</span> (Sec. 2, spherical harmonic convolution in the SFNO).</em></p>
 
 
 </section>

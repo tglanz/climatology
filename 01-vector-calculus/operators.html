@@ -276,6 +276,7 @@ window.Quarto = {
 <p><strong>Example.</strong> Let <span class="math inline">\(\mathbf{F}(x, y) = (x^2 + y,\; xy)\)</span>. Then</p>
 <p><span class="math display">\[\nabla \mathbf{F} = \begin{pmatrix} 2x &amp; 1 \\ y &amp; x \end{pmatrix}.\]</span></p>
 <p>At <span class="math inline">\(\mathbf{p} = (1, 2)\)</span>: <span class="math inline">\(\nabla \mathbf{F} = \begin{pmatrix} 2 &amp; 1 \\ 2 &amp; 1 \end{pmatrix}\)</span>.</p>
+<p><em>Further reading: <span class="citation" data-cites="Kreyszig2011aem">@Kreyszig2011aem</span>, Sec. 9.7 (scalar gradient and directional derivative); tensor gradient of vector fields is treated more fully in advanced calculus texts.</em></p>
 <hr>
 </section>
 <section id="jacobian" class="level2" data-number="1.2">
@@ -288,6 +289,7 @@ window.Quarto = {
 <p><strong>Example.</strong> The map to spherical coordinates <span class="math inline">\(\mathbf{F}(r, \theta, \phi) = (r\sin\theta\cos\phi,\; r\sin\theta\sin\phi,\; r\cos\theta)\)</span> has</p>
 <p><span class="math display">\[\det(J_\mathbf{F}) = r^2 \sin\theta,\]</span></p>
 <p>giving the volume element <span class="math inline">\(dV = r^2\sin\theta\, dr\, d\theta\, d\phi\)</span>.</p>
+<p><em>Further reading: <span class="citation" data-cites="Kreyszig2011aem">@Kreyszig2011aem</span>, Sec. 9.6 (calculus review, change of variables) and Sec. 10.7 (Jacobian in the context of triple integrals).</em></p>
 <hr>
 </section>
 <section id="directional-derivative" class="level2" data-number="1.3">
@@ -295,6 +297,7 @@ window.Quarto = {
 <p><strong>Definition.</strong> The directional derivative of <span class="math inline">\(f\)</span> at <span class="math inline">\(\mathbf{p}\)</span> along unit vector <span class="math inline">\(\hat{\mathbf{u}}\)</span> is</p>
 <p><span class="math display">\[D_{\hat{\mathbf{u}}} f(\mathbf{p}) = \nabla f(\mathbf{p}) \cdot \hat{\mathbf{u}}.\]</span></p>
 <p>This is the rate of change of <span class="math inline">\(f\)</span> along <span class="math inline">\(\hat{\mathbf{u}}\)</span>. The gradient is the unique direction that maximizes <span class="math inline">\(D_{\hat{\mathbf{u}}} f\)</span>, with maximum value <span class="math inline">\(|\nabla f(\mathbf{p})|\)</span>.</p>
+<p><em>Further reading: <span class="citation" data-cites="Kreyszig2011aem">@Kreyszig2011aem</span>, Sec. 9.7.</em></p>
 <hr>
 </section>
 <section id="divergence" class="level2" data-number="1.4">
@@ -305,6 +308,7 @@ window.Quarto = {
 <p><strong>Example.</strong> Let <span class="math inline">\(\mathbf{F}(x, y, z) = (x, y, z)\)</span> (radial expansion). Then</p>
 <p><span class="math display">\[\nabla \cdot \mathbf{F} = 1 + 1 + 1 = 3.\]</span></p>
 <p>Uniform positive divergence everywhere: every point is a source.</p>
+<p><em>Further reading: <span class="citation" data-cites="Kreyszig2011aem">@Kreyszig2011aem</span>, Sec. 9.8.</em></p>
 <hr>
 </section>
 <section id="curl" class="level2" data-number="1.5">
@@ -315,6 +319,7 @@ window.Quarto = {
 <p><strong>Example.</strong> Let <span class="math inline">\(\mathbf{F}(x, y, z) = (-y, x, 0)\)</span>, solid-body rotation in the <span class="math inline">\(xy\)</span>-plane. Then</p>
 <p><span class="math display">\[\nabla \times \mathbf{F} = \left(0 - 0,\; 0 - 0,\; 1 - (-1)\right) = (0, 0, 2).\]</span></p>
 <p>The rotation axis is <span class="math inline">\(+\hat{\mathbf{z}}\)</span> with angular velocity <span class="math inline">\(1\)</span>.</p>
+<p><em>Further reading: <span class="citation" data-cites="Kreyszig2011aem">@Kreyszig2011aem</span>, Sec. 9.9.</em></p>
 <hr>
 </section>
 <section id="laplacian" class="level2" data-number="1.6">
@@ -324,6 +329,7 @@ window.Quarto = {
 <p>For a vector field, the Laplacian acts component-wise: <span class="math inline">\(\nabla^2 \mathbf{F} = (\nabla^2 F_x, \nabla^2 F_y, \nabla^2 F_z)\)</span>.</p>
 <p><strong>Intuition.</strong> <span class="math inline">\(\nabla^2 f(\mathbf{p})\)</span> is proportional to the difference between <span class="math inline">\(f(\mathbf{p})\)</span> and the average of <span class="math inline">\(f\)</span> over an infinitesimal sphere centered at <span class="math inline">\(\mathbf{p}\)</span>. It governs diffusion, electrostatics, and fluid flow. The equation <span class="math inline">\(\nabla^2 f = 0\)</span> (Laplace equation) characterizes fields with no local sources or sinks.</p>
 <p><strong>Example.</strong> Let <span class="math inline">\(f(x, y) = x^2 - y^2\)</span>. Then <span class="math inline">\(\nabla^2 f = 2 - 2 = 0\)</span>: this function satisfies the Laplace equation.</p>
+<p><em>Further reading: <span class="citation" data-cites="Kreyszig2011aem">@Kreyszig2011aem</span>, Sec. 9.8 (Laplacian as div of grad); <span class="citation" data-cites="Evans2010pde">@Evans2010pde</span>, Ch. 2 (Laplace equation and its properties).</em></p>
 
 
 </section>
