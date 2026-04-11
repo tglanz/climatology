@@ -12,6 +12,8 @@ $$f = \sum_n \langle f, \phi_n \rangle\, \phi_n.$$
 
 The coefficients $\langle f, \phi_n \rangle$ are unique, and the representation converges in $L^2$ (in the sense $\|f - \sum_{n=1}^N \langle f, \phi_n \rangle \phi_n\|^2 \to 0$).
 
+*Further reading: @Kreyszig2011aem, Secs. 11.5-11.6 (Sturm-Liouville problems and generalized Fourier series).*
+
 ---
 
 ## Fourier Series
@@ -38,6 +40,8 @@ $$\frac{1}{2\pi}\int_{-\pi}^{\pi} |f(x)|^2\, dx = \sum_{n=-\infty}^{\infty} |c_n
 
 $$x = 2\sum_{n=1}^{\infty} \frac{(-1)^{n+1}}{n}\sin(nx) = 2\left(\sin x - \frac{\sin 2x}{2} + \frac{\sin 3x}{3} - \cdots\right).$$
 
+*Further reading: @Kreyszig2011aem, Secs. 11.1-11.2 (Fourier series, real form, even/odd functions); @BruntonKutz2022, Sec. 2.1 (Fourier series in the context of data-driven methods).*
+
 ---
 
 ## Convergence
@@ -46,3 +50,5 @@ For $f \in L^2$, the Fourier series converges in mean square but need not conver
 
 - If $f$ is piecewise smooth, the series converges to $f(x)$ at continuity points and to $\frac{1}{2}[f(x^+) + f(x^-)]$ at jump discontinuities (Gibbs phenomenon near jumps).
 - If $f \in C^k$, then $|c_n| = O(n^{-k})$: smoother functions have faster-decaying coefficients.
+
+*Further reading: @Kreyszig2011aem, Sec. 11.1 (convergence discussion).*

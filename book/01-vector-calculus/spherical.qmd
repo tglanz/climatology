@@ -24,6 +24,8 @@ $$h_r = 1, \qquad h_\theta = r, \qquad h_\phi = r\sin\theta,$$
 
 and hence $dV = r^2\sin\theta\, dr\, d\theta\, d\phi$, consistent with the Jacobian determinant from the operators section.
 
+*Further reading: @Kreyszig2011aem, Sec. 10.7 (spherical volume element in the context of triple integrals).*
+
 ---
 
 ## General Operator Formulas for Orthogonal Curvilinear Coordinates
@@ -41,6 +43,8 @@ $$\nabla \times \mathbf{F} = \frac{1}{h_1 h_2 h_3} \begin{vmatrix} h_1\hat{e}_1 
 
 **Laplacian:**
 $$\nabla^2 f = \frac{1}{h_1 h_2 h_3}\left[\frac{\partial}{\partial q_1}\!\left(\frac{h_2 h_3}{h_1}\frac{\partial f}{\partial q_1}\right) + \frac{\partial}{\partial q_2}\!\left(\frac{h_1 h_3}{h_2}\frac{\partial f}{\partial q_2}\right) + \frac{\partial}{\partial q_3}\!\left(\frac{h_1 h_2}{h_3}\frac{\partial f}{\partial q_3}\right)\right].$$
+
+*Further reading: @Kreyszig2011aem, Sec. 9.7-9.9 (operators in Cartesian); the general curvilinear derivation via scale factors is covered more fully in @Taylor2005mechanics, Ch. 16 (curvilinear coordinates).*
 
 ---
 
@@ -73,3 +77,5 @@ The full Laplacian decomposes as
 $$\nabla^2 f = \frac{1}{r^2}\frac{\partial}{\partial r}\!\left(r^2\frac{\partial f}{\partial r}\right) + \frac{1}{r^2}\Delta_{S^2} f.$$
 
 $\Delta_{S^2}$ is the operator whose eigenfunctions are the spherical harmonics, and whose Green's function the GSNO is designed to approximate.
+
+*Further reading: @Kreyszig2011aem, Sec. 12.10 (Laplace's equation in spherical coordinates and the derivation of the spherical Laplacian); @Evans2010pde, Appendix C (notation and operator identities).*

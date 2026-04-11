@@ -20,6 +20,8 @@ $$\hat{f}(\omega) = \int_{-\infty}^{\infty} f(x)\, e^{-i\omega x}\, dx, \qquad f
 
 Both conventions are standard; the choice affects normalization factors.
 
+*Further reading: @Kreyszig2011aem, Sec. 11.7 (Fourier integral) and Sec. 11.9 (Fourier transform); @BruntonKutz2022, Sec. 2.1.*
+
 ---
 
 ## Key Properties
@@ -42,6 +44,8 @@ Convolution in the spatial domain is pointwise multiplication in the frequency d
 
 $$\int_{-\infty}^{\infty} |f(x)|^2\, dx = \int_{-\infty}^{\infty} |\hat{f}(\xi)|^2\, d\xi.$$
 
+*Further reading: @Kreyszig2011aem, Sec. 11.9 (properties and convolution theorem).*
+
 ---
 
 ## Differential Equations via Fourier Transform
@@ -54,6 +58,8 @@ $$(2\pi i\xi + a)\hat{f}(\xi) = \hat{g}(\xi) \implies \hat{f}(\xi) = \frac{\hat{
 
 Inverting gives $f = \mathcal{F}^{-1}[\hat{g}/(2\pi i\xi + a)]$. This solution is a convolution $f = g * h$ where $h = \mathcal{F}^{-1}[1/(2\pi i\xi + a)]$ is the impulse response - the Green's function of the operator $\partial_x + a$.
 
+*Further reading: @Evans2010pde, Ch. 4 (Fourier transform applied to PDEs, Green's functions on $\mathbb{R}^n$).*
+
 ---
 
 ## Discrete Fourier Transform
@@ -63,3 +69,5 @@ For a finite sequence $x_0, \ldots, x_{N-1}$, the Discrete Fourier Transform (DF
 $$X_k = \sum_{n=0}^{N-1} x_n\, e^{-2\pi i kn/N}, \qquad k = 0, \ldots, N-1.$$
 
 The Fast Fourier Transform (FFT) computes the DFT in $O(N\log N)$ rather than $O(N^2)$. The convolution theorem holds exactly for the DFT, making the FFT the computational backbone of spectral methods and the Fourier Neural Operator.
+
+*Further reading: @Kreyszig2011aem, Sec. 11.9 (DFT and FFT); @BruntonKutz2022, Sec. 2.2 (FFT and applications in data-driven methods).*

@@ -8,6 +8,8 @@ $$\oint_{\partial D} \bigl(P\, dx + Q\, dy\bigr) = \iint_D \left(\frac{\partial 
 
 With $\mathbf{F} = (P, Q, 0)$, the right side is $\iint_D (\nabla \times \mathbf{F}) \cdot \hat{\mathbf{z}} \, dA$. Green's theorem is the two-dimensional special case of Stokes' theorem.
 
+*Further reading: @Kreyszig2011aem, Sec. 10.4.*
+
 ---
 
 ## Stokes' Theorem
@@ -18,6 +20,8 @@ $$\oint_{\partial S} \mathbf{F} \cdot d\mathbf{r} = \iint_S (\nabla \times \math
 
 The circulation of $\mathbf{F}$ around the boundary equals the flux of its curl through the surface.
 
+*Further reading: @Kreyszig2011aem, Sec. 10.9.*
+
 ---
 
 ## Divergence Theorem
@@ -27,3 +31,5 @@ Let $V \subset \mathbb{R}^3$ be a bounded region with piecewise smooth outward-o
 $$\iint_{\partial V} \mathbf{F} \cdot d\mathbf{S} = \iiint_V \nabla \cdot \mathbf{F} \, dV.$$
 
 The total outward flux through the boundary equals the integral of the divergence over the volume. This theorem is central to the derivation of Green's identities, which underpin Green's functions in the PDEs chapter.
+
+*Further reading: @Kreyszig2011aem, Sec. 10.7; @Evans2010pde, Appendix C.2 (Green's identities as a direct corollary).*
