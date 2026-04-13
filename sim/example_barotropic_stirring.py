@@ -3,33 +3,44 @@ import os
 
 from isca import BarotropicCodeBase, DiagTable, Experiment, Namelist, GFDL_BASE
 
+def is_fft_friendly(n):
+    """Check if n only has prime factors 2, 3, and 5."""
+    if n == 0: return False
+    for p in [2, 3, 5]:
+        while n % p == 0:
+            n //= p
+    return n == 1
 
 def alias_free_grid(num_fourier):
-    """Compute the minimum alias-free Gaussian grid dimensions for triangular truncation.
+    # Minimum requirements for alias-free quadratic products
+    min_lat = math.ceil((3 * num_fourier + 1) / 2)
+    min_lon = 3 * num_fourier + 1
 
-    Nonlinear quadratic products in spectral space produce wavenumbers up to 2N.
-    Gaussian quadrature needs at least ceil((3N + 1) / 2) latitudes to integrate
-    those products exactly. The zonal grid needs 3N + 1 longitudes (Nyquist for
-    the 2N product on a periodic domain). num_lon = 2 * num_lat at the minimum.
-    """
-    num_lat = math.ceil((3 * num_fourier + 1) / 2)
-    if num_lat % 2 == 1:
-        num_lat -= 1
+    # 1. Ensure num_lat is even (standard for Gaussian grids)
+    num_lat = min_lat if min_lat % 2 == 0 else min_lat + 1
 
-    num_lon = 3 * num_fourier + 1
-    if num_lon % 2 == 1:
-        num_lon -= 1
-
+    # 2. Find the next FFT-friendly number for num_lon
+    num_lon = min_lon
+    while not is_fft_friendly(num_lon):
+        num_lon += 1
+        
     return num_lat, num_lon
 
 # Use all available cores, rounded down to the nearest power of 2.
 # Isca requires the core count to be a power of 2 (1, 2, 4, 8, 16, ...).
 _cpu_count = os.cpu_count() or 1
 # NCORES = 2 ** (_cpu_count.bit_length() - 1)
-NCORES = 2
+class Settings:
+    Cores = 2
+    Segments = 15
+    DtAtmosSec = 600
+    StirringAmplitude = 1.0e-10
+    StirringB = 0.4
+    FourierHarmonics = 85
 
+experiment_name = 'barotropic_stirring'
 cb = BarotropicCodeBase.from_directory(GFDL_BASE)
-exp = Experiment('barotropic_stirring', codebase=cb)
+exp = Experiment('', codebase=cb, database=f"output/{experiment_name}-T{Settings.FourierHarmonics}")
 
 # DiagTable controls which model fields are written to NetCDF output and at what frequency.
 # Fields must be registered in the Fortran source via register_diag_field; the table acts as
@@ -72,9 +83,7 @@ diag.add_field('stirring_mod',           'stirring_sqr', time_avg=True)
 exp.diag_table = diag
 exp.clear_rundir()
 
-# params
-num_fourier = 85
-num_lat, num_lon = alias_free_grid(num_fourier)
+num_lat, num_lon = alias_free_grid(Settings.FourierHarmonics)
 
 # The available namelists are defined in the F90 modules.
 # To find how the modules involved we need to find the modules of the relevant executable.
@@ -89,7 +98,7 @@ exp.namelist = Namelist({
         'minutes' : 0,
         'seconds' : 0,
         # Atmospheric timestep [s]
-        'dt_atmos': 1200,
+        'dt_atmos': Settings.DtAtmosSec,
         # Calendar type; 'no_calendar' means day-count only (no months/years)
         'calendar': 'no_calendar',
     },
@@ -122,9 +131,9 @@ exp.namelist = Namelist({
         # Use triangular (isotropic) spectral truncation instead of rhomboidal
         'triang_trunc'      : True,
         # Maximum retained zonal wavenumber; this is the T in TN truncation
-        'num_fourier'       : num_fourier,
+        'num_fourier'       : Settings.FourierHarmonics,
         # Maximum retained total wavenumber; must equal num_fourier + 1 for triangular truncation
-        'num_spherical'     : num_fourier + 1,
+        'num_spherical'     : Settings.FourierHarmonics + 1,
         # Alias-free Gaussian grid dimensions (see alias_free_grid)
         'num_lat'           :  num_lat,
         'num_lon'           :  num_lon,
@@ -185,27 +194,18 @@ exp.namelist = Namelist({
     # Stochastic vorticity stirring (Vallis et al. 2004, doi:10.1175/1520-0469(2004)061<0264:AMASDM>2.0.CO;2)
     # submodules/isca/src/atmos_spectral_barotropic/stirring.F90:74
     'stirring_nml': {
-        # Decorrelation (e-folding) time of the AR(1) stirring process [s]
         'decay_time': 172800,
-        # Overall amplitude of the stirring forcing [1/s^2]
-        'amplitude' : 3.e-11,
-        # Central latitude of the stirring envelope [degrees]
+        'amplitude' : Settings.StirringAmplitude,
         'lat0'      : 45.,
-        # Central longitude of the stirring envelope [degrees]; only matters when B != 0
         'lon0'      : 180.,
-        # Meridional half-width (Gaussian sigma) of the stirring envelope [degrees]
         'widthy'    : 12.,
-        # Zonal half-width (Gaussian sigma) of the stirring envelope [degrees]; only matters when B != 0
         'widthx'    : 45.,
-        # Zonal asymmetry parameter; 0 = zonally uniform, >0 = localized around lon0
-        'B'         : 1.0,
+        'B'         : Settings.StirringB,
     },
 })
 
-N_SEGMENTS = 4
-
 if __name__ == '__main__':
     cb.compile()
-    exp.run(1, use_restart=False, num_cores=NCORES)
-    for i in range(2, N_SEGMENTS + 1):
-        exp.run(i, num_cores=NCORES)
+    exp.run(1, use_restart=False, num_cores=Settings.Cores)
+    for i in range(2, Settings.Segments + 1):
+        exp.run(i, num_cores=Settings.Cores)
