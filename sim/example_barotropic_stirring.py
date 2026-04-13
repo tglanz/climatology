@@ -1,6 +1,26 @@
+import math
 import os
 
 from isca import BarotropicCodeBase, DiagTable, Experiment, Namelist, GFDL_BASE
+
+
+def alias_free_grid(num_fourier):
+    """Compute the minimum alias-free Gaussian grid dimensions for triangular truncation.
+
+    Nonlinear quadratic products in spectral space produce wavenumbers up to 2N.
+    Gaussian quadrature needs at least ceil((3N + 1) / 2) latitudes to integrate
+    those products exactly. The zonal grid needs 3N + 1 longitudes (Nyquist for
+    the 2N product on a periodic domain). num_lon = 2 * num_lat at the minimum.
+    """
+    num_lat = math.ceil((3 * num_fourier + 1) / 2)
+    if num_lat % 2 == 1:
+        num_lat -= 1
+
+    num_lon = 3 * num_fourier + 1
+    if num_lon % 2 == 1:
+        num_lon -= 1
+
+    return num_lat, num_lon
 
 # Use all available cores, rounded down to the nearest power of 2.
 # Isca requires the core count to be a power of 2 (1, 2, 4, 8, 16, ...).
@@ -20,7 +40,7 @@ exp = Experiment('barotropic_stirring', codebase=cb)
 #
 # Fields defined in submodules/isca/src/atmos_spectral_barotropic/barotropic_diagnostics.F90
 diag = DiagTable()
-diag.add_file('atmos_monthly', 30, 'days', time_units='days')
+diag.add_file('atmos_daily', 1, 'days', time_units='days')
 
 # PRESUMEBLY; everything other than vorticity can be reconstructed.
 
@@ -51,6 +71,10 @@ diag.add_field('stirring_mod',           'stirring_sqr', time_avg=True)
 
 exp.diag_table = diag
 exp.clear_rundir()
+
+# params
+num_fourier = 85
+num_lat, num_lon = alias_free_grid(num_fourier)
 
 # The available namelists are defined in the F90 modules.
 # To find how the modules involved we need to find the modules of the relevant executable.
@@ -97,20 +121,13 @@ exp.namelist = Namelist({
     'barotropic_dynamics_nml': {
         # Use triangular (isotropic) spectral truncation instead of rhomboidal
         'triang_trunc'      : True,
-        # Maximum retained zonal wavenumber; this is the T in TN truncation (T21 here)
-        'num_fourier'       : 21,
+        # Maximum retained zonal wavenumber; this is the T in TN truncation
+        'num_fourier'       : num_fourier,
         # Maximum retained total wavenumber; must equal num_fourier + 1 for triangular truncation
-        'num_spherical'     : 22,
-        # Number of Gaussian latitude (north-south) grid points.
-        # Nonlinear terms produce wavenumbers up to 2*N; Gaussian quadrature requires
-        # at least (3*N + 1) / 2 points to integrate those products exactly (alias-free).
-        # Minimum for T21: ceil((3*21 + 1) / 2) = 32
-        'num_lat'           : 32,
-        # Number of longitude (east-west) grid points.
-        # A full zonal circle is periodic, so by Nyquist you need at least 2*(2*N) points
-        # to represent products up to wavenumber 2*N. The alias-free minimum is 3*N + 1.
-        # Minimum for T21: 3*21 + 1 = 64. Note num_lon = 2 * num_lat at the minimum.
-        'num_lon'           : 64,
+        'num_spherical'     : num_fourier + 1,
+        # Alias-free Gaussian grid dimensions (see alias_free_grid)
+        'num_lat'           :  num_lat,
+        'num_lon'           :  num_lon,
         # Step size when iterating over zonal wavenumbers m = 0, inc, 2*inc, ...
         # Set to 1 to retain all wavenumbers. Set to 2 to retain only even wavenumbers,
         # which enforces zonal symmetry (useful for hemispheric or symmetric experiments).
