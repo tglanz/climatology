@@ -23,6 +23,8 @@ RUN curl -fsSL https://deb.nodesource.com/setup_22.x | bash - \
     && apt-get install -y nodejs \
     && rm -rf /var/lib/apt/lists/*
 
+RUN curl -LsSf https://astral.sh/uv/install.sh | env UV_INSTALL_DIR=/usr/local/bin sh
+
 RUN npm install -g @anthropic-ai/claude-code \
     # Required by the nvim tree-sitter plugin
     tree-sitter-cli
