@@ -1,7 +1,5 @@
 FROM ubuntu:24.04
 
-# Relies on the installation path in instal-nvim.sh;
-# Potentially this could be a parameter to avoid this leak, but idc now
 ARG NVIM_HOME=/opt/nvim
 ARG MINIFORGE_HOME=/home/ubuntu/miniforge3
 
@@ -32,7 +30,13 @@ RUN npm install -g @anthropic-ai/claude-code \
 COPY common/install-nvim.sh /tmp/install-nvim.sh
 RUN bash /tmp/install-nvim.sh
 
-ENV PATH="${MINIFORGE_HOME}/bin:${NVIM_HOME}/bin:$PATH"
+COPY common/install-quarto.sh /tmp/install-quarto.sh
+RUN bash /tmp/install-quarto.sh
+
+COPY common/install-go.sh /tmp/install-go.sh
+RUN bash /tmp/install-go.sh
+
+ENV PATH="${MINIFORGE_HOME}/bin:${NVIM_HOME}/bin:/opt/go/bin:$PATH"
 RUN echo "PATH=$PATH" >> /etc/environment
 
 USER ubuntu
@@ -49,5 +53,4 @@ RUN curl -fsSL https://github.com/conda-forge/miniforge/releases/latest/download
     && bash /tmp/miniforge.sh -b -p ${MINIFORGE_HOME} \
     && rm /tmp/miniforge.sh
 
-
-RUN conda init zsh
+ENTRYPOINT ["/usr/bin/zsh"]

@@ -1,5 +1,5 @@
 {
-  "name": "sim",
+  "name": "climatology",
   "features": {
     "ghcr.io/devcontainers/features/sshd:1": {
       "version": "latest"
@@ -7,7 +7,7 @@
   },
   "build": {
     "dockerfile": "Dockerfile",
-    "context": ".."
+    "context": "."
   },
   "remoteUser": "ubuntu",
   "remoteEnv": {
@@ -16,7 +16,7 @@
     "GFDL_WORK": "${containerWorkspaceFolder}/.isca_work",
     "GFDL_DATA": "${containerWorkspaceFolder}/.isca_data"
   },
-  "postCreateCommand": "bash .devcontainer/sim/post-create.sh",
+  "postCreateCommand": "bash .devcontainer/post-create.sh",
   "customizations": {
     "vscode": {
       "extensions": [
@@ -25,17 +25,15 @@
         "ms-python.vscode-python-envs",
         "fortran-lang.linter-gfortran",
         "extractions.fortran-intellisense",
+        "quarto.quarto",
         "eamodio.gitlens",
         "vscodevim.vim"
       ],
       "settings": {
         "terminal.integrated.defaultProfile.linux": "zsh",
-        "python.defaultInterpreterPath": "/home/ubuntu/miniforge3/envs/isca_env/bin/python",
         "python.analysis.extraPaths": [
           "${containerWorkspaceFolder}/submodules/isca/src/extra/python"
         ],
-        "python-envs.defaultEnvManager": "ms-python.python:conda",
-        "python-envs.defaultPackageManager": "ms-python.python:conda",
         "vim.enable": true
       }
     }
