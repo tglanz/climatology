@@ -1,7 +1,4 @@
 {
-    "python-envs.defaultEnvManager": "ms-python.python:conda",
-    "python-envs.defaultPackageManager": "ms-python.python:conda",
-    "python.defaultInterpreterPath": "/home/ubuntu/miniforge3/envs/isca_env/bin/python",
     "python.analysis.extraPaths": [
         "/workspaces/climatology/submodules/isca/src/extra/python"
     ]
