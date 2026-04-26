@@ -23,6 +23,11 @@ notebook = [
     "ipykernel",
     "ipython",
 ]
+dev = [
+    "black",
+    "pylint",
+    "pytest",
+]
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/analysis"]

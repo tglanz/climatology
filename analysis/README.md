@@ -6,12 +6,19 @@ Data processing, visualization, and transformation tools for simulation and ML i
 
 ```bash
 cd analysis
-uv sync
+uv sync --all-extras
 source .venv/bin/activate
 ```
 
-For notebook support:
+## Commands
 
 ```bash
-uv sync --extra notebook
+# Rotating globe GIF from simulation output
+python -m analysis.cmd.rotating_globe --help
+
+# Formatting
+black src/
+
+# Linting
+pylint src/
 ```
