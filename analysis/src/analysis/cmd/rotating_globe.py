@@ -23,8 +23,16 @@ import numpy as np
 import xarray as xr
 from tqdm import tqdm
 
-
-DIVERGING_FIELDS = {"vor", "vcomp", "ucomp", "pv", "stream", "eddy_vor", "delta_u", "stirring"}
+DIVERGING_FIELDS = {
+    "vor",
+    "vcomp",
+    "ucomp",
+    "pv",
+    "stream",
+    "eddy_vor",
+    "delta_u",
+    "stirring",
+}
 SEQUENTIAL_FIELDS = {"tr", "trs", "stirring_amp", "stirring_sqr"}
 
 DEFAULT_CMAPS = {
@@ -42,6 +50,7 @@ DEFAULT_CMAPS = {
 #   compute_fn(ds) -> np.ndarray with shape (lat, lon) if static, (time, lat, lon) if not
 #   is_static: True means the field is time-independent (same frame for all time steps)
 
+
 def _compute_jet_stream(ds):
     """Time-mean zonal wind -- reveals persistent jet structure."""
     return ds.ucomp.mean(dim="time").values
@@ -49,7 +58,7 @@ def _compute_jet_stream(ds):
 
 def _compute_wind_speed(ds):
     """Instantaneous wind speed sqrt(u^2 + v^2)."""
-    return np.sqrt(ds.ucomp.values ** 2 + ds.vcomp.values ** 2)
+    return np.sqrt(ds.ucomp.values**2 + ds.vcomp.values**2)
 
 
 def _compute_eddy_streamfunction(ds):
@@ -86,7 +95,9 @@ COMPUTED_DIAGNOSTICS = {
 def preprocess_dataset(ds):
     for v in ds.variables:
         if "units" in ds[v].attrs and "0000-00-00" in ds[v].attrs["units"]:
-            ds[v].attrs["units"] = ds[v].attrs["units"].replace("0000-00-00", "0001-01-01")
+            ds[v].attrs["units"] = (
+                ds[v].attrs["units"].replace("0000-00-00", "0001-01-01")
+            )
         if ds[v].attrs.get("calendar") == "NO_CALENDAR":
             ds[v].attrs["calendar"] = "360_day"
     return ds
@@ -137,7 +148,9 @@ def resolve_diagnostic(ds, diag):
 
     data = ds[diag].values
     if data.ndim < 2:
-        raise ValueError(f"Diagnostic '{diag}' is not a spatial field (shape {data.shape})")
+        raise ValueError(
+            f"Diagnostic '{diag}' is not a spatial field (shape {data.shape})"
+        )
     is_static = data.ndim == 2
     is_diverging = diag in DIVERGING_FIELDS
     default_cmap = DEFAULT_CMAPS.get(diag, "RdBu_r" if is_diverging else "viridis")
@@ -162,7 +175,16 @@ def make_gif(ds, args):
     vlim = np.percentile(np.abs(data), percentile)
 
     # Override diverging detection if user explicitly chose a diverging cmap
-    if args.cmap in {"RdBu_r", "RdBu", "seismic", "bwr", "PuOr", "coolwarm", "PiYG", "PRGn"}:
+    if args.cmap in {
+        "RdBu_r",
+        "RdBu",
+        "seismic",
+        "bwr",
+        "PuOr",
+        "coolwarm",
+        "PiYG",
+        "PRGn",
+    }:
         is_diverging = True
 
     cmap = args.cmap if args.cmap is not None else default_cmap
@@ -198,13 +220,22 @@ def make_gif(ds, args):
         ax = fig.add_subplot(1, 1, 1, projection=proj)
         t_idx = time_indices[i]
         ax.pcolormesh(
-            lon, lat, data[t_idx],
-            cmap=cmap, vmin=vmin, vmax=vmax,
-            shading="auto", transform=pc,
+            lon,
+            lat,
+            data[t_idx],
+            cmap=cmap,
+            vmin=vmin,
+            vmax=vmax,
+            shading="auto",
+            transform=pc,
         )
         ax.set_global()
         ax.gridlines(alpha=0.3)
-        title = f"{diag} (t={t_idx}/{ntime - 1})" if args.time == "evolve" else f"{diag} (t={t_fixed})"
+        title = (
+            f"{diag} (t={t_idx}/{ntime - 1})"
+            if args.time == "evolve"
+            else f"{diag} (t={t_fixed})"
+        )
         ax.set_title(title)
         progress.update(1)
         return []
@@ -230,66 +261,89 @@ def main():
     )
 
     parser.add_argument(
-        "--input-path", required=True,
+        "--input-path",
+        required=True,
         help="Path to simulator output directory containing run*/atmos_daily.nc",
     )
     parser.add_argument(
-        "--output-path", default="globe.gif",
+        "--output-path",
+        default="globe.gif",
         help="Output GIF path (default: globe.gif)",
     )
     parser.add_argument(
-        "--time", default="evolve",
+        "--time",
+        default="evolve",
         help=(
             "'evolve' to advance through all time steps, or an integer for a "
             "fixed time step (default: evolve)"
         ),
     )
     parser.add_argument(
-        "--diagnostic", default="vor",
+        "--diagnostic",
+        default="vor",
         help="Variable name from the dataset (default: vor). Use --list-diagnostics to see options.",
     )
     parser.add_argument(
-        "--list-diagnostics", action="store_true",
+        "--list-diagnostics",
+        action="store_true",
         help="Print available diagnostics and exit",
     )
     parser.add_argument(
-        "--list-times", action="store_true",
+        "--list-times",
+        action="store_true",
         help="Print available time steps and exit",
     )
     parser.add_argument(
-        "--cmap", default=None,
+        "--cmap",
+        default=None,
         help="Matplotlib colormap (default: auto based on diagnostic)",
     )
     parser.add_argument(
-        "--rotations", type=float, default=1.0,
+        "--rotations",
+        type=float,
+        default=1.0,
         help="Number of full rotations over the animation (default: 1.0)",
     )
     parser.add_argument(
-        "--n-frames", type=int, default=None,
+        "--n-frames",
+        type=int,
+        default=None,
         help="Number of frames (default: number of time steps for evolve, 90 for fixed)",
     )
     parser.add_argument(
-        "--center-lat", type=float, default=30.0,
+        "--center-lat",
+        type=float,
+        default=30.0,
         help="Latitude of the view center in degrees (default: 30.0)",
     )
     parser.add_argument(
-        "--center-lon", type=float, default=0.0,
+        "--center-lon",
+        type=float,
+        default=0.0,
         help="Starting longitude of the view center in degrees (default: 0.0)",
     )
     parser.add_argument(
-        "--figsize", type=float, default=6.0,
+        "--figsize",
+        type=float,
+        default=6.0,
         help="Figure size in inches (square) (default: 6.0)",
     )
     parser.add_argument(
-        "--fps", type=int, default=6,
+        "--fps",
+        type=int,
+        default=6,
         help="Frames per second (default: 6)",
     )
     parser.add_argument(
-        "--dpi", type=int, default=100,
+        "--dpi",
+        type=int,
+        default=100,
         help="Resolution in dots per inch (default: 100)",
     )
     parser.add_argument(
-        "--percentile", type=float, default=98.0,
+        "--percentile",
+        type=float,
+        default=98.0,
         help="Percentile for robust color scaling (default: 98.0)",
     )
 
