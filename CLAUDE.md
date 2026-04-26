@@ -37,15 +37,14 @@ Each project has its own:
 ### Python (All Projects)
 
 - **Version**: 3.13
-- **Virtual Environment**:
-  ```bash
-  python -m venv .venv
-  source .venv/bin/activate
-  ```
+- **Virtual Environments**:
+  - Simulation (sim): `conda run -n isca_env <cmd>` or `conda activate isca_env`
+  - All other projects: `uv sync` (creates `.venv/` automatically)
+  - Activate: `source .venv/bin/activate`
 - **Dependency Management**: `uv`
   - Install all dependencies: `uv sync --all-groups`
 - **Build Backend**: `hatchling`
-- **CLI Framework**: `click` for command-line interfaces
+- **CLI**: No mandatory framework. Scripts in `cmd/` use whatever fits (click, argparse, bare argv)
 - **Progress Bars**: `tqdm` for long-running loops
 - **Formatting**: `black`
 - **Linting**: `pylint`
@@ -57,11 +56,9 @@ project-name/
 ├── src/
 │   └── package_name/
 │       ├── __init__.py
-│       └── main.py
-├── tests/
-├── notebooks/
-├── docs/
-│   └── getting-started.md
+│       ├── cmd/          # standalone entry point scripts
+│       └── ...
+├── notebooks/            # exploration, examples (optional)
 ├── pyproject.toml
 └── README.md
 ```
@@ -69,7 +66,8 @@ project-name/
 - Use `src/` layout
 - Notebooks go in `notebooks/` directory
 - Hatchling auto-discovers packages in `src/`
-- Run as module: `python -m package_name.main`
+- Entry point scripts go in `cmd/` inside package
+- Run as module: `python -m package_name.cmd.script_name`
 
 **Jupyter Notebook Guidelines:**
 

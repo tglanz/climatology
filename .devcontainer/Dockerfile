@@ -53,6 +53,7 @@ RUN bash /tmp/setup-oh-my-zsh.sh \
 RUN curl -fsSL https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-Linux-x86_64.sh \
     -o /tmp/miniforge.sh \
     && bash /tmp/miniforge.sh -b -p ${MINIFORGE_HOME} \
-    && rm /tmp/miniforge.sh
+    && rm /tmp/miniforge.sh \
+    && ${MINIFORGE_HOME}/bin/conda config --set auto_activate_base false
 
 ENTRYPOINT ["/usr/bin/zsh"]
