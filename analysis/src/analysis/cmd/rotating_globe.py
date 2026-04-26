@@ -17,7 +17,7 @@ import argparse
 from pathlib import Path
 
 import cartopy.crs as ccrs
-import matplotlib.animation as animation
+from matplotlib import animation
 import matplotlib.pyplot as plt
 import numpy as np
 import xarray as xr
@@ -281,7 +281,8 @@ def main():
     parser.add_argument(
         "--diagnostic",
         default="vor",
-        help="Variable name from the dataset (default: vor). Use --list-diagnostics to see options.",
+        help="Variable name from the dataset (default: vor). "
+        "Use --list-diagnostics to see options.",
     )
     parser.add_argument(
         "--list-diagnostics",

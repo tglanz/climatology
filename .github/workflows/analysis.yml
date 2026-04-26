@@ -1,0 +1,21 @@
+name: Analysis CI
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'analysis/**'
+      - '.github/workflows/analysis.yml'
+      - '.github/workflows/python-template.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'analysis/**'
+      - '.github/workflows/analysis.yml'
+      - '.github/workflows/python-template.yml'
+
+jobs:
+  ci:
+    uses: ./.github/workflows/python-template.yml
+    with:
+      project_dir: analysis

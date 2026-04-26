@@ -23,10 +23,20 @@ notebook = [
     "ipykernel",
     "ipython",
 ]
+
+[dependency-groups]
 dev = [
     "black",
     "pylint",
     "pytest",
+]
+
+[tool.pylint.messages_control]
+disable = [
+    "missing-function-docstring",
+    "missing-class-docstring",
+    "missing-module-docstring",
+    "too-many-locals",
 ]
 
 [tool.hatch.build.targets.wheel]
