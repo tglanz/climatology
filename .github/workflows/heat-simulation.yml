@@ -8,7 +8,7 @@ on:
       - '.github/workflows/python-template.yml'
 
 jobs:
-  ci:
+  heat-simulation:
     uses: ./.github/workflows/python-template.yml
     with:
       project_dir: heat-simulation

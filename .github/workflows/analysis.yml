@@ -15,7 +15,7 @@ on:
       - '.github/workflows/python-template.yml'
 
 jobs:
-  ci:
+  analysis:
     uses: ./.github/workflows/python-template.yml
     with:
       project_dir: analysis
