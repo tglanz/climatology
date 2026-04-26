@@ -1,4 +1,4 @@
-name: Analysis CI
+name: Analysis
 
 on:
   push:
