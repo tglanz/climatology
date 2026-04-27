@@ -1,0 +1,80 @@
+# Vorticity
+
+## Definitions
+
+Let $\vec{v}(\vec{x}, t)$ be the velocity field. The **vorticity** is:
+
+$$
+\vec{\omega} = \nabla \times \vec{v}
+$$
+
+Vorticity measures local rotation of fluid elements. A flow with $\vec{\omega} = 0$ everywhere is irrotational.
+
+The **circulation** around a closed curve $C$ is:
+
+$$
+\Gamma = \oint_C \vec{v} \cdot d\vec{l} = \int_S \vec{\omega} \cdot d\vec{S}
+$$
+
+where $S$ is any surface bounded by $C$ (by Stokes' theorem). Circulation is the integrated vorticity through the surface, or equivalently the net tangential velocity around the loop.
+
+## Vorticity Equation
+
+Take the curl of the momentum equation for an inviscid barotropic fluid ($p = p(\rho)$):
+
+$$
+\frac{\partial \vec{\omega}}{\partial t} + (\vec{v} \cdot \nabla)\vec{\omega} = (\vec{\omega} \cdot \nabla)\vec{v} - \vec{\omega}(\nabla \cdot \vec{v})
+$$
+
+The left-hand side is advection of vorticity. On the right:
+
+- $(\vec{\omega} \cdot \nabla)\vec{v}$ is vortex stretching and tilting. Velocity gradients along the vorticity direction amplify or reorient vortex tubes.
+- $-\vec{\omega}(\nabla \cdot \vec{v})$ accounts for divergence: expanding fluid dilutes vorticity.
+
+For incompressible flow ($\nabla \cdot \vec{v} = 0$), the second term vanishes.
+
+A baroclinic term $\frac{1}{\rho^2} \nabla \rho \times \nabla p$ appears when density is not a function of pressure alone. It generates vorticity wherever isosurfaces of $\rho$ and $p$ are misaligned.
+
+## Kelvin's Circulation Theorem
+
+For an inviscid, barotropic fluid with only conservative body forces, the circulation around a material curve $C(t)$ (a curve moving with the fluid) is conserved:
+
+$$
+\frac{D\Gamma}{Dt} = 0
+$$
+
+Vortex lines are frozen into the fluid: they stretch and deform with it but cannot be created or destroyed. This breaks down when viscosity, baroclinicity, or non-conservative forces are present.
+
+## Vorticity Equation in a Rotating Frame
+
+In a frame rotating with angular velocity $\vec{\Omega}$, define the **absolute vorticity** $\vec{\omega}_a = \vec{\omega} + 2\vec{\Omega}$. The vorticity equation becomes:
+
+$$
+\frac{D\vec{\omega}_a}{Dt} = (\vec{\omega}_a \cdot \nabla)\vec{v} - \vec{\omega}_a(\nabla \cdot \vec{v})
+$$
+
+The planetary vorticity $2\vec{\Omega}$ enters on equal footing with the relative vorticity $\vec{\omega}$. For large-scale geophysical flows, $|2\vec{\Omega}| \gg |\vec{\omega}|$, so planetary rotation dominates the vorticity budget.
+
+Restricting to the vertical component for shallow horizontal flow, with $f = 2\Omega \sin\varphi$:
+
+$$
+\frac{D}{Dt}(\zeta + f) = -(\zeta + f)\nabla_h \cdot \vec{v}_h
+$$
+
+where $\zeta = \hat{k} \cdot (\nabla \times \vec{v})$ is the vertical component of relative vorticity and $\nabla_h \cdot \vec{v}_h$ is the horizontal divergence.
+
+## Circulation Theorem and the $\beta$-effect
+
+Kelvin's theorem applied to the rotating Earth conserves absolute circulation. A fluid column moving poleward encounters increasing $f$, so $\zeta$ must decrease to compensate. This coupling between meridional motion and relative vorticity is the $\beta$-effect and is the restoring mechanism for Rossby waves.
+
+## Barotropic Vorticity Equation
+
+For a two-dimensional, incompressible, inviscid flow on a $\beta$-plane, horizontal divergence vanishes ($\nabla_h \cdot \vec{v}_h = 0$). The vorticity equation reduces to:
+
+$$
+\frac{\partial \zeta}{\partial t} + J(\psi, \zeta) + \beta \frac{\partial \psi}{\partial x} = 0
+$$
+
+where $\psi$ is the streamfunction defined by $u = -\partial \psi / \partial y$, $v = \partial \psi / \partial x$, and $J(\psi, \zeta) = \frac{\partial \psi}{\partial x}\frac{\partial \zeta}{\partial y} - \frac{\partial \psi}{\partial y}\frac{\partial \zeta}{\partial x}$ is the Jacobian. Since $\zeta = \nabla^2 \psi$, this is a single prognostic equation for $\psi$.
+
+This is the **Barotropic Vorticity Equation (BVE)** - the PDE that the GSNO will be trained to solve.

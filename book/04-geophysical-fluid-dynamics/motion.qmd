@@ -1,0 +1,57 @@
+# Basic
+
+Let $\vec{x} \in \mathbb{R}^3$ denote position, $t$ time, $\vec{v}(\vec{x}, t)$ the velocity field, $\rho(\vec{x}, t)$ the mass density, $p(\vec{x}, t)$ the pressure, $\nu$ the kinematic viscosity, and $\vec{F}_b(\vec{x}, t)$ the body force per unit mass.
+
+## Material Derivative
+
+The rate of change following a fluid parcel. For scalar $\phi(\vec{x}, t)$ and vector $\vec{b}(\vec{x}, t)$:
+
+$$
+\frac{D\phi}{Dt} = \frac{\partial \phi}{\partial t} + \vec{v} \cdot \nabla \phi
+~~~,~~~
+\frac{D\vec{b}}{Dt} = \frac{\partial \vec{b}}{\partial t} + (\vec{v} \cdot \nabla) \vec{b}
+$$
+
+The first term is local change at a fixed point; the second is advection.
+
+## Mass Continuity
+
+$$
+\frac{\partial \rho}{\partial t} + \nabla \cdot (\rho \vec{v}) = 0
+$$
+
+Conservation of mass. Expanding the divergence: $\frac{D\rho}{Dt} + \rho \nabla \cdot \vec{v} = 0$.
+
+For incompressible flow, $\rho$ is constant along parcel trajectories ($D\rho/Dt = 0$), giving the incompressibility constraint:
+
+$$
+\nabla \cdot \vec{v} = 0
+$$
+
+The velocity field is divergence-free: fluid parcels may deform but not change volume. This eliminates density as a prognostic variable and couples velocity to pressure through the momentum equation, where $p$ acts as a Lagrange multiplier enforcing this constraint.
+
+## Momentum Equation
+
+$$
+\rho \frac{D\vec{v}}{Dt} = -\nabla p + \mu \nabla^2 \vec{v} + \rho \vec{F}_b
+$$
+
+Start from Newton's second law for a small parcel of fluid with volume $\delta V$:
+
+$$
+\vec{F} = m \vec{a}
+$$
+
+The parcel has mass $m = \rho \, \delta V$ and acceleration $\vec{a} = D\vec{v}/Dt$, so:
+
+$$
+\vec{F} = \rho \, \delta V \frac{D\vec{v}}{Dt}
+$$
+
+Divide both sides by $\delta V$ to express everything per unit volume:
+
+$$
+\frac{\vec{F}}{\delta V} = \rho \frac{D\vec{v}}{Dt}
+$$
+
+The left-hand side is the sum of force densities (force per unit volume) acting on the parcel: pressure gradient $(-\nabla p)$, viscous stress $(\mu \nabla^2 \vec{v}$, where $\mu = \rho \nu$ is the dynamic viscosity), and body forces $(\rho \vec{F}_b)$.

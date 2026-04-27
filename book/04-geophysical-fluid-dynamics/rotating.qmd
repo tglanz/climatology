@@ -1,0 +1,72 @@
+# Rotating Frame
+
+The Earth rotates with angular velocity $\vec{\Omega}$, where $|\vec{\Omega}| = \Omega \approx 7.292 \times 10^{-5} \, \text{rad/s}$. The equations of motion derived in the inertial (non-rotating) frame must be transformed to account for this rotation.
+
+## Inertial to Rotating Frame
+
+Let subscripts $I$ and $R$ denote quantities in the inertial and rotating frames. For any vector $\vec{A}$:
+
+$$
+\left(\frac{d\vec{A}}{dt}\right)_I = \left(\frac{d\vec{A}}{dt}\right)_R + \vec{\Omega} \times \vec{A}
+$$
+
+Applying this to the position vector $\vec{r}$ gives the velocity transformation:
+
+$$
+\vec{v}_I = \vec{v}_R + \vec{\Omega} \times \vec{r}
+$$
+
+Applying it again to $\vec{v}_I$ gives the acceleration:
+
+$$
+\left(\frac{D\vec{v}}{Dt}\right)_I = \left(\frac{D\vec{v}}{Dt}\right)_R + 2\vec{\Omega} \times \vec{v}_R + \vec{\Omega} \times (\vec{\Omega} \times \vec{r})
+$$
+
+## Momentum Equation in the Rotating Frame
+
+Substituting into the momentum equation from the previous section, and dropping the $R$ subscript (all quantities are now in the rotating frame):
+
+$$
+\rho \frac{D\vec{v}}{Dt} = -\nabla p + \mu \nabla^2 \vec{v} - 2\rho \vec{\Omega} \times \vec{v} - \rho \vec{\Omega} \times (\vec{\Omega} \times \vec{r}) + \rho \vec{g}
+$$
+
+Two new terms appear:
+
+- $-2\rho \vec{\Omega} \times \vec{v}$ is the **Coriolis force**. It acts perpendicular to the velocity, deflecting moving parcels to the right in the Northern Hemisphere and to the left in the Southern. It does no work (it changes direction, not speed).
+- $-\rho \vec{\Omega} \times (\vec{\Omega} \times \vec{r})$ is the **centrifugal force**. It points outward from the rotation axis. In practice it is absorbed into an effective gravity $\vec{g}^* = \vec{g} - \vec{\Omega} \times (\vec{\Omega} \times \vec{r})$, and the geopotential surfaces (including "sea level") already account for it.
+
+With this absorption, the equation becomes:
+
+$$
+\rho \frac{D\vec{v}}{Dt} = -\nabla p + \mu \nabla^2 \vec{v} - 2\rho \vec{\Omega} \times \vec{v} + \rho \vec{g}^*
+$$
+
+## The Coriolis Parameter
+
+For large-scale atmospheric and oceanic flows, the vertical component of the Coriolis force dominates. Let $\varphi$ denote latitude. The **Coriolis parameter** is:
+
+$$
+f = 2\Omega \sin\varphi
+$$
+
+At the equator $f = 0$; at the poles $f = \pm 2\Omega$. The horizontal component of the Coriolis acceleration reduces to $f \hat{k} \times \vec{v}_h$, where $\vec{v}_h$ is the horizontal velocity and $\hat{k}$ is the local vertical unit vector.
+
+## $f$-plane and $\beta$-plane
+
+For motions whose horizontal scale $L$ is small compared to the Earth's radius $a$, a local Cartesian approximation is used.
+
+**$f$-plane**: $f$ is treated as constant, equal to its value at a reference latitude $\varphi_0$:
+
+$$
+f = f_0 = 2\Omega \sin\varphi_0
+$$
+
+Valid when the flow does not span a large range of latitudes. Captures inertial oscillations and geostrophic balance but not Rossby wave dynamics.
+
+**$\beta$-plane**: $f$ varies linearly with the northward coordinate $y$:
+
+$$
+f = f_0 + \beta y ~~~,~~~ \beta = \frac{df}{dy} = \frac{2\Omega \cos\varphi_0}{a}
+$$
+
+The $\beta$-effect is the minimal ingredient needed to support Rossby waves and westward phase propagation of large-scale disturbances.

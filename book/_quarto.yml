@@ -23,7 +23,10 @@ book:
     - part: 03-pdes/index.qmd
       chapters: []
     - part: 04-geophysical-fluid-dynamics/index.qmd
-      chapters: []
+      chapters:
+        - 04-geophysical-fluid-dynamics/motion.qmd
+        - 04-geophysical-fluid-dynamics/rotating.qmd
+        - 04-geophysical-fluid-dynamics/vorticity.qmd
     - part: 05-neural-operators/index.qmd
       chapters: []
 
