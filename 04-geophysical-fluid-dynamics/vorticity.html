@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>5&nbsp; Spherical Coordinates – Global Physical Climatology</title>
+<title>12&nbsp; Vorticity – Global Physical Climatology</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -33,8 +33,8 @@ ul.task-list li input[type="checkbox"] {
 <script src="../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../">
-<link href="../02-harmonic-analysis/index.html" rel="next">
-<link href="../01-vector-calculus/theorems.html" rel="prev">
+<link href="../05-neural-operators/index.html" rel="next">
+<link href="../04-geophysical-fluid-dynamics/rotating.html" rel="prev">
 <script src="../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="../site_libs/quarto-html/popper.min.js"></script>
@@ -114,7 +114,7 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../01-vector-calculus/index.html">Vector Calculus</a></li><li class="breadcrumb-item"><a href="../01-vector-calculus/spherical.html"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Spherical Coordinates</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../04-geophysical-fluid-dynamics/index.html">Geophysical Fluid Dynamics</a></li><li class="breadcrumb-item"><a href="../04-geophysical-fluid-dynamics/vorticity.html"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Vorticity</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -180,7 +180,7 @@ window.Quarto = {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../01-vector-calculus/spherical.html" class="sidebar-item-text sidebar-link active">
+  <a href="../01-vector-calculus/spherical.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Spherical Coordinates</span></span></a>
   </div>
 </li>
@@ -248,7 +248,7 @@ window.Quarto = {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../04-geophysical-fluid-dynamics/vorticity.html" class="sidebar-item-text sidebar-link">
+  <a href="../04-geophysical-fluid-dynamics/vorticity.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Vorticity</span></span></a>
   </div>
 </li>
@@ -268,21 +268,21 @@ window.Quarto = {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#coordinate-system" id="toc-coordinate-system" class="nav-link active" data-scroll-target="#coordinate-system"><span class="header-section-number">5.1</span> Coordinate System</a></li>
-  <li><a href="#scale-factors" id="toc-scale-factors" class="nav-link" data-scroll-target="#scale-factors"><span class="header-section-number">5.2</span> Scale Factors</a></li>
-  <li><a href="#general-operator-formulas-for-orthogonal-curvilinear-coordinates" id="toc-general-operator-formulas-for-orthogonal-curvilinear-coordinates" class="nav-link" data-scroll-target="#general-operator-formulas-for-orthogonal-curvilinear-coordinates"><span class="header-section-number">5.3</span> General Operator Formulas for Orthogonal Curvilinear Coordinates</a></li>
-  <li><a href="#operators-in-spherical-coordinates" id="toc-operators-in-spherical-coordinates" class="nav-link" data-scroll-target="#operators-in-spherical-coordinates"><span class="header-section-number">5.4</span> Operators in Spherical Coordinates</a></li>
-  <li><a href="#laplace-beltrami-operator-on-s2" id="toc-laplace-beltrami-operator-on-s2" class="nav-link" data-scroll-target="#laplace-beltrami-operator-on-s2"><span class="header-section-number">5.5</span> Laplace-Beltrami Operator on <span class="math inline">\(S^2\)</span></a></li>
-  <li><a href="#worked-examples" id="toc-worked-examples" class="nav-link" data-scroll-target="#worked-examples"><span class="header-section-number">5.6</span> Worked Examples</a></li>
+  <li><a href="#definitions" id="toc-definitions" class="nav-link active" data-scroll-target="#definitions"><span class="header-section-number">12.1</span> Definitions</a></li>
+  <li><a href="#vorticity-equation" id="toc-vorticity-equation" class="nav-link" data-scroll-target="#vorticity-equation"><span class="header-section-number">12.2</span> Vorticity Equation</a></li>
+  <li><a href="#kelvins-circulation-theorem" id="toc-kelvins-circulation-theorem" class="nav-link" data-scroll-target="#kelvins-circulation-theorem"><span class="header-section-number">12.3</span> Kelvin’s Circulation Theorem</a></li>
+  <li><a href="#vorticity-equation-in-a-rotating-frame" id="toc-vorticity-equation-in-a-rotating-frame" class="nav-link" data-scroll-target="#vorticity-equation-in-a-rotating-frame"><span class="header-section-number">12.4</span> Vorticity Equation in a Rotating Frame</a></li>
+  <li><a href="#circulation-theorem-and-the-beta-effect" id="toc-circulation-theorem-and-the-beta-effect" class="nav-link" data-scroll-target="#circulation-theorem-and-the-beta-effect"><span class="header-section-number">12.5</span> Circulation Theorem and the <span class="math inline">\(\beta\)</span>-effect</a></li>
+  <li><a href="#barotropic-vorticity-equation" id="toc-barotropic-vorticity-equation" class="nav-link" data-scroll-target="#barotropic-vorticity-equation"><span class="header-section-number">12.6</span> Barotropic Vorticity Equation</a></li>
   </ul>
 </nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../01-vector-calculus/index.html">Vector Calculus</a></li><li class="breadcrumb-item"><a href="../01-vector-calculus/spherical.html"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Spherical Coordinates</span></a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../04-geophysical-fluid-dynamics/index.html">Geophysical Fluid Dynamics</a></li><li class="breadcrumb-item"><a href="../04-geophysical-fluid-dynamics/vorticity.html"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Vorticity</span></a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Spherical Coordinates</span></h1>
+<h1 class="title"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Vorticity</span></h1>
 </div>
 
 
@@ -299,71 +299,66 @@ window.Quarto = {
 </header>
 
 
-<section id="coordinate-system" class="level2" data-number="5.1">
-<h2 data-number="5.1" class="anchored" data-anchor-id="coordinate-system"><span class="header-section-number">5.1</span> Coordinate System</h2>
-<p>Spherical coordinates <span class="math inline">\((r, \theta, \phi)\)</span> relate to Cartesian coordinates by</p>
-<p><span class="math display">\[x = r\sin\theta\cos\phi, \quad y = r\sin\theta\sin\phi, \quad z = r\cos\theta,\]</span></p>
-<p>where <span class="math inline">\(r \geq 0\)</span> is the radial distance, <span class="math inline">\(\theta \in [0, \pi]\)</span> is the polar angle (colatitude, from the north pole), and <span class="math inline">\(\phi \in [0, 2\pi)\)</span> is the azimuthal angle (longitude). The orthonormal basis <span class="math inline">\((\hat{r}, \hat{\theta}, \hat{\phi})\)</span> points in the directions of increasing <span class="math inline">\(r\)</span>, <span class="math inline">\(\theta\)</span>, <span class="math inline">\(\phi\)</span> respectively, and rotates with position.</p>
-<hr>
+<section id="definitions" class="level2" data-number="12.1">
+<h2 data-number="12.1" class="anchored" data-anchor-id="definitions"><span class="header-section-number">12.1</span> Definitions</h2>
+<p>Let <span class="math inline">\(\vec{v}(\vec{x}, t)\)</span> be the velocity field. The <strong>vorticity</strong> is:</p>
+<p><span class="math display">\[
+\vec{\omega} = \nabla \times \vec{v}
+\]</span></p>
+<p>Vorticity measures local rotation of fluid elements. A flow with <span class="math inline">\(\vec{\omega} = 0\)</span> everywhere is irrotational.</p>
+<p>The <strong>circulation</strong> around a closed curve <span class="math inline">\(C\)</span> is:</p>
+<p><span class="math display">\[
+\Gamma = \oint_C \vec{v} \cdot d\vec{l} = \int_S \vec{\omega} \cdot d\vec{S}
+\]</span></p>
+<p>where <span class="math inline">\(S\)</span> is any surface bounded by <span class="math inline">\(C\)</span> (by Stokes’ theorem). Circulation is the integrated vorticity through the surface, or equivalently the net tangential velocity around the loop.</p>
 </section>
-<section id="scale-factors" class="level2" data-number="5.2">
-<h2 data-number="5.2" class="anchored" data-anchor-id="scale-factors"><span class="header-section-number">5.2</span> Scale Factors</h2>
-<p>For an orthogonal curvilinear coordinate system <span class="math inline">\((q_1, q_2, q_3)\)</span>, the scale factors are</p>
-<p><span class="math display">\[h_i = \left|\frac{\partial \mathbf{r}}{\partial q_i}\right|,\]</span></p>
-<p>converting coordinate differentials to physical arc lengths: <span class="math inline">\(ds_i = h_i\, dq_i\)</span>. The volume element is <span class="math inline">\(dV = h_1 h_2 h_3\, dq_1\, dq_2\, dq_3\)</span>.</p>
-<p>For spherical coordinates, computing <span class="math inline">\(\partial \mathbf{r}/\partial r\)</span>, <span class="math inline">\(\partial \mathbf{r}/\partial \theta\)</span>, <span class="math inline">\(\partial \mathbf{r}/\partial \phi\)</span> and taking magnitudes gives</p>
-<p><span class="math display">\[h_r = 1, \qquad h_\theta = r, \qquad h_\phi = r\sin\theta,\]</span></p>
-<p>and hence <span class="math inline">\(dV = r^2\sin\theta\, dr\, d\theta\, d\phi\)</span>, consistent with the Jacobian determinant from the operators section.</p>
-<p><em>Further reading: <span class="citation" data-cites="Kreyszig2011aem">@Kreyszig2011aem</span>, Sec. 10.7 (spherical volume element in the context of triple integrals).</em></p>
-<hr>
+<section id="vorticity-equation" class="level2" data-number="12.2">
+<h2 data-number="12.2" class="anchored" data-anchor-id="vorticity-equation"><span class="header-section-number">12.2</span> Vorticity Equation</h2>
+<p>Take the curl of the momentum equation for an inviscid barotropic fluid (<span class="math inline">\(p = p(\rho)\)</span>):</p>
+<p><span class="math display">\[
+\frac{\partial \vec{\omega}}{\partial t} + (\vec{v} \cdot \nabla)\vec{\omega} = (\vec{\omega} \cdot \nabla)\vec{v} - \vec{\omega}(\nabla \cdot \vec{v})
+\]</span></p>
+<p>The left-hand side is advection of vorticity. On the right:</p>
+<ul>
+<li><span class="math inline">\((\vec{\omega} \cdot \nabla)\vec{v}\)</span> is vortex stretching and tilting. Velocity gradients along the vorticity direction amplify or reorient vortex tubes.</li>
+<li><span class="math inline">\(-\vec{\omega}(\nabla \cdot \vec{v})\)</span> accounts for divergence: expanding fluid dilutes vorticity.</li>
+</ul>
+<p>For incompressible flow (<span class="math inline">\(\nabla \cdot \vec{v} = 0\)</span>), the second term vanishes.</p>
+<p>A baroclinic term <span class="math inline">\(\frac{1}{\rho^2} \nabla \rho \times \nabla p\)</span> appears when density is not a function of pressure alone. It generates vorticity wherever isosurfaces of <span class="math inline">\(\rho\)</span> and <span class="math inline">\(p\)</span> are misaligned.</p>
 </section>
-<section id="general-operator-formulas-for-orthogonal-curvilinear-coordinates" class="level2" data-number="5.3">
-<h2 data-number="5.3" class="anchored" data-anchor-id="general-operator-formulas-for-orthogonal-curvilinear-coordinates"><span class="header-section-number">5.3</span> General Operator Formulas for Orthogonal Curvilinear Coordinates</h2>
-<p>For coordinates <span class="math inline">\((q_1, q_2, q_3)\)</span> with scale factors <span class="math inline">\((h_1, h_2, h_3)\)</span> and vector field <span class="math inline">\(\mathbf{F} = F_1\hat{e}_1 + F_2\hat{e}_2 + F_3\hat{e}_3\)</span>:</p>
-<p><strong>Gradient:</strong> <span class="math display">\[\nabla f = \frac{1}{h_1}\frac{\partial f}{\partial q_1}\hat{e}_1 + \frac{1}{h_2}\frac{\partial f}{\partial q_2}\hat{e}_2 + \frac{1}{h_3}\frac{\partial f}{\partial q_3}\hat{e}_3.\]</span></p>
-<p><strong>Divergence:</strong> <span class="math display">\[\nabla \cdot \mathbf{F} = \frac{1}{h_1 h_2 h_3}\left[\frac{\partial(h_2 h_3 F_1)}{\partial q_1} + \frac{\partial(h_1 h_3 F_2)}{\partial q_2} + \frac{\partial(h_1 h_2 F_3)}{\partial q_3}\right].\]</span></p>
-<p><strong>Curl:</strong> <span class="math display">\[\nabla \times \mathbf{F} = \frac{1}{h_1 h_2 h_3} \begin{vmatrix} h_1\hat{e}_1 &amp; h_2\hat{e}_2 &amp; h_3\hat{e}_3 \\ \partial_{q_1} &amp; \partial_{q_2} &amp; \partial_{q_3} \\ h_1 F_1 &amp; h_2 F_2 &amp; h_3 F_3 \end{vmatrix}.\]</span></p>
-<p><strong>Laplacian:</strong> <span class="math display">\[\nabla^2 f = \frac{1}{h_1 h_2 h_3}\left[\frac{\partial}{\partial q_1}\!\left(\frac{h_2 h_3}{h_1}\frac{\partial f}{\partial q_1}\right) + \frac{\partial}{\partial q_2}\!\left(\frac{h_1 h_3}{h_2}\frac{\partial f}{\partial q_2}\right) + \frac{\partial}{\partial q_3}\!\left(\frac{h_1 h_2}{h_3}\frac{\partial f}{\partial q_3}\right)\right].\]</span></p>
-<p><em>Further reading: <span class="citation" data-cites="Kreyszig2011aem">@Kreyszig2011aem</span>, Sec. 9.7-9.9 (operators in Cartesian); the general curvilinear derivation via scale factors is covered more fully in <span class="citation" data-cites="Taylor2005mechanics">@Taylor2005mechanics</span>, Ch. 16 (curvilinear coordinates).</em></p>
-<hr>
+<section id="kelvins-circulation-theorem" class="level2" data-number="12.3">
+<h2 data-number="12.3" class="anchored" data-anchor-id="kelvins-circulation-theorem"><span class="header-section-number">12.3</span> Kelvin’s Circulation Theorem</h2>
+<p>For an inviscid, barotropic fluid with only conservative body forces, the circulation around a material curve <span class="math inline">\(C(t)\)</span> (a curve moving with the fluid) is conserved:</p>
+<p><span class="math display">\[
+\frac{D\Gamma}{Dt} = 0
+\]</span></p>
+<p>Vortex lines are frozen into the fluid: they stretch and deform with it but cannot be created or destroyed. This breaks down when viscosity, baroclinicity, or non-conservative forces are present.</p>
 </section>
-<section id="operators-in-spherical-coordinates" class="level2" data-number="5.4">
-<h2 data-number="5.4" class="anchored" data-anchor-id="operators-in-spherical-coordinates"><span class="header-section-number">5.4</span> Operators in Spherical Coordinates</h2>
-<p>Substituting <span class="math inline">\((h_r, h_\theta, h_\phi) = (1, r, r\sin\theta)\)</span>:</p>
-<p><strong>Gradient:</strong> <span class="math display">\[\nabla f = \frac{\partial f}{\partial r}\hat{r} + \frac{1}{r}\frac{\partial f}{\partial \theta}\hat{\theta} + \frac{1}{r\sin\theta}\frac{\partial f}{\partial \phi}\hat{\phi}.\]</span></p>
-<p><strong>Divergence:</strong> <span class="math display">\[\nabla \cdot \mathbf{F} = \frac{1}{r^2}\frac{\partial(r^2 F_r)}{\partial r} + \frac{1}{r\sin\theta}\frac{\partial(\sin\theta\, F_\theta)}{\partial \theta} + \frac{1}{r\sin\theta}\frac{\partial F_\phi}{\partial \phi}.\]</span></p>
-<p><strong>Curl:</strong> <span class="math display">\[\nabla \times \mathbf{F} = \frac{1}{r\sin\theta}\!\left(\frac{\partial(\sin\theta\, F_\phi)}{\partial \theta} - \frac{\partial F_\theta}{\partial \phi}\right)\hat{r} + \frac{1}{r}\!\left(\frac{1}{\sin\theta}\frac{\partial F_r}{\partial \phi} - \frac{\partial(r F_\phi)}{\partial r}\right)\hat{\theta} + \frac{1}{r}\!\left(\frac{\partial(r F_\theta)}{\partial r} - \frac{\partial F_r}{\partial \theta}\right)\hat{\phi}.\]</span></p>
-<p><strong>Laplacian:</strong> <span class="math display">\[\nabla^2 f = \frac{1}{r^2}\frac{\partial}{\partial r}\!\left(r^2\frac{\partial f}{\partial r}\right) + \frac{1}{r^2\sin\theta}\frac{\partial}{\partial \theta}\!\left(\sin\theta\frac{\partial f}{\partial \theta}\right) + \frac{1}{r^2\sin^2\theta}\frac{\partial^2 f}{\partial \phi^2}.\]</span></p>
-<hr>
+<section id="vorticity-equation-in-a-rotating-frame" class="level2" data-number="12.4">
+<h2 data-number="12.4" class="anchored" data-anchor-id="vorticity-equation-in-a-rotating-frame"><span class="header-section-number">12.4</span> Vorticity Equation in a Rotating Frame</h2>
+<p>In a frame rotating with angular velocity <span class="math inline">\(\vec{\Omega}\)</span>, define the <strong>absolute vorticity</strong> <span class="math inline">\(\vec{\omega}_a = \vec{\omega} + 2\vec{\Omega}\)</span>. The vorticity equation becomes:</p>
+<p><span class="math display">\[
+\frac{D\vec{\omega}_a}{Dt} = (\vec{\omega}_a \cdot \nabla)\vec{v} - \vec{\omega}_a(\nabla \cdot \vec{v})
+\]</span></p>
+<p>The planetary vorticity <span class="math inline">\(2\vec{\Omega}\)</span> enters on equal footing with the relative vorticity <span class="math inline">\(\vec{\omega}\)</span>. For large-scale geophysical flows, <span class="math inline">\(|2\vec{\Omega}| \gg |\vec{\omega}|\)</span>, so planetary rotation dominates the vorticity budget.</p>
+<p>Restricting to the vertical component for shallow horizontal flow, with <span class="math inline">\(f = 2\Omega \sin\varphi\)</span>:</p>
+<p><span class="math display">\[
+\frac{D}{Dt}(\zeta + f) = -(\zeta + f)\nabla_h \cdot \vec{v}_h
+\]</span></p>
+<p>where <span class="math inline">\(\zeta = \hat{k} \cdot (\nabla \times \vec{v})\)</span> is the vertical component of relative vorticity and <span class="math inline">\(\nabla_h \cdot \vec{v}_h\)</span> is the horizontal divergence.</p>
 </section>
-<section id="laplace-beltrami-operator-on-s2" class="level2" data-number="5.5">
-<h2 data-number="5.5" class="anchored" data-anchor-id="laplace-beltrami-operator-on-s2"><span class="header-section-number">5.5</span> Laplace-Beltrami Operator on <span class="math inline">\(S^2\)</span></h2>
-<p>On the unit sphere (<span class="math inline">\(r = 1\)</span>, constant), only the angular part of the Laplacian survives. The Laplace-Beltrami operator is</p>
-<p><span class="math display">\[\Delta_{S^2} f = \frac{1}{\sin\theta}\frac{\partial}{\partial \theta}\!\left(\sin\theta\frac{\partial f}{\partial \theta}\right) + \frac{1}{\sin^2\theta}\frac{\partial^2 f}{\partial \phi^2}.\]</span></p>
-<p>The full Laplacian decomposes as</p>
-<p><span class="math display">\[\nabla^2 f = \frac{1}{r^2}\frac{\partial}{\partial r}\!\left(r^2\frac{\partial f}{\partial r}\right) + \frac{1}{r^2}\Delta_{S^2} f.\]</span></p>
-<p><span class="math inline">\(\Delta_{S^2}\)</span> is the operator whose eigenfunctions are the spherical harmonics, and whose Green’s function the GSNO is designed to approximate.</p>
-<p><em>Further reading: <span class="citation" data-cites="Kreyszig2011aem">@Kreyszig2011aem</span>, Sec. 12.10 (Laplace’s equation in spherical coordinates and the derivation of the spherical Laplacian); <span class="citation" data-cites="Evans2010pde">@Evans2010pde</span>, Appendix C (notation and operator identities).</em></p>
-<hr>
+<section id="circulation-theorem-and-the-beta-effect" class="level2" data-number="12.5">
+<h2 data-number="12.5" class="anchored" data-anchor-id="circulation-theorem-and-the-beta-effect"><span class="header-section-number">12.5</span> Circulation Theorem and the <span class="math inline">\(\beta\)</span>-effect</h2>
+<p>Kelvin’s theorem applied to the rotating Earth conserves absolute circulation. A fluid column moving poleward encounters increasing <span class="math inline">\(f\)</span>, so <span class="math inline">\(\zeta\)</span> must decrease to compensate. This coupling between meridional motion and relative vorticity is the <span class="math inline">\(\beta\)</span>-effect and is the restoring mechanism for Rossby waves.</p>
 </section>
-<section id="worked-examples" class="level2" data-number="5.6">
-<h2 data-number="5.6" class="anchored" data-anchor-id="worked-examples"><span class="header-section-number">5.6</span> Worked Examples</h2>
-<p><strong>Gradient of a radial function.</strong> Compute <span class="math inline">\(\nabla(r^2)\)</span> in spherical coordinates.</p>
-<p><span class="math inline">\(f = r^2\)</span> depends only on <span class="math inline">\(r\)</span>, so <span class="math inline">\(\partial f/\partial\theta = \partial f/\partial\phi = 0\)</span>:</p>
-<p><span class="math display">\[\nabla(r^2) = \frac{\partial(r^2)}{\partial r}\hat{r} = 2r\hat{r}.\]</span></p>
-<p>Consistent with the Cartesian result <span class="math inline">\(\nabla(x^2+y^2+z^2) = 2(x,y,z)\)</span>.</p>
-<hr>
-<p><strong>Divergence of a radial vector field.</strong> Let <span class="math inline">\(\mathbf{F} = r^2\hat{r}\)</span>. Compute <span class="math inline">\(\nabla \cdot \mathbf{F}\)</span>.</p>
-<p>Only the radial term contributes:</p>
-<p><span class="math display">\[\nabla \cdot \mathbf{F} = \frac{1}{r^2}\frac{\partial(r^2 \cdot r^2)}{\partial r} = \frac{1}{r^2}\frac{\partial r^4}{\partial r} = \frac{4r^3}{r^2} = 4r.\]</span></p>
-<hr>
-<p><strong>Fundamental solution of Laplace’s equation.</strong> Show <span class="math inline">\(\nabla^2(1/r) = 0\)</span> for <span class="math inline">\(r \neq 0\)</span>.</p>
-<p><span class="math display">\[\nabla^2\!\left(\frac{1}{r}\right) = \frac{1}{r^2}\frac{d}{dr}\!\left(r^2 \frac{d}{dr}\frac{1}{r}\right) = \frac{1}{r^2}\frac{d}{dr}\!\left(-1\right) = 0.\]</span></p>
-<p><span class="math inline">\(1/r\)</span> is the fundamental solution of the Laplace equation in <span class="math inline">\(\mathbb{R}^3\)</span> - the Green’s function for <span class="math inline">\(-\nabla^2\)</span>. Its angular average over any sphere centered at the origin is <span class="math inline">\(1/r\)</span>, constant on each sphere, which is why it is rotationally symmetric and satisfies <span class="math inline">\(\Delta_{S^2}(1/r) = 0\)</span> trivially (no angular dependence).</p>
-<hr>
-<p><strong>Solid angle integral.</strong> Compute <span class="math inline">\(\int_{S^2} \cos^2\theta\, d\Omega\)</span>.</p>
-<p><span class="math display">\[\int_{S^2} \cos^2\theta\, d\Omega = \int_0^{2\pi} d\phi \int_0^{\pi} \cos^2\theta\sin\theta\, d\theta = 2\pi \int_{-1}^{1} u^2\, du = 2\pi \cdot \frac{2}{3} = \frac{4\pi}{3}.\]</span></p>
-<p>The mean value of <span class="math inline">\(\cos^2\theta\)</span> over <span class="math inline">\(S^2\)</span> is <span class="math inline">\(\frac{1}{3}\)</span>, consistent with isotropy: <span class="math inline">\(\langle x^2\rangle = \langle y^2\rangle = \langle z^2\rangle = \langle r^2\rangle / 3\)</span>.</p>
+<section id="barotropic-vorticity-equation" class="level2" data-number="12.6">
+<h2 data-number="12.6" class="anchored" data-anchor-id="barotropic-vorticity-equation"><span class="header-section-number">12.6</span> Barotropic Vorticity Equation</h2>
+<p>For a two-dimensional, incompressible, inviscid flow on a <span class="math inline">\(\beta\)</span>-plane, horizontal divergence vanishes (<span class="math inline">\(\nabla_h \cdot \vec{v}_h = 0\)</span>). The vorticity equation reduces to:</p>
+<p><span class="math display">\[
+\frac{\partial \zeta}{\partial t} + J(\psi, \zeta) + \beta \frac{\partial \psi}{\partial x} = 0
+\]</span></p>
+<p>where <span class="math inline">\(\psi\)</span> is the streamfunction defined by <span class="math inline">\(u = -\partial \psi / \partial y\)</span>, <span class="math inline">\(v = \partial \psi / \partial x\)</span>, and <span class="math inline">\(J(\psi, \zeta) = \frac{\partial \psi}{\partial x}\frac{\partial \zeta}{\partial y} - \frac{\partial \psi}{\partial y}\frac{\partial \zeta}{\partial x}\)</span> is the Jacobian. Since <span class="math inline">\(\zeta = \nabla^2 \psi\)</span>, this is a single prognostic equation for <span class="math inline">\(\psi\)</span>.</p>
+<p>This is the <strong>Barotropic Vorticity Equation (BVE)</strong> - the PDE that the GSNO will be trained to solve.</p>
 
 
 </section>
@@ -771,13 +766,13 @@ window.Quarto = {
   </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="../01-vector-calculus/theorems.html" class="pagination-link" aria-label="Integral Theorems">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Integral Theorems</span></span>
+      <a href="../04-geophysical-fluid-dynamics/rotating.html" class="pagination-link" aria-label="Rotating Frame">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Rotating Frame</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../02-harmonic-analysis/index.html" class="pagination-link" aria-label="Harmonic Analysis">
-        <span class="nav-page-text">Harmonic Analysis</span> <i class="bi bi-arrow-right-short"></i>
+      <a href="../05-neural-operators/index.html" class="pagination-link" aria-label="Neural Operators">
+        <span class="nav-page-text">Neural Operators</span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

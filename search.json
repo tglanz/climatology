@@ -534,6 +534,149 @@
     ]
   },
   {
+    "objectID": "04-geophysical-fluid-dynamics/motion.html",
+    "href": "04-geophysical-fluid-dynamics/motion.html",
+    "title": "10  Basic",
+    "section": "",
+    "text": "10.1 Material Derivative\nLet \\(\\vec{x} \\in \\mathbb{R}^3\\) denote position, \\(t\\) time, \\(\\vec{v}(\\vec{x}, t)\\) the velocity field, \\(\\rho(\\vec{x}, t)\\) the mass density, \\(p(\\vec{x}, t)\\) the pressure, \\(\\nu\\) the kinematic viscosity, and \\(\\vec{F}_b(\\vec{x}, t)\\) the body force per unit mass.\nThe rate of change following a fluid parcel. For scalar \\(\\phi(\\vec{x}, t)\\) and vector \\(\\vec{b}(\\vec{x}, t)\\):\n\\[\n\\frac{D\\phi}{Dt} = \\frac{\\partial \\phi}{\\partial t} + \\vec{v} \\cdot \\nabla \\phi\n~~~,~~~\n\\frac{D\\vec{b}}{Dt} = \\frac{\\partial \\vec{b}}{\\partial t} + (\\vec{v} \\cdot \\nabla) \\vec{b}\n\\]\nThe first term is local change at a fixed point; the second is advection.",
+    "crumbs": [
+      "Geophysical Fluid Dynamics",
+      "<span class='chapter-number'>10</span>  <span class='chapter-title'>Basic</span>"
+    ]
+  },
+  {
+    "objectID": "04-geophysical-fluid-dynamics/motion.html#mass-continuity",
+    "href": "04-geophysical-fluid-dynamics/motion.html#mass-continuity",
+    "title": "10  Basic",
+    "section": "10.2 Mass Continuity",
+    "text": "10.2 Mass Continuity\n\\[\n\\frac{\\partial \\rho}{\\partial t} + \\nabla \\cdot (\\rho \\vec{v}) = 0\n\\]\nConservation of mass. Expanding the divergence: \\(\\frac{D\\rho}{Dt} + \\rho \\nabla \\cdot \\vec{v} = 0\\).\nFor incompressible flow, \\(\\rho\\) is constant along parcel trajectories (\\(D\\rho/Dt = 0\\)), giving the incompressibility constraint:\n\\[\n\\nabla \\cdot \\vec{v} = 0\n\\]\nThe velocity field is divergence-free: fluid parcels may deform but not change volume. This eliminates density as a prognostic variable and couples velocity to pressure through the momentum equation, where \\(p\\) acts as a Lagrange multiplier enforcing this constraint.",
+    "crumbs": [
+      "Geophysical Fluid Dynamics",
+      "<span class='chapter-number'>10</span>  <span class='chapter-title'>Basic</span>"
+    ]
+  },
+  {
+    "objectID": "04-geophysical-fluid-dynamics/motion.html#momentum-equation",
+    "href": "04-geophysical-fluid-dynamics/motion.html#momentum-equation",
+    "title": "10  Basic",
+    "section": "10.3 Momentum Equation",
+    "text": "10.3 Momentum Equation\n\\[\n\\rho \\frac{D\\vec{v}}{Dt} = -\\nabla p + \\mu \\nabla^2 \\vec{v} + \\rho \\vec{F}_b\n\\]\nStart from Newton’s second law for a small parcel of fluid with volume \\(\\delta V\\):\n\\[\n\\vec{F} = m \\vec{a}\n\\]\nThe parcel has mass \\(m = \\rho \\, \\delta V\\) and acceleration \\(\\vec{a} = D\\vec{v}/Dt\\), so:\n\\[\n\\vec{F} = \\rho \\, \\delta V \\frac{D\\vec{v}}{Dt}\n\\]\nDivide both sides by \\(\\delta V\\) to express everything per unit volume:\n\\[\n\\frac{\\vec{F}}{\\delta V} = \\rho \\frac{D\\vec{v}}{Dt}\n\\]\nThe left-hand side is the sum of force densities (force per unit volume) acting on the parcel: pressure gradient \\((-\\nabla p)\\), viscous stress \\((\\mu \\nabla^2 \\vec{v}\\), where \\(\\mu = \\rho \\nu\\) is the dynamic viscosity), and body forces \\((\\rho \\vec{F}_b)\\).",
+    "crumbs": [
+      "Geophysical Fluid Dynamics",
+      "<span class='chapter-number'>10</span>  <span class='chapter-title'>Basic</span>"
+    ]
+  },
+  {
+    "objectID": "04-geophysical-fluid-dynamics/rotating.html",
+    "href": "04-geophysical-fluid-dynamics/rotating.html",
+    "title": "11  Rotating Frame",
+    "section": "",
+    "text": "11.1 Inertial to Rotating Frame\nThe Earth rotates with angular velocity \\(\\vec{\\Omega}\\), where \\(|\\vec{\\Omega}| = \\Omega \\approx 7.292 \\times 10^{-5} \\, \\text{rad/s}\\). The equations of motion derived in the inertial (non-rotating) frame must be transformed to account for this rotation.\nLet subscripts \\(I\\) and \\(R\\) denote quantities in the inertial and rotating frames. For any vector \\(\\vec{A}\\):\n\\[\n\\left(\\frac{d\\vec{A}}{dt}\\right)_I = \\left(\\frac{d\\vec{A}}{dt}\\right)_R + \\vec{\\Omega} \\times \\vec{A}\n\\]\nApplying this to the position vector \\(\\vec{r}\\) gives the velocity transformation:\n\\[\n\\vec{v}_I = \\vec{v}_R + \\vec{\\Omega} \\times \\vec{r}\n\\]\nApplying it again to \\(\\vec{v}_I\\) gives the acceleration:\n\\[\n\\left(\\frac{D\\vec{v}}{Dt}\\right)_I = \\left(\\frac{D\\vec{v}}{Dt}\\right)_R + 2\\vec{\\Omega} \\times \\vec{v}_R + \\vec{\\Omega} \\times (\\vec{\\Omega} \\times \\vec{r})\n\\]",
+    "crumbs": [
+      "Geophysical Fluid Dynamics",
+      "<span class='chapter-number'>11</span>  <span class='chapter-title'>Rotating Frame</span>"
+    ]
+  },
+  {
+    "objectID": "04-geophysical-fluid-dynamics/rotating.html#momentum-equation-in-the-rotating-frame",
+    "href": "04-geophysical-fluid-dynamics/rotating.html#momentum-equation-in-the-rotating-frame",
+    "title": "11  Rotating Frame",
+    "section": "11.2 Momentum Equation in the Rotating Frame",
+    "text": "11.2 Momentum Equation in the Rotating Frame\nSubstituting into the momentum equation from the previous section, and dropping the \\(R\\) subscript (all quantities are now in the rotating frame):\n\\[\n\\rho \\frac{D\\vec{v}}{Dt} = -\\nabla p + \\mu \\nabla^2 \\vec{v} - 2\\rho \\vec{\\Omega} \\times \\vec{v} - \\rho \\vec{\\Omega} \\times (\\vec{\\Omega} \\times \\vec{r}) + \\rho \\vec{g}\n\\]\nTwo new terms appear:\n\n\\(-2\\rho \\vec{\\Omega} \\times \\vec{v}\\) is the Coriolis force. It acts perpendicular to the velocity, deflecting moving parcels to the right in the Northern Hemisphere and to the left in the Southern. It does no work (it changes direction, not speed).\n\\(-\\rho \\vec{\\Omega} \\times (\\vec{\\Omega} \\times \\vec{r})\\) is the centrifugal force. It points outward from the rotation axis. In practice it is absorbed into an effective gravity \\(\\vec{g}^* = \\vec{g} - \\vec{\\Omega} \\times (\\vec{\\Omega} \\times \\vec{r})\\), and the geopotential surfaces (including “sea level”) already account for it.\n\nWith this absorption, the equation becomes:\n\\[\n\\rho \\frac{D\\vec{v}}{Dt} = -\\nabla p + \\mu \\nabla^2 \\vec{v} - 2\\rho \\vec{\\Omega} \\times \\vec{v} + \\rho \\vec{g}^*\n\\]",
+    "crumbs": [
+      "Geophysical Fluid Dynamics",
+      "<span class='chapter-number'>11</span>  <span class='chapter-title'>Rotating Frame</span>"
+    ]
+  },
+  {
+    "objectID": "04-geophysical-fluid-dynamics/rotating.html#the-coriolis-parameter",
+    "href": "04-geophysical-fluid-dynamics/rotating.html#the-coriolis-parameter",
+    "title": "11  Rotating Frame",
+    "section": "11.3 The Coriolis Parameter",
+    "text": "11.3 The Coriolis Parameter\nFor large-scale atmospheric and oceanic flows, the vertical component of the Coriolis force dominates. Let \\(\\varphi\\) denote latitude. The Coriolis parameter is:\n\\[\nf = 2\\Omega \\sin\\varphi\n\\]\nAt the equator \\(f = 0\\); at the poles \\(f = \\pm 2\\Omega\\). The horizontal component of the Coriolis acceleration reduces to \\(f \\hat{k} \\times \\vec{v}_h\\), where \\(\\vec{v}_h\\) is the horizontal velocity and \\(\\hat{k}\\) is the local vertical unit vector.",
+    "crumbs": [
+      "Geophysical Fluid Dynamics",
+      "<span class='chapter-number'>11</span>  <span class='chapter-title'>Rotating Frame</span>"
+    ]
+  },
+  {
+    "objectID": "04-geophysical-fluid-dynamics/rotating.html#f-plane-and-beta-plane",
+    "href": "04-geophysical-fluid-dynamics/rotating.html#f-plane-and-beta-plane",
+    "title": "11  Rotating Frame",
+    "section": "11.4 \\(f\\)-plane and \\(\\beta\\)-plane",
+    "text": "11.4 \\(f\\)-plane and \\(\\beta\\)-plane\nFor motions whose horizontal scale \\(L\\) is small compared to the Earth’s radius \\(a\\), a local Cartesian approximation is used.\n\\(f\\)-plane: \\(f\\) is treated as constant, equal to its value at a reference latitude \\(\\varphi_0\\):\n\\[\nf = f_0 = 2\\Omega \\sin\\varphi_0\n\\]\nValid when the flow does not span a large range of latitudes. Captures inertial oscillations and geostrophic balance but not Rossby wave dynamics.\n\\(\\beta\\)-plane: \\(f\\) varies linearly with the northward coordinate \\(y\\):\n\\[\nf = f_0 + \\beta y ~~~,~~~ \\beta = \\frac{df}{dy} = \\frac{2\\Omega \\cos\\varphi_0}{a}\n\\]\nThe \\(\\beta\\)-effect is the minimal ingredient needed to support Rossby waves and westward phase propagation of large-scale disturbances.",
+    "crumbs": [
+      "Geophysical Fluid Dynamics",
+      "<span class='chapter-number'>11</span>  <span class='chapter-title'>Rotating Frame</span>"
+    ]
+  },
+  {
+    "objectID": "04-geophysical-fluid-dynamics/vorticity.html",
+    "href": "04-geophysical-fluid-dynamics/vorticity.html",
+    "title": "12  Vorticity",
+    "section": "",
+    "text": "12.1 Definitions\nLet \\(\\vec{v}(\\vec{x}, t)\\) be the velocity field. The vorticity is:\n\\[\n\\vec{\\omega} = \\nabla \\times \\vec{v}\n\\]\nVorticity measures local rotation of fluid elements. A flow with \\(\\vec{\\omega} = 0\\) everywhere is irrotational.\nThe circulation around a closed curve \\(C\\) is:\n\\[\n\\Gamma = \\oint_C \\vec{v} \\cdot d\\vec{l} = \\int_S \\vec{\\omega} \\cdot d\\vec{S}\n\\]\nwhere \\(S\\) is any surface bounded by \\(C\\) (by Stokes’ theorem). Circulation is the integrated vorticity through the surface, or equivalently the net tangential velocity around the loop.",
+    "crumbs": [
+      "Geophysical Fluid Dynamics",
+      "<span class='chapter-number'>12</span>  <span class='chapter-title'>Vorticity</span>"
+    ]
+  },
+  {
+    "objectID": "04-geophysical-fluid-dynamics/vorticity.html#vorticity-equation",
+    "href": "04-geophysical-fluid-dynamics/vorticity.html#vorticity-equation",
+    "title": "12  Vorticity",
+    "section": "12.2 Vorticity Equation",
+    "text": "12.2 Vorticity Equation\nTake the curl of the momentum equation for an inviscid barotropic fluid (\\(p = p(\\rho)\\)):\n\\[\n\\frac{\\partial \\vec{\\omega}}{\\partial t} + (\\vec{v} \\cdot \\nabla)\\vec{\\omega} = (\\vec{\\omega} \\cdot \\nabla)\\vec{v} - \\vec{\\omega}(\\nabla \\cdot \\vec{v})\n\\]\nThe left-hand side is advection of vorticity. On the right:\n\n\\((\\vec{\\omega} \\cdot \\nabla)\\vec{v}\\) is vortex stretching and tilting. Velocity gradients along the vorticity direction amplify or reorient vortex tubes.\n\\(-\\vec{\\omega}(\\nabla \\cdot \\vec{v})\\) accounts for divergence: expanding fluid dilutes vorticity.\n\nFor incompressible flow (\\(\\nabla \\cdot \\vec{v} = 0\\)), the second term vanishes.\nA baroclinic term \\(\\frac{1}{\\rho^2} \\nabla \\rho \\times \\nabla p\\) appears when density is not a function of pressure alone. It generates vorticity wherever isosurfaces of \\(\\rho\\) and \\(p\\) are misaligned.",
+    "crumbs": [
+      "Geophysical Fluid Dynamics",
+      "<span class='chapter-number'>12</span>  <span class='chapter-title'>Vorticity</span>"
+    ]
+  },
+  {
+    "objectID": "04-geophysical-fluid-dynamics/vorticity.html#kelvins-circulation-theorem",
+    "href": "04-geophysical-fluid-dynamics/vorticity.html#kelvins-circulation-theorem",
+    "title": "12  Vorticity",
+    "section": "12.3 Kelvin’s Circulation Theorem",
+    "text": "12.3 Kelvin’s Circulation Theorem\nFor an inviscid, barotropic fluid with only conservative body forces, the circulation around a material curve \\(C(t)\\) (a curve moving with the fluid) is conserved:\n\\[\n\\frac{D\\Gamma}{Dt} = 0\n\\]\nVortex lines are frozen into the fluid: they stretch and deform with it but cannot be created or destroyed. This breaks down when viscosity, baroclinicity, or non-conservative forces are present.",
+    "crumbs": [
+      "Geophysical Fluid Dynamics",
+      "<span class='chapter-number'>12</span>  <span class='chapter-title'>Vorticity</span>"
+    ]
+  },
+  {
+    "objectID": "04-geophysical-fluid-dynamics/vorticity.html#vorticity-equation-in-a-rotating-frame",
+    "href": "04-geophysical-fluid-dynamics/vorticity.html#vorticity-equation-in-a-rotating-frame",
+    "title": "12  Vorticity",
+    "section": "12.4 Vorticity Equation in a Rotating Frame",
+    "text": "12.4 Vorticity Equation in a Rotating Frame\nIn a frame rotating with angular velocity \\(\\vec{\\Omega}\\), define the absolute vorticity \\(\\vec{\\omega}_a = \\vec{\\omega} + 2\\vec{\\Omega}\\). The vorticity equation becomes:\n\\[\n\\frac{D\\vec{\\omega}_a}{Dt} = (\\vec{\\omega}_a \\cdot \\nabla)\\vec{v} - \\vec{\\omega}_a(\\nabla \\cdot \\vec{v})\n\\]\nThe planetary vorticity \\(2\\vec{\\Omega}\\) enters on equal footing with the relative vorticity \\(\\vec{\\omega}\\). For large-scale geophysical flows, \\(|2\\vec{\\Omega}| \\gg |\\vec{\\omega}|\\), so planetary rotation dominates the vorticity budget.\nRestricting to the vertical component for shallow horizontal flow, with \\(f = 2\\Omega \\sin\\varphi\\):\n\\[\n\\frac{D}{Dt}(\\zeta + f) = -(\\zeta + f)\\nabla_h \\cdot \\vec{v}_h\n\\]\nwhere \\(\\zeta = \\hat{k} \\cdot (\\nabla \\times \\vec{v})\\) is the vertical component of relative vorticity and \\(\\nabla_h \\cdot \\vec{v}_h\\) is the horizontal divergence.",
+    "crumbs": [
+      "Geophysical Fluid Dynamics",
+      "<span class='chapter-number'>12</span>  <span class='chapter-title'>Vorticity</span>"
+    ]
+  },
+  {
+    "objectID": "04-geophysical-fluid-dynamics/vorticity.html#circulation-theorem-and-the-beta-effect",
+    "href": "04-geophysical-fluid-dynamics/vorticity.html#circulation-theorem-and-the-beta-effect",
+    "title": "12  Vorticity",
+    "section": "12.5 Circulation Theorem and the \\(\\beta\\)-effect",
+    "text": "12.5 Circulation Theorem and the \\(\\beta\\)-effect\nKelvin’s theorem applied to the rotating Earth conserves absolute circulation. A fluid column moving poleward encounters increasing \\(f\\), so \\(\\zeta\\) must decrease to compensate. This coupling between meridional motion and relative vorticity is the \\(\\beta\\)-effect and is the restoring mechanism for Rossby waves.",
+    "crumbs": [
+      "Geophysical Fluid Dynamics",
+      "<span class='chapter-number'>12</span>  <span class='chapter-title'>Vorticity</span>"
+    ]
+  },
+  {
+    "objectID": "04-geophysical-fluid-dynamics/vorticity.html#barotropic-vorticity-equation",
+    "href": "04-geophysical-fluid-dynamics/vorticity.html#barotropic-vorticity-equation",
+    "title": "12  Vorticity",
+    "section": "12.6 Barotropic Vorticity Equation",
+    "text": "12.6 Barotropic Vorticity Equation\nFor a two-dimensional, incompressible, inviscid flow on a \\(\\beta\\)-plane, horizontal divergence vanishes (\\(\\nabla_h \\cdot \\vec{v}_h = 0\\)). The vorticity equation reduces to:\n\\[\n\\frac{\\partial \\zeta}{\\partial t} + J(\\psi, \\zeta) + \\beta \\frac{\\partial \\psi}{\\partial x} = 0\n\\]\nwhere \\(\\psi\\) is the streamfunction defined by \\(u = -\\partial \\psi / \\partial y\\), \\(v = \\partial \\psi / \\partial x\\), and \\(J(\\psi, \\zeta) = \\frac{\\partial \\psi}{\\partial x}\\frac{\\partial \\zeta}{\\partial y} - \\frac{\\partial \\psi}{\\partial y}\\frac{\\partial \\zeta}{\\partial x}\\) is the Jacobian. Since \\(\\zeta = \\nabla^2 \\psi\\), this is a single prognostic equation for \\(\\psi\\).\nThis is the Barotropic Vorticity Equation (BVE) - the PDE that the GSNO will be trained to solve.",
+    "crumbs": [
+      "Geophysical Fluid Dynamics",
+      "<span class='chapter-number'>12</span>  <span class='chapter-title'>Vorticity</span>"
+    ]
+  },
+  {
     "objectID": "05-neural-operators/index.html",
     "href": "05-neural-operators/index.html",
     "title": "Neural Operators",
