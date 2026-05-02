@@ -1,0 +1,26 @@
+[data]
+experiments_dir = "../output/barotropic_stirring-T85"
+split = [0.8, 0.1, 0.1]
+
+[model.fno]
+n_modes = [64, 64]
+hidden_channels = 64
+in_channels = 2
+out_channels = 1
+
+[training]
+epochs = 500
+batch_size = 16
+learning_rate = 1e-3
+lr_decay_factor = 0.5
+lr_decay_every = 100
+loss = "relative_l2"
+optimizer = "adam"
+weight_decay = 0.0
+
+[logging]
+level = "INFO"
+stdout = true
+
+[paths]
+checkpoint_dir = "checkpoints"

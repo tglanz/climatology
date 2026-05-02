@@ -11,6 +11,8 @@ dependencies = [
     "neuraloperator",
     "torch>=2.11.0",
     "torchvision>=0.26.0",
+    "click",
+    "tqdm>=4.67.3",
 ]
 
 [project.scripts]
