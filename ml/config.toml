@@ -1,6 +1,13 @@
 [data]
-experiments_dir = "../output/barotropic_stirring-T85"
-split = [0.8, 0.1, 0.1]
+experiments_dir = "../output"
+experiment_pattern = "barotropic_stirring-T85*"
+segment_pattern = "run*/atmos_daily.nc"
+x_vars = ["vor", "stirring"]
+y_vars = ["vor"]
+split = [1.0, 0.0, 0.0]
+skip = 0
+# samples_per_experiment = 50
+# sampling = "evenly_spaced"
 
 [model.fno]
 n_modes = [64, 64]
@@ -24,3 +31,4 @@ stdout = true
 
 [paths]
 checkpoint_dir = "checkpoints"
+preprocessed_dir = "data"

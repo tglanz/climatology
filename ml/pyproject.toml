@@ -13,6 +13,10 @@ dependencies = [
     "torchvision>=0.26.0",
     "click",
     "tqdm>=4.67.3",
+    "xarray",
+    "netCDF4",
+    "numpy",
+    "h5py",
 ]
 
 [project.scripts]
@@ -24,3 +28,18 @@ build-backend = "uv_build"
 
 [tool.uv.sources]
 neuraloperator = { path = "../submodules/neuraloperator", editable = true }
+
+[dependency-groups]
+dev = [
+    "black",
+    "pylint",
+    "pytest",
+]
+
+[tool.pylint.messages_control]
+disable = [
+    "missing-function-docstring",
+    "missing-class-docstring",
+    "missing-module-docstring",
+    "too-many-locals",
+]

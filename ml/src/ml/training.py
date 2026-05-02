@@ -13,10 +13,13 @@ def create_loss_fn(kind: str) -> Callable[[torch.Tensor, torch.Tensor], torch.Te
     if kind == "mse":
         return nn.MSELoss()
     if kind == "relative_l2":
+
         def relative_l2(pred, target):
             return torch.mean(
-                torch.norm(pred - target, dim=(-2, -1)) / torch.norm(target, dim=(-2, -1))
+                torch.norm(pred - target, dim=(-2, -1))
+                / torch.norm(target, dim=(-2, -1))
             )
+
         return relative_l2
     raise ValueError(f"unknown loss: {kind}")
 
@@ -32,9 +35,15 @@ class Trainer:
         self.loss_fn = create_loss_fn(cfg.training.loss)
 
         if cfg.training.optimizer == "adam":
-            self.optimizer = torch.optim.Adam(model.parameters(), lr=cfg.training.learning_rate)
+            self.optimizer = torch.optim.Adam(
+                model.parameters(), lr=cfg.training.learning_rate
+            )
         elif cfg.training.optimizer == "adamw":
-            self.optimizer = torch.optim.AdamW(model.parameters(), lr=cfg.training.learning_rate, weight_decay=cfg.training.weight_decay)
+            self.optimizer = torch.optim.AdamW(
+                model.parameters(),
+                lr=cfg.training.learning_rate,
+                weight_decay=cfg.training.weight_decay,
+            )
         else:
             raise ValueError(f"unknown optimizer: {cfg.training.optimizer}")
 
@@ -45,19 +54,30 @@ class Trainer:
         )
         cfg.paths.checkpoint_dir.mkdir(parents=True, exist_ok=True)
 
-    def fit(self, train_loader: DataLoader, val_loader: DataLoader):
+    def fit(self, train_loader: DataLoader, val_loader: DataLoader | None):
         best_val = float("inf")
 
         for epoch in tqdm(range(1, self.cfg.training.epochs + 1), desc="epochs"):
             train_loss = self.train_epoch(train_loader)
-            val_loss = self.evaluate(val_loader)
             self.scheduler.step()
 
-            self.log.info("epoch %d  train=%.6f  val=%.6f", epoch, train_loss, val_loss)
-
-            if val_loss < best_val:
-                best_val = val_loss
-                torch.save(self.model.state_dict(), self.cfg.paths.checkpoint_dir / "best.pt")
+            if val_loader is not None:
+                val_loss = self.evaluate(val_loader)
+                self.log.info(
+                    "epoch %d  train=%.6f  val=%.6f", epoch, train_loss, val_loss
+                )
+                if val_loss < best_val:
+                    best_val = val_loss
+                    torch.save(
+                        self.model.state_dict(),
+                        self.cfg.paths.checkpoint_dir / "best.pt",
+                    )
+            else:
+                self.log.info("epoch %d  train=%.6f", epoch, train_loss)
+                torch.save(
+                    self.model.state_dict(),
+                    self.cfg.paths.checkpoint_dir / "best.pt",
+                )
 
     def train_epoch(self, loader: DataLoader) -> float:
         self.model.train()

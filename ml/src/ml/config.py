@@ -4,28 +4,50 @@ import tomllib
 
 
 @dataclass
-class DataConfig:
-    # root directory containing experiment subdirectories
+class IscaDataConfig:
+    # root directory to search for experiments
     experiments_dir: Path
+    # glob pattern under experiments_dir to find experiment directories
+    experiment_pattern: str
+    # glob pattern within each experiment directory to find NC files
+    segment_pattern: str
+    # input variable names
+    x_vars: list[str]
+    # target variable names
+    y_vars: list[str]
     # train/val/test fraction by experiment, must sum to 1.0
     split: tuple[float, float, float] = (0.8, 0.1, 0.1)
+    # number of pairs to take from each experiment after skip; None means all
+    samples_per_experiment: int | None = None
+    # sampling strategy when samples_per_experiment is set: 'evenly_spaced' or 'uniform'
+    sampling: str = "evenly_spaced"
+    # number of initial pairs to skip per experiment
+    skip: int = 0
 
     def __post_init__(self):
         self.experiments_dir = Path(self.experiments_dir)
-        assert abs(sum(self.split) - 1.0) < 1e-6, f"split must sum to 1.0, got {self.split}"
-        assert self.experiments_dir.exists(), f"experiments_dir not found: {self.experiments_dir}"
+        assert (
+            abs(sum(self.split) - 1.0) < 1e-6
+        ), f"split must sum to 1.0, got {self.split}"
+        assert (
+            self.experiments_dir.exists()
+        ), f"experiments_dir not found: {self.experiments_dir}"
+        assert self.sampling in (
+            "evenly_spaced",
+            "uniform",
+        ), f"unknown sampling: {self.sampling}"
 
 
 @dataclass
 class FNOModelConfig:
     # number of Fourier modes to retain per spatial dimension
-    n_modes: tuple[int, int] = (64, 64)
+    n_modes: tuple[int, int]
     # width of the FNO lifting/projection layers
-    hidden_channels: int = 64
-    # number of input fields (vorticity + forcing = 2)
-    in_channels: int = 2
-    # number of predicted fields (vorticity = 1)
-    out_channels: int = 1
+    hidden_channels: int
+    # number of input fields
+    in_channels: int
+    # number of predicted fields
+    out_channels: int
 
 
 @dataclass
@@ -66,9 +88,12 @@ class LoggingConfig:
 class PathsConfig:
     # directory for saving model checkpoints
     checkpoint_dir: Path = Path("checkpoints")
+    # directory where preprocessed HDF5 splits are written and read from
+    preprocessed_dir: Path = Path("data")
 
     def __post_init__(self):
         self.checkpoint_dir = Path(self.checkpoint_dir)
+        self.preprocessed_dir = Path(self.preprocessed_dir)
 
 
 @dataclass
@@ -78,7 +103,7 @@ class ModelConfig:
 
 @dataclass
 class Config:
-    data: DataConfig
+    data: IscaDataConfig
     model: ModelConfig
     training: TrainingConfig
     logging: LoggingConfig
@@ -89,18 +114,26 @@ def load(path: Path) -> Config:
     with open(path, "rb") as f:
         raw = tomllib.load(f)
 
-    data = DataConfig(
-        experiments_dir=raw["data"]["experiments_dir"],
-        split=tuple(raw["data"].get("split", [0.8, 0.1, 0.1])),
+    d = raw["data"]
+    data = IscaDataConfig(
+        experiments_dir=d["experiments_dir"],
+        experiment_pattern=d["experiment_pattern"],
+        segment_pattern=d["segment_pattern"],
+        x_vars=list(d["x_vars"]),
+        y_vars=list(d["y_vars"]),
+        split=tuple(d.get("split", [0.8, 0.1, 0.1])),
+        samples_per_experiment=d.get("samples_per_experiment", None),
+        sampling=d.get("sampling", "evenly_spaced"),
+        skip=d.get("skip", 0),
     )
 
-    m = raw.get("model", {}).get("fno", {})
+    m = raw["model"]["fno"]
     model = ModelConfig(
         fno=FNOModelConfig(
-            n_modes=tuple(m.get("n_modes", [64, 64])),
-            hidden_channels=m.get("hidden_channels", 64),
-            in_channels=m.get("in_channels", 2),
-            out_channels=m.get("out_channels", 1),
+            n_modes=tuple(m["n_modes"]),
+            hidden_channels=m["hidden_channels"],
+            in_channels=m["in_channels"],
+            out_channels=m["out_channels"],
         )
     )
 
@@ -126,6 +159,9 @@ def load(path: Path) -> Config:
     p = raw.get("paths", {})
     paths = PathsConfig(
         checkpoint_dir=p.get("checkpoint_dir", "checkpoints"),
+        preprocessed_dir=p.get("preprocessed_dir", "data"),
     )
 
-    return Config(data=data, model=model, training=training, logging=logging_cfg, paths=paths)
+    return Config(
+        data=data, model=model, training=training, logging=logging_cfg, paths=paths
+    )
