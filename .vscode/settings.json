@@ -1,5 +1,7 @@
 {
+    "terminal.integrated.enableKittyKeyboardProtocol": false,
     "python.analysis.extraPaths": [
-        "/workspaces/climatology/submodules/isca/src/extra/python"
+        "/workspaces/climatology/submodules/isca/src/extra/python",
+        "./submodules/neuraloperator"
     ]
 }

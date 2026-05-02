@@ -25,16 +25,13 @@
         "ms-python.vscode-python-envs",
         "fortran-lang.linter-gfortran",
         "extractions.fortran-intellisense",
-        "quarto.quarto",
-        "eamodio.gitlens",
-        "vscodevim.vim"
+        "quarto.quarto"
       ],
       "settings": {
         "terminal.integrated.defaultProfile.linux": "zsh",
         "python.analysis.extraPaths": [
           "${containerWorkspaceFolder}/submodules/isca/src/extra/python"
-        ],
-        "vim.enable": true
+        ]
       }
     }
   }

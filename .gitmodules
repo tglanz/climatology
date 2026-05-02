@@ -1,3 +1,6 @@
 [submodule "submodules/isca"]
 	path = submodules/isca
 	url = https://github.com/ExeClim/Isca
+[submodule "submodules/neuraloperator"]
+	path = submodules/neuraloperator
+	url = https://github.com/NeuralOperator/neuraloperator

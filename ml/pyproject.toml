@@ -1,0 +1,24 @@
+[project]
+name = "ml"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+authors = [
+    { name = "Tal Glanzman", email = "talglanzman@gmail.com" }
+]
+requires-python = ">=3.13"
+dependencies = [
+    "neuraloperator",
+    "torch>=2.11.0",
+    "torchvision>=0.26.0",
+]
+
+[project.scripts]
+ml = "ml:main"
+
+[build-system]
+requires = ["uv_build>=0.11.8,<0.12.0"]
+build-backend = "uv_build"
+
+[tool.uv.sources]
+neuraloperator = { path = "../submodules/neuraloperator", editable = true }
