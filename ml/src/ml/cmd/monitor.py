@@ -1,9 +1,9 @@
-import csv
 import os
 import time
 from pathlib import Path
 
 import click
+import numpy as np
 import plotext as plt
 from rich.console import Console
 from rich.layout import Layout
@@ -13,70 +13,58 @@ from rich.table import Table
 from rich.text import Text
 
 from ml.config import Config, load as load_config
+from ml.common.monitor import MonitorState, Section, RunSeries
 
 
-EPOCH_METRICS_FILE = "epoch-metrics.csv"
 INFO_RATIO = 1
 CHART_RATIO = 3
 PANEL_OVERHEAD = 4  # borders + padding
 
 
-def _read_metrics(path: Path) -> list[dict]:
-    if not path.exists():
-        return []
-    with open(path, newline="") as f:
-        return list(csv.DictReader(f))
+# --- generic renderers (no business logic) ---
 
-
-def _info_panel(cfg: Config, rows: list[dict]) -> Panel:
-    t = cfg.training
-    exp_name = cfg.data.experiment_dir.name
-
+def _info_panel(title: str, sections: list[Section]) -> Panel:
     table = Table.grid(padding=(0, 1))
-    table.add_column(style="dim")
+    table.add_column(style="bold dim")
     table.add_column()
-
-    table.add_row("experiment", exp_name)
-    table.add_row("loss", t.loss)
-    table.add_row("optimizer", t.optimizer)
-    table.add_row("epochs", str(t.epochs))
-    table.add_row("batch_size", str(t.batch_size))
-    table.add_row("lr_init", str(t.learning_rate))
-    table.add_row("lr_decay", f"{t.lr_decay_factor} / {t.lr_decay_every} ep")
-    if t.target_loss is not None:
-        table.add_row("target_loss", str(t.target_loss))
-
-    if rows:
-        by_run: dict[str, list[dict]] = {}
-        for r in rows:
-            by_run.setdefault(r["run_id"], []).append(r)
-
+    table.add_row(f"[bold]{title}[/bold]", "")
+    for section in sections:
         table.add_row("", "")
-        for run_id, run_rows in by_run.items():
-            last = run_rows[-1]
-            best_row = min(run_rows, key=lambda r: float(r["val_loss"]))
-            table.add_row("run", run_id)
-            table.add_row("epoch", f"{last['epoch']} / {t.epochs}")
-            table.add_row("val_loss", f"{float(last['val_loss']):.6f}")
-            table.add_row("train_loss", f"{float(last['train_loss']):.6f}")
-            table.add_row("best_val", f"{float(best_row['val_loss']):.6f} @ ep {best_row['epoch']}")
-            table.add_row("lr", last["learning_rate"])
-            table.add_row("", "")
-
+        table.add_row(f"[bold]{section.name}[/bold]", "")
+        for key, value in section.items:
+            table.add_row(f"  {key}", value)
     return Panel(table, title="Experiment")
 
 
-def _chart_panel(rows: list[dict], term_width: int, term_height: int) -> Panel:
-    if not rows:
+def _sections_to_text(title: str, sections: list[Section]) -> str:
+    lines = [title]
+    for section in sections:
+        lines.append("")
+        lines.append(section.name)
+        for key, value in section.items:
+            lines.append(f"  {key:<12} {value}")
+    return "\n".join(lines)
+
+
+def _sections_to_two_columns(title: str, sections: list[Section]) -> tuple[str, str]:
+    mid = len(sections) // 2
+    def _render(secs: list[Section]) -> str:
+        lines = []
+        for section in secs:
+            lines.append(section.name)
+            for key, value in section.items:
+                lines.append(f"  {key:<12} {value}")
+            lines.append("")
+        return "\n".join(lines)
+    return title, _render(sections[:mid]), _render(sections[mid:])
+
+
+def _chart_panel(series: list[RunSeries], term_width: int, term_height: int) -> Panel:
+    if not series:
         return Panel(Text("Waiting for metrics..."), title="Loss")
 
-    total_ratio = INFO_RATIO + CHART_RATIO
-    chart_w = int(term_width * CHART_RATIO / total_ratio) - PANEL_OVERHEAD
+    chart_w = int(term_width * CHART_RATIO / (INFO_RATIO + CHART_RATIO)) - PANEL_OVERHEAD
     chart_h = term_height - PANEL_OVERHEAD
-
-    by_run: dict[str, list[dict]] = {}
-    for r in rows:
-        by_run.setdefault(r["run_id"], []).append(r)
 
     plt.clear_figure()
     plt.theme("dark")
@@ -85,34 +73,167 @@ def _chart_panel(rows: list[dict], term_width: int, term_height: int) -> Panel:
     plt.ylabel("loss")
 
     all_epochs: list[int] = []
-    for run_id, run_rows in by_run.items():
-        short_id = run_id[-8:]
-        epochs = [int(r["epoch"]) for r in run_rows]
-        all_epochs.extend(epochs)
-        plt.plot(epochs, [float(r["train_loss"]) for r in run_rows], label=f"{short_id} train")
-        plt.plot(epochs, [float(r["val_loss"]) for r in run_rows], label=f"{short_id} val")
+    for s in series:
+        prefix = f"{s.label} " if s.label else ""
+        all_epochs.extend(s.epochs)
+        plt.plot(s.epochs, s.train_losses, label=f"{prefix}train")
+        plt.plot(s.epochs, s.val_losses,   label=f"{prefix}val")
 
     if all_epochs:
         unique = sorted(set(all_epochs))
-        max_ticks = 15
-        step = max(1, len(unique) // max_ticks)
+        step = max(1, len(unique) // 15)
         ticks = unique[::step]
         if unique[-1] not in ticks:
             ticks.append(unique[-1])
         plt.xticks(ticks)
 
-    chart = plt.build()
-    return Panel(Text.from_ansi(chart), title="Loss")
+    return Panel(Text.from_ansi(plt.build()), title="Loss")
 
 
-def _build_layout(cfg: Config, rows: list[dict], term_width: int, term_height: int) -> Layout:
-    layout = Layout()
-    layout.split_row(
-        Layout(_info_panel(cfg, rows), name="info", ratio=INFO_RATIO),
-        Layout(_chart_panel(rows, term_width, term_height), name="chart", ratio=CHART_RATIO),
+# --- terminal UI ---
+
+def _run_terminal(state: MonitorState, interval: float) -> None:
+    console = Console()
+    with Live(console=console, screen=True, refresh_per_second=1) as live:
+        while True:
+            state.update()
+            size = os.get_terminal_size()
+            layout = Layout()
+            layout.split_row(
+                Layout(_info_panel(state.title, state.sections), name="info", ratio=INFO_RATIO),
+                Layout(_chart_panel(state.series, size.columns, size.lines), name="chart", ratio=CHART_RATIO),
+            )
+            live.update(layout)
+            time.sleep(interval)
+
+
+# --- GUI ---
+
+def _run_gui(state: MonitorState, interval: float) -> None:
+    import matplotlib.pyplot as mpl
+    import matplotlib.ticker as ticker
+
+    mpl.ion()
+    fig = mpl.figure(figsize=(14, 8))
+    gs = fig.add_gridspec(3, 3)
+    ax_info    = fig.add_subplot(gs[0, 0])
+    ax_chart   = fig.add_subplot(gs[0, 1:])
+    ax_spatial = fig.add_subplot(gs[1, :2])
+    ax_zonal   = fig.add_subplot(gs[1, 2])
+    ax_power   = fig.add_subplot(gs[2, :])
+
+    ax_info.axis("off")
+    info_title = ax_info.text(
+        0.05, 0.99, "", transform=ax_info.transAxes,
+        verticalalignment="top", fontfamily="monospace", fontsize=9, fontweight="bold",
     )
-    return layout
+    info_left = ax_info.text(
+        0.05, 0.88, "", transform=ax_info.transAxes,
+        verticalalignment="top", fontfamily="monospace", fontsize=9,
+    )
+    info_right = ax_info.text(
+        0.52, 0.88, "", transform=ax_info.transAxes,
+        verticalalignment="top", fontfamily="monospace", fontsize=9,
+    )
 
+    ax_chart.set_yscale("linear")
+    fig.subplots_adjust(left=0.05, right=0.97, top=0.96, bottom=0.06, hspace=0.45, wspace=0.3)
+    ax_chart.set_title("loss per epoch")
+    ax_chart.set_xlabel("epoch")
+    ax_chart.set_ylabel("loss")
+    ax_chart.grid(True, alpha=0.3)
+    ax_chart.xaxis.set_major_locator(ticker.MaxNLocator(integer=True))
+
+    if state.target_loss is not None:
+        ax_chart.axhline(
+            state.target_loss, color="red", linestyle=":", linewidth=1,
+            label=f"target ({state.target_loss})",
+        )
+
+    ax_spatial.set_title("spatial mean error", fontsize=9, pad=3)
+    ax_spatial.set_xlabel("lon")
+    ax_spatial.set_ylabel("lat")
+    spatial_im = ax_spatial.imshow(
+        [[0]], aspect="auto", origin="lower", cmap="viridis",
+        extent=[0, 360, -90, 90],
+    )
+    fig.colorbar(spatial_im, ax=ax_spatial, fraction=0.02, pad=0.01)
+
+    ax_zonal.set_title("zonal mean error")
+    ax_zonal.set_xlabel("error")
+    ax_zonal.set_ylabel("lat")
+    ax_zonal.set_ylim(-90, 90)
+    n_hist = MonitorState._ZONAL_HISTORY_LEN
+    zonal_lines = [
+        ax_zonal.plot([], [], color="tab:blue" if k == 0 else "gray", alpha=1.0 if k == 0 else max(0.08, 1 - k / (n_hist - 1)))[0]
+        for k in range(n_hist - 1, -1, -1)
+    ]
+    zonal_lines.reverse()  # index 0 = latest
+
+    ax_power.set_title("power spectrum", fontsize=9, pad=3)
+    ax_power.set_xlabel("zonal wavenumber")
+    ax_power.set_ylabel("power")
+    ax_power.set_yscale("log")
+    ax_power.set_xscale("log")
+    error_power_line,  = ax_power.plot([], [], label="error",  color="tab:red")
+    signal_power_line, = ax_power.plot([], [], label="signal", color="tab:blue")
+    cutoff = state._cfg.model.fno.n_modes[0]
+    ax_power.axvline(cutoff, color="gray", linestyle=":", linewidth=1, label=f"n_modes={cutoff}")
+    ax_power.legend(fontsize=8)
+
+    lines: dict[str, mpl.Line2D] = {}
+
+    while mpl.fignum_exists(fig.number):
+        state.update()
+        title, left, right = _sections_to_two_columns(state.title, state.sections)
+        info_title.set_text(title)
+        info_left.set_text(left)
+        info_right.set_text(right)
+
+        for s in state.series:
+            prefix = f"{s.label} " if s.label else ""
+            train_key = f"{s.run_id}_train"
+            val_key = f"{s.run_id}_val"
+            if train_key not in lines:
+                (lines[train_key],) = ax_chart.plot(s.epochs, s.train_losses, label=f"{prefix}train")
+                (lines[val_key],)   = ax_chart.plot(s.epochs, s.val_losses,   label=f"{prefix}val", linestyle="--")
+                ax_chart.legend()
+            else:
+                lines[train_key].set_data(s.epochs, s.train_losses)
+                lines[val_key].set_data(s.epochs, s.val_losses)
+
+        ax_chart.relim()
+        ax_chart.autoscale_view()
+
+        if state.spatial_error is not None:
+            spatial_im.set_data(state.spatial_error)
+            spatial_im.set_clim(vmin=0, vmax=state.spatial_error.max())
+
+        if state.zonal_mean_history:
+            lats = np.linspace(-90, 90, len(state.zonal_mean_history[0]))
+            history = state.zonal_mean_history
+            for k, line in enumerate(zonal_lines):
+                idx = len(history) - 1 - k
+                if idx >= 0:
+                    line.set_data(history[idx], lats)
+                else:
+                    line.set_data([], [])
+            ax_zonal.relim()
+            ax_zonal.autoscale_view(scaley=False)
+
+        if state.error_power is not None and state.signal_power is not None:
+            wavenumbers = np.arange(1, len(state.error_power) + 1)  # start at 1 for log scale
+            error_power_line.set_data(wavenumbers, state.error_power)
+            signal_power_line.set_data(wavenumbers, state.signal_power)
+            ax_power.relim()
+            ax_power.autoscale_view()
+
+        fig.canvas.draw()
+        fig.canvas.flush_events()
+        mpl.pause(interval)
+
+
+# --- CLI ---
 
 @click.group()
 def monitor():
@@ -121,149 +242,14 @@ def monitor():
 
 
 @monitor.command()
-@click.option(
-    "-c", "--config", "config_path",
-    required=True,
-    type=click.Path(exists=True, path_type=Path),
-)
+@click.option("-c", "--config", "config_path", required=True, type=click.Path(exists=True, path_type=Path))
 @click.option("--interval", default=2.0, show_default=True, help="Poll interval in seconds.")
 @click.option("--gui", is_flag=True, default=False, help="Use a matplotlib window instead of terminal UI.")
 def training(config_path: Path, interval: float, gui: bool):
     """Monitor training metrics in real-time."""
     cfg = load_config(config_path)
-    metrics_file = cfg.paths.training_dir / EPOCH_METRICS_FILE
-
+    state = MonitorState(cfg)
     if gui:
-        _run_gui(cfg, metrics_file, interval)
+        _run_gui(state, interval)
     else:
-        _run_terminal(cfg, metrics_file, interval)
-
-
-def _run_terminal(cfg: Config, metrics_file: Path, interval: float) -> None:
-    console = Console()
-    with Live(console=console, screen=True, refresh_per_second=1) as live:
-        while True:
-            rows = _read_metrics(metrics_file)
-            size = os.get_terminal_size()
-            live.update(_build_layout(cfg, rows, size.columns, size.lines))
-            time.sleep(interval)
-
-
-def _gui_info_text(cfg: Config, rows: list[dict]) -> str:
-    t = cfg.training
-    lines = [
-        cfg.data.experiment_dir.name,
-        "",
-        f"loss:       {t.loss}",
-        f"optimizer:  {t.optimizer}",
-        f"epochs:     {t.epochs}",
-        f"batch_size: {t.batch_size}",
-        f"lr_init:    {t.learning_rate}",
-        f"lr_decay:   {t.lr_decay_factor} / {t.lr_decay_every} ep",
-    ]
-    if t.target_loss is not None:
-        lines.append(f"target_loss:{t.target_loss}")
-
-    if rows:
-        by_run: dict[str, list[dict]] = {}
-        for r in rows:
-            by_run.setdefault(r["run_id"], []).append(r)
-
-        for run_rows in by_run.values():
-            last = run_rows[-1]
-            best = min(run_rows, key=lambda r: float(r["val_loss"]))
-            lines += [
-                "",
-                f"epoch:      {last['epoch']} / {t.epochs}",
-                f"val_loss:   {float(last['val_loss']):.6f}",
-                f"train_loss: {float(last['train_loss']):.6f}",
-                f"best_val:   {float(best['val_loss']):.6f} @ ep {best['epoch']}",
-                f"lr:         {last['learning_rate']}",
-            ]
-
-    return "\n".join(lines)
-
-
-def _run_gui(cfg: Config, metrics_file: Path, interval: float) -> None:
-    import matplotlib.pyplot as mpl
-    import matplotlib.ticker as ticker
-    from matplotlib.widgets import RadioButtons
-
-    mpl.ion()
-    fig = mpl.figure(figsize=(13, 5))
-    gs = fig.add_gridspec(1, 2, width_ratios=[1, 3])
-    ax_info = fig.add_subplot(gs[0])
-    ax_chart = fig.add_subplot(gs[1])
-
-    ax_info.axis("off")
-    info_text = ax_info.text(
-        0.05, 0.95, "", transform=ax_info.transAxes,
-        verticalalignment="top", fontfamily="monospace", fontsize=9,
-    )
-
-    # radio buttons in the bottom quarter of the info column
-    info_pos = ax_info.get_position()
-    ax_radio = fig.add_axes([
-        info_pos.x0 + 0.02,
-        info_pos.y0,
-        info_pos.width * 0.6,
-        info_pos.height * 0.15,
-    ])
-    radio = RadioButtons(ax_radio, ("log", "linear"), active=0)
-
-    def _on_scale(label: str) -> None:
-        ax_chart.set_yscale(label)
-        ax_chart.relim()
-        ax_chart.autoscale_view()
-        fig.canvas.draw()
-
-    radio.on_clicked(_on_scale)
-    ax_chart.set_yscale("log")
-
-    fig.tight_layout(pad=2.0)
-
-    ax_chart.set_xlabel("epoch")
-    ax_chart.set_ylabel("loss")
-    ax_chart.grid(True, alpha=0.3)
-    ax_chart.xaxis.set_major_locator(ticker.MaxNLocator(integer=True))
-
-    if cfg.training.target_loss is not None:
-        ax_chart.axhline(cfg.training.target_loss, color="red", linestyle=":", linewidth=1, label=f"target ({cfg.training.target_loss})")
-
-    lines: dict[str, mpl.Line2D] = {}
-
-    while mpl.fignum_exists(fig.number):
-        rows = _read_metrics(metrics_file)
-
-        info_text.set_text(_gui_info_text(cfg, rows))
-
-        if rows:
-            by_run: dict[str, list[dict]] = {}
-            for r in rows:
-                by_run.setdefault(r["run_id"], []).append(r)
-
-            run_ids = list(by_run.keys())
-            for run_id, run_rows in by_run.items():
-                epochs = [int(r["epoch"]) for r in run_rows]
-                train_losses = [float(r["train_loss"]) for r in run_rows]
-                val_losses = [float(r["val_loss"]) for r in run_rows]
-
-                # only prefix with run index when there are multiple runs
-                prefix = f"run{run_ids.index(run_id) + 1} " if len(run_ids) > 1 else ""
-                train_key = f"{run_id}_train"
-                val_key = f"{run_id}_val"
-
-                if train_key not in lines:
-                    (lines[train_key],) = ax_chart.plot(epochs, train_losses, label=f"{prefix}train")
-                    (lines[val_key],) = ax_chart.plot(epochs, val_losses, label=f"{prefix}val", linestyle="--")
-                    ax_chart.legend()
-                else:
-                    lines[train_key].set_data(epochs, train_losses)
-                    lines[val_key].set_data(epochs, val_losses)
-
-            ax_chart.relim()
-            ax_chart.autoscale_view()
-
-        fig.canvas.draw()
-        fig.canvas.flush_events()
-        mpl.pause(interval)
+        _run_terminal(state, interval)

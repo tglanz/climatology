@@ -92,16 +92,21 @@ class PathsConfig:
     checkpoint_dir: Path | None = None
     # directory where preprocessed HDF5 splits are written and read from; derived if omitted
     preprocessed_dir: Path | None = None
-    # directory for training outputs (epoch-metrics.csv, runs.csv); derived if omitted
+    # directory for training outputs; derived from experiment_dir if omitted
     training_dir: Path | None = None
+    # per-epoch scalar metrics CSV; derived from training_dir if omitted
+    epoch_metrics_file: Path | None = None
+    # run summary CSV; derived from training_dir if omitted
+    runs_file: Path | None = None
+    # spatial/spectral metrics HDF5; derived from training_dir if omitted
+    metrics_file: Path | None = None
 
     def __post_init__(self):
-        if self.checkpoint_dir is not None:
-            self.checkpoint_dir = Path(self.checkpoint_dir)
-        if self.preprocessed_dir is not None:
-            self.preprocessed_dir = Path(self.preprocessed_dir)
-        if self.training_dir is not None:
-            self.training_dir = Path(self.training_dir)
+        for field in ("checkpoint_dir", "preprocessed_dir", "training_dir",
+                      "epoch_metrics_file", "runs_file", "metrics_file"):
+            v = getattr(self, field)
+            if v is not None:
+                setattr(self, field, Path(v))
 
 
 @dataclass
@@ -169,6 +174,7 @@ def load(path: Path) -> Config:
     paths = PathsConfig(
         checkpoint_dir=p.get("checkpoint_dir", None),
         preprocessed_dir=p.get("preprocessed_dir", None),
+        metrics_file=p.get("metrics_file", None),
     )
 
     if paths.checkpoint_dir is None:
@@ -177,6 +183,12 @@ def load(path: Path) -> Config:
         paths.preprocessed_dir = data.experiment_dir / "training-data"
     if paths.training_dir is None:
         paths.training_dir = data.experiment_dir / "training"
+    if paths.epoch_metrics_file is None:
+        paths.epoch_metrics_file = paths.training_dir / "epoch-metrics.csv"
+    if paths.runs_file is None:
+        paths.runs_file = paths.training_dir / "runs.csv"
+    if paths.metrics_file is None:
+        paths.metrics_file = paths.training_dir / "metrics.h5"
 
     return Config(
         data=data, model=model, training=training, logging=logging_cfg, paths=paths

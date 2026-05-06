@@ -10,16 +10,11 @@ from ml.isca_dataset import make_loaders
 
 
 @click.command()
-@click.option(
-    "-c",
-    "--config",
-    "config_path",
-    required=True,
-    type=click.Path(exists=True, path_type=Path),
-)
-def train(config_path: Path):
+@click.option("-c", "--config", "config_path", required=True, type=click.Path(exists=True, path_type=Path))
+@click.option("--track-metrics", is_flag=True, default=False, help="Write spatial error, zonal mean, and power spectrum after each epoch.")
+def train(config_path: Path, track_metrics: bool):
     cfg = load_config(config_path)
     setup_logging(cfg.logging)
     model = build_model(cfg.model.fno)
     train_loader, val_loader, _ = make_loaders(cfg)
-    Trainer(model, cfg).fit(train_loader, val_loader)
+    Trainer(model, cfg).fit(train_loader, val_loader, track_metrics=track_metrics)

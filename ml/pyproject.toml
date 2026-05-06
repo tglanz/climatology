@@ -37,6 +37,9 @@ dev = [
     "pylint",
     "pytest",
 ]
+gui = [
+    "matplotlib",
+]
 
 [tool.pylint.messages_control]
 disable = [

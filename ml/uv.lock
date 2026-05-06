@@ -698,6 +698,9 @@ dev = [
     { name = "pylint" },
     { name = "pytest" },
 ]
+gui = [
+    { name = "matplotlib" },
+]
 
 [package.metadata]
 requires-dist = [
@@ -720,6 +723,7 @@ dev = [
     { name = "pylint" },
     { name = "pytest" },
 ]
+gui = [{ name = "matplotlib" }]
 
 [[package]]
 name = "mpmath"
