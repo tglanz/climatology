@@ -17,10 +17,12 @@ dependencies = [
     "netCDF4",
     "numpy",
     "h5py",
+    "rich>=13",
+    "plotext>=5",
 ]
 
 [project.scripts]
-ml = "ml:main"
+ml = "ml.cmd.cli:cli"
 
 [build-system]
 requires = ["uv_build>=0.11.8,<0.12.0"]

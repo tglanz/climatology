@@ -88,10 +88,10 @@ class IscaDataPreprocessor:
         data_cfg = self.cfg.data
         out_dir = self.cfg.paths.preprocessed_dir
 
-        exp_dirs = sorted(data_cfg.experiments_dir.glob(data_cfg.experiment_pattern))
+        exp_dirs = sorted(data_cfg.experiment_dir.glob(data_cfg.simulation_pattern))
         assert (
             exp_dirs
-        ), f"no experiments found: {data_cfg.experiments_dir}/{data_cfg.experiment_pattern}"
+        ), f"no experiments found: {data_cfg.experiment_dir}/{data_cfg.simulation_pattern}"
 
         n = len(exp_dirs)
         n_train = int(n * data_cfg.split[0])

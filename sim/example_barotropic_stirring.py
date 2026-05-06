@@ -1,7 +1,16 @@
+import argparse
 import math
 import os
+from pathlib import Path
 
 from isca import BarotropicCodeBase, DiagTable, Experiment, Namelist, GFDL_BASE
+
+
+def next_run_dir(experiment_dir: Path) -> Path:
+    n = 0
+    while (experiment_dir / str(n)).exists():
+        n += 1
+    return experiment_dir / str(n)
 
 def is_fft_friendly(n):
     """Check if n only has prime factors 2, 3, and 5."""
@@ -38,9 +47,10 @@ class Settings:
     StirringB = 0.4
     FourierHarmonics = 85
 
-experiment_name = 'barotropic_stirring'
+EXPERIMENT_BASE = 'barotropic_stirring'
+OUTPUT_DIR = Path('output')
+
 cb = BarotropicCodeBase.from_directory(GFDL_BASE)
-exp = Experiment('', codebase=cb, database=f"output/{experiment_name}-T{Settings.FourierHarmonics}")
 
 # DiagTable controls which model fields are written to NetCDF output and at what frequency.
 # Fields must be registered in the Fortran source via register_diag_field; the table acts as
@@ -80,16 +90,13 @@ diag.add_field('stirring_mod',           'stirring_amp', time_avg=True)
 # Time-mean of stirring^2 over the full integration, written at run end [1/s^4]
 diag.add_field('stirring_mod',           'stirring_sqr', time_avg=True)
 
-exp.diag_table = diag
-exp.clear_rundir()
-
 num_lat, num_lon = alias_free_grid(Settings.FourierHarmonics)
 
 # The available namelists are defined in the F90 modules.
 # To find how the modules involved we need to find the modules of the relevant executable.
 # In this case, we use `BarotropicCodeBase`, inside it look for the name.
 # Then, the file paths are defined in submodules/isca/src/extra/model/barotropic/path_names.
-exp.namelist = Namelist({
+namelist = Namelist({
     # FMS top-level run control
     'main_nml': {
         # Total integration length
@@ -205,7 +212,28 @@ exp.namelist = Namelist({
 })
 
 if __name__ == '__main__':
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--compile', action='store_true', help='compile only, do not run')
+    parser.add_argument('--index', type=int, default=None, help='run index; if omitted, auto-increments')
+    args = parser.parse_args()
+
     cb.compile()
+    if args.compile:
+        raise SystemExit(0)
+
+    experiment_dir = OUTPUT_DIR / f"{EXPERIMENT_BASE}-T{Settings.FourierHarmonics}"
+    simulations_dir = experiment_dir / 'simulations'
+
+    if args.index is not None:
+        exp_name = str(args.index)
+    else:
+        exp_name = next_run_dir(simulations_dir).name
+
+    exp = Experiment(exp_name, codebase=cb, database=str(simulations_dir))
+    exp.diag_table = diag
+    exp.clear_rundir()
+    exp.namelist = namelist
+
     exp.run(1, use_restart=False, num_cores=Settings.Cores)
     for i in range(2, Settings.Segments + 1):
         exp.run(i, num_cores=Settings.Cores)

@@ -1,0 +1,208 @@
+diff --git a/src/extra/python/isca/templates/compile.sh b/src/extra/python/isca/templates/compile.sh
+index d203774..c51a078 100755
+--- a/src/extra/python/isca/templates/compile.sh
++++ b/src/extra/python/isca/templates/compile.sh
+@@ -18,9 +18,9 @@ template_debug={{ template_dir }}/mkmf.template.debug
+ execdir={{ execdir }}        # where code is compiled and executable is created
+ executable={{ executable_name }}
+ 
+-netcdf_flags=`nf-config --fflags --flibs`
++#netcdf_flags=`nf-config --fflags --flibs`
+ 
+-ulimit -s unlimited # Set stack size to unlimited
++#ulimit -s unlimited # Set stack size to unlimited
+ export MALLOC_CHECK_=0
+ 
+ # 3. compile the mppncombine tool if it hasn't yet been done.
+@@ -53,13 +53,13 @@ if [ $debug == True ]; then
+  echo "Compiling in debug mode"
+ 
+ # execute mkmf to create makefile
+-cppDefs="-Duse_libMPI -Duse_netCDF -Duse_LARGEFILE -DINTERNAL_FILE_NML -DOVERLOAD_C8 {{compile_flags}}"
++cppDefs="-Duse_libMPI -Duse_netCDF -Duse_LARGEFILE -DINTERNAL_FILE_NML -DOVERLOAD_C8 ${CDEFS} {{compile_flags}}"
+ $mkmf  -a $sourcedir -t $template_debug -p $executable -c "$cppDefs" $pathnames $sourcedir/shared/include $sourcedir/shared/mpp/include
+ 
+ else
+ 
+ # execute mkmf to create makefile
+-cppDefs="-Duse_libMPI -Duse_netCDF -Duse_LARGEFILE -DINTERNAL_FILE_NML -DOVERLOAD_C8 {{compile_flags}}"
++cppDefs="-Duse_libMPI -Duse_netCDF -Duse_LARGEFILE -DINTERNAL_FILE_NML -DOVERLOAD_C8 ${CDEFS} {{compile_flags}}"
+ $mkmf  -a $sourcedir -t $template -p $executable -c "$cppDefs" $pathnames $sourcedir/shared/include $sourcedir/shared/mpp/include
+ 
+ fi
+diff --git a/src/extra/python/isca/templates/run.sh b/src/extra/python/isca/templates/run.sh
+index e4a8d60..260edb5 100644
+--- a/src/extra/python/isca/templates/run.sh
++++ b/src/extra/python/isca/templates/run.sh
+@@ -5,7 +5,7 @@ rundir={{ rundir }}  # change this if you're rerunning from the output directory
+ 
+ source {{ env_source }}
+ 
+-ulimit -s unlimited
++#ulimit -s unlimited
+ 
+ debug={{ run_idb }}                                     # logical to identify if running in debug mode or not
+ 
+diff --git a/src/shared/memutils/memutils.F90 b/src/shared/memutils/memutils.F90
+index 948f369..57c08c8 100644
+--- a/src/shared/memutils/memutils.F90
++++ b/src/shared/memutils/memutils.F90
+@@ -340,22 +340,24 @@ real    :: multiplier
+   memuse = 0.0
+   multiplier = 1.0
+ 
++#ifndef MACOS
+   call mpp_open ( mem_unit, file_name,                                 &
+                       form=MPP_ASCII,        action=MPP_RDONLY,        &
+                       access=MPP_SEQUENTIAL, threading=MPP_SINGLE )
+-  
++
+   do; read (mem_unit,'(a)', end=10) string
+     if ( INDEX ( string, 'VmHWM:' ) == 1 ) then
+       read (string(7:LEN_TRIM(string)-2),*) memuse
+       exit
+     endif
+   enddo
+-  
++
+   if (TRIM(string(LEN_TRIM(string)-1:)) == "kB" ) &
+     multiplier = 1.0/1024. ! Convert from kB to MB
+ 
+ 10 call mpp_close ( mem_unit )
+    memuse = memuse * multiplier
++#endif
+ 
+   return
+ end subroutine mem_dump
+diff --git a/src/shared/mosaic/create_xgrid.c b/src/shared/mosaic/create_xgrid.c
+index e539a6a..0abd595 100644
+--- a/src/shared/mosaic/create_xgrid.c
++++ b/src/shared/mosaic/create_xgrid.c
+@@ -96,6 +96,14 @@ void get_grid_great_circle_area_(const int *nlon, const int *nlat, const double
+ }
+ #endif
+ 
++int isHeadNode_b(struct Node *list, struct Node nodeIn)
++{
++  if(sameNode(*list, nodeIn))
++    return 1;
++  else
++    return 0;
++}
++
+ void get_grid_great_circle_area(const int *nlon, const int *nlat, const double *x, const double *y, const double *z, double *area)
+ {
+   int nx, ny, nxp, i, j, n_in;
+@@ -1360,7 +1368,7 @@ int clip_2dx2d_great_circle(const double x1_in[], const double y1_in[], const do
+       error_handler("firstIntersect is not in the subjList");
+     }
+     addNode(polyList, firstIntersect);
+-    if( isHeadNode(intersectList, firstIntersect) ) {
++    if( isHeadNode_b(intersectList, firstIntersect) ) {
+       temp = intersectList;
+       intersectList = getNextNode(intersectList);
+       free(temp);
+@@ -1431,7 +1439,7 @@ int clip_2dx2d_great_circle(const double x1_in[], const double y1_in[], const do
+ 	else {
+ 	  addNode(polyList, *temp2);
+ 	  if(temp2IsIntersect) { /* remove temp2 from intersectList */
+-	    if( isHeadNode(intersectList, *temp2) ) {
++	    if( isHeadNode_b(intersectList, *temp2) ) {
+ 	      temp = intersectList;
+ 	      intersectList = getNextNode(intersectList);
+ 	      free(temp);
+@@ -1457,7 +1465,7 @@ int clip_2dx2d_great_circle(const double x1_in[], const double y1_in[], const do
+ 
+       /* add curIntersect to polyList and remove it from intersectList and curList */
+       addNode(polyList, curIntersect);
+-      if( isHeadNode(intersectList, curIntersect) ) {
++      if( isHeadNode_b(intersectList, curIntersect) ) {
+ 	temp = intersectList;
+ 	intersectList = getNextNode(intersectList);
+ 	free(temp);
+@@ -1466,7 +1474,7 @@ int clip_2dx2d_great_circle(const double x1_in[], const double y1_in[], const do
+ 	removeNode(intersectList, curIntersect);
+       nintersect--;
+       
+-      if( isHeadNode(curList, curIntersect) ) {
++      if( isHeadNode_b(curList, curIntersect) ) {
+ 	temp = curList;
+ 	curList = getNextNode(curList);
+ 	if( curListNum == 0 )
+diff --git a/src/shared/mpp/affinity.c b/src/shared/mpp/affinity.c
+index a816605..fe81f53 100644
+--- a/src/shared/mpp/affinity.c
++++ b/src/shared/mpp/affinity.c
+@@ -21,6 +21,13 @@
+ 
+ #define _GNU_SOURCE
+ 
++#ifdef MACOS
++
++int get_cpu_affinity(void) { return -1; };
++void set_cpu_affinity( int cpu ) {};
++
++#else
++
+ #include <stdio.h>
+ #include <stdlib.h>
+ #include <string.h>
+@@ -69,8 +76,6 @@ int get_cpu_affinity(void)
+   return (last_cpu == -1) ? first_cpu : -1;
+ }
+ 
+-int get_cpu_affinity_(void) { return get_cpu_affinity(); }	/* Fortran interface */
+-
+ 
+ /*
+  * Set CPU affinity to one core.
+@@ -86,4 +91,7 @@ void set_cpu_affinity( int cpu )
+   }
+ }
+ 
++#endif
++
++int get_cpu_affinity_(void) { return get_cpu_affinity(); } /* Fortran interface */
+ void set_cpu_affinity_(int *cpu) { set_cpu_affinity(*cpu); }	/* Fortran interface */
+diff --git a/src/shared/mpp/mpp_memutils.F90 b/src/shared/mpp/mpp_memutils.F90
+index 38e6339..4823d77 100644
+--- a/src/shared/mpp/mpp_memutils.F90
++++ b/src/shared/mpp/mpp_memutils.F90
+@@ -137,21 +137,23 @@ real    :: multiplier
+   memuse = 0.0
+   multiplier = 1.0
+ 
++#ifndef MACOS
+   mem_unit = get_unit()
+   open(mem_unit, file=file_name, form='FORMATTED', action='READ', access='SEQUENTIAL')
+-  
++
+   do; read (mem_unit,'(a)', end=10) string
+     if ( INDEX ( string, 'VmHWM:' ) == 1 ) then
+       read (string(7:LEN_TRIM(string)-2),*) memuse
+       exit
+     endif
+   enddo
+-  
++
+   if (TRIM(string(LEN_TRIM(string)-1:)) == "kB" ) &
+     multiplier = 1.0/1024. ! Convert from kB to MB
+ 
+ 10 close (mem_unit)
+    memuse = memuse * multiplier
++#endif
+ 
+   return
+ end subroutine mpp_mem_dump
+diff --git a/src/extra/env/mac_conda b/src/extra/env/mac_conda
+new file mode 100644
+--- /dev/null
++++ b/src/extra/env/mac_conda
+@@ -0,0 +1,7 @@
++echo "Loading basic ubuntu-conda environment (mac version)"
++
++export GFDL_MKMF_TEMPLATE=ubuntu_conda
++
++export F90=mpifort
++export CC=mpicc
++export CDEFS="-DMACOS"

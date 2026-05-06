@@ -1,13 +1,13 @@
 [data]
-experiments_dir = "../output"
-experiment_pattern = "barotropic_stirring-T85*"
+experiment_dir = "./output/barotropic_stirring-T85"
+simulation_pattern = "simulations/*"
 segment_pattern = "run*/atmos_daily.nc"
 x_vars = ["vor", "stirring"]
 y_vars = ["vor"]
-split = [1.0, 0.0, 0.0]
-skip = 0
-# samples_per_experiment = 50
-# sampling = "evenly_spaced"
+split = [0.5, 0.25, 0.25]
+skip = 50
+samples_per_experiment = 10
+sampling = "uniform"
 
 [model.fno]
 n_modes = [64, 64]
@@ -16,7 +16,8 @@ in_channels = 2
 out_channels = 1
 
 [training]
-epochs = 3
+epochs = 300
+target_loss = 0.1
 batch_size = 16
 learning_rate = 1e-3
 lr_decay_factor = 0.5
@@ -29,6 +30,6 @@ weight_decay = 0.0
 level = "INFO"
 stdout = true
 
-[paths]
-checkpoint_dir = "checkpoints"
-preprocessed_dir = "data"
+# [paths]
+# checkpoint_dir = ...   # defaults to <experiment_dir>/checkpoints
+# preprocessed_dir = ... # defaults to <experiment_dir>/training-data

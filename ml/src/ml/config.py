@@ -5,33 +5,33 @@ import tomllib
 
 @dataclass
 class IscaDataConfig:
-    # root directory to search for experiments
-    experiments_dir: Path
-    # glob pattern under experiments_dir to find experiment directories
-    experiment_pattern: str
-    # glob pattern within each experiment directory to find NC files
+    # root directory of the experiment (contains simulations/, training-data/, checkpoints/)
+    experiment_dir: Path
+    # glob pattern under experiment_dir to find individual simulation directories
+    simulation_pattern: str
+    # glob pattern within each simulation directory to find NC files
     segment_pattern: str
     # input variable names
     x_vars: list[str]
     # target variable names
     y_vars: list[str]
-    # train/val/test fraction by experiment, must sum to 1.0
+    # train/val/test fraction by simulation, must sum to 1.0
     split: tuple[float, float, float] = (0.8, 0.1, 0.1)
-    # number of pairs to take from each experiment after skip; None means all
+    # number of pairs to take from each simulation after skip; None means all
     samples_per_experiment: int | None = None
     # sampling strategy when samples_per_experiment is set: 'evenly_spaced' or 'uniform'
     sampling: str = "evenly_spaced"
-    # number of initial pairs to skip per experiment
+    # number of initial pairs to skip per simulation
     skip: int = 0
 
     def __post_init__(self):
-        self.experiments_dir = Path(self.experiments_dir)
+        self.experiment_dir = Path(self.experiment_dir)
         assert (
             abs(sum(self.split) - 1.0) < 1e-6
         ), f"split must sum to 1.0, got {self.split}"
         assert (
-            self.experiments_dir.exists()
-        ), f"experiments_dir not found: {self.experiments_dir}"
+            self.experiment_dir.exists()
+        ), f"experiment_dir not found: {self.experiment_dir}"
         assert self.sampling in (
             "evenly_spaced",
             "uniform",
@@ -62,6 +62,8 @@ class TrainingConfig:
     lr_decay_factor: float = 0.5
     # epoch interval for learning rate decay
     lr_decay_every: int = 100
+    # stop early when monitored loss drops below this value; None disables
+    target_loss: float | None = None
     # loss function: 'relative_l2' or 'mse'
     loss: str = "relative_l2"
     # optimizer: 'adam' or 'adamw'
@@ -86,14 +88,20 @@ class LoggingConfig:
 
 @dataclass
 class PathsConfig:
-    # directory for saving model checkpoints
-    checkpoint_dir: Path = Path("checkpoints")
-    # directory where preprocessed HDF5 splits are written and read from
-    preprocessed_dir: Path = Path("data")
+    # directory for saving model checkpoints; derived from experiment_dir if omitted
+    checkpoint_dir: Path | None = None
+    # directory where preprocessed HDF5 splits are written and read from; derived if omitted
+    preprocessed_dir: Path | None = None
+    # directory for training outputs (epoch-metrics.csv, runs.csv); derived if omitted
+    training_dir: Path | None = None
 
     def __post_init__(self):
-        self.checkpoint_dir = Path(self.checkpoint_dir)
-        self.preprocessed_dir = Path(self.preprocessed_dir)
+        if self.checkpoint_dir is not None:
+            self.checkpoint_dir = Path(self.checkpoint_dir)
+        if self.preprocessed_dir is not None:
+            self.preprocessed_dir = Path(self.preprocessed_dir)
+        if self.training_dir is not None:
+            self.training_dir = Path(self.training_dir)
 
 
 @dataclass
@@ -116,8 +124,8 @@ def load(path: Path) -> Config:
 
     d = raw["data"]
     data = IscaDataConfig(
-        experiments_dir=d["experiments_dir"],
-        experiment_pattern=d["experiment_pattern"],
+        experiment_dir=d["experiment_dir"],
+        simulation_pattern=d["simulation_pattern"],
         segment_pattern=d["segment_pattern"],
         x_vars=list(d["x_vars"]),
         y_vars=list(d["y_vars"]),
@@ -144,6 +152,7 @@ def load(path: Path) -> Config:
         learning_rate=t.get("learning_rate", 1e-3),
         lr_decay_factor=t.get("lr_decay_factor", 0.5),
         lr_decay_every=t.get("lr_decay_every", 100),
+        target_loss=t.get("target_loss", None),
         loss=t.get("loss", "relative_l2"),
         optimizer=t.get("optimizer", "adam"),
         weight_decay=t.get("weight_decay", 0.0),
@@ -158,9 +167,16 @@ def load(path: Path) -> Config:
 
     p = raw.get("paths", {})
     paths = PathsConfig(
-        checkpoint_dir=p.get("checkpoint_dir", "checkpoints"),
-        preprocessed_dir=p.get("preprocessed_dir", "data"),
+        checkpoint_dir=p.get("checkpoint_dir", None),
+        preprocessed_dir=p.get("preprocessed_dir", None),
     )
+
+    if paths.checkpoint_dir is None:
+        paths.checkpoint_dir = data.experiment_dir / "checkpoints"
+    if paths.preprocessed_dir is None:
+        paths.preprocessed_dir = data.experiment_dir / "training-data"
+    if paths.training_dir is None:
+        paths.training_dir = data.experiment_dir / "training"
 
     return Config(
         data=data, model=model, training=training, logging=logging_cfg, paths=paths
