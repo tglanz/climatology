@@ -18,6 +18,8 @@ def fix_time_units(ds: xr.Dataset) -> xr.Dataset:
             ds[v].attrs["units"] = (
                 ds[v].attrs["units"].replace("0000-00-00", "0001-01-01")
             )
+        if ds[v].attrs.get("calendar") == "NO_CALENDAR":
+            ds[v].attrs["calendar"] = "360_day"
     return ds
 
 

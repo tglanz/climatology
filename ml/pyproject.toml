@@ -1,24 +1,18 @@
 [project]
 name = "ml"
 version = "0.1.0"
-description = "Add your description here"
+description = "Global Physical Climatology: ML training, inference, and analysis"
 readme = "README.md"
 authors = [
     { name = "Tal Glanzman", email = "talglanzman@gmail.com" }
 ]
 requires-python = ">=3.13"
 dependencies = [
-    "neuraloperator",
-    "torch>=2.11.0",
-    "torchvision>=0.26.0",
-    "click",
-    "tqdm>=4.67.3",
+    "numpy",
     "xarray",
     "netCDF4",
-    "numpy",
-    "h5py",
-    "rich>=13",
-    "plotext>=5",
+    "click",
+    "tqdm>=4.67.3",
 ]
 
 [project.scripts]
@@ -32,13 +26,33 @@ build-backend = "uv_build"
 neuraloperator = { path = "../submodules/neuraloperator", editable = true }
 
 [dependency-groups]
+train = [
+    "torch>=2.11.0",
+    "torchvision>=0.26.0",
+    "neuraloperator",
+    "h5py",
+    "rich>=13",
+    "plotext>=5",
+]
+inference = [
+    "torch>=2.11.0",
+    "torchvision>=0.26.0",
+    "neuraloperator",
+]
+vis = [
+    "cartopy>=0.25",
+    "matplotlib",
+    "dask",
+    "pandas",
+    "jupyter",
+    "nbconvert>=7",
+    "ipykernel",
+    "ipython",
+]
 dev = [
     "black",
     "pylint",
     "pytest",
-]
-gui = [
-    "matplotlib",
 ]
 
 [tool.pylint.messages_control]

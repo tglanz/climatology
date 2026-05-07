@@ -1,3 +1,4 @@
+import json
 import logging
 from pathlib import Path
 
@@ -112,3 +113,12 @@ class IscaDataPreprocessor:
 
         for name, dirs in splits.items():
             extract_pairs(dirs, data_cfg, out_dir / f"{name}.h5")
+
+        manifest = {
+            name: [str(Path("..") / d.relative_to(data_cfg.experiment_dir)) for d in dirs]
+            for name, dirs in splits.items()
+        }
+        manifest_path = out_dir / "splits.json"
+        with open(manifest_path, "w") as f:
+            json.dump(manifest, f, indent=2)
+        log.info("wrote split manifest to %s", manifest_path)

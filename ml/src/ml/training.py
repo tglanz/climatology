@@ -83,6 +83,16 @@ class Trainer:
             normalizer_y.mean.squeeze().tolist(),
             normalizer_y.std.squeeze().tolist(),
         )
+        torch.save(
+            {
+                "x_mean": normalizer_x.mean.cpu(),
+                "x_std": normalizer_x.std.cpu(),
+                "y_mean": normalizer_y.mean.cpu(),
+                "y_std": normalizer_y.std.cpu(),
+            },
+            self.cfg.paths.checkpoint_dir / "normalization.pt",
+        )
+        self.log.info("saved normalization stats to %s", self.cfg.paths.checkpoint_dir / "normalization.pt")
 
     def fit(self, train_loader: DataLoader, val_loader: DataLoader | None, track_metrics: bool = False):
         self._fit_normalizers(train_loader)
@@ -110,14 +120,14 @@ class Trainer:
                 if val_loss < best_val:
                     best_val = val_loss
                     best_val_epoch = epoch
-                    torch.save(self.model.state_dict(), self.cfg.paths.checkpoint_dir / "best.pt")
+                    torch.save(self.model.state_dict(), self.cfg.paths.checkpoint_dir / "parameters.pt")
                 monitored = val_loss
                 if training_metrics is not None:
                     training_metrics.update(self.model, val_loader)
             else:
                 val_loss = None
                 self.log.info("epoch %d  train=%.6f", epoch, train_loss)
-                torch.save(self.model.state_dict(), self.cfg.paths.checkpoint_dir / "best.pt")
+                torch.save(self.model.state_dict(), self.cfg.paths.checkpoint_dir / "parameters.pt")
                 monitored = train_loss
 
             if training_metrics is not None:

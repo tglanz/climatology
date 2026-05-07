@@ -1,47 +1,48 @@
 # Training
 
-# BVE + Stirring
+## Problem
 
-Goal: Train a model, such that for input $(\omega_t, F_t)$ produces $\omega_{t+1}$ where
-
-- $\omega_t$ is the vorticity field at time $t$
-- $F_t$ is the forcing (stirring) field at time $t$
-
-## Data
-
-Each experiment $e$ is a simulation under stirring configuration $S_e$, producing vorticity snapshots $\omega_e(t)$ and forcing fields $F_e(t)$ for $t = 0, 1, \ldots, T_e$ on a fixed spatial grid $D$.
-
-Let $\mathcal{E}$ be the set of all experiments. For each experiment $e$, let $\mathcal{S}(e) \subseteq \{0, 1, \ldots, T_e - 1\}$ be the set of sampled time indices. Index each sample by $i = (e, t)$:
+Given vorticity $\omega_t$ and stirring forcing $F_t$ at time $t$, predict $\omega_{t+1}$:
 
 $$x_i = (\omega_e(t),\ F_e(t)), \qquad y_i = \omega_e(t+1)$$
 
-$$\mathcal{D} = \{(x_i,\ y_i) \mid e \in \mathcal{E},\ t \in \mathcal{S}(e)\}$$
+Experiments are split 80/10/10 by simulation (not by sample) so no simulation appears in
+more than one split.
 
-where $N = \sum_{e \in \mathcal{E}} |\mathcal{S}(e)|$ is the total number of training samples.
+## Loss
 
-## Training
+- **MSE**: $\frac{1}{N}\sum\|\hat{y}_i - y_i\|_2^2$
+- **Relative $L^2$** (current): $\frac{1}{N}\sum\frac{\|\hat{y}_i - y_i\|_2}{\|y_i\|_2}$
 
-$\mathcal{E}$ is partitioned into train/val/test splits (e.g. by 80%/10%/10% split). All pairs from each experiment belong to a single split.
+Persistence baseline (copy $\omega_t$ as prediction): ~0.947. Target: 0.1.
 
-**Loss**:
-- MSE: $\frac{1}{N}\sum\|\hat{y}_i - y_i\|_2^2$ — simple baseline
-- Relative $L^2$ (FNO): $\frac{1}{N}\sum\frac{\|\hat{y}_i - y_i\|_2}{\|y_i\|_2}$
-- Geometric relative $L^2$ (SFNO): accounts for spherical geometry by weighting grid points by latitude Jacobian and quadrature weights:
+## Architecture
 
-$$\mathcal{L} = \frac{\left(\sum_{i,j} w_j \sin\theta_j\, |\hat{y}_{ij} - y_{ij}|^2\right)^{1/2}}{\left(\sum_{i,j} w_j \sin\theta_j\, |y_{ij}|^2\right)^{1/2}}$$
+**FNO** (current): flat 2D FFT over the lat-lon grid. Correct for the zonal
+(periodic) direction; approximate for latitude (Gaussian grid, non-uniform spacing,
+pole boundaries).
 
-where $\theta_j$ is the colatitude and $w_j$ are quadrature weights.
+**SFNO** (recommended next step): replaces FFT with spherical harmonic transforms.
+Natural basis for fields on a sphere; correct inductive bias for this problem.
+FourCastNetv2 uses SFNO for global weather prediction. Already available at
+`submodules/neuraloperator/neuralop/models/sfno.py` — drop-in replacement for FNO.
+Requires `torch_harmonics`.
 
-**Optimizer**: Adam in both FNO and SFNO.
-- FNO: lr $10^{-3}$, halved every 100 epochs, 500 epochs total
-- SFNO: lr $2\times10^{-3}$ (initial), $10^{-5}$ (fine-tuning); fine-tuning uses autoregressive rollout loss accumulated across multiple forecast steps
+**TFNO**: Tucker-factorized FNO. Fewer parameters for same expressiveness; useful if
+overfitting persists without switching to SFNO.
 
-## Inference
+## Optimizer
 
-The simulator is replaced by an autoregressive loop:
+Adam, lr $10^{-3}$, halved every 100 epochs.
 
-$$\omega(t+1) = \text{FNO}(\omega(t),\ F(t))$$
+## Tuning Heuristics
 
-$F(t)$ is sampled from an Ornstein-Uhlenbeck process.
+| Symptom | Action |
+|---|---|
+| Val plateaus, train converges | Reduce hidden_channels (32->16), add weight_decay 1e-4 |
+| Both plateau above 0.3 | Increase hidden_channels or n_modes |
+| Train/val gap > 0.2 | Overfitting; reduce model or add weight_decay, increase batch_size |
 
-> Note: we can use the existing implementation at `stirring.F90:222~` to generate those samples. Commented there: !This is equation A.6 in Vallis et al 2004 - DOI:10.1175/1520-0469(2004)061<0264:AMASDM>2.0.CO;2
+**Data diversity**: all current simulations use identical stirring parameters. Varying
+amplitude, latitude, and width across simulations would improve generalization to
+unseen forcing regimes.
