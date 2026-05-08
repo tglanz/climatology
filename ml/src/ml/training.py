@@ -14,6 +14,8 @@ from neuralop.data.transforms.normalizers import UnitGaussianNormalizer
 
 from ml.config import Config, SchedulerConfig
 from ml.common.training_metrics import TrainingMetrics
+from ml.early_stopping import CompositeEarlyStopper, EarlyStoppingInfo
+from ml.training_info import TrainingInfo
 
 
 LossFn = Callable[[torch.Tensor, torch.Tensor], torch.Tensor]
@@ -126,7 +128,14 @@ class Trainer:
         self.loss_fn = create_loss_fn(cfg.training.loss, lat_weights=lat_weights)
         self.log.info("loss: %s", cfg.training.loss)
 
+        wd = cfg.training.regularization.weight_decay
         if cfg.training.optimizer == "adam":
+            if wd is not None and wd != 0.0:
+                self.log.warning(
+                    "regularization.weight_decay=%s is ignored when optimizer='adam'; "
+                    "switch optimizer to 'adamw' to apply it",
+                    wd,
+                )
             self.optimizer = torch.optim.Adam(
                 model.parameters(), lr=cfg.training.learning_rate
             )
@@ -134,7 +143,7 @@ class Trainer:
             self.optimizer = torch.optim.AdamW(
                 model.parameters(),
                 lr=cfg.training.learning_rate,
-                weight_decay=cfg.training.weight_decay,
+                weight_decay=wd if wd is not None else 0.0,
             )
         else:
             raise ValueError(f"unknown optimizer: {cfg.training.optimizer}")
@@ -146,7 +155,20 @@ class Trainer:
             "scheduler: %s (mode=%s)", cfg.training.scheduler.kind, self.scheduler_mode
         )
 
+        self.early_stopper = CompositeEarlyStopper.from_config(
+            cfg.training.early_stopping
+        )
+        if len(self.early_stopper) > 0:
+            self.log.info(
+                "early stopping: %s",
+                ", ".join(type(s).__name__ for s in self.early_stopper),
+            )
+        else:
+            self.log.info("early stopping: none")
+
         self.grad_clip = cfg.training.grad_clip
+
+        self.info = TrainingInfo.collect(cfg, self.run_id, self.model, self.device)
 
     def _fit_normalizers(self, train_loader: DataLoader):
         normalizer_x = UnitGaussianNormalizer(dim=[0, 2, 3])
@@ -212,9 +234,14 @@ class Trainer:
 
         best_val = float("inf")
         best_val_epoch = -1
-        target_loss = self.cfg.training.target_loss
         stopped_early = False
         start_time = datetime.now(timezone.utc)
+
+        # persist run metadata once now (end_time is null until finalize)
+        self.info.save(self.cfg.paths.training_info_file)
+        self.log.info(
+            "wrote run metadata to %s", self.cfg.paths.training_info_file
+        )
 
         for epoch in tqdm(range(1, self.cfg.training.epochs + 1), desc="epochs"):
             t0 = time.monotonic()
@@ -258,11 +285,17 @@ class Trainer:
                     val_loss,
                 )
 
-            if target_loss is not None and monitored <= target_loss:
+            es_info = EarlyStoppingInfo(
+                epoch=epoch,
+                train_loss=train_loss,
+                val_loss=val_loss,
+                best_val_loss=best_val,
+                best_val_epoch=best_val_epoch,
+                learning_rate=lr,
+            )
+            if self.early_stopper.should_early_stop(es_info):
                 self.log.info(
-                    "target loss %.6f reached at epoch %d, stopping",
-                    target_loss,
-                    epoch,
+                    "early stop at epoch %d: %s", epoch, self.early_stopper.reason()
                 )
                 stopped_early = True
                 break
@@ -277,6 +310,14 @@ class Trainer:
                 best_val_epoch,
                 stopped_early,
             )
+
+        self.info.finalize(
+            total_epochs=epoch,
+            best_val_loss=best_val,
+            best_val_epoch=best_val_epoch,
+            stopped_early=stopped_early,
+        )
+        self.info.save(self.cfg.paths.training_info_file)
 
     def train_epoch(self, loader: DataLoader) -> float:
         self.model.train()

@@ -28,7 +28,11 @@ class MonitorState:
         self.title: str = cfg.data.experiment_dir.name
         self.sections: list[Section] = []
         self.series: list[RunSeries] = []
-        self.target_loss: float | None = cfg.training.target_loss
+        self.target_loss: float | None = (
+            cfg.training.early_stopping.target_loss.value
+            if cfg.training.early_stopping.target_loss is not None
+            else None
+        )
         self.spatial_error: np.ndarray | None = None
         self.zonal_mean_history: list[np.ndarray] = []
         self.error_power: np.ndarray | None = None
@@ -60,6 +64,26 @@ def _read_metrics(path: Path) -> list[dict]:
         return list(csv.DictReader(f))
 
 
+def _early_stopping_items(t) -> list[tuple[str, str]]:
+    es = t.early_stopping
+    items: list[tuple[str, str]] = []
+    if es.target_loss is not None:
+        items.append(
+            ("target_loss", f"{es.target_loss.value} ({es.target_loss.monitor})")
+        )
+    if es.patience is not None:
+        p = es.patience
+        items.append(
+            (
+                "patience",
+                f"{p.patience} ep, min_delta={p.min_delta} ({p.monitor})",
+            )
+        )
+    if not items:
+        items.append(("none", "-"))
+    return items
+
+
 def _scheduler_items(t) -> list[tuple[str, str]]:
     s = t.scheduler
     items: list[tuple[str, str]] = [("kind", s.kind)]
@@ -86,8 +110,10 @@ def _build_sections(cfg: Config, rows: list[dict]) -> tuple[str, list[Section]]:
     avg_elapsed = sum(float(r["elapsed_seconds"]) for r in rows) / len(rows) if rows else 0.0
 
     optimizer_items = [("optimizer", t.optimizer)]
-    if t.optimizer == "adamw":
-        optimizer_items.append(("weight_decay", str(t.weight_decay)))
+    if t.optimizer == "adamw" and t.regularization.weight_decay is not None:
+        optimizer_items.append(("weight_decay", str(t.regularization.weight_decay)))
+    if t.regularization.dropout is not None:
+        optimizer_items.append(("dropout", str(t.regularization.dropout)))
     if t.grad_clip is not None:
         optimizer_items.append(("grad_clip", str(t.grad_clip)))
 
@@ -113,6 +139,7 @@ def _build_sections(cfg: Config, rows: list[dict]) -> tuple[str, list[Section]]:
             ("ratio",    f"{float(last['val_loss']) / float(last['train_loss']):.2f}" if last and last.get("val_loss") and float(last['train_loss']) > 0 else "-"),
             ("best_val", f"{float(best_row['val_loss']):.6f} @ ep {best_row['epoch']}" if best_row else "-"),
         ]),
+        Section("[Early Stopping]", _early_stopping_items(t)),
     ]
 
     return cfg.data.experiment_dir.name, sections

@@ -56,6 +56,10 @@ def sample_indices(n_available: int, samples: int | None, sampling: str) -> list
         return np.linspace(0, n_available - 1, samples, dtype=int).tolist()
     if sampling == "uniform":
         return np.random.choice(n_available, samples, replace=False).tolist()
+    if sampling == "latest":
+        # Take the `samples` most-recent valid indices. Past spinup is automatic
+        # since we are reading from the end of the trajectory.
+        return list(range(n_available - samples, n_available))
     raise ValueError(f"unknown sampling: {sampling}")
 
 

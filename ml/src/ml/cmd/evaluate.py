@@ -49,23 +49,36 @@ def autoregression(config_path: Path, input_path: Path, t0: int, T: int, output_
         f"refusing to evaluate on training or validation data"
     )
 
-    # Load dataset and slice.
+    K = cfg.data.lag_steps
+
+    # Load dataset and slice. With lag_steps=K we need K-1 timesteps before t0
+    # to form the first input window, and one timestep after the last
+    # prediction for ground-truth comparison.
     ds = xr.open_dataset(input_path, decode_times=False)
     ds = fix_time_units(ds)
     n_times = ds.sizes["time"]
-    assert n_times >= t0 + T + 1, (
-        f"file has {n_times} timesteps but need at least {t0 + T + 1} "
+    assert t0 >= K - 1, (
+        f"--start {t0} must be >= lag_steps - 1 = {K - 1} so that K={K} "
+        f"history timesteps are available"
+    )
+    history_start = t0 - (K - 1)
+    end_exclusive = t0 + T + 1
+    assert n_times >= end_exclusive, (
+        f"file has {n_times} timesteps but need at least {end_exclusive} "
         f"(--start {t0} + --timesteps {T} + 1)"
     )
-    ds_slice = ds.isel(time=slice(t0, t0 + T + 1))
+    ds_slice = ds.isel(time=slice(history_start, end_exclusive))
 
-    vor0 = ds_slice["vor"].values[0]
-    stirring_seq = ds_slice["stirring"].values[:T]
+    vor_history = ds_slice["vor"].values[:K]
+    # stirring covers all K-step windows used during the rollout:
+    # last window is (t0+T-K, ..., t0+T-1), i.e. K + T - 1 timesteps total.
+    stirring_seq = ds_slice["stirring"].values[: K + T - 1]
 
-    # Run autoregression.
-    model = build_model(cfg.model.fno)
+    # Run autoregression. Reconstruct the architecture exactly as it was at
+    # training time, including dropout layers (no-ops in eval mode).
+    model = build_model(cfg.model.fno, dropout=cfg.training.regularization.dropout)
     autoregressor = Autoregressor(model, cfg.paths.checkpoint_dir)
-    vor_pred = autoregressor.rollout(vor0, stirring_seq)
+    vor_pred = autoregressor.rollout(vor_history, stirring_seq)
 
     vor_truth = ds_slice["vor"].values
     vor_pred_err = vor_pred - vor_truth

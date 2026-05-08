@@ -6,29 +6,59 @@ x_vars = ["vor", "stirring"]
 y_vars = ["vor"]
 # test, val, train
 split = [0.1, 0.1, 0.8]
-skip = 45
-# samples_per_experiment = 5
-sampling = "uniform"
+# Number of input timesteps stacked along the channel axis.
+# lag_steps = 1 -> (vor_t, stirring_t)        -> vor_t+1   (legacy behaviour)
+# lag_steps = 5 -> (vor_t-4, stirring_t-4, ..., vor_t, stirring_t) -> vor_t+1
+lag_steps = 5
+# 1 independent pair per simulation (FNO benchmarks recipe).
+samples_per_experiment = 1
+# 'latest' takes the temporally most recent valid window per sim,
+# guaranteed to be past spinup without needing a manual `skip`.
+sampling = "latest"
+skip = 0
 
 [model.fno]
 n_modes = [32, 64]
-hidden_channels = 64
-n_layers = 4
-in_channels = 2
+hidden_channels = 32
+n_layers = 3
+# in_channels MUST equal data.lag_steps * len(data.x_vars). Validated at config load.
+in_channels = 10
 out_channels = 1
 
 [training]
 epochs = 300
-target_loss = 0.1
 batch_size = 64
 learning_rate = 1e-3
-loss = "lat_weighted_relative_l2"   # mse | relative_l2 | lat_weighted_relative_l2
-optimizer = "adam"                  # adam | adamw
-weight_decay = 0.0
-# grad_clip = 1.0                   # uncomment to enable gradient norm clipping
+# mse | relative_l2 | lat_weighted_relative_l2
+loss = "lat_weighted_relative_l2"
+# adam | adamw
+optimizer = "adamw"
+# gradient norm clipping
+# grad_clip = 1.0
 
+# Regularization. No defaults; absent fields are not applied.
+[training.regularization]
+weight_decay = 1e-3   # only used when optimizer = "adamw"
+dropout      = 0.1    # forwarded to FNO as channel_mlp_dropout
+
+# Early stopping. Each subsection that is present is enabled. Any criterion
+# firing stops training. Remove a subsection to disable it.
+
+[training.early_stopping.target_loss]
+value = 0.1
+# val | train
+monitor = "val" 
+
+[training.early_stopping.patience]
+patience = 10
+min_delta = 1e-4
+# val | train
+monitor = "val"
+
+# TODO: this can just be training.scheduler
 [training.scheduler]
-kind = "cosine"   # step | cosine | plateau | none
+# step | cosine | plateau | none
+kind = "cosine"
 
 [training.scheduler.step]
 step_size = 100
@@ -49,5 +79,6 @@ level = "INFO"
 stdout = true
 
 # [paths]
-# checkpoint_dir = ...   # defaults to <experiment_dir>/training
-# preprocessed_dir = ... # defaults to <experiment_dir>/training-data
+# checkpoint_dir = ...     # defaults to <experiment_dir>/training
+# preprocessed_dir = ...   # defaults to <experiment_dir>/data
+# training_info_file = ... # defaults to <experiment_dir>/training/training.json

@@ -217,16 +217,23 @@ if __name__ == '__main__':
     parser.add_argument('--index', type=int, default=None, help='run index; if omitted, auto-increments')
     args = parser.parse_args()
 
-    cb.compile()
-    if args.compile:
-        raise SystemExit(0)
-
     experiment_dir = OUTPUT_DIR / f"{EXPERIMENT_BASE}-T{Settings.FourierHarmonics}"
     simulations_dir = experiment_dir / 'simulations'
 
     if args.index is not None:
         exp_name = str(args.index)
-    else:
+        # If the final segment already produced an atmos_daily.nc, treat this index as
+        # complete and skip. Lets `seq 0 N | parallel ml-sim --index {}` fill gaps idempotently.
+        last_segment = simulations_dir / exp_name / f"run{Settings.Segments:04d}" / 'atmos_daily.nc'
+        if last_segment.exists():
+            print(f"[skip] index={exp_name}: {last_segment} already exists")
+            raise SystemExit(0)
+
+    cb.compile()
+    if args.compile:
+        raise SystemExit(0)
+
+    if args.index is None:
         exp_name = next_run_dir(simulations_dir).name
 
     exp = Experiment(exp_name, codebase=cb, database=str(simulations_dir))

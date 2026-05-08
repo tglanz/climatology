@@ -33,41 +33,85 @@ class Autoregressor:
 
         log.info("loaded model from %s (device: %s)", checkpoint_dir, self.device)
 
-    def rollout(self, vor0: np.ndarray, stirring_seq: np.ndarray) -> np.ndarray:
+    def rollout(
+        self, vor_history: np.ndarray, stirring_seq: np.ndarray
+    ) -> np.ndarray:
         """
-        Autoregressively predict vorticity for T steps.
+        Autoregressively predict vorticity.
 
         Parameters
         ----------
-        vor0 : (lat, lon) initial vorticity field at t_0
-        stirring_seq : (T, lat, lon) stirring forcing for steps t_0 .. t_0+T-1
+        vor_history : (K, lat, lon)
+            Vorticity at the K most recent known timesteps, in chronological
+            order. K must equal the lag_steps the model was trained with.
+            For K=1 this is a single (1, lat, lon) snapshot, equivalent to
+            the previous (lat, lon) `vor0` argument.
+        stirring_seq : (K + T - 1, lat, lon)
+            Stirring at all timesteps used in any input window:
+            the K history timesteps plus T - 1 additional steps for the
+            future predictions. T is inferred as
+                T = stirring_seq.shape[0] - K + 1
+            and must be >= 1.
 
         Returns
         -------
-        vor_pred : (T+1, lat, lon) predicted vorticity at t_0 .. t_0+T
-        """
-        T = stirring_seq.shape[0]
-        lat, lon = vor0.shape
-        vor_pred = np.empty((T + 1, lat, lon), dtype=np.float32)
-        vor_pred[0] = vor0
+        vor : (K + T, lat, lon)
+            Vorticity at the union of history and prediction times. The
+            first K rows echo `vor_history`; rows K..K+T-1 are predicted
+            one step ahead each.
 
-        vor_t = torch.from_numpy(vor0.astype(np.float32)).to(self.device)
+        The model input for prediction step s (s = 0, ..., T - 1) uses
+        the K-step window
+            (vor_t-K+1, stirring_t-K+1, vor_t-K+2, stirring_t-K+2, ...,
+             vor_t,     stirring_t)
+        flattened along the channel axis (oldest-to-newest, x_vars-major
+        within each step). This must match the convention used by
+        `extract_pairs` in `ml.isca_preprocessing`.
+        """
+        assert vor_history.ndim == 3, (
+            f"vor_history must be (K, lat, lon), got {vor_history.shape}"
+        )
+        assert stirring_seq.ndim == 3, (
+            f"stirring_seq must be (L, lat, lon), got {stirring_seq.shape}"
+        )
+        K, lat, lon = vor_history.shape
+        L = stirring_seq.shape[0]
+        assert L >= K, (
+            f"stirring_seq length {L} must be >= K={K} (history coverage)"
+        )
+        T = L - K + 1
+        assert T >= 1, "no predictions: stirring_seq too short"
+
+        out = np.empty((K + T, lat, lon), dtype=np.float32)
+        out[:K] = vor_history.astype(np.float32)
+
+        vor_window = torch.from_numpy(vor_history.astype(np.float32)).to(self.device)
+        stirring_t = torch.from_numpy(stirring_seq.astype(np.float32)).to(self.device)
 
         with torch.no_grad():
-            for t in range(T):
-                stirring_t = torch.from_numpy(stirring_seq[t].astype(np.float32)).to(self.device)
+            for s in range(T):
+                stirring_window = stirring_t[s : s + K]  # (K, lat, lon)
 
-                # x shape: (1, 2, lat, lon)
-                x = torch.stack([vor_t, stirring_t], dim=0).unsqueeze(0)
+                # Interleave channels [vor_k, stirring_k] for k = 0..K-1
+                channels = []
+                for k in range(K):
+                    channels.append(vor_window[k])
+                    channels.append(stirring_window[k])
+                x = torch.stack(channels, dim=0).unsqueeze(0)  # (1, 2K, lat, lon)
 
                 x_norm = (x - self.x_mean) / self.x_std
                 y_norm = self.model(x_norm)
                 y = y_norm * self.y_std + self.y_mean
+                next_vor = y.squeeze(0).squeeze(0)  # (lat, lon)
 
-                vor_t = y.squeeze(0).squeeze(0)
+                assert not torch.isnan(next_vor).any(), (
+                    f"NaN in model output at rollout step {s}"
+                )
 
-                assert not torch.isnan(vor_t).any(), f"NaN in model output at step {t}"
+                out[K + s] = next_vor.cpu().numpy()
+                # Slide window: drop oldest, append the new prediction.
+                vor_window = torch.cat(
+                    [vor_window[1:], next_vor.unsqueeze(0)], dim=0
+                )
 
-                vor_pred[t + 1] = vor_t.cpu().numpy()
-
-        return vor_pred
+        return out
