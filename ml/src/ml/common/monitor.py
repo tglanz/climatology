@@ -60,6 +60,23 @@ def _read_metrics(path: Path) -> list[dict]:
         return list(csv.DictReader(f))
 
 
+def _scheduler_items(t) -> list[tuple[str, str]]:
+    s = t.scheduler
+    items: list[tuple[str, str]] = [("kind", s.kind)]
+    if s.kind == "step":
+        items.append(("step_size", str(s.step.step_size)))
+        items.append(("gamma",     str(s.step.gamma)))
+    elif s.kind == "cosine":
+        items.append(("t_max",   str(s.cosine.t_max)))
+        items.append(("eta_min", str(s.cosine.eta_min)))
+    elif s.kind == "plateau":
+        items.append(("patience",  str(s.plateau.patience)))
+        items.append(("factor",    str(s.plateau.factor)))
+        items.append(("threshold", str(s.plateau.threshold)))
+        items.append(("eta_min",   str(s.plateau.eta_min)))
+    return items
+
+
 def _build_sections(cfg: Config, rows: list[dict]) -> tuple[str, list[Section]]:
     t = cfg.training
     last = rows[-1] if rows else None
@@ -68,22 +85,29 @@ def _build_sections(cfg: Config, rows: list[dict]) -> tuple[str, list[Section]]:
     epoch_num = int(last["epoch"]) if last else 0
     avg_elapsed = sum(float(r["elapsed_seconds"]) for r in rows) / len(rows) if rows else 0.0
 
+    optimizer_items = [("optimizer", t.optimizer)]
+    if t.optimizer == "adamw":
+        optimizer_items.append(("weight_decay", str(t.weight_decay)))
+    if t.grad_clip is not None:
+        optimizer_items.append(("grad_clip", str(t.grad_clip)))
+
+    lr_items: list[tuple[str, str]] = [
+        ("init", str(t.learning_rate)),
+        ("lr",   last["learning_rate"] if last else str(t.learning_rate)),
+    ]
+    lr_items.extend(_scheduler_items(t))
+
     sections = [
-        Section("[Optimizer]", [
-            ("optimizer", t.optimizer),
-        ]),
+        Section("[Optimizer]", optimizer_items),
         Section("[Epoch]", [
             ("total",        str(t.epochs)),
             ("number",       str(epoch_num) if last else "-"),
             ("progress",     f"{100 * epoch_num / t.epochs:.1f}%" if t.epochs and last else "-"),
             ("avg duration", f"{avg_elapsed:.1f}s" if last else "-"),
         ]),
-        Section("[LR]", [
-            ("init",  str(t.learning_rate)),
-            ("decay", f"{t.lr_decay_factor} / {t.lr_decay_every} ep"),
-            ("lr",    last["learning_rate"] if last else str(t.learning_rate)),
-        ]),
+        Section("[LR]", lr_items),
         Section("[Loss]", [
+            ("kind",     t.loss),
             ("val",      f"{float(last['val_loss']):.6f}" if last and last.get("val_loss") else "-"),
             ("train",    f"{float(last['train_loss']):.6f}" if last else "-"),
             ("ratio",    f"{float(last['val_loss']) / float(last['train_loss']):.2f}" if last and last.get("val_loss") and float(last['train_loss']) > 0 else "-"),

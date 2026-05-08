@@ -4,32 +4,50 @@ simulation_pattern = "simulations/*"
 segment_pattern = "run*/atmos_daily.nc"
 x_vars = ["vor", "stirring"]
 y_vars = ["vor"]
-split = [0.8, 0.1, 0.1]
+# test, val, train
+split = [0.1, 0.1, 0.8]
 skip = 45
-# samples_per_experiment = 10  # omit to use all available pairs after skip
+# samples_per_experiment = 5
 sampling = "uniform"
 
 [model.fno]
-n_modes = [16, 16]
-hidden_channels = 32
+n_modes = [32, 64]
+hidden_channels = 64
+n_layers = 4
 in_channels = 2
 out_channels = 1
 
 [training]
 epochs = 300
 target_loss = 0.1
-batch_size = 16
+batch_size = 64
 learning_rate = 1e-3
-lr_decay_factor = 0.5
-lr_decay_every = 100
-loss = "relative_l2"
-optimizer = "adam"
+loss = "lat_weighted_relative_l2"   # mse | relative_l2 | lat_weighted_relative_l2
+optimizer = "adam"                  # adam | adamw
 weight_decay = 0.0
+# grad_clip = 1.0                   # uncomment to enable gradient norm clipping
+
+[training.scheduler]
+kind = "cosine"   # step | cosine | plateau | none
+
+[training.scheduler.step]
+step_size = 100
+gamma = 0.5
+
+[training.scheduler.cosine]
+# t_max defaults to training.epochs when omitted
+eta_min = 0.0
+
+[training.scheduler.plateau]
+patience = 15
+factor = 0.5
+threshold = 1e-4
+eta_min = 0.0
 
 [logging]
 level = "INFO"
 stdout = true
 
 # [paths]
-# checkpoint_dir = ...   # defaults to <experiment_dir>/checkpoints
+# checkpoint_dir = ...   # defaults to <experiment_dir>/training
 # preprocessed_dir = ... # defaults to <experiment_dir>/training-data

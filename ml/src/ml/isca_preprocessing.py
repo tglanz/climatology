@@ -95,20 +95,21 @@ class IscaDataPreprocessor:
         ), f"no experiments found: {data_cfg.experiment_dir}/{data_cfg.simulation_pattern}"
 
         n = len(exp_dirs)
-        n_train = int(n * data_cfg.split[0])
+        n_test = int(n * data_cfg.split[0])
         n_val = int(n * data_cfg.split[1])
 
+        # Assign lowest-numbered simulations to test so sim 0 is always held out.
         splits = {
-            "train": exp_dirs[:n_train],
-            "val": exp_dirs[n_train : n_train + n_val],
-            "test": exp_dirs[n_train + n_val :],
+            "test":  exp_dirs[:n_test],
+            "val":   exp_dirs[n_test : n_test + n_val],
+            "train": exp_dirs[n_test + n_val :],
         }
 
         log.info(
-            "experiments: %d train / %d val / %d test",
-            len(splits["train"]),
-            len(splits["val"]),
+            "experiments: %d test / %d val / %d train",
             len(splits["test"]),
+            len(splits["val"]),
+            len(splits["train"]),
         )
 
         for name, dirs in splits.items():

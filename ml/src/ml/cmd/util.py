@@ -5,6 +5,7 @@ import torch
 
 from ml.config import load as load_config
 from ml.isca_dataset import make_loaders
+from ml.model import build_model
 from ml.training import create_loss_fn
 
 
@@ -12,6 +13,49 @@ from ml.training import create_loss_fn
 def util():
     """Utility commands."""
     pass
+
+
+@util.command("model-info")
+@click.option(
+    "-c", "--config", "config_path",
+    required=True,
+    type=click.Path(exists=True, path_type=Path),
+)
+def model_info(config_path: Path):
+    """Print model architecture summary and parameter counts."""
+    cfg = load_config(config_path)
+    model = build_model(cfg.model.fno)
+
+    total = sum(p.numel() for p in model.parameters())
+    trainable = sum(p.numel() for p in model.parameters() if p.requires_grad)
+
+    fno = cfg.model.fno
+    print(f"architecture:    FNO")
+    print(f"n_modes:         {fno.n_modes}")
+    print(f"hidden_channels: {fno.hidden_channels}")
+    print(f"n_layers:        {fno.n_layers}")
+    print(f"in_channels:     {fno.in_channels}")
+    print(f"out_channels:    {fno.out_channels}")
+    print(f"total params:    {total:,}")
+    print(f"trainable:       {trainable:,}")
+
+    import json, h5py
+    preprocessed_dir = cfg.paths.preprocessed_dir
+    manifest_path = preprocessed_dir / "splits.json"
+    manifest = {}
+    if manifest_path.exists():
+        with open(manifest_path) as f:
+            manifest = json.load(f)
+
+    print()
+    for split in ("train", "val", "test"):
+        n_sims = len(manifest.get(split, []))
+        h5 = preprocessed_dir / f"{split}.h5"
+        if h5.exists():
+            with h5py.File(h5, "r") as f:
+                n_samples = f["x"].shape[0]
+            ratio = total / n_samples if n_samples > 0 else float("inf")
+            print(f"{split:5}  {n_sims:4} sims  {n_samples:6,} samples  {ratio:.0f} params/sample")
 
 
 @util.command("persistence-score")

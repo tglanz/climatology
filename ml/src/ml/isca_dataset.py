@@ -97,3 +97,33 @@ def make_loaders(
         make_loader(out_dir / "val.h5", bs, shuffle=False),
         make_loader(out_dir / "test.h5", bs, shuffle=False),
     )
+
+
+def load_latitudes(cfg: Config) -> np.ndarray:
+    """
+    Load the latitude grid for the dataset.
+
+    Reads the first segment listed in the train split of splits.json and
+    returns the 1-D latitude array (degrees north).
+    """
+    import json
+
+    manifest_path = cfg.paths.preprocessed_dir / "splits.json"
+    assert manifest_path.exists(), (
+        f"manifest not found: {manifest_path}; run preprocess training-data first"
+    )
+    with open(manifest_path) as f:
+        manifest = json.load(f)
+
+    train_dirs = manifest.get("train", [])
+    assert train_dirs, "no train simulations in manifest"
+
+    sim_dir = (cfg.paths.preprocessed_dir / train_dirs[0]).resolve()
+    nc_files = sorted(sim_dir.glob(cfg.data.segment_pattern))
+    assert nc_files, f"no NC files in {sim_dir} matching {cfg.data.segment_pattern}"
+
+    ds = xr.open_dataset(nc_files[0], decode_times=False)
+    assert "lat" in ds, f"variable 'lat' not in {nc_files[0]}"
+    lat = ds["lat"].values.astype(np.float32)
+    ds.close()
+    return lat

@@ -9,4 +9,5 @@ def build_model(cfg: FNOModelConfig) -> FNO:
         hidden_channels=cfg.hidden_channels,
         in_channels=cfg.in_channels,
         out_channels=cfg.out_channels,
+        n_layers=cfg.n_layers,
     )
