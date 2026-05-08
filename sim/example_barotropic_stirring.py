@@ -40,7 +40,7 @@ def alias_free_grid(num_fourier):
 _cpu_count = os.cpu_count() or 1
 # NCORES = 2 ** (_cpu_count.bit_length() - 1)
 class Settings:
-    Cores = 2
+    Cores = 1
     Segments = 15
     DtAtmosSec = 600
     StirringAmplitude = 1.0e-10
