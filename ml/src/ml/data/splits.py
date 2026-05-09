@@ -1,3 +1,4 @@
+import os
 import json
 import logging
 
@@ -31,13 +32,14 @@ class Splits:
         splits_path = cfg.preprocessed_dir / SPLITS_FILE_NAME
         assert cfg.preprocessed_dir.exists(), f"{cfg.preprocessed_dir} not found"
 
+        base = splits_path.parent
         log.info(f"saving splits to {splits_path}")
         with open(splits_path, "w") as f:
             json.dump({
-                KEY_TEST: [path.relative_to(splits_path) for path in self.test],
-                KEY_VALIDATION: [path.relative_to(splits_path) for path in self.validations],
-                KEY_TRAIN: [path.relative_to(splits_path) for path in self.trains],
-            }, f)
+                KEY_TEST: [os.path.relpath(p, start=base) for p in self.test],
+                KEY_VALIDATION: [os.path.relpath(p, start=base) for p in self.validation],
+                KEY_TRAIN: [os.path.relpath(p, start=base) for p in self.train],
+            }, f, indent=2)
 
     def has_test(self, path: Path) -> bool:
         return path in self.test

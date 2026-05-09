@@ -164,4 +164,6 @@ class IscaDataPreprocessor:
         extract_pairs(splits.validation, data_cfg, out_dir / "val.h5")
         extract_pairs(splits.test, data_cfg, out_dir / "test.h5")
 
+        splits.save(self.cfg.paths)
+
         log.info("finished isca preprocessing")
