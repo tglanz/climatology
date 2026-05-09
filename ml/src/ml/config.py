@@ -11,11 +11,11 @@ class SplitConfig:
     validation + test + train must be equal to 1.
     """
     validation: float 
-    validation_limit: int | None
     test: float 
-    test_limit: int | None
     train: float 
-    train_limit: int | None
+    validation_limit: int | None = None
+    test_limit: int | None = None
+    train_limit: int | None = None
 
     def __post_init__(self):
         values = [self.validation, self.train, self.test]

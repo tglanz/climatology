@@ -21,9 +21,9 @@ validation = 0.1
 test = 0.1
 train = 0.8
 # Just for debug, i want preprocessing to be quick
-train_limit=5
-test_limit=1
-validation_limit=1
+# train_limit=5
+# test_limit=1
+# validation_limit=1
 
 [model.fno]
 n_modes = [32, 64]

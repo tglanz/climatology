@@ -150,9 +150,9 @@ class IscaDataPreprocessor:
         split_cfg = data_cfg.split
 
         n = len(exp_dirs)
-        n_test = min(int(n * split_cfg.test), split_cfg.test_limit)
-        n_val = min(int(n * split_cfg.validation), split_cfg.validation_limit)
-        n_train = min(n - n_test - n_val, split_cfg.train_limit)
+        n_test = min(int(n * split_cfg.test), split_cfg.test_limit or float("inf"))
+        n_val = min(int(n * split_cfg.validation), split_cfg.validation_limit or float("inf"))
+        n_train = min(n - n_test - n_val, split_cfg.train_limit or float("inf"))
 
         splits = Splits(
             test=exp_dirs[:n_test],
