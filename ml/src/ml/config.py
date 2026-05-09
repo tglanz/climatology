@@ -5,6 +5,21 @@ import tomllib
 
 VALID_SAMPLING = ("evenly_spaced", "uniform", "latest")
 
+@dataclass
+class SplitConfig:
+    """
+    validation + test + train must be equal to 1.
+    """
+    validation: float 
+    validation_limit: int | None
+    test: float 
+    test_limit: int | None
+    train: float 
+    train_limit: int | None
+
+    def __post_init__(self):
+        values = [self.validation, self.train, self.test]
+        assert abs(sum(values) - 1.0) < 1e-6, f"split parts {values} must equal to 1"
 
 @dataclass
 class IscaDataConfig:
@@ -18,10 +33,9 @@ class IscaDataConfig:
     x_vars: list[str]
     # target variable names
     y_vars: list[str]
-    # [test, val, train] fraction by simulation, must sum to 1.0.
-    # Simulations are sorted numerically; test gets the lowest indices (sim 0 first),
-    # then val, then train. This keeps sim 0 permanently in the test split.
-    split: tuple[float, float, float]
+
+    split: SplitConfig
+
     # number of pairs to take from each simulation after skip; None means all
     samples_per_experiment: int | None = None
     # sampling strategy when samples_per_experiment is set:
@@ -39,9 +53,6 @@ class IscaDataConfig:
 
     def __post_init__(self):
         self.experiment_dir = Path(self.experiment_dir)
-        assert (
-            abs(sum(self.split) - 1.0) < 1e-6
-        ), f"split must sum to 1.0, got {self.split}"
         assert (
             self.experiment_dir.exists()
         ), f"experiment_dir not found: {self.experiment_dir}"
@@ -267,7 +278,7 @@ def load(path: Path) -> Config:
         segment_pattern=d["segment_pattern"],
         x_vars=list(d["x_vars"]),
         y_vars=list(d["y_vars"]),
-        split=tuple(d["split"]),
+        split=SplitConfig(**d["split"]),
         samples_per_experiment=d.get("samples_per_experiment", None),
         sampling=d.get("sampling", "latest"),
         skip=d.get("skip", 0),

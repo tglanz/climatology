@@ -3,6 +3,7 @@ import logging
 from pathlib import Path
 
 import click
+from ml.data.splits import Splits
 import numpy as np
 import xarray as xr
 
@@ -10,7 +11,7 @@ from ml.config import load as load_config
 from ml.common.logging import setup_logging
 from ml.model import build_model
 from ml.inference import Autoregressor
-from ml.isca_dataset import fix_time_units
+from ml.data.isca_dataset import fix_time_units
 
 
 @click.group()
@@ -33,18 +34,10 @@ def autoregression(config_path: Path, input_path: Path, t0: int, T: int, output_
     if output_path is None:
         output_path = cfg.data.experiment_dir / "eval" / "autoregression.nc"
 
-    # Verify input is from the test split.
-    manifest_path = cfg.paths.preprocessed_dir / "splits.json"
-    assert manifest_path.exists(), f"splits.json not found: {manifest_path} — run preprocess first"
-    with open(manifest_path) as f:
-        manifest = json.load(f)
+    splits = Splits.from_config(cfg.paths)
 
-    test_dirs = {
-        (manifest_path.parent / rel).resolve()
-        for rel in manifest.get("test", [])
-    }
     sim_dir = input_path.parent.parent.resolve()
-    assert sim_dir in test_dirs, (
+    assert splits.has_test(sim_dir), (
         f"input simulation {sim_dir} is not in the test split — "
         f"refusing to evaluate on training or validation data"
     )

@@ -176,7 +176,7 @@ def _collect_data(cfg: "Config") -> dict[str, Any]:
     info: dict[str, Any] = {
         "x_vars": list(d.x_vars),
         "y_vars": list(d.y_vars),
-        "split": list(d.split),
+        "split": d.split,
         "skip": d.skip,
         "samples_per_experiment": d.samples_per_experiment,
         "sampling": d.sampling,

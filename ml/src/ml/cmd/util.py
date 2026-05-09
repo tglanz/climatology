@@ -7,7 +7,7 @@ from rich.console import Console
 from rich.table import Table
 
 from ml.config import load as load_config
-from ml.isca_dataset import make_loaders, load_latitudes
+from ml.data.isca_dataset import make_loaders, load_latitudes
 from ml.model import build_model
 from ml.training import create_loss_fn, _cosine_lat_weights
 from ml.training_info import TrainingSummary, list_training_summaries

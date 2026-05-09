@@ -8,7 +8,7 @@ from ml.config import load as load_config
 from ml.common.logging import setup_logging
 from ml.model import build_model
 from ml.training import Trainer, _cosine_lat_weights
-from ml.isca_dataset import make_loaders, load_latitudes
+from ml.data.isca_dataset import make_loaders, load_latitudes
 from ml.training_info import rotate_training_dir
 
 

@@ -6,8 +6,8 @@ import xarray as xr
 
 from ml.config import load as load_config
 from ml.common.logging import setup_logging
-from ml.isca_dataset import validate_segment
-from ml.isca_preprocessing import IscaDataPreprocessor
+from ml.data.isca_dataset import validate_segment
+from ml.data.isca_preprocessing import IscaDataPreprocessor
 
 
 @click.group()
@@ -101,7 +101,7 @@ def validate_simulations(config_path: Path, invalid_only: bool, analyze: bool):
         enstrophy_str = "-"
         if analyze and valid:
             try:
-                e = _mean_enstrophy(nc_files)
+                e = mean_enstrophy(nc_files)
                 enstrophy_str = f"{e:.6e}" if e is not None else "-"
             except Exception as ex:
                 enstrophy_str = f"err:{ex}"
@@ -125,7 +125,7 @@ def validate_simulations(config_path: Path, invalid_only: bool, analyze: bool):
         raise SystemExit(2)
 
 
-def _mean_enstrophy(nc_files: list[Path]) -> float | None:
+def mean_enstrophy(nc_files: list[Path]) -> float | None:
     """
     Mean global enstrophy across all timesteps in `nc_files`.
 

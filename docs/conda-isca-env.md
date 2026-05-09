@@ -35,7 +35,7 @@ conda run -n isca_env python sim/example_barotropic_stirring.py
 conda run -n isca_env python -c "import isca; print(isca.__file__)"
 ```
 
-You do not need to activate the environment or use `conda init`—`conda run` handles everything.
+You do not need to activate the environment or use `conda init` - `conda run` handles everything.
 
 ## Set Required Environment Variables
 

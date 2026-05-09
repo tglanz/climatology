@@ -17,3 +17,6 @@ cli.add_command(preprocess)
 cli.add_command(monitor)
 cli.add_command(util)
 cli.add_command(evaluate)
+
+if __name__ == '__main__':
+    cli()

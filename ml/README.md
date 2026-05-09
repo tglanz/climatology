@@ -56,8 +56,8 @@ Base (always): numpy, xarray, netCDF4, click, tqdm.
 ## Training outputs
 
 All training artifacts go to `output/<experiment>/training/`:
-- `parameters.pt` — model weights (best val loss)
-- `normalization.pt` — normalizer mean/std (required for inference)
-- `epoch-metrics.csv` — per-epoch loss and learning rate
-- `runs.csv` — per-run summary
-- `metrics.h5` — spatial/spectral error per epoch (with `--track-metrics`)
+- `parameters.pt` - model weights (best val loss)
+- `normalization.pt` - normalizer mean/std (required for inference)
+- `epoch-metrics.csv` - per-epoch loss and learning rate
+- `runs.csv` - per-run summary
+- `metrics.h5` - spatial/spectral error per epoch (with `--track-metrics`)

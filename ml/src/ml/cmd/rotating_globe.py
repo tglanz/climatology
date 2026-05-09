@@ -23,7 +23,7 @@ import numpy as np
 import xarray as xr
 from tqdm import tqdm
 
-from ml.isca_dataset import fix_time_units
+from ml.data.isca_dataset import fix_time_units
 
 DIVERGING_FIELDS = {
     "vor",

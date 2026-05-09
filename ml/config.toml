@@ -5,7 +5,6 @@ segment_pattern = "run*/atmos_daily.nc"
 x_vars = ["vor", "stirring"]
 y_vars = ["vor"]
 # test, val, train
-split = [0.1, 0.1, 0.8]
 # Number of input timesteps stacked along the channel axis.
 # lag_steps = 1 -> (vor_t, stirring_t)        -> vor_t+1   (legacy behaviour)
 # lag_steps = 5 -> (vor_t-4, stirring_t-4, ..., vor_t, stirring_t) -> vor_t+1
@@ -16,6 +15,15 @@ samples_per_experiment = 1
 # guaranteed to be past spinup without needing a manual `skip`.
 sampling = "latest"
 skip = 0
+
+[data.split]
+validation = 0.1
+test = 0.1
+train = 0.8
+# Just for debug, i want preprocessing to be quick
+train_limit=5
+test_limit=1
+validation_limit=1
 
 [model.fno]
 n_modes = [32, 64]
