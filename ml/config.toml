@@ -1,10 +1,15 @@
+# TODO: theres some inconsistency / inaccurate terminology wrt "data".
+# first of all, is "data" what lives in the experiment/data dir?
+# if so, simulations are not "data".
+# second of all, the experiment_dir should not be under "data".
+# need to think - but i think we could have "[data] + [simulation]" sections and also extract the "experiment_dir" into [path].
+# not sure if we need a "[experiment]". however, now that i think of it, maybe the best thing to do is to replace [path] with [experiment].
 [data]
 experiment_dir = "./output/barotropic_stirring-T85"
 simulation_pattern = "simulations/*"
 segment_pattern = "run*/atmos_daily.nc"
 x_vars = ["vor", "stirring"]
 y_vars = ["vor"]
-# test, val, train
 # Number of input timesteps stacked along the channel axis.
 # lag_steps = 1 -> (vor_t, stirring_t)        -> vor_t+1   (legacy behaviour)
 # lag_steps = 5 -> (vor_t-4, stirring_t-4, ..., vor_t, stirring_t) -> vor_t+1
@@ -25,6 +30,8 @@ train = 0.8
 # test_limit=1
 # validation_limit=1
 
+# TODO: [model] section. should have "architecture"; e.g. architecture in {fno, sfno, tfno}.
+# currently, we only do fno.
 [model.fno]
 n_modes = [32, 64]
 hidden_channels = 32
