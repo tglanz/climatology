@@ -177,10 +177,13 @@ def _collect_data(cfg: "Config") -> dict[str, Any]:
         "x_vars": list(d.x_vars),
         "y_vars": list(d.y_vars),
         "split": d.split,
-        "skip": d.skip,
-        "samples_per_experiment": d.samples_per_experiment,
-        "sampling": d.sampling,
-        "lag_steps": d.lag_steps,
+        "windows": {
+            "input_length":       d.windows.input_length,
+            "spinup_timesteps":   d.windows.spinup_timesteps,
+            "anchor":             d.windows.anchor,
+            "mode":               d.windows.mode,
+            "max_per_simulation": d.windows.max_per_simulation,
+        },
         "splits": {},
     }
 

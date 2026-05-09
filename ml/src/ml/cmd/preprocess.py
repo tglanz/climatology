@@ -8,6 +8,7 @@ from ml.config import load as load_config
 from ml.common.logging import setup_logging
 from ml.data.isca_dataset import validate_segment
 from ml.data.isca_preprocessing import IscaDataPreprocessor
+from ml.diagnostics import mean_enstrophy
 
 
 @click.group()
@@ -72,7 +73,7 @@ def validate_simulations(config_path: Path, invalid_only: bool, analyze: bool):
         )
         raise SystemExit(1)
 
-    K = cfg.data.lag_steps
+    K = cfg.data.windows.input_length
     n_invalid = 0
 
     for sim_dir in sim_dirs:
@@ -101,7 +102,7 @@ def validate_simulations(config_path: Path, invalid_only: bool, analyze: bool):
         enstrophy_str = "-"
         if analyze and valid:
             try:
-                e = mean_enstrophy(nc_files)
+                e = _per_simulation_mean_enstrophy(nc_files)
                 enstrophy_str = f"{e:.6e}" if e is not None else "-"
             except Exception as ex:
                 enstrophy_str = f"err:{ex}"
@@ -125,13 +126,12 @@ def validate_simulations(config_path: Path, invalid_only: bool, analyze: bool):
         raise SystemExit(2)
 
 
-def mean_enstrophy(nc_files: list[Path]) -> float | None:
+def _per_simulation_mean_enstrophy(nc_files: list[Path]) -> float | None:
     """
-    Mean global enstrophy across all timesteps in `nc_files`.
-
-    Per timestep enstrophy is the cos-lat-weighted spatial mean of 0.5*vor**2
-    (weights normalized so the unweighted mean equals the weighted mean for a
-    constant field). Returns None if 'vor' is absent.
+    Time-mean global enstrophy across every timestep contained in
+    `nc_files` (the segments that make up one simulation). Returns None
+    if 'vor' is absent. Per-timestep math is delegated to
+    `ml.diagnostics.mean_enstrophy`.
     """
     total = 0.0
     n_steps = 0
@@ -142,9 +142,7 @@ def mean_enstrophy(nc_files: list[Path]) -> float | None:
                 continue
             vor = ds["vor"].values.astype(np.float64)
             lat = ds["lat"].values.astype(np.float64)
-            w = np.cos(np.deg2rad(lat))
-            w = w / w.mean()
-            per_t = 0.5 * (vor ** 2 * w[:, None]).mean(axis=(1, 2))
+            per_t = mean_enstrophy(vor, lat)  # shape (T,)
             total += float(per_t.sum())
             n_steps += per_t.size
         finally:

@@ -14,6 +14,10 @@ from neuralop.data.transforms.normalizers import UnitGaussianNormalizer
 
 from ml.config import Config, SchedulerConfig
 from ml.common.training_metrics import TrainingMetrics
+from ml.diagnostics import (
+    cosine_latitude_weights_torch,
+    lat_weighted_relative_l2_torch,
+)
 from ml.early_stopping import CompositeEarlyStopper, EarlyStoppingInfo
 from ml.training_info import TrainingInfo
 
@@ -22,17 +26,8 @@ LossFn = Callable[[torch.Tensor, torch.Tensor], torch.Tensor]
 
 
 def _cosine_lat_weights(latitudes_deg: np.ndarray) -> torch.Tensor:
-    """
-    Build cos(lat) area weights, normalized so the mean equals 1.
-
-    The normalization keeps the loss scale comparable to the unweighted case;
-    only the relative weighting between latitudes changes.
-    """
-    rad = np.deg2rad(latitudes_deg.astype(np.float32))
-    w = np.cos(rad)
-    w = np.clip(w, 0.0, None)
-    w = w / w.mean()
-    return torch.from_numpy(w.astype(np.float32))
+    """Backwards-compatible wrapper around `diagnostics.cosine_latitude_weights_torch`."""
+    return cosine_latitude_weights_torch(latitudes_deg, normalize="mean1")
 
 
 def create_loss_fn(kind: str, lat_weights: torch.Tensor | None = None) -> LossFn:
@@ -53,23 +48,22 @@ def create_loss_fn(kind: str, lat_weights: torch.Tensor | None = None) -> LossFn
         assert lat_weights is not None, (
             "lat_weighted_relative_l2 requires lat_weights"
         )
-        # buffer-style: stash on the closure so .to(device) handled at call time
+        # The lat_weights tensor needs to live on the same device as the
+        # prediction. We stash it on a single-element holder so the
+        # device move can happen lazily on the first call (the trainer
+        # decides the device after constructing the loss).
         weights_holder = {"w": lat_weights}
 
-        def lat_weighted_relative_l2(
+        def lat_weighted_relative_l2_loss(
             pred: torch.Tensor, target: torch.Tensor
         ) -> torch.Tensor:
             w = weights_holder["w"]
             if w.device != pred.device:
                 w = w.to(pred.device)
                 weights_holder["w"] = w
-            # broadcast over (B, C, lat, lon)
-            wb = w.view(1, 1, -1, 1)
-            num = ((pred - target).pow(2) * wb).sum(dim=(-2, -1)).sqrt()
-            den = (target.pow(2) * wb).sum(dim=(-2, -1)).sqrt()
-            return (num / den).mean()
+            return lat_weighted_relative_l2_torch(pred, target, w)
 
-        return lat_weighted_relative_l2
+        return lat_weighted_relative_l2_loss
 
     raise ValueError(f"unknown loss: {kind}")
 

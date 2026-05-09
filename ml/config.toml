@@ -10,13 +10,17 @@ simulation_pattern = "simulations/*"
 segment_pattern = "run*/atmos_daily.nc"
 x_vars = ["vor", "stirring"]
 y_vars = ["vor"]
-# Number of input timesteps stacked along the channel axis.
-# lag_steps = 1 -> (vor_t, stirring_t)        -> vor_t+1   (legacy behaviour)
-# lag_steps = 5 -> (vor_t-4, stirring_t-4, ..., vor_t, stirring_t) -> vor_t+1
-lag_steps = 5
-samples_per_experiment = 8
-sampling = "evenly_spaced"
-skip = 30
+
+[data.windows]
+input_length = 5
+spinup_timesteps = 40
+# only 'latest' supported for now
+anchor = "latest"
+# 'tumbling' (disjoint windows, stride = input_length + 1) | 'rolling' (overlapping, stride = 1)
+mode = "tumbling"
+# if unspecified, takes everything
+max_per_simulation = 2
+
 
 [data.split]
 validation = 0.1
@@ -33,7 +37,7 @@ train = 0.8
 n_modes = [32, 64]
 hidden_channels = 64
 n_layers = 4
-# in_channels MUST equal data.lag_steps * len(data.x_vars). Validated at config load.
+# in_channels MUST equal data.windows.input_length * len(data.x_vars). Validated at config load.
 in_channels = 10
 out_channels = 1
 
@@ -59,13 +63,13 @@ dropout      = 0.1    # forwarded to FNO as channel_mlp_dropout
 [training.early_stopping.target_loss]
 value = 0.1
 # val | train
-monitor = "val" 
+monitor = "train" 
 
 [training.early_stopping.patience]
-patience = 30
+patience = 20
 min_delta = 1e-4
 # val | train
-monitor = "val"
+monitor = "train"
 
 # TODO: this can just be training.scheduler
 [training.scheduler]

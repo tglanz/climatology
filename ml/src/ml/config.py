@@ -3,7 +3,77 @@ from pathlib import Path
 import tomllib
 
 
-VALID_SAMPLING = ("evenly_spaced", "uniform", "latest")
+VALID_ANCHORS = ("latest",)
+VALID_MODES = ("tumbling", "rolling")
+
+
+@dataclass
+class WindowsConfig:
+    """
+    Strategy for extracting (input, target) windows from one simulation.
+
+    A window is `input_length` consecutive snapshots used as the model
+    input, plus one target snapshot immediately after.
+
+    Two orthogonal knobs decide which valid candidate windows to keep:
+
+    - `mode` controls the stride between selected windows:
+        - "tumbling": disjoint windows, stride = `input_length + 1`. Each
+                      snapshot belongs to at most one (input, target)
+                      pair.
+        - "rolling":  fully overlapping windows, stride = 1. Each
+                      snapshot may appear as input in many pairs and as
+                      target in one. Useful for rollout / pushforward
+                      training where consecutive predictions must be
+                      self-consistent.
+    - `anchor` controls which side of the valid range the selection is
+      anchored to. Only "latest" is currently supported: the latest
+      window's target is at the very end of the valid range; earlier
+      windows step back by `stride`.
+    - `max_per_simulation` optionally caps the number of selected
+      windows per simulation. With `None`, all valid windows for the
+      chosen anchor and mode are kept.
+
+    Fields:
+        input_length:        number of snapshots stacked into one model
+                             input. input_length=1 is the legacy single-
+                             snapshot setup; larger values give the model
+                             a multi-step history.
+        spinup_timesteps:    target-anchored spinup. The first valid
+                             target index is `spinup_timesteps`. With
+                             input_length=K, the earliest input snapshot
+                             of a selected window can sit at timeline
+                             index `spinup_timesteps - K + 1`.
+        anchor:              one of VALID_ANCHORS.
+        mode:                one of VALID_MODES.
+        max_per_simulation:  optional cap on selected windows per sim;
+                             None means take all available.
+    """
+
+    input_length: int = 1
+    spinup_timesteps: int = 0
+    anchor: str = "latest"
+    mode: str = "tumbling"
+    max_per_simulation: int | None = None
+
+    def __post_init__(self):
+        assert self.input_length >= 1, (
+            f"input_length must be >= 1, got {self.input_length}"
+        )
+        assert self.spinup_timesteps >= 0, (
+            f"spinup_timesteps must be >= 0, got {self.spinup_timesteps}"
+        )
+        assert self.anchor in VALID_ANCHORS, (
+            f"unknown anchor: {self.anchor} (valid: {VALID_ANCHORS})"
+        )
+        assert self.mode in VALID_MODES, (
+            f"unknown mode: {self.mode} (valid: {VALID_MODES})"
+        )
+        if self.max_per_simulation is not None:
+            assert self.max_per_simulation > 0, (
+                f"max_per_simulation must be positive when set, got {self.max_per_simulation}"
+            )
+
 
 @dataclass
 class SplitConfig:
@@ -35,31 +105,14 @@ class IscaDataConfig:
     y_vars: list[str]
 
     split: SplitConfig
-
-    # number of pairs to take from each simulation after skip; None means all
-    samples_per_experiment: int | None = None
-    # sampling strategy when samples_per_experiment is set:
-    #   'evenly_spaced' - linspace over the valid range
-    #   'uniform'       - uniform random over the valid range
-    #   'latest'        - take the last `samples_per_experiment` valid indices
-    #                     (most temporally recent; spinup-safe without `skip`)
-    sampling: str = "latest"
-    # number of initial pairs to skip per simulation (per-segment-flattened indexing)
-    skip: int = 0
-    # number of input timesteps stacked into each training pair.
-    # lag_steps = 1 means just the current state (legacy behaviour).
-    # lag_steps = K means (t-K+1, ..., t) -> t+1.
-    lag_steps: int = 1
+    # window-extraction strategy: input length, selection, spinup, optional cap
+    windows: WindowsConfig
 
     def __post_init__(self):
         self.experiment_dir = Path(self.experiment_dir)
         assert (
             self.experiment_dir.exists()
         ), f"experiment_dir not found: {self.experiment_dir}"
-        assert self.sampling in VALID_SAMPLING, (
-            f"unknown sampling: {self.sampling} (valid: {VALID_SAMPLING})"
-        )
-        assert self.lag_steps >= 1, f"lag_steps must be >= 1, got {self.lag_steps}"
 
 
 @dataclass
@@ -272,6 +325,19 @@ def load(path: Path) -> Config:
         raw = tomllib.load(f)
 
     d = raw["data"]
+    if "windows" not in d:
+        raise ValueError(
+            "[data.windows] section is required. Fields: input_length, "
+            "spinup_timesteps, anchor, mode, max_per_simulation."
+        )
+    w = d["windows"]
+    windows = WindowsConfig(
+        input_length=w.get("input_length", 1),
+        spinup_timesteps=w.get("spinup_timesteps", 0),
+        anchor=w.get("anchor", "latest"),
+        mode=w.get("mode", "tumbling"),
+        max_per_simulation=w.get("max_per_simulation", None),
+    )
     data = IscaDataConfig(
         experiment_dir=d["experiment_dir"],
         simulation_pattern=d["simulation_pattern"],
@@ -279,10 +345,7 @@ def load(path: Path) -> Config:
         x_vars=list(d["x_vars"]),
         y_vars=list(d["y_vars"]),
         split=SplitConfig(**d["split"]),
-        samples_per_experiment=d.get("samples_per_experiment", None),
-        sampling=d.get("sampling", "latest"),
-        skip=d.get("skip", 0),
-        lag_steps=d.get("lag_steps", 1),
+        windows=windows,
     )
 
     m = raw["model"]["fno"]
@@ -392,11 +455,11 @@ def load(path: Path) -> Config:
     if paths.training_info_file is None:
         paths.training_info_file = paths.training_dir / "training.json"
 
-    expected_in_channels = data.lag_steps * len(data.x_vars)
+    expected_in_channels = data.windows.input_length * len(data.x_vars)
     assert model.fno.in_channels == expected_in_channels, (
         f"model.fno.in_channels={model.fno.in_channels} does not match "
-        f"data.lag_steps * len(x_vars) = {data.lag_steps} * {len(data.x_vars)} "
-        f"= {expected_in_channels}"
+        f"data.windows.input_length * len(x_vars) = "
+        f"{data.windows.input_length} * {len(data.x_vars)} = {expected_in_channels}"
     )
 
     return Config(

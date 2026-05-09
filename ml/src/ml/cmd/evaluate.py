@@ -9,6 +9,7 @@ import xarray as xr
 
 from ml.config import load as load_config
 from ml.common.logging import setup_logging
+from ml.diagnostics import rms_error
 from ml.model import build_model
 from ml.inference import Autoregressor
 from ml.data.isca_dataset import fix_time_units
@@ -38,20 +39,20 @@ def autoregression(config_path: Path, input_path: Path, t0: int, T: int, output_
 
     sim_dir = input_path.parent.parent.resolve()
     assert splits.has_test(sim_dir), (
-        f"input simulation {sim_dir} is not in the test split — "
+        f"input simulation {sim_dir} is not in the test split - "
         f"refusing to evaluate on training or validation data"
     )
 
-    K = cfg.data.lag_steps
+    K = cfg.data.windows.input_length
 
-    # Load dataset and slice. With lag_steps=K we need K-1 timesteps before t0
-    # to form the first input window, and one timestep after the last
+    # Load dataset and slice. With input_length=K we need K-1 timesteps before
+    # t0 to form the first input window, and one timestep after the last
     # prediction for ground-truth comparison.
     ds = xr.open_dataset(input_path, decode_times=False)
     ds = fix_time_units(ds)
     n_times = ds.sizes["time"]
     assert t0 >= K - 1, (
-        f"--start {t0} must be >= lag_steps - 1 = {K - 1} so that K={K} "
+        f"--start {t0} must be >= input_length - 1 = {K - 1} so that K={K} "
         f"history timesteps are available"
     )
     history_start = t0 - (K - 1)
@@ -76,7 +77,7 @@ def autoregression(config_path: Path, input_path: Path, t0: int, T: int, output_
     vor_truth = ds_slice["vor"].values
     vor_pred_err = vor_pred - vor_truth
 
-    rms = float(np.sqrt(np.mean(vor_pred_err ** 2)))
+    rms = rms_error(vor_pred, vor_truth)
     log.info("RMS error over rollout: %.6f", rms)
 
     # Build output dataset.

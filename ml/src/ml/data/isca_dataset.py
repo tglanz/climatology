@@ -46,23 +46,6 @@ def validate_segment(
     return T, spatial
 
 
-def sample_indices(n_available: int, samples: int | None, sampling: str) -> list[int]:
-    if samples is None:
-        return list(range(n_available))
-    assert (
-        samples <= n_available
-    ), f"requested {samples} samples but only {n_available} available"
-    if sampling == "evenly_spaced":
-        return np.linspace(0, n_available - 1, samples, dtype=int).tolist()
-    if sampling == "uniform":
-        return np.random.choice(n_available, samples, replace=False).tolist()
-    if sampling == "latest":
-        # Take the `samples` most-recent valid indices. Past spinup is automatic
-        # since we are reading from the end of the trajectory.
-        return list(range(n_available - samples, n_available))
-    raise ValueError(f"unknown sampling: {sampling}")
-
-
 class IscaDataset(Dataset):
     def __init__(self, h5_path: Path):
         assert h5_path.exists(), f"preprocessed file not found: {h5_path}"
@@ -84,7 +67,7 @@ class IscaDataset(Dataset):
 def make_loader(path: Path, batch_size: int, shuffle: bool) -> DataLoader | None:
     assert (
         path.exists()
-    ), f"preprocessed file missing: {path} — run preprocess-training-data first"
+    ), f"preprocessed file missing: {path} - run preprocess-training-data first"
     ds = IscaDataset(path)
     if len(ds) == 0:
         return None

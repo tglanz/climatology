@@ -9,7 +9,8 @@ import xarray as xr
 from tqdm import tqdm
 
 from ml.config import Config, IscaDataConfig
-from ml.data.isca_dataset import fix_time_units, sample_indices, validate_segment
+from ml.data.isca_dataset import fix_time_units, validate_segment
+from ml.data.window_selector import build_selector
 
 log = logging.getLogger(__name__)
 
@@ -22,20 +23,23 @@ def extract_pairs(
     """
     Build (x, y) training pairs and write them to HDF5.
 
-    For lag_steps=K, each x sample stacks the input variables at K consecutive
-    timesteps along the channel axis (oldest to newest, x_vars-major within
-    each timestep): channel order is
+    For input_length=K, each x sample stacks the input variables at K
+    consecutive timesteps along the channel axis (oldest to newest,
+    x_vars-major within each timestep): channel order is
         [x_vars[0]_{t-K+1}, ..., x_vars[-1]_{t-K+1},
          x_vars[0]_{t-K+2}, ..., x_vars[-1]_{t-K+2},
          ...,
          x_vars[0]_{t},     ..., x_vars[-1]_{t}]
     The corresponding y is y_vars at timestep t+1.
 
-    Timesteps are concatenated across the segment files of each simulation,
-    so a window may straddle a segment boundary.
+    Timesteps are concatenated across the segment files of each
+    simulation, so a window may straddle a segment boundary. Selection of
+    which target indices to materialize is delegated to
+    `ml.data.window_selector.build_selector`.
     """
-    K = cfg.lag_steps
+    K = cfg.windows.input_length
     n_in = K * len(cfg.x_vars)
+    selector = build_selector(cfg.windows)
     output_path.parent.mkdir(parents=True, exist_ok=True)
 
     with h5py.File(output_path, "w") as f:
@@ -75,21 +79,27 @@ def extract_pairs(
                 for t in range(T):
                     timeline.append((path, t))
 
-            # Valid target indices: need K timesteps before (inclusive) and 1 after.
+            # Valid target indices: need K timesteps before (inclusive) and
+            # 1 after, AND target index >= spinup_timesteps.
             #   target index `j` in `timeline`, where j-K is the oldest input,
             #                                          j-1 is the newest input,
             #                                          j   is the target.
-            # So j must satisfy K <= j <= len(timeline) - 1.
-            valid_target_indices = list(range(K, len(timeline)))
-            valid_target_indices = valid_target_indices[cfg.skip:]
-            assert valid_target_indices, (
-                f"no valid samples after lag_steps={K} and skip={cfg.skip} in {exp_dir} "
-                f"(timeline length {len(timeline)})"
-            )
+            # So j must satisfy max(K, spinup_timesteps) <= j <= len(timeline) - 1.
+            spinup = cfg.windows.spinup_timesteps
+            start_target = max(K, spinup)
+            valid_target_indices = list(range(start_target, len(timeline)))
+            if not valid_target_indices:
+                # Incomplete simulation (e.g. only one segment, or the
+                # spinup window exceeds the trajectory). Skip rather
+                # than abort the whole preprocess.
+                log.warning(
+                    "skipping %s: no valid windows after input_length=%d "
+                    "and spinup_timesteps=%d (timeline length %d)",
+                    exp_dir, K, spinup, len(timeline),
+                )
+                continue
 
-            selected = sample_indices(
-                len(valid_target_indices), cfg.samples_per_experiment, cfg.sampling
-            )
+            selected = selector.select(len(valid_target_indices))
 
             # Open each NC file at most once per simulation.
             ds_cache: dict[Path, xr.Dataset] = {}
@@ -129,8 +139,10 @@ def extract_pairs(
                     ds.close()
 
         log.info(
-            "wrote %d pairs to %s (lag_steps=%d, %d input channels)",
+            "wrote %d pairs to %s (input_length=%d, %d input channels, "
+            "anchor=%s, mode=%s)",
             written, output_path, K, n_in,
+            cfg.windows.anchor, cfg.windows.mode,
         )
 
 
