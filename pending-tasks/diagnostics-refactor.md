@@ -256,6 +256,88 @@ arrays and broadcast over batch / channel dims.
   meaningful, and (where applicable) a reference link. No function
   has internal state, reads from disk, or has side effects.
 
+## Verification (no tests, but explicit comparison steps)
+
+This repo does not have a test suite and we are not adding one for
+this task. Verification is done by running existing or new utility
+commands and comparing stdout / artifacts before and after the
+migration. Aim for byte-exact agreement where the math is
+unchanged, and a 1e-6 relative tolerance where float reordering is
+unavoidable.
+
+### Caveat: training is not seeded
+
+The trainer has no random seed today. End-to-end loss curves are not
+bit-reproducible across runs regardless of refactor. So we do not
+verify the diagnostics refactor by re-training. We verify it on
+fixed inputs through utility commands.
+
+### One small new util command needed
+
+Add `ml util diagnostic-fingerprint -c <cfg>` (in `cmd/util.py`).
+It loads a fixed batch from `val.h5` (always the first batch, no
+shuffling), instantiates the same `lat_weights` the trainer would,
+and prints a JSON-formatted dump of:
+
+- `cos_lat_weights[mean, std, min, max]`
+- `area_mean(y[0])`
+- `area_l2_norm(y[0])`
+- `zonal_mean(y[0])[mean, std]`
+- `zonal_power_spectrum(y[0])[first 8 modes]`
+- `signed_error(x[:, vor_t_channel:vor_t_channel+1], y)[mean, std]`
+- `absolute_error(...)[mean, std]`
+- `relative_error(...)[mean]`
+- `rms_error(...)`
+- `relative_l2(...)`
+- `lat_weighted_relative_l2(...)`
+- `error_power_spectrum(...)[first 8 modes]`
+- `signal_power_spectrum(y[0])[first 8 modes]`
+- `mean_enstrophy(y[0], lat)`
+
+Pure stdout, deterministic, no random state. The command is small
+(reuses `make_loaders`, `load_latitudes`, `_cosine_lat_weights`).
+
+### Procedure
+
+Before starting the migration:
+
+1. `ml util model-info -c ml/config.toml > /tmp/before-model-info.txt`
+2. `ml util persistence-score -c ml/config.toml > /tmp/before-persistence.txt`
+3. `ml preprocess validate-simulations -c ml/config.toml --analyze > /tmp/before-enstrophy.txt`
+4. `ml util diagnostic-fingerprint -c ml/config.toml > /tmp/before-fingerprint.json`
+   (Add this util first; it does not depend on the diagnostics
+   refactor itself. The util currently calls into the inline
+   implementations.)
+
+After each migration step (one site at a time, not all-at-once):
+
+1. Re-run all four commands.
+2. `diff` the outputs.
+3. Acceptable: identical bytes, or relative differences below 1e-6
+   on numeric fields (rounding from a single float reordering).
+4. Unacceptable: any difference larger than 1e-5 relative, or any
+   structural change in the output (missing keys, different shapes).
+
+After the full migration:
+
+1. Re-run all four commands one more time, full diff.
+2. Re-execute one representative notebook end-to-end. The
+   notebook's kernel must be able to import `ml.diagnostics`.
+   `model_evaluation.ipynb` is the right candidate because it
+   touches errors and rollouts.
+3. Re-run `ml train -c ml/config.toml` for ~5 epochs against the
+   existing preprocessed data. We do not compare bit-exact loss
+   numbers here (trainer is not seeded). What we check: the run
+   completes, the loss is within the expected order of magnitude
+   (start near 1.0, drop into the 0.5-0.7 range within 10 epochs),
+   `metrics.h5` is written and has the expected dataset names and
+   shapes.
+
+If `diagnostic-fingerprint` agrees byte-for-byte before and after,
+the function-level migration is verified. The integration paths
+(loss in trainer, `track-metrics` writer) are then verified by the
+re-train smoke run.
+
 ## Open questions / decisions to defer
 
 - **Numpy vs torch dispatch.** Keep simple: numpy primary, torch

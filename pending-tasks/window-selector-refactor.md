@@ -223,6 +223,118 @@ generic signature.
   succeed).
 - `training.json` records the new `data.windows` structure.
 
+## Verification (no tests, but explicit comparison steps)
+
+This repo does not have a test suite and we are not adding one for
+this task. Verification is done by running existing or new utility
+commands against the preprocessed HDF5 outputs and comparing.
+
+### Critical mapping the implementer must not miss
+
+The new `spinup_timesteps` is target-anchored: "first valid target
+index is N". The current `skip` is applied to a list of valid
+target indices that already starts at `lag_steps`. To reproduce the
+current behavior bit-exactly, the migration mapping is:
+
+```
+new spinup_timesteps = old skip + old lag_steps
+```
+
+For our config (`skip = 30`, `lag_steps = 5`) the equivalent new
+config is `spinup_timesteps = 35`. Naively renaming `skip = 30` to
+`spinup_timesteps = 30` shifts the training set by `lag_steps`
+snapshots silently. Verification depends on this mapping being
+applied during the equivalence check.
+
+### One small new util command needed
+
+Add `ml util preprocess-fingerprint -c <cfg>` (in `cmd/util.py`).
+It loads `train.h5`, `val.h5`, `test.h5` from the configured
+`preprocessed_dir` and prints, for each:
+
+- `n_pairs`, `x.shape`, `y.shape`, `x.dtype`, `y.dtype`
+- SHA-256 of the `x` dataset bytes (numpy `.tobytes()` of the loaded
+  array, not the file)
+- SHA-256 of the `y` dataset bytes
+- `x[0].sum()`, `x[0].mean()`, `x[0].std()` (a sanity-check digest
+  for the first sample)
+- Same for `y[0]`
+
+Pure stdout, deterministic. The command is small (reuses
+`h5py.File` already imported in `cmd/util.py:model-info`).
+
+This is needed because direct `sha256sum` on the H5 files is
+unreliable: HDF5 records creation timestamps and chunk metadata
+that change every run, so two preprocesses with identical training
+data produce different file hashes.
+
+### Procedure
+
+Before starting the migration, with the **current** config
+(`skip = 30`, `lag_steps = 5`, `samples_per_experiment = 8`,
+`sampling = "evenly_spaced"`):
+
+1. `ml preprocess training-data -c ml/config.toml`
+2. Add the `preprocess-fingerprint` util.
+3. `ml util preprocess-fingerprint -c ml/config.toml > /tmp/before-preprocess.txt`
+4. `ml util model-info -c ml/config.toml > /tmp/before-model-info.txt`
+5. `ml util persistence-score -c ml/config.toml > /tmp/before-persistence.txt`
+
+Apply the refactor. Set the migrated config to the equivalent old
+behavior:
+
+```toml
+[data.windows]
+input_length = 5
+selection = "evenly_spaced"
+spinup_timesteps = 35           # = old skip(30) + old lag_steps(5)
+max_per_simulation = 8
+```
+
+Then:
+
+1. `ml preprocess training-data -c ml/config.toml`
+2. `ml util preprocess-fingerprint -c ml/config.toml > /tmp/after-preprocess.txt`
+3. `ml util model-info -c ml/config.toml > /tmp/after-model-info.txt`
+4. `ml util persistence-score -c ml/config.toml > /tmp/after-persistence.txt`
+5. `diff /tmp/before-preprocess.txt /tmp/after-preprocess.txt` -
+   must be empty.
+6. `diff /tmp/before-model-info.txt /tmp/after-model-info.txt` -
+   must be empty (apart from the architecture / config display
+   lines that legitimately reflect the new field names).
+7. `diff /tmp/before-persistence.txt /tmp/after-persistence.txt` -
+   must be empty.
+
+`UniformSelector` is exempt from byte-exact comparison because the
+random RNG state interacts with the wider numpy global state, and
+unless the implementer also threads explicit seed plumbing,
+identical seeds are not guaranteed. For uniform, accept that pair
+counts and shapes match; do not compare hashes.
+
+After the equivalence check passes, switch to the new default and
+record the new fingerprints:
+
+```toml
+[data.windows]
+input_length = 5
+selection = "non_overlapping"
+spinup_timesteps = 30
+# max_per_simulation unset
+```
+
+1. `ml preprocess training-data -c ml/config.toml`
+2. `ml util preprocess-fingerprint -c ml/config.toml > /tmp/non-overlap-preprocess.txt`
+3. `ml util model-info -c ml/config.toml > /tmp/non-overlap-model-info.txt`
+4. Confirm `n_pairs` per split equals
+   `floor((105 - 30) / (5 + 1)) = 12` per simulation (so 12 * 800
+   training pairs, 12 * 100 val, 12 * 100 test, modulo the
+   simulation count in each split).
+5. Re-run `persistence-score`; record but do not compare to old
+   numbers.
+
+If both equivalence diffs are empty and the non-overlapping run
+produces the expected pair counts, the refactor is verified.
+
 ## Open questions / decisions to defer
 
 - **Configurable overlap.** A future selector could expose a `stride`
