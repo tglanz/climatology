@@ -134,7 +134,7 @@ def area_l2_norm(field: np.ndarray, latitudes_deg: np.ndarray) -> np.ndarray:
 
     See https://en.wikipedia.org/wiki/Lp_space.
     """
-    return np.sqrt(area_mean(field ** 2, latitudes_deg))
+    return np.sqrt(area_mean(field**2, latitudes_deg))
 
 
 def zonal_mean(field: ArrayLike) -> ArrayLike:
@@ -221,9 +221,7 @@ def rms_error(pred: np.ndarray, truth: np.ndarray) -> float:
     return float(np.sqrt(np.mean((pred - truth) ** 2)))
 
 
-def relative_l2(
-    pred: np.ndarray, truth: np.ndarray, eps: float = 1e-12
-) -> float:
+def relative_l2(pred: np.ndarray, truth: np.ndarray, eps: float = 1e-12) -> float:
     """
     Relative L2 error per sample:
     `||pred - truth||_2 / (||truth||_2 + eps)`, treating the input as a
@@ -260,7 +258,7 @@ def lat_weighted_relative_l2(
     """
     w = cosine_latitude_weights(latitudes_deg)
     err2 = ((pred - truth) ** 2) * w[:, None]
-    sig2 = (truth ** 2) * w[:, None]
+    sig2 = (truth**2) * w[:, None]
     num = float(np.sqrt(err2.sum()))
     den = float(np.sqrt(sig2.sum()))
     return num / (den + eps)
@@ -406,7 +404,7 @@ def enstrophy_density(vor: ArrayLike) -> ArrayLike:
 
     See https://en.wikipedia.org/wiki/Enstrophy.
     """
-    return 0.5 * vor ** 2
+    return 0.5 * vor**2
 
 
 def mean_enstrophy(vor: np.ndarray, latitudes_deg: np.ndarray) -> np.ndarray:
@@ -454,3 +452,13 @@ def persistence_prediction(x: ArrayLike, vor_t_channel: int) -> ArrayLike:
     See https://en.wikipedia.org/wiki/Persistence_forecasting.
     """
     return x[:, vor_t_channel : vor_t_channel + 1, :, :]
+
+
+# Re-export convergence diagnostics. Imported at the bottom of the file
+# because ml.diagnostics.convergence depends on names defined above
+# (mean_enstrophy, zonal_mean).
+from ml.diagnostics.convergence import (  # noqa: E402
+    compute_enstrophy,
+    compute_time_mean_zonal_mean,
+    find_spinup_time,
+)
