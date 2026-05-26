@@ -73,7 +73,7 @@ def validate_simulations(config_path: Path, invalid_only: bool, analyze: bool):
         )
         raise SystemExit(1)
 
-    K = cfg.data.windows.input_length
+    K = cfg.data.windows.length
     n_invalid = 0
 
     for sim_dir in sim_dirs:

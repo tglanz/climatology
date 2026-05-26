@@ -89,7 +89,7 @@ def persistence_score(config_path: Path):
     assert "vor" in cfg.data.x_vars, (
         f"persistence baseline assumes 'vor' is in x_vars, got {cfg.data.x_vars}"
     )
-    K = cfg.data.windows.input_length
+    K = cfg.data.windows.length
     n_vars = len(cfg.data.x_vars)
     vor_t_channel = (K - 1) * n_vars + cfg.data.x_vars.index("vor")
 
@@ -300,7 +300,7 @@ def diagnostic_fingerprint(config_path: Path):
     # Build a deterministic synthetic prediction so we can exercise loss /
     # error / spectrum primitives without needing a trained model.
     # Persistence is the most natural choice: the most recent vor channel.
-    K = cfg.data.windows.input_length
+    K = cfg.data.windows.length
     n_vars = len(cfg.data.x_vars)
     assert "vor" in cfg.data.x_vars, "vor must be in x_vars for this fingerprint"
     vor_t_channel = (K - 1) * n_vars + cfg.data.x_vars.index("vor")

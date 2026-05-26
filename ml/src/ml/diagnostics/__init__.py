@@ -461,4 +461,6 @@ from ml.diagnostics.convergence import (  # noqa: E402
     compute_enstrophy,
     compute_time_mean_zonal_mean,
     find_spinup_time,
+    find_zonal_mean_convergence_time,
+    zonal_mean_convergence_errors,
 )

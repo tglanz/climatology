@@ -3,75 +3,88 @@ from pathlib import Path
 import tomllib
 
 
-VALID_ANCHORS = ("latest",)
-VALID_MODES = ("tumbling", "rolling")
+VALID_START_AT = ("beginning", "spinup")
+VALID_END_AT = ("end", "convergence")
+
+
+@dataclass
+class SpinupConfig:
+    """Parameters for dynamic spin-up detection on the enstrophy series.
+
+    Consumed by `find_spinup_time` in
+    `ml/src/ml/diagnostics/convergence.py`. Present only when the user
+    opts into spin-up detection by declaring `[data.windows.spinup]`.
+    """
+
+    threshold: float
+    hold: int
+
+    def __post_init__(self):
+        assert self.threshold > 0.0, (
+            f"spinup.threshold must be positive, got {self.threshold}"
+        )
+        assert self.hold >= 1, f"spinup.hold must be >= 1, got {self.hold}"
+
+
+@dataclass
+class ConvergenceConfig:
+    """Parameters for dynamic convergence detection on the running
+    time-mean of the diagnostic.
+
+    Consumed by `find_convergence_time` in
+    `ml/src/ml/diagnostics/convergence.py`. Present only when the user
+    opts into convergence detection by declaring
+    `[data.windows.convergence]`.
+    """
+
+    threshold: float
+    hold: int
+
+    def __post_init__(self):
+        assert self.threshold > 0.0, (
+            f"convergence.threshold must be positive, got {self.threshold}"
+        )
+        assert self.hold >= 1, f"convergence.hold must be >= 1, got {self.hold}"
 
 
 @dataclass
 class WindowsConfig:
-    """
-    Strategy for extracting (input, target) windows from one simulation.
+    """Configuration of the input-window selector.
 
-    A window is `input_length` consecutive snapshots used as the model
-    input, plus one target snapshot immediately after.
+    A window is `length` consecutive snapshots. The selector emits
+    window-start indices `t_0` stepping by `stride` from `t_0_min`
+    to `t_0_max`, optionally capped by `limit`.
 
-    Two orthogonal knobs decide which valid candidate windows to keep:
+    Bounds:
+        t_0_min = 0   if start_at == "beginning"
+        t_0_min = t_s if start_at == "spinup"
+        t_0_max = M - K     if end_at == "end"
+        t_0_max = t_c       if end_at == "convergence"
 
-    - `mode` controls the stride between selected windows:
-        - "tumbling": disjoint windows, stride = `input_length + 1`. Each
-                      snapshot belongs to at most one (input, target)
-                      pair.
-        - "rolling":  fully overlapping windows, stride = 1. Each
-                      snapshot may appear as input in many pairs and as
-                      target in one. Useful for rollout / pushforward
-                      training where consecutive predictions must be
-                      self-consistent.
-    - `anchor` controls which side of the valid range the selection is
-      anchored to. Only "latest" is currently supported: the latest
-      window's target is at the very end of the valid range; earlier
-      windows step back by `stride`.
-    - `max_per_simulation` optionally caps the number of selected
-      windows per simulation. With `None`, all valid windows for the
-      chosen anchor and mode are kept.
-
-    Fields:
-        input_length:        number of snapshots stacked into one model
-                             input. input_length=1 is the legacy single-
-                             snapshot setup; larger values give the model
-                             a multi-step history.
-        spinup_timesteps:    target-anchored spinup. The first valid
-                             target index is `spinup_timesteps`. With
-                             input_length=K, the earliest input snapshot
-                             of a selected window can sit at timeline
-                             index `spinup_timesteps - K + 1`.
-        anchor:              one of VALID_ANCHORS.
-        mode:                one of VALID_MODES.
-        max_per_simulation:  optional cap on selected windows per sim;
-                             None means take all available.
+    Cross-section validation (start_at requires [data.spinup],
+    end_at requires [data.convergence]) lives in
+    `IscaDataConfig.__post_init__`, where the sibling sections are
+    visible.
     """
 
-    input_length: int = 1
-    spinup_timesteps: int = 0
-    anchor: str = "latest"
-    mode: str = "tumbling"
-    max_per_simulation: int | None = None
+    start_at: str
+    end_at: str
+    length: int
+    stride: int
+    limit: int | None = None
 
     def __post_init__(self):
-        assert self.input_length >= 1, (
-            f"input_length must be >= 1, got {self.input_length}"
+        assert self.start_at in VALID_START_AT, (
+            f"unknown start_at: {self.start_at} (valid: {VALID_START_AT})"
         )
-        assert self.spinup_timesteps >= 0, (
-            f"spinup_timesteps must be >= 0, got {self.spinup_timesteps}"
+        assert self.end_at in VALID_END_AT, (
+            f"unknown end_at: {self.end_at} (valid: {VALID_END_AT})"
         )
-        assert self.anchor in VALID_ANCHORS, (
-            f"unknown anchor: {self.anchor} (valid: {VALID_ANCHORS})"
-        )
-        assert self.mode in VALID_MODES, (
-            f"unknown mode: {self.mode} (valid: {VALID_MODES})"
-        )
-        if self.max_per_simulation is not None:
-            assert self.max_per_simulation > 0, (
-                f"max_per_simulation must be positive when set, got {self.max_per_simulation}"
+        assert self.length >= 1, f"length must be >= 1, got {self.length}"
+        assert self.stride >= 1, f"stride must be >= 1, got {self.stride}"
+        if self.limit is not None:
+            assert self.limit >= 1, (
+                f"limit must be >= 1 when set, got {self.limit}"
             )
 
 
@@ -105,14 +118,26 @@ class IscaDataConfig:
     y_vars: list[str]
 
     split: SplitConfig
-    # window-extraction strategy: input length, selection, spinup, optional cap
+    # window-extraction strategy: length, selection bounds, optional cap
     windows: WindowsConfig
+    # optional dynamic spin-up detector; required when windows.start_at == "spinup"
+    spinup: SpinupConfig | None = None
+    # optional dynamic convergence detector; required when windows.end_at == "convergence"
+    convergence: ConvergenceConfig | None = None
 
     def __post_init__(self):
         self.experiment_dir = Path(self.experiment_dir)
         assert (
             self.experiment_dir.exists()
         ), f"experiment_dir not found: {self.experiment_dir}"
+        if self.windows.start_at == "spinup":
+            assert self.spinup is not None, (
+                "windows.start_at = 'spinup' requires [data.spinup] section"
+            )
+        if self.windows.end_at == "convergence":
+            assert self.convergence is not None, (
+                "windows.end_at = 'convergence' requires [data.convergence] section"
+            )
 
 
 @dataclass
@@ -358,17 +383,9 @@ def load(path: Path) -> Config:
     d = raw["data"]
     if "windows" not in d:
         raise ValueError(
-            "[data.windows] section is required. Fields: input_length, "
-            "spinup_timesteps, anchor, mode, max_per_simulation."
+            "[data.windows] section is required. See docs/pre-processing.md "
+            "for the configuration surface."
         )
-    w = d["windows"]
-    windows = WindowsConfig(
-        input_length=w.get("input_length", 1),
-        spinup_timesteps=w.get("spinup_timesteps", 0),
-        anchor=w.get("anchor", "latest"),
-        mode=w.get("mode", "tumbling"),
-        max_per_simulation=w.get("max_per_simulation", None),
-    )
     data = IscaDataConfig(
         experiment_dir=d["experiment_dir"],
         simulation_pattern=d["simulation_pattern"],
@@ -376,7 +393,9 @@ def load(path: Path) -> Config:
         x_vars=list(d["x_vars"]),
         y_vars=list(d["y_vars"]),
         split=SplitConfig(**d["split"]),
-        windows=windows,
+        windows=WindowsConfig(**d["windows"]),
+        spinup=SpinupConfig(**d["spinup"]) if "spinup" in d else None,
+        convergence=ConvergenceConfig(**d["convergence"]) if "convergence" in d else None,
     )
 
     model_raw = raw["model"]
@@ -499,12 +518,12 @@ def load(path: Path) -> Config:
     if paths.training_info_file is None:
         paths.training_info_file = paths.training_dir / "training.json"
 
-    expected_in_channels = data.windows.input_length * len(data.x_vars)
+    expected_in_channels = data.windows.length * len(data.x_vars)
     active = model.active_sub_config()
     assert active.in_channels == expected_in_channels, (
         f"model.{model.architecture}.in_channels={active.in_channels} does not match "
-        f"data.windows.input_length * len(x_vars) = "
-        f"{data.windows.input_length} * {len(data.x_vars)} = {expected_in_channels}"
+        f"data.windows.length * len(x_vars) = "
+        f"{data.windows.length} * {len(data.x_vars)} = {expected_in_channels}"
     )
 
     return Config(

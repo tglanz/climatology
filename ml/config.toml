@@ -11,15 +11,25 @@ segment_pattern = "run*/atmos_daily.nc"
 x_vars = ["vor", "stirring"]
 y_vars = ["vor"]
 
+# Windowing surface. See docs/pre-processing.md for semantics.
+# [data.spinup] and [data.convergence] are optional; omit either
+# section to disable that detector. [data.windows] is always required.
+
 [data.windows]
-input_length = 5
-spinup_timesteps = 40
-# only 'latest' supported for now
-anchor = "latest"
-# 'tumbling' (disjoint windows, stride = input_length + 1) | 'rolling' (overlapping, stride = 1)
-mode = "tumbling"
-# if unspecified, takes everything
-max_per_simulation = 2
+# "beginning" | "spinup". "spinup" requires [data.spinup].
+start_at = "spinup"
+# "end" | "convergence". "convergence" requires [data.convergence].
+end_at = "end"
+# K consecutive snapshots per input.
+length = 5
+# gap between consecutive window starts. 6 = K + 1 (tumbling-equivalent).
+stride = 6
+# optional cap on windows per simulation; omit for no cap.
+limit = 2
+
+[data.spinup]
+threshold = 0.05
+hold = 3
 
 
 [data.split]
@@ -42,7 +52,7 @@ architecture = "sfno"
 n_modes = [32, 64]
 hidden_channels = 64
 n_layers = 4
-# in_channels MUST equal data.windows.input_length * len(data.x_vars). Validated at config load.
+# in_channels MUST equal data.windows.length * len(data.x_vars). Validated at config load.
 in_channels = 10
 out_channels = 1
 

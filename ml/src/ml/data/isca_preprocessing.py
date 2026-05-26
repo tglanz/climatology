@@ -1,18 +1,40 @@
-import json
 import logging
 from pathlib import Path
 
 import h5py
-from ml.data.splits import Splits
 import numpy as np
 import xarray as xr
 from tqdm import tqdm
 
 from ml.config import Config, IscaDataConfig
 from ml.data.isca_dataset import fix_time_units, validate_segment
+from ml.data.splits import Splits
 from ml.data.window_selector import build_selector
+from ml.diagnostics import (
+    compute_enstrophy,
+    find_spinup_time,
+    find_zonal_mean_convergence_time,
+)
 
 log = logging.getLogger(__name__)
+
+
+CONVERGENCE_DIAGNOSTIC_VAR = "ucomp"
+
+
+def _open_cached(path: Path, ds_cache: dict[Path, xr.Dataset]) -> xr.Dataset:
+    if path not in ds_cache:
+        ds_cache[path] = fix_time_units(xr.open_dataset(path, decode_times=False))
+    return ds_cache[path]
+
+
+def _aggregate_field(
+    nc_files: list[Path],
+    var_name: str,
+    ds_cache: dict[Path, xr.Dataset],
+) -> np.ndarray:
+    arrays = [_open_cached(p, ds_cache)[var_name].values for p in nc_files]
+    return np.concatenate(arrays, axis=0)
 
 
 def extract_pairs(
@@ -23,23 +45,27 @@ def extract_pairs(
     """
     Build (x, y) training pairs and write them to HDF5.
 
-    For input_length=K, each x sample stacks the input variables at K
+    For window_length=K, each x sample stacks the input variables at K
     consecutive timesteps along the channel axis (oldest to newest,
     x_vars-major within each timestep): channel order is
-        [x_vars[0]_{t-K+1}, ..., x_vars[-1]_{t-K+1},
-         x_vars[0]_{t-K+2}, ..., x_vars[-1]_{t-K+2},
+        [x_vars[0]_{t_0}, ..., x_vars[-1]_{t_0},
+         x_vars[0]_{t_0+1}, ..., x_vars[-1]_{t_0+1},
          ...,
-         x_vars[0]_{t},     ..., x_vars[-1]_{t}]
-    The corresponding y is y_vars at timestep t+1.
+         x_vars[0]_{t_0+K-1}, ..., x_vars[-1]_{t_0+K-1}]
+    The corresponding y is y_vars at timestep t_0 + K.
 
     Timesteps are concatenated across the segment files of each
-    simulation, so a window may straddle a segment boundary. Selection of
-    which target indices to materialize is delegated to
-    `ml.data.window_selector.build_selector`.
+    simulation, so a window may straddle a segment boundary. The set
+    of window-start indices t_0 is produced by `WindowSelector` given
+    per-simulation t_s and t_c when the spinup / convergence
+    sub-sections of `[data.windows]` are configured.
     """
-    K = cfg.windows.input_length
+    windows_cfg = cfg.windows
+    spinup_cfg = cfg.spinup
+    convergence_cfg = cfg.convergence
+    K = windows_cfg.length
     n_in = K * len(cfg.x_vars)
-    selector = build_selector(cfg.windows)
+    selector = build_selector(windows_cfg)
     output_path.parent.mkdir(parents=True, exist_ok=True)
 
     with h5py.File(output_path, "w") as f:
@@ -64,8 +90,6 @@ def extract_pairs(
             nc_files = sorted(exp_dir.glob(cfg.segment_pattern))
             assert nc_files, f"no NC files found: {exp_dir}/{cfg.segment_pattern}"
 
-            # Flat per-sim sequence of timesteps across all segments,
-            # in chronological order.
             timeline: list[tuple[Path, int]] = []
             for path in nc_files:
                 T, spatial = validate_segment(path, cfg.x_vars, cfg.y_vars)
@@ -75,56 +99,61 @@ def extract_pairs(
                     y_ds.resize((0, len(cfg.y_vars), *spatial_shape))
                 else:
                     assert spatial == spatial_shape, f"spatial mismatch in {path}"
-
                 for t in range(T):
                     timeline.append((path, t))
 
-            # Valid target indices: need K timesteps before (inclusive) and
-            # 1 after, AND target index >= spinup_timesteps.
-            #   target index `j` in `timeline`, where j-K is the oldest input,
-            #                                          j-1 is the newest input,
-            #                                          j   is the target.
-            # So j must satisfy max(K, spinup_timesteps) <= j <= len(timeline) - 1.
-            spinup = cfg.windows.spinup_timesteps
-            start_target = max(K, spinup)
-            valid_target_indices = list(range(start_target, len(timeline)))
-            if not valid_target_indices:
-                # Incomplete simulation (e.g. only one segment, or the
-                # spinup window exceeds the trajectory). Skip rather
-                # than abort the whole preprocess.
+            M = len(timeline)
+            t_s: int | None = None
+            t_c: int | None = None
+            ds_cache: dict[Path, xr.Dataset] = {}
+            try:
+                if spinup_cfg is not None:
+                    lat = _open_cached(nc_files[0], ds_cache)["lat"].values
+                    vor_full = _aggregate_field(nc_files, "vor", ds_cache)
+                    enstrophy = compute_enstrophy(vor_full, lat)
+                    t_s = find_spinup_time(
+                        enstrophy,
+                        tol=spinup_cfg.threshold,
+                        hold=spinup_cfg.hold,
+                    )
+                if convergence_cfg is not None:
+                    lat = _open_cached(nc_files[0], ds_cache)["lat"].values
+                    u_full = _aggregate_field(
+                        nc_files, CONVERGENCE_DIAGNOSTIC_VAR, ds_cache
+                    )
+                    t_c = find_zonal_mean_convergence_time(
+                        u_full,
+                        lat,
+                        t_s if t_s is not None else 0,
+                        threshold=convergence_cfg.threshold,
+                        hold=convergence_cfg.hold,
+                    )
+            finally:
+                for d in ds_cache.values():
+                    d.close()
+                ds_cache = {}
+
+            selected_t0 = selector.select(M, t_s=t_s, t_c=t_c)
+
+            if not selected_t0:
                 log.warning(
-                    "skipping %s: no valid windows after input_length=%d "
-                    "and spinup_timesteps=%d (timeline length %d)",
-                    exp_dir, K, spinup, len(timeline),
+                    "skipping %s: no valid windows (M=%d, K=%d, t_s=%s, t_c=%s)",
+                    exp_dir, M, K, t_s, t_c,
                 )
                 continue
 
-            selected = selector.select(len(valid_target_indices))
-
-            # Open each NC file at most once per simulation.
-            ds_cache: dict[Path, xr.Dataset] = {}
             try:
-                for sel in selected:
-                    j = valid_target_indices[sel]
-
+                for t_0 in selected_t0:
                     x_channels = []
                     for k in range(K):
-                        path_k, t_k = timeline[j - K + k]
-                        if path_k not in ds_cache:
-                            ds_cache[path_k] = fix_time_units(
-                                xr.open_dataset(path_k, decode_times=False)
-                            )
-                        ds_k = ds_cache[path_k]
+                        path_k, t_k = timeline[t_0 + k]
+                        ds_k = _open_cached(path_k, ds_cache)
                         for v in cfg.x_vars:
                             x_channels.append(ds_k[v].isel(time=t_k).values)
                     x = np.stack(x_channels, axis=0)
 
-                    path_y, t_y = timeline[j]
-                    if path_y not in ds_cache:
-                        ds_cache[path_y] = fix_time_units(
-                            xr.open_dataset(path_y, decode_times=False)
-                        )
-                    ds_y = ds_cache[path_y]
+                    path_y, t_y = timeline[t_0 + K]
+                    ds_y = _open_cached(path_y, ds_cache)
                     y = np.stack(
                         [ds_y[v].isel(time=t_y).values for v in cfg.y_vars], axis=0
                     )
@@ -135,14 +164,17 @@ def extract_pairs(
                     y_ds[written] = y
                     written += 1
             finally:
-                for ds in ds_cache.values():
-                    ds.close()
+                for d in ds_cache.values():
+                    d.close()
 
         log.info(
-            "wrote %d pairs to %s (input_length=%d, %d input channels, "
-            "anchor=%s, mode=%s)",
+            "wrote %d pairs to %s (K=%d, %d input channels, "
+            "start_at=%s, end_at=%s, stride=%d, limit=%s)",
             written, output_path, K, n_in,
-            cfg.windows.anchor, cfg.windows.mode,
+            windows_cfg.start_at,
+            windows_cfg.end_at,
+            windows_cfg.stride,
+            windows_cfg.limit,
         )
 
 

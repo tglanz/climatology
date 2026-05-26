@@ -1,74 +1,71 @@
 """
-Window selector: pick which (input, target) windows to extract from a
-single simulation's flat timeline.
+Window selector: choose the input-window start indices `t_0` to
+materialize from a single simulation's flat timeline.
 
-The selector is parameterized on two orthogonal axes:
+A window is `length` (= K) consecutive snapshots starting at `t_0`;
+the next-step target sits at `t_0 + K`. The selector emits a strictly
+increasing list of `t_0` values in [t_0_min, t_0_max], stepping by
+`stride`, optionally capped to the first `limit` values.
 
-- `mode` controls the stride between selected windows:
-    - "tumbling": disjoint windows, stride = input_length + 1. Each
-                  snapshot is in at most one (input, target) pair.
-    - "rolling":  adjacent overlapping windows, stride = 1. Each
-                  snapshot can appear as input in many pairs and as
-                  target in one.
-- `anchor` controls which end of the valid range the selection is
-  anchored to. Only "latest" is currently supported: the latest
-  selected window's target is at the very end of the valid range
-  (n_valid - 1); earlier windows step back by `stride`.
-- `max_per_simulation` optionally caps the number of selected windows
-  per simulation. With `None`, all valid windows for the chosen anchor
-  and mode are kept.
+Bounds:
+    t_0_min = 0   if start_at == "beginning"
+    t_0_min = t_s if start_at == "spinup"     (caller supplies t_s)
+    t_0_max = M - K - 1            if end_at == "end"
+    t_0_max = min(t_c, M - K - 1)  if end_at == "convergence" (caller supplies t_c)
 
-`select(n_valid)` returns a sorted list of indices into the
-`valid_target_indices` array (already filtered by spinup elsewhere).
+`M - K - 1` is the largest `t_0` such that the next-step target
+`t_0 + K` is still a valid timeline index in [0, M - 1].
+
+See docs/pre-processing.md for the formal semantics and validation
+rules across the spinup, convergence, and windows sections.
 """
 
 from __future__ import annotations
-
-import numpy as np
 
 from ml.config import WindowsConfig
 
 
 class WindowSelector:
-    """Picks valid window indices from a simulation timeline."""
+    """Picks input-window start indices for one simulation."""
 
-    def __init__(
+    def __init__(self, cfg: WindowsConfig):
+        self.cfg = cfg
+
+    def select(
         self,
-        input_length: int,
-        anchor: str,
-        mode: str,
-        count: int | None,
-    ):
-        self.input_length = input_length
-        self.anchor = anchor
-        self.mode = mode
-        self.count = count
+        timeline_length: int,
+        t_s: int | None = None,
+        t_c: int | None = None,
+    ) -> list[int]:
+        K = self.cfg.length
+        M = timeline_length
 
-    def select(self, n_valid: int) -> list[int]:
-        if n_valid <= 0:
+        if self.cfg.start_at == "beginning":
+            t0_min = 0
+        else:
+            assert t_s is not None, (
+                "start_at='spinup' requires t_s to be supplied by the caller"
+            )
+            t0_min = t_s
+
+        natural_max = M - K - 1
+        if self.cfg.end_at == "end":
+            t0_max = natural_max
+        else:
+            assert t_c is not None, (
+                "end_at='convergence' requires t_c to be supplied by the caller"
+            )
+            t0_max = min(t_c, natural_max)
+
+        if t0_min > t0_max:
             return []
 
-        stride = 1 if self.mode == "rolling" else self.input_length + 1
-
-        # Latest-anchored: the last selected index is n_valid - 1, and
-        # earlier ones step back by `stride`. We build the list backward
-        # then reverse to ascending order, which is what the caller
-        # expects.
-        indices = list(range(n_valid - 1, -1, -stride))
-        indices.reverse()
-
-        if self.count is None:
-            return indices
-        # `count` is a cap, not a requirement: silently take fewer if
-        # the trajectory does not have enough valid windows.
-        return indices[-self.count :]
+        indices = list(range(t0_min, t0_max + 1, self.cfg.stride))
+        if self.cfg.limit is not None:
+            indices = indices[: self.cfg.limit]
+        return indices
 
 
 def build_selector(cfg: WindowsConfig) -> WindowSelector:
     """Construct a `WindowSelector` from a `WindowsConfig`."""
-    return WindowSelector(
-        input_length=cfg.input_length,
-        anchor=cfg.anchor,
-        mode=cfg.mode,
-        count=cfg.max_per_simulation,
-    )
+    return WindowSelector(cfg)

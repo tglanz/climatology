@@ -178,12 +178,20 @@ def _collect_data(cfg: "Config") -> dict[str, Any]:
         "y_vars": list(d.y_vars),
         "split": d.split,
         "windows": {
-            "input_length":       d.windows.input_length,
-            "spinup_timesteps":   d.windows.spinup_timesteps,
-            "anchor":             d.windows.anchor,
-            "mode":               d.windows.mode,
-            "max_per_simulation": d.windows.max_per_simulation,
+            "start_at": d.windows.start_at,
+            "end_at":   d.windows.end_at,
+            "length":   d.windows.length,
+            "stride":   d.windows.stride,
+            "limit":    d.windows.limit,
         },
+        "spinup": (
+            {"threshold": d.spinup.threshold, "hold": d.spinup.hold}
+            if d.spinup is not None else None
+        ),
+        "convergence": (
+            {"threshold": d.convergence.threshold, "hold": d.convergence.hold}
+            if d.convergence is not None else None
+        ),
         "splits": {},
     }
 

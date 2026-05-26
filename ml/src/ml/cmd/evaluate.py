@@ -43,7 +43,7 @@ def autoregression(config_path: Path, input_path: Path, t0: int, T: int, output_
         f"refusing to evaluate on training or validation data"
     )
 
-    K = cfg.data.windows.input_length
+    K = cfg.data.windows.length
 
     # Load dataset and slice. With input_length=K we need K-1 timesteps before
     # t0 to form the first input window, and one timestep after the last

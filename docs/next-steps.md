@@ -132,3 +132,26 @@ study before scaling capacity, persistence-score before declaring a
 plateau is irreducible, val-curve shape before adjusting regularization.
 Build that into the loop rather than running 8-hour trainings to
 diagnose model questions.
+
+## Climatology prediction track
+
+Generalising the pipeline so the target diagnostic can be a climatology
+profile (e.g. time-mean zonal-mean of $u$) rather than only a next-step
+field. Aims at predicting a statistical climatology from a finite
+window of step diagnostics.
+
+- Add a climatology target to preprocessing: per-window time-mean
+  zonal-mean of $u$, shape $(C, H)$.
+- Add a model head that outputs $(C, H)$ instead of $(C, H, W)$.
+- Add a $(B, C, H)$ variant of `lat_weighted_relative_l2`.
+- Add a baseline: in-window time-mean zonal-mean of $u$ (no model).
+- Add a static-input pathway for forcing parameters (stirring
+  amplitude, latitude band, decorrelation time).
+- Eval against per-sim reference $D(t_s, M)$ and against the
+  ensemble-mean climatology across realizations of the same forcing.
+- Sweep $K$; plot model error and baseline error against $K$ to
+  characterise the informative regime.
+- Notebook with predicted vs reference profile per simulation, against
+  the variance envelope from `notebook_2`.
+- Decide single-forcing vs multi-forcing scope before the static-input
+  pathway is wired.
