@@ -31,7 +31,7 @@ If you see `OK`, the package is installed and all dependencies are available.
 To run any command in the environment, prefix it with `conda run -n isca_env`:
 
 ```bash
-conda run -n isca_env python sim/example_barotropic_stirring.py
+conda run -n isca_env python sim/barotropic_stirring.py
 conda run -n isca_env python -c "import isca; print(isca.__file__)"
 ```
 

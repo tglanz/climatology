@@ -1,0 +1,81 @@
+# Training config for the unforced BVE diagnostic pipeline.
+# Sibling of ml/config.toml; only the fields tied to the dataset and the
+# input-channel count differ. Keeping the rest identical so best val on
+# this run is directly comparable to the stirring run.
+[data]
+experiment_dir = "./output/barotropic_decaying-T85"
+simulation_pattern = "simulations/*"
+segment_pattern = "run*/atmos_daily.nc"
+x_vars = ["vor"]
+y_vars = ["vor"]
+
+[data.windows]
+input_length = 5
+spinup_timesteps = 40
+anchor = "latest"
+mode = "tumbling"
+max_per_simulation = 2
+
+
+[data.split]
+validation = 0.1
+test = 0.1
+train = 0.8
+
+[model]
+architecture = "sfno"
+
+[model.fno]
+n_modes = [32, 64]
+hidden_channels = 64
+n_layers = 4
+# input_length * len(x_vars) = 5 * 1
+in_channels = 5
+out_channels = 1
+
+[model.sfno]
+n_modes = [32, 64]
+hidden_channels = 64
+n_layers = 4
+in_channels = 5
+out_channels = 1
+
+[training]
+epochs = 300
+batch_size = 64
+learning_rate = 1e-3
+loss = "lat_weighted_relative_l2"
+optimizer = "adamw"
+
+[training.regularization]
+weight_decay = 1e-3
+dropout      = 0.1
+
+[training.early_stopping.target_loss]
+value = 0.1
+monitor = "train"
+
+[training.early_stopping.patience]
+patience = 20
+min_delta = 1e-4
+monitor = "train"
+
+[training.scheduler]
+kind = "cosine"
+
+[training.scheduler.step]
+step_size = 100
+gamma = 0.5
+
+[training.scheduler.cosine]
+eta_min = 0.0
+
+[training.scheduler.plateau]
+patience = 15
+factor = 0.5
+threshold = 1e-4
+eta_min = 0.0
+
+[logging]
+level = "INFO"
+stdout = true

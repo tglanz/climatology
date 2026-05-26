@@ -10,7 +10,7 @@ barotropic vorticity equation.
 - 15 daily-output segments per sim (7 days each, 105 days total).
 - Single forcing distribution across all sims; only the random seed of the
   stirring varies between runs.
-- One sim per CLI invocation: `python sim/example_barotropic_stirring.py --index N`.
+- One sim per CLI invocation: `python sim/barotropic_stirring.py --index N`.
 - Skip-if-exists: invocations whose `simulations/N/run0015/atmos_daily.nc`
   already exists exit immediately, so `seq 0 999 | parallel ...` is idempotent
   under crashes.

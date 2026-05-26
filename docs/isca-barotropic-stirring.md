@@ -137,11 +137,11 @@ python -c "from isca import BarotropicCodeBase; print('OK')"
 
 ## Running the Test Case
 
-The experiment script is at `sim/example_barotropic_stirring.py`. Run it with:
+The experiment script is at `sim/barotropic_stirring.py`. Run it with:
 
 ```bash
 conda activate isca_env
-python sim/example_barotropic_stirring.py
+python sim/barotropic_stirring.py
 ```
 
 The script automatically detects the number of available CPUs and rounds down to the

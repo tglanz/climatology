@@ -7,7 +7,7 @@ problem.
 
 ## Motivation
 
-Our current setup (sim/example_barotropic_stirring.py) uses Vallis
+Our current setup (sim/barotropic_stirring.py) uses Vallis
 stochastic stirring with decay_time = 2 days. The mapping
 `(vor_history, stirring_history) -> vor(t+1)` is therefore stochastic:
 the unobserved future stirring during the prediction window contributes
@@ -60,7 +60,7 @@ Acceptance criterion for the diagnostic:
 
 ## Differences vs current sim script
 
-Comparing `sim/example_barotropic_stirring.py` (current) against
+Comparing `sim/barotropic_stirring.py` (current) against
 `barotropic_vor_eq_test.py` (unforced reference):
 
 | field                               | stirring (current) | unforced (target) |
@@ -91,7 +91,7 @@ Source of inter-sim diversity:
 
 ### Option 1: extend the current script
 
-Modify `sim/example_barotropic_stirring.py` to support a `--no-stirring`
+Modify `sim/barotropic_stirring.py` to support a `--no-stirring`
 flag (or rename the script) that:
 
 - Drops the `stirring_nml` block from the namelist.
@@ -108,7 +108,7 @@ Cons: branching logic inside one script can get noisy.
 
 ### Option 2: new script
 
-Create `sim/example_barotropic_decaying.py` (or similar) as a sibling.
+Create `sim/barotropic_decaying.py` (or similar) as a sibling.
 Lift the harness boilerplate (skip-if-exists, output paths, diag
 table, FFT-friendly grid) into a shared module if duplication becomes
 significant.
