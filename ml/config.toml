@@ -31,13 +31,25 @@ train = 0.8
 # test_limit=1
 # validation_limit=1
 
-# TODO: [model] section. should have "architecture"; e.g. architecture in {fno, sfno, tfno}.
-# currently, we only do fno.
+# Architecture selector. Valid: "fno" | "sfno".
+# Per-architecture options live in [model.<arch>]; only the active
+# sub-section is consumed at load time, but the inactive one is parsed
+# if present so toggling architecture is a one-line change here.
+[model]
+architecture = "sfno"
+
 [model.fno]
 n_modes = [32, 64]
 hidden_channels = 64
 n_layers = 4
 # in_channels MUST equal data.windows.input_length * len(data.x_vars). Validated at config load.
+in_channels = 10
+out_channels = 1
+
+[model.sfno]
+n_modes = [32, 64]
+hidden_channels = 64
+n_layers = 4
 in_channels = 10
 out_channels = 1
 

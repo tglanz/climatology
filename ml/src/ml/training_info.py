@@ -208,16 +208,16 @@ def _collect_data(cfg: "Config") -> dict[str, Any]:
 
 
 def _collect_model(cfg: "Config", model: "torch.nn.Module") -> dict[str, Any]:
-    fno = cfg.model.fno
+    sub = cfg.model.active_sub_config()
     total = sum(p.numel() for p in model.parameters())
     trainable = sum(p.numel() for p in model.parameters() if p.requires_grad)
     return {
-        "architecture": "FNO",
-        "n_modes": list(fno.n_modes),
-        "hidden_channels": fno.hidden_channels,
-        "n_layers": fno.n_layers,
-        "in_channels": fno.in_channels,
-        "out_channels": fno.out_channels,
+        "architecture": cfg.model.architecture,
+        "n_modes": list(sub.n_modes),
+        "hidden_channels": sub.hidden_channels,
+        "n_layers": sub.n_layers,
+        "in_channels": sub.in_channels,
+        "out_channels": sub.out_channels,
         "total_params": total,
         "trainable_params": trainable,
     }

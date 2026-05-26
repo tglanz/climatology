@@ -13,6 +13,7 @@ dependencies = [
     "netCDF4",
     "click",
     "tqdm>=4.67.3",
+    "torch_harmonics==0.7.4",
 ]
 
 [project.scripts]

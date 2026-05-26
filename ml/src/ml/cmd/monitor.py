@@ -177,7 +177,7 @@ def _run_gui(state: MonitorState, interval: float) -> None:
     ax_power.set_xscale("log")
     error_power_line,  = ax_power.plot([], [], label="error",  color="tab:red")
     signal_power_line, = ax_power.plot([], [], label="signal", color="tab:blue")
-    cutoff = state._cfg.model.fno.n_modes[0]
+    cutoff = state._cfg.model.active_sub_config().n_modes[0]
     ax_power.axvline(cutoff, color="gray", linestyle=":", linewidth=1, label=f"n_modes={cutoff}")
     ax_power.legend(fontsize=8)
 

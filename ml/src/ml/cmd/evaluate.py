@@ -70,7 +70,7 @@ def autoregression(config_path: Path, input_path: Path, t0: int, T: int, output_
 
     # Run autoregression. Reconstruct the architecture exactly as it was at
     # training time, including dropout layers (no-ops in eval mode).
-    model = build_model(cfg.model.fno, dropout=cfg.training.regularization.dropout)
+    model = build_model(cfg.model, dropout=cfg.training.regularization.dropout)
     autoregressor = Autoregressor(model, cfg.paths.checkpoint_dir)
     vor_pred = autoregressor.rollout(vor_history, stirring_seq)
 

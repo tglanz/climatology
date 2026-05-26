@@ -32,7 +32,7 @@ def train(config_path: Path, track_metrics: bool):
     cfg.paths.training_dir.mkdir(parents=True, exist_ok=True)
     shutil.copy2(config_path, cfg.paths.training_dir / "config.toml")
 
-    model = build_model(cfg.model.fno, dropout=cfg.training.regularization.dropout)
+    model = build_model(cfg.model, dropout=cfg.training.regularization.dropout)
     train_loader, val_loader, _ = make_loaders(cfg)
 
     lat_weights = None

@@ -129,6 +129,21 @@ class FNOModelConfig:
     n_layers: int = 4
 
 
+@dataclass
+class SFNOModelConfig:
+    # number of spherical-harmonic modes retained per spatial dimension
+    n_modes: tuple[int, int]
+    # width of the SFNO lifting/projection layers
+    hidden_channels: int
+    # number of input fields
+    in_channels: int
+    # number of predicted fields
+    out_channels: int
+    # number of SFNO blocks stacked in sequence
+    n_layers: int = 4
+
+
+VALID_ARCHITECTURES = ("fno", "sfno")
 VALID_LOSSES = ("mse", "relative_l2", "lat_weighted_relative_l2")
 VALID_OPTIMIZERS = ("adam", "adamw")
 VALID_SCHEDULERS = ("step", "cosine", "plateau", "none")
@@ -308,7 +323,23 @@ class PathsConfig:
 
 @dataclass
 class ModelConfig:
-    fno: FNOModelConfig
+    architecture: str
+    fno: FNOModelConfig | None = None
+    sfno: SFNOModelConfig | None = None
+
+    def __post_init__(self):
+        assert self.architecture in VALID_ARCHITECTURES, (
+            f"unknown architecture: {self.architecture} "
+            f"(valid: {VALID_ARCHITECTURES})"
+        )
+        active = self.active_sub_config()
+        assert active is not None, (
+            f"architecture={self.architecture} but "
+            f"[model.{self.architecture}] section is missing"
+        )
+
+    def active_sub_config(self) -> FNOModelConfig | SFNOModelConfig | None:
+        return self.fno if self.architecture == "fno" else self.sfno
 
 
 @dataclass
@@ -348,16 +379,29 @@ def load(path: Path) -> Config:
         windows=windows,
     )
 
-    m = raw["model"]["fno"]
-    model = ModelConfig(
-        fno=FNOModelConfig(
-            n_modes=tuple(m["n_modes"]),
-            hidden_channels=m["hidden_channels"],
-            in_channels=m["in_channels"],
-            out_channels=m["out_channels"],
-            n_layers=m.get("n_layers", 4),
+    model_raw = raw["model"]
+    architecture = model_raw["architecture"]
+    fno_cfg = None
+    if "fno" in model_raw:
+        f = model_raw["fno"]
+        fno_cfg = FNOModelConfig(
+            n_modes=tuple(f["n_modes"]),
+            hidden_channels=f["hidden_channels"],
+            in_channels=f["in_channels"],
+            out_channels=f["out_channels"],
+            n_layers=f.get("n_layers", 4),
         )
-    )
+    sfno_cfg = None
+    if "sfno" in model_raw:
+        s = model_raw["sfno"]
+        sfno_cfg = SFNOModelConfig(
+            n_modes=tuple(s["n_modes"]),
+            hidden_channels=s["hidden_channels"],
+            in_channels=s["in_channels"],
+            out_channels=s["out_channels"],
+            n_layers=s.get("n_layers", 4),
+        )
+    model = ModelConfig(architecture=architecture, fno=fno_cfg, sfno=sfno_cfg)
 
     t = raw["training"]
     s = t.get("scheduler", {})
@@ -456,8 +500,9 @@ def load(path: Path) -> Config:
         paths.training_info_file = paths.training_dir / "training.json"
 
     expected_in_channels = data.windows.input_length * len(data.x_vars)
-    assert model.fno.in_channels == expected_in_channels, (
-        f"model.fno.in_channels={model.fno.in_channels} does not match "
+    active = model.active_sub_config()
+    assert active.in_channels == expected_in_channels, (
+        f"model.{model.architecture}.in_channels={active.in_channels} does not match "
         f"data.windows.input_length * len(x_vars) = "
         f"{data.windows.input_length} * {len(data.x_vars)} = {expected_in_channels}"
     )
