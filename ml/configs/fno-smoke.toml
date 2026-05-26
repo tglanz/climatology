@@ -1,0 +1,62 @@
+# FNO 1-epoch smoke config. Use to quickly verify the FNO build path
+# end-to-end without touching the canonical `ml/config.toml`.
+#
+# Run from repo root:
+#   uv --project ml run python -m ml.cmd.cli train -c ml/configs/fno-smoke.toml
+
+[data]
+experiment_dir = "./output/barotropic_stirring-T85"
+simulation_pattern = "simulations/*"
+segment_pattern = "run*/atmos_daily.nc"
+x_vars = ["vor", "stirring"]
+y_vars = ["vor"]
+
+[data.windows]
+input_length = 5
+spinup_timesteps = 40
+anchor = "latest"
+mode = "tumbling"
+max_per_simulation = 2
+
+[data.split]
+validation = 0.1
+test = 0.1
+train = 0.8
+
+[model]
+architecture = "fno"
+
+[model.fno]
+n_modes = [32, 64]
+hidden_channels = 64
+n_layers = 4
+in_channels = 10
+out_channels = 1
+
+[model.sfno]
+n_modes = [32, 64]
+hidden_channels = 64
+n_layers = 4
+in_channels = 10
+out_channels = 1
+
+[training]
+epochs = 1
+batch_size = 64
+learning_rate = 1e-3
+loss = "lat_weighted_relative_l2"
+optimizer = "adamw"
+
+[training.regularization]
+weight_decay = 1e-3
+dropout = 0.1
+
+[training.scheduler]
+kind = "cosine"
+
+[training.scheduler.cosine]
+eta_min = 0.0
+
+[logging]
+level = "INFO"
+stdout = true
