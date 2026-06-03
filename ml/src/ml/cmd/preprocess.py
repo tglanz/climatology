@@ -90,8 +90,9 @@ def validate_simulations(config_path: Path, invalid_only: bool, validate_spinup:
             vorticities = aggregated_read_field(nc_files, "vor", cache=segments_cache)
             enstrophy = mean_enstrophy(vorticities, lats)
             t_spinup = find_spinup_time(diagnostic=enstrophy,
-                stable_time=cfg.data.spinup.hold,
-                tol=cfg.data.spinup.threshold)
+                stable_time=cfg.data.spinup.stable_time,
+                window_size=cfg.data.spinup.window_size,
+                z_threshold=cfg.data.spinup.z_threshold)
             if not t_spinup:
                 valid = False
                 reason = f"Unable to infer spinup time with {cfg.data.spinup}"

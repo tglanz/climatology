@@ -5,6 +5,18 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "ml: preprocess validate-simulations",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "ml/src/ml/cmd/cli.py",
+            "console": "integratedTerminal",
+            "args": [
+                "preprocess",
+                "validate-simulations",
+                "-c", "./ml/configs/default.toml"
+            ]
+        },
+        {
             "name": "ml: preprocess training-data",
             "type": "debugpy",
             "request": "launch",
@@ -13,7 +25,7 @@
             "args": [
                 "preprocess",
                 "training-data",
-                "-c", "./ml/config.toml"
+                "-c", "./ml/configs/test.toml"
             ]
         }
     ]

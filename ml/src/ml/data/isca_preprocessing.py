@@ -90,8 +90,9 @@ def extract_pairs(
                     enstrophy = mean_enstrophy(vor_full, lat)
                     t_s = find_spinup_time(
                         enstrophy,
-                        tol=spinup_cfg.threshold,
-                        hold=spinup_cfg.hold,
+                        z_threshold=spinup_cfg.z_threshold,
+                        stable_time=spinup_cfg.stable_time,
+                        window_size=spinup_cfg.window_size,
                     )
                 if convergence_cfg is not None:
                     lat = read_segment(nc_files[0], ds_cache)["lat"].values

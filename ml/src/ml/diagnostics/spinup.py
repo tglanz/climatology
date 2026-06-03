@@ -5,7 +5,7 @@ def find_spinup_time(
     diagnostic: NDArray[np.floating],
     window_size: int = 10,
     stable_time: int = 10,
-    tol: float = 2.0,
+    z_threshold: float = 2.0,
 ) -> int:
     x = np.asarray(diagnostic, dtype=np.float64)
 
@@ -24,7 +24,7 @@ def find_spinup_time(
     z_mean = np.abs(means[1:] - means[:-1]) / (std_err[1:] + std_err[:-1])
     z_var = np.abs(np.log(vars_[1:] + 1e-12) - np.log(vars_[:-1] + 1e-12))
 
-    stable = (z_mean < tol) & (z_var < tol)
+    stable = (z_mean < z_threshold) & (z_var < z_threshold)
 
     required = max(1, stable_time // window_size)
 

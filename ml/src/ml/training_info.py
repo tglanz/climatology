@@ -185,7 +185,7 @@ def _collect_data(cfg: "Config") -> dict[str, Any]:
             "limit":    d.windows.limit,
         },
         "spinup": (
-            {"threshold": d.spinup.threshold, "hold": d.spinup.hold}
+            {"z_threshold": d.spinup.z_threshold, "stable_time": d.spinup.stable_time, "window_size": d.spinup.window_size}
             if d.spinup is not None else None
         ),
         "convergence": (

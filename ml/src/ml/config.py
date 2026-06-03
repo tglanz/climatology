@@ -1,4 +1,4 @@
-from dataclasses import dataclass, field
+from dataclasses import asdict, dataclass, field, fields
 from pathlib import Path
 import tomllib
 
@@ -16,15 +16,19 @@ class SpinupConfig:
     opts into spin-up detection by declaring `[data.windows.spinup]`.
     """
 
-    threshold: float
-    hold: int
+    z_threshold: float
+    stable_time: int
+    window_size: int = 10
 
     def __post_init__(self):
-        assert self.threshold > 0.0, (
-            f"spinup.threshold must be positive, got {self.threshold}"
+        assert self.z_threshold > 0.0, (
+            f"spinup.z_threshold must be positive, got {self.z_threshold}"
         )
-        assert self.hold >= 1, f"spinup.hold must be >= 1, got {self.hold}"
+        assert self.stable_time >= 1, f"spinup.stable_time must be >= 1, got {self.stable_time}"
+        assert self.window_size >= 2, f"spinup.window_size must be >= 2, got {self.window_size}"
 
+    def to_kwargs(self) -> dict:
+        return asdict(self)
 
 @dataclass
 class ConvergenceConfig:
@@ -45,6 +49,9 @@ class ConvergenceConfig:
             f"convergence.threshold must be positive, got {self.threshold}"
         )
         assert self.hold >= 1, f"convergence.hold must be >= 1, got {self.hold}"
+
+    def to_kwargs(self):
+        return asdict(self)
 
 
 @dataclass

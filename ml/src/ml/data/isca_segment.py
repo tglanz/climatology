@@ -40,6 +40,9 @@ def validate_segment_dataset(ds: xr.Dataset, x_vars: list[str], y_vars: list[str
 
     if "average_DT" in ds:
         dt = ds["average_DT"].values
+        # its a timedelta64 when read with decode_time
+        if np.issubdtype(dt.dtype, np.timedelta64):
+            dt = dt.astype(np.float64)
         assert np.allclose(dt, dt[0], rtol=1e-3), f"inconsistent time steps in dataset"
 
     num_samples = ds.sizes["time"]
@@ -52,3 +55,30 @@ def validate_segment(
 ) -> tuple[int, tuple]:
     ds = read_segment(nc_path, cache)
     return validate_segment_dataset(ds, x_vars, y_vars)
+
+
+def read_segments(paths: str | Path | list[str | Path], decode_time: bool = False) -> xr.Dataset:
+    ds = xr.open_mfdataset(
+        paths,
+        combine="by_coords",
+        data_vars="minimal",
+        coords="minimal",
+        compat="override",
+        decode_times=False,
+        preprocess=fix_time_units,
+    )
+
+    if decode_time:
+        ds = _decode_time(ds)
+
+    return ds
+
+def _decode_time(ds: xr.Dataset) -> xr.Dataset:
+    """ Used for visualization """
+    ds = xr.decode_cf(
+        ds,
+        decode_times=xr.coders.CFDatetimeCoder(use_cftime=True),
+        decode_timedelta=True,
+    )
+
+    return ds

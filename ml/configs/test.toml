@@ -28,8 +28,9 @@ stride = 6
 limit = 2
 
 [data.spinup]
-threshold = 0.05
-hold = 3
+z_threshold = 0.05
+stable_time = 3
+window_size = 10
 
 
 [data.split]
