@@ -11,7 +11,7 @@ def setup_logging(cfg: LoggingConfig):
         cfg.output_file.parent.mkdir(parents=True, exist_ok=True)
         handlers.append(logging.FileHandler(cfg.output_file))
     logging.basicConfig(
-        level=cfg.level,
+        level=cfg.level.upper(),
         handlers=handlers,
         format="%(asctime)s %(name)s %(levelname)s %(message)s",
     )

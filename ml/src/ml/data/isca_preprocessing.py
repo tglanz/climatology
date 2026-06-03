@@ -2,16 +2,17 @@ import logging
 from pathlib import Path
 
 import h5py
+from ml.diagnostics.enstrophy import mean_enstrophy
 import numpy as np
 import xarray as xr
 from tqdm import tqdm
 
 from ml.config import Config, IscaDataConfig
-from ml.data.isca_dataset import fix_time_units, validate_segment
+from ml.data.isca_segment import aggregated_read_field, fix_time_units, read_segment, validate_segment
 from ml.data.splits import Splits
 from ml.data.window_selector import build_selector
+
 from ml.diagnostics import (
-    compute_enstrophy,
     find_spinup_time,
     find_zonal_mean_convergence_time,
 )
@@ -21,21 +22,8 @@ log = logging.getLogger(__name__)
 
 CONVERGENCE_DIAGNOSTIC_VAR = "ucomp"
 
-
-def _open_cached(path: Path, ds_cache: dict[Path, xr.Dataset]) -> xr.Dataset:
-    if path not in ds_cache:
-        ds_cache[path] = fix_time_units(xr.open_dataset(path, decode_times=False))
-    return ds_cache[path]
-
-
-def _aggregate_field(
-    nc_files: list[Path],
-    var_name: str,
-    ds_cache: dict[Path, xr.Dataset],
-) -> np.ndarray:
-    arrays = [_open_cached(p, ds_cache)[var_name].values for p in nc_files]
-    return np.concatenate(arrays, axis=0)
-
+def sort_simulation_dirs(exp_dirs: list[Path]) -> list[Path]:
+    return list(sorted(exp_dirs, key=lambda p: int(str(p).split("/")[-1])))
 
 def extract_pairs(
     exp_dirs: list[Path],
@@ -43,23 +31,10 @@ def extract_pairs(
     output_path: Path,
 ):
     """
-    Build (x, y) training pairs and write them to HDF5.
-
-    For window_length=K, each x sample stacks the input variables at K
-    consecutive timesteps along the channel axis (oldest to newest,
-    x_vars-major within each timestep): channel order is
-        [x_vars[0]_{t_0}, ..., x_vars[-1]_{t_0},
-         x_vars[0]_{t_0+1}, ..., x_vars[-1]_{t_0+1},
-         ...,
-         x_vars[0]_{t_0+K-1}, ..., x_vars[-1]_{t_0+K-1}]
-    The corresponding y is y_vars at timestep t_0 + K.
-
-    Timesteps are concatenated across the segment files of each
-    simulation, so a window may straddle a segment boundary. The set
-    of window-start indices t_0 is produced by `WindowSelector` given
-    per-simulation t_s and t_c when the spinup / convergence
-    sub-sections of `[data.windows]` are configured.
+    Build (x, y) training pairs and write them to HDF5
     """
+
+    exp_dirs = sort_simulation_dirs(exp_dirs)
     windows_cfg = cfg.windows
     spinup_cfg = cfg.spinup
     convergence_cfg = cfg.convergence
@@ -86,6 +61,7 @@ def extract_pairs(
         written = 0
 
         for exp_dir in tqdm(exp_dirs, desc=f"preprocessing {output_path.stem}"):
+            log.debug("processing exp_dir=%s", exp_dir)
             assert exp_dir.exists(), f"experiment directory not found: {exp_dir}"
             nc_files = sorted(exp_dir.glob(cfg.segment_pattern))
             assert nc_files, f"no NC files found: {exp_dir}/{cfg.segment_pattern}"
@@ -106,21 +82,20 @@ def extract_pairs(
             t_s: int | None = None
             t_c: int | None = None
             ds_cache: dict[Path, xr.Dataset] = {}
+
             try:
                 if spinup_cfg is not None:
-                    lat = _open_cached(nc_files[0], ds_cache)["lat"].values
-                    vor_full = _aggregate_field(nc_files, "vor", ds_cache)
-                    enstrophy = compute_enstrophy(vor_full, lat)
+                    lat = read_segment(nc_files[0], ds_cache)["lat"].values
+                    vor_full = aggregated_read_field(nc_files, "vor", ds_cache)
+                    enstrophy = mean_enstrophy(vor_full, lat)
                     t_s = find_spinup_time(
                         enstrophy,
                         tol=spinup_cfg.threshold,
                         hold=spinup_cfg.hold,
                     )
                 if convergence_cfg is not None:
-                    lat = _open_cached(nc_files[0], ds_cache)["lat"].values
-                    u_full = _aggregate_field(
-                        nc_files, CONVERGENCE_DIAGNOSTIC_VAR, ds_cache
-                    )
+                    lat = read_segment(nc_files[0], ds_cache)["lat"].values
+                    u_full = aggregated_read_field(nc_files, CONVERGENCE_DIAGNOSTIC_VAR, ds_cache)
                     t_c = find_zonal_mean_convergence_time(
                         u_full,
                         lat,
@@ -147,13 +122,13 @@ def extract_pairs(
                     x_channels = []
                     for k in range(K):
                         path_k, t_k = timeline[t_0 + k]
-                        ds_k = _open_cached(path_k, ds_cache)
+                        ds_k = read_segment(path_k, ds_cache)
                         for v in cfg.x_vars:
                             x_channels.append(ds_k[v].isel(time=t_k).values)
                     x = np.stack(x_channels, axis=0)
 
                     path_y, t_y = timeline[t_0 + K]
-                    ds_y = _open_cached(path_y, ds_cache)
+                    ds_y = read_segment(path_y, ds_cache)
                     y = np.stack(
                         [ds_y[v].isel(time=t_y).values for v in cfg.y_vars], axis=0
                     )
@@ -177,6 +152,19 @@ def extract_pairs(
             windows_cfg.limit,
         )
 
+def list_simulation_dirs(cfg: IscaDataConfig, should_sort: bool = True):
+    log.debug("listing simulations from %s/%s", cfg.experiment_dir, cfg.simulation_pattern)
+    sim_dirs = list(cfg.experiment_dir.glob(cfg.simulation_pattern))
+
+    assert sim_dirs, f"no simulations found: {cfg.experiment_dir}/{cfg.simulation_pattern}"
+
+    if should_sort:
+        sim_dirs = sort_simulation_dirs(sim_dirs)
+
+    return sim_dirs
+
+def list_segment_files(sim_dir: str, cfg: IscaDataConfig) -> list[str]:
+    return list(sorted(sim_dir.glob(cfg.segment_pattern)))
 
 class IscaDataPreprocessor:
     def __init__(self, cfg: Config):
@@ -185,28 +173,32 @@ class IscaDataPreprocessor:
     def run(self):
         data_cfg = self.cfg.data
         out_dir = self.cfg.paths.preprocessed_dir
-
-        exp_dirs = sorted(data_cfg.experiment_dir.glob(data_cfg.simulation_pattern))
-        assert (
-            exp_dirs
-        ), f"no experiments found: {data_cfg.experiment_dir}/{data_cfg.simulation_pattern}"
+        exp_dirs = list_simulation_dirs(data_cfg)
 
         split_cfg = data_cfg.split
 
         n = len(exp_dirs)
         n_test = min(int(n * split_cfg.test), split_cfg.test_limit or float("inf"))
-        n_val = min(int(n * split_cfg.validation), split_cfg.validation_limit or float("inf"))
-        n_train = min(n - n_test - n_val, split_cfg.train_limit or float("inf"))
+        n_validation = min(int(n * split_cfg.validation), split_cfg.validation_limit or float("inf"))
+        n_train = min(n - n_test - n_validation, split_cfg.train_limit or float("inf"))
+        log.info("processing data; total_experiments=%s, n_train=%s, n_test=%s, n_validation=%s",
+                 n, n_train, n_test, n_validation)
 
         splits = Splits(
             test=exp_dirs[:n_test],
-            validation=exp_dirs[n_test : n_test + n_val],
-            train=exp_dirs[n_test + n_val : n_test + n_val + n_train],
+            validation=exp_dirs[n_test : n_test + n_validation],
+            train=exp_dirs[n_test + n_validation : n_test + n_validation + n_train],
         )
 
-        extract_pairs(splits.train, data_cfg, out_dir / "train.h5")
+        log.info("extracting validation pairs")
         extract_pairs(splits.validation, data_cfg, out_dir / "val.h5")
+        
+        log.info("extracing test pairs")
         extract_pairs(splits.test, data_cfg, out_dir / "test.h5")
+
+        log.info("extracting train pairs")
+        extract_pairs(splits.train, data_cfg, out_dir / "train.h5")
+
 
         splits.save(self.cfg.paths)
 

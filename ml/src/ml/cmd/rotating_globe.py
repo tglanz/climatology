@@ -94,7 +94,7 @@ COMPUTED_DIAGNOSTICS = {
 }
 
 
-def load_data(input_path):
+def load_data(input_path) -> xr.Dataset:
     pattern = str(Path(input_path) / "run*" / "atmos_daily.nc")
     ds = xr.open_mfdataset(
         pattern,

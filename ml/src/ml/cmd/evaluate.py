@@ -12,7 +12,7 @@ from ml.common.logging import setup_logging
 from ml.diagnostics import rms_error
 from ml.model import build_model
 from ml.inference import Autoregressor
-from ml.data.isca_dataset import fix_time_units
+from ml.data.isca_segment import read_segment
 
 
 @click.group()
@@ -48,8 +48,7 @@ def autoregression(config_path: Path, input_path: Path, t0: int, T: int, output_
     # Load dataset and slice. With input_length=K we need K-1 timesteps before
     # t0 to form the first input window, and one timestep after the last
     # prediction for ground-truth comparison.
-    ds = xr.open_dataset(input_path, decode_times=False)
-    ds = fix_time_units(ds)
+    ds = read_segment(input_path)
     n_times = ds.sizes["time"]
     assert t0 >= K - 1, (
         f"--start {t0} must be >= input_length - 1 = {K - 1} so that K={K} "

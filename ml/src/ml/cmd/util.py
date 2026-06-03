@@ -14,7 +14,8 @@ from ml.config import load as load_config
 from ml.data.isca_dataset import make_loaders, load_latitudes
 from ml.diagnostics import persistence_prediction
 from ml.model import build_model
-from ml.training import create_loss_fn, _cosine_lat_weights
+from ml.training import create_loss_fn
+from ml.diagnostics.spatial import cosine_latitude_weights
 from ml.training_info import TrainingSummary, list_training_summaries
 
 
@@ -78,7 +79,7 @@ def persistence_score(config_path: Path):
     cfg = load_config(config_path)
     lat_weights = None
     if cfg.training.loss == "lat_weighted_relative_l2":
-        lat_weights = _cosine_lat_weights(load_latitudes(cfg))
+        lat_weights = cosine_latitude_weights(load_latitudes(cfg))
     loss_fn = create_loss_fn(cfg.training.loss, lat_weights=lat_weights)
 
     _, val_loader, _ = make_loaders(cfg)
@@ -226,11 +227,7 @@ def _fmt_params(n: int | None) -> str:
 )
 def preprocess_fingerprint(config_path: Path):
     """
-    Print a stable, content-only fingerprint of preprocessed train/val/test
-    HDF5 files. Hashing the HDF5 files directly is unreliable because HDF5
-    stores creation timestamps and chunk metadata; we hash the dataset
-    arrays themselves instead. Use this to compare preprocessing output
-    across refactors that should leave the data unchanged.
+    Print a stable, content-only fingerprint of preprocessed train/val/test HDF5 files
     """
     cfg = load_config(config_path)
     base = cfg.paths.preprocessed_dir
@@ -276,13 +273,7 @@ def preprocess_fingerprint(config_path: Path):
 def diagnostic_fingerprint(config_path: Path):
     """
     Print a JSON-shaped, deterministic dump of every diagnostic primitive
-    evaluated on the first batch from val.h5. Used to verify that a
-    refactor of the diagnostic computations leaves their numerical outputs
-    unchanged.
-
-    Operates without the trainer's seed (the trainer is not seeded today),
-    by reading val.h5 directly and constructing predictions and weights
-    from fixed inputs only.
+    evaluated on the first batch from val.h5
     """
     cfg = load_config(config_path)
 
@@ -294,8 +285,8 @@ def diagnostic_fingerprint(config_path: Path):
         y = torch.from_numpy(f["y"][:1])  # (1, C_out, H, W)
 
     lat = load_latitudes(cfg)
-    w_t = _cosine_lat_weights(lat)
-    w = w_t.numpy().astype(np.float64)
+    w_t = cosine_latitude_weights(lat)
+    w = w_t.astype(np.float64)
 
     # Build a deterministic synthetic prediction so we can exercise loss /
     # error / spectrum primitives without needing a trained model.
@@ -330,7 +321,6 @@ def diagnostic_fingerprint(config_path: Path):
     # Zonal power spectra (rfft along longitude, then |.|^2)
     zonal_power_y0 = np.abs(np.fft.rfft(y0, axis=-1)) ** 2  # (H, W//2+1)
     error_power = np.abs(np.fft.rfft(error, axis=-1)) ** 2
-    signal_power = zonal_power_y0  # same definition for "signal"
 
     # Errors as scalars
     rms = float(np.sqrt((error ** 2).mean()))

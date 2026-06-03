@@ -11,41 +11,6 @@ from ml.config import Config
 
 log = logging.getLogger(__name__)
 
-
-def fix_time_units(ds: xr.Dataset) -> xr.Dataset:
-    for v in ds.variables:
-        if "units" in ds[v].attrs and "0000-00-00" in ds[v].attrs["units"]:
-            ds[v].attrs["units"] = (
-                ds[v].attrs["units"].replace("0000-00-00", "0001-01-01")
-            )
-        if ds[v].attrs.get("calendar") == "NO_CALENDAR":
-            ds[v].attrs["calendar"] = "360_day"
-    return ds
-
-
-def validate_segment(
-    path: Path, x_vars: list[str], y_vars: list[str]
-) -> tuple[int, tuple]:
-    ds = xr.open_dataset(path, decode_times=False)
-    ds = fix_time_units(ds)
-
-    all_vars = list(dict.fromkeys(x_vars + y_vars))
-    for var in all_vars:
-        assert var in ds, f"variable '{var}' not in {path}"
-        assert (
-            "time" in ds[var].dims
-        ), f"variable '{var}' has no time dimension in {path}"
-
-    if "average_DT" in ds:
-        dt = ds["average_DT"].values
-        assert np.allclose(dt, dt[0], rtol=1e-3), f"inconsistent time steps in {path}"
-
-    T = ds.sizes["time"]
-    spatial = (ds.sizes["lat"], ds.sizes["lon"])
-    ds.close()
-    return T, spatial
-
-
 class IscaDataset(Dataset):
     def __init__(self, h5_path: Path):
         assert h5_path.exists(), f"preprocessed file not found: {h5_path}"

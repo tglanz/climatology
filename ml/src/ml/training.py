@@ -15,7 +15,6 @@ from neuralop.data.transforms.normalizers import UnitGaussianNormalizer
 from ml.config import Config, SchedulerConfig
 from ml.common.training_metrics import TrainingMetrics
 from ml.diagnostics import (
-    cosine_latitude_weights_torch,
     lat_weighted_relative_l2_torch,
 )
 from ml.early_stopping import CompositeEarlyStopper, EarlyStoppingInfo
@@ -23,12 +22,6 @@ from ml.training_info import TrainingInfo
 
 
 LossFn = Callable[[torch.Tensor, torch.Tensor], torch.Tensor]
-
-
-def _cosine_lat_weights(latitudes_deg: np.ndarray) -> torch.Tensor:
-    """Backwards-compatible wrapper around `diagnostics.cosine_latitude_weights_torch`."""
-    return cosine_latitude_weights_torch(latitudes_deg, normalize="mean1")
-
 
 def create_loss_fn(kind: str, lat_weights: torch.Tensor | None = None) -> LossFn:
     if kind == "mse":

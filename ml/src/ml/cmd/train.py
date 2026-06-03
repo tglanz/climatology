@@ -7,7 +7,9 @@ import click
 from ml.config import load as load_config
 from ml.common.logging import setup_logging
 from ml.model import build_model
-from ml.training import Trainer, _cosine_lat_weights
+
+from ml.diagnostics.spatial import cosine_latitude_weights
+
 from ml.data.isca_dataset import make_loaders, load_latitudes
 from ml.training_info import rotate_training_dir
 
@@ -38,7 +40,7 @@ def train(config_path: Path, track_metrics: bool):
     lat_weights = None
     if cfg.training.loss == "lat_weighted_relative_l2":
         latitudes = load_latitudes(cfg)
-        lat_weights = _cosine_lat_weights(latitudes)
+        lat_weights = cosine_latitude_weights(latitudes)
 
     Trainer(model, cfg, lat_weights=lat_weights).fit(
         train_loader, val_loader, track_metrics=track_metrics

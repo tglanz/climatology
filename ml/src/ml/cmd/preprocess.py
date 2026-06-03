@@ -1,14 +1,15 @@
 from pathlib import Path
 
 import click
+from ml.diagnostics.enstrophy import mean_enstrophy
+from ml.diagnostics.spinup import find_spinup_time
 import numpy as np
-import xarray as xr
+from tqdm import tqdm
 
 from ml.config import load as load_config
 from ml.common.logging import setup_logging
-from ml.data.isca_dataset import validate_segment
-from ml.data.isca_preprocessing import IscaDataPreprocessor
-from ml.diagnostics import mean_enstrophy
+from ml.data.isca_segment import read_segment, validate_segment, aggregated_read_field
+from ml.data.isca_preprocessing import IscaDataPreprocessor, list_simulation_dirs, list_segment_files
 
 
 @click.group()
@@ -42,42 +43,25 @@ def preprocess_training_data(config_path: Path):
     "--invalid-only",
     is_flag=True,
     default=False,
-    help="Only print simulations that fail validation.",
+    help="Only print simulations that fail validation",
 )
 @click.option(
-    "--analyze",
+    "--validate-spinup",
     is_flag=True,
     default=False,
-    help=(
-        "Also compute mean global enstrophy (cos-lat-weighted spatial mean of "
-        "0.5*vor**2, averaged over time) for each valid simulation."
-    ),
+    help="If true, computes spinup time. If no spinup time is found, marks the file is invalid"
 )
-def validate_simulations(config_path: Path, invalid_only: bool, analyze: bool):
-    """
-    Walk every simulation under data.simulation_pattern and emit one line per sim:
-
-        <sim_dir> -- runs=<N>; samples=<T>; enstrophy=<F | ->; valid=<true|false>; invalid_reason=<...>
-
-    The format is stable so callers can `cut -d' ' -f1` to extract the sim path,
-    or `awk -F'; ' '{...}'` to slice the key=value pairs.
-    """
+def validate_simulations(config_path: Path, invalid_only: bool, validate_spinup: bool):
     cfg = load_config(config_path)
     setup_logging(cfg.logging)
 
-    sim_dirs = sorted(cfg.data.experiment_dir.glob(cfg.data.simulation_pattern))
-    if not sim_dirs:
-        print(
-            f"no simulations matched "
-            f"{cfg.data.experiment_dir}/{cfg.data.simulation_pattern}"
-        )
-        raise SystemExit(1)
+    sim_dirs = list_simulation_dirs(cfg.data)
 
     K = cfg.data.windows.length
     n_invalid = 0
 
-    for sim_dir in sim_dirs:
-        nc_files = sorted(sim_dir.glob(cfg.data.segment_pattern))
+    for sim_dir in tqdm(sim_dirs):
+        nc_files = list_segment_files(sim_dir, cfg.data)
         n_runs = len(nc_files)
         n_samples = 0
         valid = True
@@ -87,25 +71,30 @@ def validate_simulations(config_path: Path, invalid_only: bool, analyze: bool):
             valid = False
             reason = "no segments matching segment_pattern"
         else:
-            for nc in nc_files:
+            segments_cache = {}
+            for nc_path in nc_files:
                 try:
-                    T, _ = validate_segment(nc, cfg.data.x_vars, cfg.data.y_vars)
+                    segment_samples_count, segment_spatial_shape = validate_segment(
+                        nc_path, cfg.data.x_vars, cfg.data.y_vars, cache=segments_cache)
                 except (AssertionError, OSError, ValueError) as e:
                     valid = False
-                    reason = f"{nc.name}: {e}"
+                    reason = f"{nc_path.name}: {e}"
                     break
-                n_samples += T
+                n_samples += segment_samples_count
             if valid and n_samples < K + 1:
                 valid = False
                 reason = f"timeline too short: {n_samples} < {K + 1}"
 
-        enstrophy_str = "-"
-        if analyze and valid:
-            try:
-                e = _per_simulation_mean_enstrophy(nc_files)
-                enstrophy_str = f"{e:.6e}" if e is not None else "-"
-            except Exception as ex:
-                enstrophy_str = f"err:{ex}"
+        if valid and validate_spinup:
+            lats = read_segment(nc_files[0], cache=segments_cache)["lat"].values
+            vorticities = aggregated_read_field(nc_files, "vor", cache=segments_cache)
+            enstrophy = mean_enstrophy(vorticities, lats)
+            t_spinup = find_spinup_time(diagnostic=enstrophy,
+                stable_time=cfg.data.spinup.hold,
+                tol=cfg.data.spinup.threshold)
+            if not t_spinup:
+                valid = False
+                reason = f"Unable to infer spinup time with {cfg.data.spinup}"
 
         if not valid:
             n_invalid += 1
@@ -113,38 +102,13 @@ def validate_simulations(config_path: Path, invalid_only: bool, analyze: bool):
         if invalid_only and valid:
             continue
 
-        print(
+        tqdm.write(
             f"{sim_dir} -- "
             f"runs={n_runs}; "
             f"samples={n_samples}; "
-            f"enstrophy={enstrophy_str}; "
             f"valid={'true' if valid else 'false'}; "
             f"invalid_reason={reason}"
         )
 
     if n_invalid > 0:
         raise SystemExit(2)
-
-
-def _per_simulation_mean_enstrophy(nc_files: list[Path]) -> float | None:
-    """
-    Time-mean global enstrophy across every timestep contained in
-    `nc_files` (the segments that make up one simulation). Returns None
-    if 'vor' is absent. Per-timestep math is delegated to
-    `ml.diagnostics.mean_enstrophy`.
-    """
-    total = 0.0
-    n_steps = 0
-    for nc in nc_files:
-        ds = xr.open_dataset(nc, decode_times=False)
-        try:
-            if "vor" not in ds:
-                continue
-            vor = ds["vor"].values.astype(np.float64)
-            lat = ds["lat"].values.astype(np.float64)
-            per_t = mean_enstrophy(vor, lat)  # shape (T,)
-            total += float(per_t.sum())
-            n_steps += per_t.size
-        finally:
-            ds.close()
-    return total / n_steps if n_steps > 0 else None
