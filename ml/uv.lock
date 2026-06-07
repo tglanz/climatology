@@ -1416,6 +1416,7 @@ version = "0.1.0"
 source = { editable = "." }
 dependencies = [
     { name = "click" },
+    { name = "dask" },
     { name = "netcdf4" },
     { name = "numpy" },
     { name = "torch-harmonics" },
@@ -1457,6 +1458,7 @@ vis = [
 [package.metadata]
 requires-dist = [
     { name = "click" },
+    { name = "dask", specifier = ">=2026.3.0" },
     { name = "netcdf4" },
     { name = "numpy" },
     { name = "torch-harmonics", specifier = "==0.7.4" },

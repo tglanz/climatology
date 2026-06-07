@@ -1,4 +1,6 @@
 """
+NOTE: this is shitty file. no need for re-exports. With time ill remove usages of those re-exports and remove this.
+
 Diagnostics: the single home for semantic computations on physical fields.
 
 This module collects the named, well-defined quantities used elsewhere

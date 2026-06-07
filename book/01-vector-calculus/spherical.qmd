@@ -76,7 +76,7 @@ The full Laplacian decomposes as
 
 $$\nabla^2 f = \frac{1}{r^2}\frac{\partial}{\partial r}\!\left(r^2\frac{\partial f}{\partial r}\right) + \frac{1}{r^2}\Delta_{S^2} f.$$
 
-$\Delta_{S^2}$ is the operator whose eigenfunctions are the spherical harmonics, and whose Green's function the GSNO is designed to approximate.
+$\Delta_{S^2}$ is the operator whose eigenfunctions are the spherical harmonics.
 
 *Further reading: @Kreyszig2011aem, Sec. 12.10 (Laplace's equation in spherical coordinates and the derivation of the spherical Laplacian); @Evans2010pde, Appendix C (notation and operator identities).*
 
