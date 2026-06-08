@@ -14,6 +14,7 @@ from rich.text import Text
 
 from ml.config import Config, load as load_config
 from ml.common.monitor import MonitorState, Section, RunSeries
+from ml.visualization.meridional_profile import setup_meridional_profile_axes, update_meridional_profile
 
 
 INFO_RATIO = 1
@@ -272,21 +273,12 @@ def _run_gui_climatology(state: MonitorState, interval: float) -> None:
             label=f"target ({state.target_loss})",
         )
 
-    ax_profile.set_title("zonal mean u(lat): predicted vs truth", fontsize=9, pad=3)
-    ax_profile.set_xlabel("latitude")
-    ax_profile.set_ylabel("u (m/s)")
-    ax_profile.grid(True, alpha=0.3)
-
-    n_hist = MonitorState._PROFILE_HISTORY_LEN
-    pred_lines = [
-        ax_profile.plot([], [], color="tab:blue" if k == 0 else "gray",
-                        alpha=1.0 if k == 0 else max(0.08, 1 - k / (n_hist - 1)),
-                        label="pred" if k == 0 else None)[0]
-        for k in range(n_hist - 1, -1, -1)
-    ]
-    pred_lines.reverse()  # index 0 = latest
-    truth_line, = ax_profile.plot([], [], color="tab:orange", linestyle="--", label="truth")
-    ax_profile.legend(fontsize=8)
+    pred_lines, truth_line = setup_meridional_profile_axes(
+        ax_profile,
+        title="zonal mean u(lat): predicted vs truth",
+        xlabel="u (m/s)",
+        n_history=MonitorState._PROFILE_HISTORY_LEN,
+    )
 
     loss_lines: dict[str, mpl.Line2D] = {}
 
@@ -311,23 +303,11 @@ def _run_gui_climatology(state: MonitorState, interval: float) -> None:
         ax_chart.relim()
         ax_chart.autoscale_view()
 
-        if state.profile_pred_history:
-            lats = np.linspace(-90, 90, len(state.profile_pred_history[0]))
-            history = state.profile_pred_history
-            for k, line in enumerate(pred_lines):
-                idx = len(history) - 1 - k
-                if idx >= 0:
-                    line.set_data(lats, history[idx])
-                else:
-                    line.set_data([], [])
-            ax_profile.relim()
-            ax_profile.autoscale_view()
-
-        if state.profile_truth is not None:
-            lats = np.linspace(-90, 90, len(state.profile_truth))
-            truth_line.set_data(lats, state.profile_truth)
-            ax_profile.relim()
-            ax_profile.autoscale_view()
+        update_meridional_profile(
+            ax_profile, pred_lines, truth_line,
+            state.profile_pred_history, state.profile_truth,
+            pred_std=state.profile_pred_std,
+        )
 
         fig.canvas.draw()
         fig.canvas.flush_events()

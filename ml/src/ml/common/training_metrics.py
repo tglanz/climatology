@@ -81,6 +81,7 @@ class TrainingMetrics:
         power_acc: torch.Tensor | None = None
         target_power_acc: torch.Tensor | None = None
         pred_acc: torch.Tensor | None = None
+        pred_sq_acc: torch.Tensor | None = None
         truth_acc: torch.Tensor | None = None
         is_clim: bool | None = None
         n_samples = 0
@@ -103,8 +104,9 @@ class TrainingMetrics:
                 spatial_acc = err_abs if spatial_acc is None else spatial_acc + err_abs
 
                 if is_clim:
-                    pred_acc  = pred_b.sum(0)  if pred_acc  is None else pred_acc  + pred_b.sum(0)
-                    truth_acc = truth_b.sum(0) if truth_acc is None else truth_acc + truth_b.sum(0)
+                    pred_acc    = pred_b.sum(0)      if pred_acc    is None else pred_acc    + pred_b.sum(0)
+                    pred_sq_acc = pred_b.pow(2).sum(0) if pred_sq_acc is None else pred_sq_acc + pred_b.pow(2).sum(0)
+                    truth_acc   = truth_b.sum(0)     if truth_acc   is None else truth_acc   + truth_b.sum(0)
                 else:
                     error_power  = zonal_power_spectrum_torch(pred_b - truth_b).sum(dim=(0, 1))
                     target_power = zonal_power_spectrum_torch(truth_b).sum(dim=(0, 1))
@@ -121,8 +123,11 @@ class TrainingMetrics:
         with h5py.File(tmp, "w") as f:
             f.create_dataset("spatial_error", data=spatial_error)
             if is_clim:
-                f.create_dataset("profile_pred",  data=(pred_acc  / n_samples).cpu().numpy().astype(np.float32))
-                f.create_dataset("profile_truth", data=(truth_acc / n_samples).cpu().numpy().astype(np.float32))
+                pred_mean = pred_acc / n_samples
+                pred_std = (pred_sq_acc / n_samples - pred_mean.pow(2)).clamp(min=0).sqrt()
+                f.create_dataset("profile_pred",     data=pred_mean.cpu().numpy().astype(np.float32))
+                f.create_dataset("profile_pred_std", data=pred_std.cpu().numpy().astype(np.float32))
+                f.create_dataset("profile_truth",    data=(truth_acc / n_samples).cpu().numpy().astype(np.float32))
             else:
                 f.create_dataset("zonal_mean_error", data=zonal_mean(spatial_error).astype(np.float32))
                 f.create_dataset("error_power",      data=(power_acc        / (n_samples * H)).cpu().numpy().astype(np.float32))
