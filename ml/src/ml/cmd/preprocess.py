@@ -46,18 +46,32 @@ def preprocess_training_data(config_path: Path):
     help="If true, computes spinup time. If no spinup time is found, marks the simulation invalid",
 )
 @click.option(
+    "--validate-convergence",
+    is_flag=True,
+    default=False,
+    help="If true, runs convergence detection. If convergence is not reached, marks the simulation invalid",
+)
+@click.option(
+    "--validate-climatology",
+    is_flag=True,
+    default=False,
+    help="If true, resolves the climatology window and marks simulations invalid if it cannot be satisfied",
+)
+@click.option(
     "--workers",
     default=8,
     show_default=True,
     help="Number of parallel worker processes. 0 = run on main thread",
 )
-def validate_simulations(config_path: Path, invalid_only: bool, validate_spinup: bool, workers: int):
+def validate_simulations(config_path: Path, invalid_only: bool, validate_spinup: bool, validate_convergence: bool, validate_climatology: bool, workers: int):
     from ml.usecases.validate_simulations import run
     setup_logging(load_config(config_path).logging)
 
     n_invalid = run(
         config_path=config_path,
-        validate_spinup=validate_spinup,
+        should_validate_spinup=validate_spinup,
+        should_validate_convergence=validate_convergence,
+        should_validate_climatology=validate_climatology,
         invalid_only=invalid_only,
         workers=workers,
     )

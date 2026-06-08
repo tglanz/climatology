@@ -8,6 +8,7 @@ import xarray as xr
 from tqdm import tqdm
 
 from ml.config import Config, IscaDataConfig
+from ml.data.climatology import compute_climatology, is_climatology_var, nc_var_for, resolve_window
 from ml.data.isca_segment import aggregated_read_field, fix_time_units, read_segment, validate_segment
 from ml.data.splits import Splits
 from ml.data.window_selector import build_selector
@@ -31,16 +32,37 @@ def extract_pairs(
     output_path: Path,
 ):
     """
-    Build (x, y) training pairs and write them to HDF5
+    Build (x, y) training pairs and write them to HDF5.
+
+    y_vars may mix step diagnostics (written to dataset "y", shape (N, C, H, W))
+    and climatology diagnostics (written to dataset "y", shape (N, C, H)).
+    Climatology values are computed once per simulation over the configured
+    window and repeated for every pair drawn from that simulation.
     """
 
     exp_dirs = sort_simulation_dirs(exp_dirs)
     windows_cfg = cfg.windows
     spinup_cfg = cfg.spinup
     convergence_cfg = cfg.convergence
+    climatology_cfg = cfg.climatology
     K = windows_cfg.length
     n_in = K * len(cfg.x_vars)
     selector = build_selector(windows_cfg)
+
+    step_y_vars = [v for v in cfg.y_vars if not is_climatology_var(v)]
+    clim_y_vars = [v for v in cfg.y_vars if is_climatology_var(v)]
+
+    assert not (step_y_vars and clim_y_vars), (
+        "mixing step and climatology diagnostics in y_vars is not supported"
+    )
+    if clim_y_vars:
+        assert climatology_cfg is not None, (
+            "y_vars contains climatology diagnostics but [data.climatology] section is missing"
+        )
+
+    is_clim = bool(clim_y_vars)
+    active_y_vars = clim_y_vars if is_clim else step_y_vars
+
     output_path.parent.mkdir(parents=True, exist_ok=True)
 
     with h5py.File(output_path, "w") as f:
@@ -50,12 +72,22 @@ def extract_pairs(
             maxshape=(None, n_in, None, None),
             dtype="float32",
         )
-        y_ds = f.create_dataset(
-            "y",
-            shape=(0, len(cfg.y_vars), 0, 0),
-            maxshape=(None, len(cfg.y_vars), None, None),
-            dtype="float32",
-        )
+        if is_clim:
+            y_ds = f.create_dataset(
+                "y",
+                shape=(0, len(active_y_vars), 0),
+                maxshape=(None, len(active_y_vars), None),
+                dtype="float32",
+            )
+        else:
+            y_ds = f.create_dataset(
+                "y",
+                shape=(0, len(active_y_vars), 0, 0),
+                maxshape=(None, len(active_y_vars), None, None),
+                dtype="float32",
+            )
+        y_ds.attrs["vars"] = active_y_vars
+        y_ds.attrs["kind"] = "climatology" if is_clim else "step"
 
         spatial_shape = None
         written = 0
@@ -68,11 +100,14 @@ def extract_pairs(
 
             timeline: list[tuple[Path, int]] = []
             for path in nc_files:
-                T, spatial = validate_segment(path, cfg.x_vars, cfg.y_vars)
+                T, spatial = validate_segment(path, cfg.x_vars, step_y_vars)
                 if spatial_shape is None:
                     spatial_shape = spatial
                     x_ds.resize((0, n_in, *spatial_shape))
-                    y_ds.resize((0, len(cfg.y_vars), *spatial_shape))
+                    if is_clim:
+                        y_ds.resize((0, len(active_y_vars), spatial_shape[0]))
+                    else:
+                        y_ds.resize((0, len(active_y_vars), *spatial_shape))
                 else:
                     assert spatial == spatial_shape, f"spatial mismatch in {path}"
                 for t in range(T):
@@ -81,6 +116,7 @@ def extract_pairs(
             M = len(timeline)
             t_s: int | None = None
             t_c: int | None = None
+            clim_array: np.ndarray | None = None
             ds_cache: dict[Path, xr.Dataset] = {}
 
             try:
@@ -104,6 +140,15 @@ def extract_pairs(
                         threshold=convergence_cfg.threshold,
                         hold=convergence_cfg.hold,
                     )
+                    if t_c is None:
+                        raise ValueError(f"convergence not reached for {exp_dir}; run validate-simulations --validate-convergence to identify failing simulations before preprocessing")
+                if clim_y_vars:
+                    a, b = resolve_window(climatology_cfg, t_s, t_c, M)
+                    clim_arrays = []
+                    for diag in clim_y_vars:
+                        field = aggregated_read_field(nc_files, nc_var_for(diag), ds_cache)
+                        clim_arrays.append(compute_climatology(diag, field, a, b))
+                    clim_array = np.stack(clim_arrays, axis=0).astype(np.float32)
             finally:
                 for d in ds_cache.values():
                     d.close()
@@ -128,16 +173,21 @@ def extract_pairs(
                             x_channels.append(ds_k[v].isel(time=t_k).values)
                     x = np.stack(x_channels, axis=0)
 
-                    path_y, t_y = timeline[t_0 + K]
-                    ds_y = read_segment(path_y, ds_cache)
-                    y = np.stack(
-                        [ds_y[v].isel(time=t_y).values for v in cfg.y_vars], axis=0
-                    )
-
                     x_ds.resize((written + 1, n_in, *spatial_shape))
-                    y_ds.resize((written + 1, len(cfg.y_vars), *spatial_shape))
                     x_ds[written] = x
-                    y_ds[written] = y
+
+                    if is_clim:
+                        y_ds.resize((written + 1, len(active_y_vars), spatial_shape[0]))
+                        y_ds[written] = clim_array
+                    else:
+                        path_y, t_y = timeline[t_0 + K]
+                        ds_y = read_segment(path_y, ds_cache)
+                        y = np.stack(
+                            [ds_y[v].isel(time=t_y).values for v in step_y_vars], axis=0
+                        )
+                        y_ds.resize((written + 1, len(active_y_vars), *spatial_shape))
+                        y_ds[written] = y
+
                     written += 1
             finally:
                 for d in ds_cache.values():
@@ -145,12 +195,14 @@ def extract_pairs(
 
         log.info(
             "wrote %d pairs to %s (K=%d, %d input channels, "
-            "start_at=%s, end_at=%s, stride=%d, limit=%s)",
+            "start_at=%s, end_at=%s, stride=%d, limit=%s, y_kind=%s, y_vars=%s)",
             written, output_path, K, n_in,
             windows_cfg.start_at,
             windows_cfg.end_at,
             windows_cfg.stride,
             windows_cfg.limit,
+            "climatology" if is_clim else "step",
+            active_y_vars,
         )
 
 def list_simulation_dirs(cfg: IscaDataConfig, should_sort: bool = True):

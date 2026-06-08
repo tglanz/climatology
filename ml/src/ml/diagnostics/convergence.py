@@ -23,20 +23,6 @@ def zonal_mean_convergence_errors(
     latitudes_deg: np.ndarray,
     t_s: int,
 ) -> np.ndarray:
-    """
-    Cos-lat-weighted relative L2 error between the running time-mean
-    zonal-mean of `field` over [t_s, t_s + i) and the long-run
-    reference over [t_s, M), evaluated for every i = 1, ..., M - t_s
-    - 1, where M is the trajectory length.
-
-    The result is the convergence curve: a 1D array of length
-    M - t_s - 1 whose k-th entry is the relative error at window
-    length i = k + 1. A trajectory that has reached statistical
-    equilibrium produces a curve that decays toward zero as i grows.
-
-    Pass t_s = 0 when no spin-up has been detected; the reference is
-    then the average over the entire trajectory.
-    """
     M = field.shape[0]
     assert 0 <= t_s < M, f"need 0 <= t_s={t_s} < M={M}"
 
@@ -87,7 +73,4 @@ def find_zonal_mean_convergence_time(
         if below[start : start + hold].all():
             return t_s + (start + 1)
 
-    raise ValueError(
-        f"convergence not reached (threshold={threshold}, hold={hold}); "
-        f"trajectory may not be long enough"
-    )
+    return None

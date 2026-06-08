@@ -8,8 +8,8 @@
 experiment_dir = "./output/barotropic_stirring-T85"
 simulation_pattern = "simulations/*"
 segment_pattern = "run*/atmos_daily.nc"
-x_vars = ["vor"]
-y_vars = ["time_mean_zonal_mean_ucomp"]
+x_vars = ["vor", "stirring"]
+y_vars = ["vor"]
 
 # Windowing surface. See docs/pre-processing.md for semantics.
 # [data.spinup] and [data.convergence] are optional; omit either
@@ -31,14 +31,6 @@ limit = 2
 z_threshold = 2.0
 stable_time = 3
 window_size = 10
-
-[data.convergence]
-threshold = 0.05
-hold = 3
-
-[data.climatology]
-start_at = "convergence"
-end_at = "end"
 
 
 [data.split]
@@ -62,14 +54,14 @@ n_modes = [32, 64]
 hidden_channels = 64
 n_layers = 4
 # in_channels MUST equal data.windows.length * len(data.x_vars). Validated at config load.
-in_channels = 5
+in_channels = 10
 out_channels = 1
 
 [model.sfno]
 n_modes = [32, 64]
 hidden_channels = 64
 n_layers = 4
-in_channels = 5
+in_channels = 10
 out_channels = 1
 
 [training]

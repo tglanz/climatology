@@ -6,6 +6,9 @@ import tomllib
 VALID_START_AT = ("beginning", "spinup")
 VALID_END_AT = ("end", "convergence")
 
+VALID_CLIMATOLOGY_START_AT = ("spinup", "convergence")
+VALID_CLIMATOLOGY_END_AT = ("convergence", "end")
+
 
 @dataclass
 class SpinupConfig:
@@ -52,6 +55,41 @@ class ConvergenceConfig:
 
     def to_kwargs(self):
         return asdict(self)
+
+
+@dataclass
+class ClimatologyConfig:
+    """Window over which per-simulation climatology diagnostics are computed.
+
+    Exactly two of (start_at, end_at, length) must be provided; the third
+    is derived. start_at and end_at are symbolic anchors resolved at
+    preprocessing time against the detected t_s and t_c.
+
+    Anchor cross-section validation (e.g. start_at='convergence' requires
+    [data.convergence]) lives in IscaDataConfig.__post_init__.
+    """
+
+    start_at: str | None = None
+    end_at: str | None = None
+    length: int | None = None
+
+    def __post_init__(self):
+        provided = sum(v is not None for v in [self.start_at, self.end_at, self.length])
+        assert provided == 2, (
+            f"exactly 2 of (start_at, end_at, length) must be set, got {provided}"
+        )
+        if self.start_at is not None:
+            assert self.start_at in VALID_CLIMATOLOGY_START_AT, (
+                f"unknown climatology start_at: {self.start_at!r} "
+                f"(valid: {VALID_CLIMATOLOGY_START_AT})"
+            )
+        if self.end_at is not None:
+            assert self.end_at in VALID_CLIMATOLOGY_END_AT, (
+                f"unknown climatology end_at: {self.end_at!r} "
+                f"(valid: {VALID_CLIMATOLOGY_END_AT})"
+            )
+        if self.length is not None:
+            assert self.length >= 1, f"climatology length must be >= 1, got {self.length}"
 
 
 @dataclass
@@ -131,6 +169,8 @@ class IscaDataConfig:
     spinup: SpinupConfig | None = None
     # optional dynamic convergence detector; required when windows.end_at == "convergence"
     convergence: ConvergenceConfig | None = None
+    # optional climatology window; required when any y_var is a climatology diagnostic
+    climatology: ClimatologyConfig | None = None
 
     def __post_init__(self):
         self.experiment_dir = Path(self.experiment_dir)
@@ -145,6 +185,15 @@ class IscaDataConfig:
             assert self.convergence is not None, (
                 "windows.end_at = 'convergence' requires [data.convergence] section"
             )
+        if self.climatology is not None:
+            if self.climatology.start_at == "spinup" or self.climatology.end_at == "spinup":
+                assert self.spinup is not None, (
+                    "climatology anchor 'spinup' requires [data.spinup] section"
+                )
+            if self.climatology.start_at == "convergence" or self.climatology.end_at == "convergence":
+                assert self.convergence is not None, (
+                    "climatology anchor 'convergence' requires [data.convergence] section"
+                )
 
 
 @dataclass
@@ -403,6 +452,7 @@ def load(path: Path) -> Config:
         windows=WindowsConfig(**d["windows"]),
         spinup=SpinupConfig(**d["spinup"]) if "spinup" in d else None,
         convergence=ConvergenceConfig(**d["convergence"]) if "convergence" in d else None,
+        climatology=ClimatologyConfig(**d["climatology"]) if "climatology" in d else None,
     )
 
     model_raw = raw["model"]
