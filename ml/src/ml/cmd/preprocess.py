@@ -4,7 +4,6 @@ import click
 
 from ml.config import load as load_config
 from ml.common.logging import setup_logging
-from ml.data.isca_preprocessing import IscaDataPreprocessor
 
 @click.group()
 def preprocess():
@@ -12,17 +11,13 @@ def preprocess():
 
 
 @preprocess.command("training-data")
-@click.option(
-    "-c",
-    "--config",
-    "config_path",
-    required=True,
-    type=click.Path(exists=True, path_type=Path),
-)
-def preprocess_training_data(config_path: Path):
+@click.option("-c", "--config", "config_path", required=True, type=click.Path(exists=True, path_type=Path))
+@click.option("--workers", default=0, show_default=True, help="Parallel worker processes. 0 = serial.")
+def preprocess_training_data(config_path: Path, workers: int):
+    from ml.usecases.preprocess import run
     cfg = load_config(config_path)
     setup_logging(cfg.logging)
-    IscaDataPreprocessor(cfg).run()
+    run(config_path, n_workers=workers)
 
 
 @preprocess.command("validate-simulations")

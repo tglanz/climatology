@@ -241,9 +241,9 @@ def _run_gui_climatology(state: MonitorState, interval: float) -> None:
     mpl.ion()
     fig = mpl.figure(figsize=(14, 6))
     gs = fig.add_gridspec(2, 3)
-    ax_info    = fig.add_subplot(gs[0, 0])
-    ax_chart   = fig.add_subplot(gs[0, 1:])
-    ax_profile = fig.add_subplot(gs[1, :])
+    ax_info    = fig.add_subplot(gs[0, :2])
+    ax_chart   = fig.add_subplot(gs[1, :2])
+    ax_profile = fig.add_subplot(gs[:, 2])
 
     ax_info.axis("off")
     info_title = ax_info.text(
@@ -260,7 +260,7 @@ def _run_gui_climatology(state: MonitorState, interval: float) -> None:
     )
 
     ax_chart.set_yscale("linear")
-    fig.subplots_adjust(left=0.07, right=0.97, top=0.95, bottom=0.08, hspace=0.45, wspace=0.3)
+    fig.subplots_adjust(left=0.07, right=0.97, top=0.95, bottom=0.08, hspace=0.35, wspace=0.35)
     ax_chart.set_title("loss per epoch")
     ax_chart.set_xlabel("epoch")
     ax_chart.set_ylabel("loss")

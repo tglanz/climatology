@@ -1,258 +1,135 @@
 import logging
 from pathlib import Path
 
-import h5py
-from ml.diagnostics.enstrophy import mean_enstrophy
 import numpy as np
 import xarray as xr
-from tqdm import tqdm
 
-from ml.config import Config, IscaDataConfig
+from ml.config import IscaDataConfig, load as load_config
 from ml.data.climatology import compute_climatology, is_climatology_var, nc_var_for, resolve_window
-from ml.data.isca_segment import aggregated_read_field, fix_time_units, read_segment, validate_segment
-from ml.data.splits import Splits
+from ml.data.isca_segment import aggregated_read_field, read_segment, validate_segment
 from ml.data.window_selector import build_selector
-
-from ml.diagnostics import (
-    find_spinup_time,
-    find_zonal_mean_convergence_time,
-)
+from ml.diagnostics import find_spinup_time, find_zonal_mean_convergence_time
+from ml.diagnostics.enstrophy import mean_enstrophy
 
 log = logging.getLogger(__name__)
 
-
 CONVERGENCE_DIAGNOSTIC_VAR = "ucomp"
+
 
 def sort_simulation_dirs(exp_dirs: list[Path]) -> list[Path]:
     return list(sorted(exp_dirs, key=lambda p: int(str(p).split("/")[-1])))
 
-def extract_pairs(
-    exp_dirs: list[Path],
-    cfg: IscaDataConfig,
-    output_path: Path,
-):
-    """
-    Build (x, y) training pairs and write them to HDF5.
 
-    y_vars may mix step diagnostics (written to dataset "y", shape (N, C, H, W))
-    and climatology diagnostics (written to dataset "y", shape (N, C, H)).
-    Climatology values are computed once per simulation over the configured
-    window and repeated for every pair drawn from that simulation.
-    """
-
-    exp_dirs = sort_simulation_dirs(exp_dirs)
-    windows_cfg = cfg.windows
-    spinup_cfg = cfg.spinup
-    convergence_cfg = cfg.convergence
-    climatology_cfg = cfg.climatology
-    K = windows_cfg.length
-    n_in = K * len(cfg.x_vars)
-    selector = build_selector(windows_cfg)
-
-    step_y_vars = [v for v in cfg.y_vars if not is_climatology_var(v)]
-    clim_y_vars = [v for v in cfg.y_vars if is_climatology_var(v)]
-
-    assert not (step_y_vars and clim_y_vars), (
-        "mixing step and climatology diagnostics in y_vars is not supported"
-    )
-    if clim_y_vars:
-        assert climatology_cfg is not None, (
-            "y_vars contains climatology diagnostics but [data.climatology] section is missing"
-        )
-
-    is_clim = bool(clim_y_vars)
-    active_y_vars = clim_y_vars if is_clim else step_y_vars
-
-    output_path.parent.mkdir(parents=True, exist_ok=True)
-
-    with h5py.File(output_path, "w") as f:
-        x_ds = f.create_dataset(
-            "x",
-            shape=(0, n_in, 0, 0),
-            maxshape=(None, n_in, None, None),
-            dtype="float32",
-        )
-        if is_clim:
-            y_ds = f.create_dataset(
-                "y",
-                shape=(0, len(active_y_vars), 0),
-                maxshape=(None, len(active_y_vars), None),
-                dtype="float32",
-            )
-        else:
-            y_ds = f.create_dataset(
-                "y",
-                shape=(0, len(active_y_vars), 0, 0),
-                maxshape=(None, len(active_y_vars), None, None),
-                dtype="float32",
-            )
-        y_ds.attrs["vars"] = active_y_vars
-        y_ds.attrs["kind"] = "climatology" if is_clim else "step"
-
-        spatial_shape = None
-        written = 0
-
-        for exp_dir in tqdm(exp_dirs, desc=f"preprocessing {output_path.stem}"):
-            log.debug("processing exp_dir=%s", exp_dir)
-            assert exp_dir.exists(), f"experiment directory not found: {exp_dir}"
-            nc_files = sorted(exp_dir.glob(cfg.segment_pattern))
-            assert nc_files, f"no NC files found: {exp_dir}/{cfg.segment_pattern}"
-
-            timeline: list[tuple[Path, int]] = []
-            for path in nc_files:
-                T, spatial = validate_segment(path, cfg.x_vars, step_y_vars)
-                if spatial_shape is None:
-                    spatial_shape = spatial
-                    x_ds.resize((0, n_in, *spatial_shape))
-                    if is_clim:
-                        y_ds.resize((0, len(active_y_vars), spatial_shape[0]))
-                    else:
-                        y_ds.resize((0, len(active_y_vars), *spatial_shape))
-                else:
-                    assert spatial == spatial_shape, f"spatial mismatch in {path}"
-                for t in range(T):
-                    timeline.append((path, t))
-
-            M = len(timeline)
-            t_s: int | None = None
-            t_c: int | None = None
-            clim_array: np.ndarray | None = None
-            ds_cache: dict[Path, xr.Dataset] = {}
-
-            try:
-                if spinup_cfg is not None:
-                    lat = read_segment(nc_files[0], ds_cache)["lat"].values
-                    vor_full = aggregated_read_field(nc_files, "vor", ds_cache)
-                    enstrophy = mean_enstrophy(vor_full, lat)
-                    t_s = find_spinup_time(
-                        enstrophy,
-                        z_threshold=spinup_cfg.z_threshold,
-                        stable_time=spinup_cfg.stable_time,
-                        window_size=spinup_cfg.window_size,
-                    )
-                if convergence_cfg is not None:
-                    lat = read_segment(nc_files[0], ds_cache)["lat"].values
-                    u_full = aggregated_read_field(nc_files, CONVERGENCE_DIAGNOSTIC_VAR, ds_cache)
-                    t_c = find_zonal_mean_convergence_time(
-                        u_full,
-                        lat,
-                        t_s if t_s is not None else 0,
-                        threshold=convergence_cfg.threshold,
-                        hold=convergence_cfg.hold,
-                    )
-                    if t_c is None:
-                        raise ValueError(f"convergence not reached for {exp_dir}; run validate-simulations --validate-convergence to identify failing simulations before preprocessing")
-                if clim_y_vars:
-                    a, b = resolve_window(climatology_cfg, t_s, t_c, M)
-                    clim_arrays = []
-                    for diag in clim_y_vars:
-                        field = aggregated_read_field(nc_files, nc_var_for(diag), ds_cache)
-                        clim_arrays.append(compute_climatology(diag, field, a, b))
-                    clim_array = np.stack(clim_arrays, axis=0).astype(np.float32)
-            finally:
-                for d in ds_cache.values():
-                    d.close()
-                ds_cache = {}
-
-            selected_t0 = selector.select(M, t_s=t_s, t_c=t_c)
-
-            if not selected_t0:
-                log.warning(
-                    "skipping %s: no valid windows (M=%d, K=%d, t_s=%s, t_c=%s)",
-                    exp_dir, M, K, t_s, t_c,
-                )
-                continue
-
-            try:
-                for t_0 in selected_t0:
-                    x_channels = []
-                    for k in range(K):
-                        path_k, t_k = timeline[t_0 + k]
-                        ds_k = read_segment(path_k, ds_cache)
-                        for v in cfg.x_vars:
-                            x_channels.append(ds_k[v].isel(time=t_k).values)
-                    x = np.stack(x_channels, axis=0)
-
-                    x_ds.resize((written + 1, n_in, *spatial_shape))
-                    x_ds[written] = x
-
-                    if is_clim:
-                        y_ds.resize((written + 1, len(active_y_vars), spatial_shape[0]))
-                        y_ds[written] = clim_array
-                    else:
-                        path_y, t_y = timeline[t_0 + K]
-                        ds_y = read_segment(path_y, ds_cache)
-                        y = np.stack(
-                            [ds_y[v].isel(time=t_y).values for v in step_y_vars], axis=0
-                        )
-                        y_ds.resize((written + 1, len(active_y_vars), *spatial_shape))
-                        y_ds[written] = y
-
-                    written += 1
-            finally:
-                for d in ds_cache.values():
-                    d.close()
-
-        log.info(
-            "wrote %d pairs to %s (K=%d, %d input channels, "
-            "start_at=%s, end_at=%s, stride=%d, limit=%s, y_kind=%s, y_vars=%s)",
-            written, output_path, K, n_in,
-            windows_cfg.start_at,
-            windows_cfg.end_at,
-            windows_cfg.stride,
-            windows_cfg.limit,
-            "climatology" if is_clim else "step",
-            active_y_vars,
-        )
-
-def list_simulation_dirs(cfg: IscaDataConfig, should_sort: bool = True):
+def list_simulation_dirs(cfg: IscaDataConfig, should_sort: bool = True) -> list[Path]:
     log.debug("listing simulations from %s/%s", cfg.experiment_dir, cfg.simulation_pattern)
     sim_dirs = list(cfg.experiment_dir.glob(cfg.simulation_pattern))
-
     assert sim_dirs, f"no simulations found: {cfg.experiment_dir}/{cfg.simulation_pattern}"
-
     if should_sort:
         sim_dirs = sort_simulation_dirs(sim_dirs)
-
     return sim_dirs
 
-def list_segment_files(sim_dir: str, cfg: IscaDataConfig) -> list[str]:
+
+def list_segment_files(sim_dir: Path, cfg: IscaDataConfig) -> list[Path]:
     return list(sorted(sim_dir.glob(cfg.segment_pattern)))
 
-class IscaDataPreprocessor:
-    def __init__(self, cfg: Config):
-        self.cfg = cfg
 
-    def run(self):
-        data_cfg = self.cfg.data
-        out_dir = self.cfg.paths.preprocessed_dir
-        exp_dirs = list_simulation_dirs(data_cfg)
+def process_one_sim(
+    exp_dir: Path,
+    config_path: Path,
+) -> tuple[np.ndarray, np.ndarray] | None:
+    """
+    Process one simulation directory and return (x, y) window arrays, or None
+    if no valid windows exist. Safe to call from a worker process.
+    """
+    cfg = load_config(config_path)
+    data_cfg = cfg.data
+    K = data_cfg.windows.length
+    selector = build_selector(data_cfg.windows)
 
-        split_cfg = data_cfg.split
+    step_y_vars = [v for v in data_cfg.y_vars if not is_climatology_var(v)]
+    clim_y_vars = [v for v in data_cfg.y_vars if is_climatology_var(v)]
+    is_clim = bool(clim_y_vars)
 
-        n = len(exp_dirs)
-        n_test = min(int(n * split_cfg.test), split_cfg.test_limit or float("inf"))
-        n_validation = min(int(n * split_cfg.validation), split_cfg.validation_limit or float("inf"))
-        n_train = min(n - n_test - n_validation, split_cfg.train_limit or float("inf"))
-        log.info("processing data; total_experiments=%s, n_train=%s, n_test=%s, n_validation=%s",
-                 n, n_train, n_test, n_validation)
+    nc_files = sorted(exp_dir.glob(data_cfg.segment_pattern))
+    if not nc_files:
+        log.warning("no NC files in %s", exp_dir)
+        return None
 
-        splits = Splits(
-            test=exp_dirs[:n_test],
-            validation=exp_dirs[n_test : n_test + n_validation],
-            train=exp_dirs[n_test + n_validation : n_test + n_validation + n_train],
-        )
+    timeline: list[tuple[Path, int]] = []
+    spatial_shape: tuple | None = None
+    for path in nc_files:
+        T, spatial = validate_segment(path, data_cfg.x_vars, step_y_vars)
+        if spatial_shape is None:
+            spatial_shape = spatial
+        timeline.extend((path, t) for t in range(T))
 
-        log.info("extracting validation pairs")
-        extract_pairs(splits.validation, data_cfg, out_dir / "val.h5")
-        
-        log.info("extracing test pairs")
-        extract_pairs(splits.test, data_cfg, out_dir / "test.h5")
+    M = len(timeline)
+    t_s: int | None = None
+    t_c: int | None = None
+    clim_array: np.ndarray | None = None
+    ds_cache: dict[Path, xr.Dataset] = {}
 
-        log.info("extracting train pairs")
-        extract_pairs(splits.train, data_cfg, out_dir / "train.h5")
+    try:
+        if data_cfg.spinup is not None:
+            lat = read_segment(nc_files[0], ds_cache)["lat"].values
+            vor_full = aggregated_read_field(nc_files, "vor", ds_cache)
+            t_s = find_spinup_time(
+                mean_enstrophy(vor_full, lat),
+                z_threshold=data_cfg.spinup.z_threshold,
+                stable_time=data_cfg.spinup.stable_time,
+                window_size=data_cfg.spinup.window_size,
+            )
+        if data_cfg.convergence is not None:
+            lat = read_segment(nc_files[0], ds_cache)["lat"].values
+            u_full = aggregated_read_field(nc_files, CONVERGENCE_DIAGNOSTIC_VAR, ds_cache)
+            t_c = find_zonal_mean_convergence_time(
+                u_full, lat,
+                t_s if t_s is not None else 0,
+                threshold=data_cfg.convergence.threshold,
+                hold=data_cfg.convergence.hold,
+            )
+            if t_c is None:
+                raise ValueError(
+                    f"convergence not reached for {exp_dir}; "
+                    "run validate-simulations --validate-convergence before preprocessing"
+                )
+        if clim_y_vars:
+            a, b = resolve_window(data_cfg.climatology, t_s, t_c, M)
+            clim_array = np.stack([
+                compute_climatology(
+                    diag, aggregated_read_field(nc_files, nc_var_for(diag), ds_cache), a, b
+                )
+                for diag in clim_y_vars
+            ], axis=0).astype(np.float32)
+    finally:
+        for d in ds_cache.values():
+            d.close()
+        ds_cache = {}
 
+    selected_t0 = selector.select(M, t_s=t_s, t_c=t_c)
+    if not selected_t0:
+        log.warning("skipping %s: no valid windows (M=%d, t_s=%s, t_c=%s)", exp_dir, M, t_s, t_c)
+        return None
 
-        splits.save(self.cfg.paths)
+    xs: list[np.ndarray] = []
+    ys: list[np.ndarray] = []
+    try:
+        for t_0 in selected_t0:
+            x_channels = []
+            for k in range(K):
+                path_k, t_k = timeline[t_0 + k]
+                ds_k = read_segment(path_k, ds_cache)
+                for v in data_cfg.x_vars:
+                    x_channels.append(ds_k[v].isel(time=t_k).values)
+            xs.append(np.stack(x_channels, axis=0))
+            if is_clim:
+                ys.append(clim_array)
+            else:
+                path_y, t_y = timeline[t_0 + K]
+                ds_y = read_segment(path_y, ds_cache)
+                ys.append(np.stack([ds_y[v].isel(time=t_y).values for v in step_y_vars], axis=0))
+    finally:
+        for d in ds_cache.values():
+            d.close()
 
-        log.info("finished isca preprocessing")
+    return np.stack(xs, axis=0), np.stack(ys, axis=0)
