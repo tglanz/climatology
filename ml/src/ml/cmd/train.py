@@ -11,6 +11,7 @@ from ml.model import build_model
 from ml.diagnostics.spatial import cosine_latitude_weights
 
 from ml.data.isca_dataset import make_loaders, load_latitudes
+from ml.training import Trainer
 from ml.training_info import rotate_training_dir
 
 

@@ -27,6 +27,18 @@
                 "training-data",
                 "-c", "./ml/configs/test.toml"
             ]
+        },
+                {
+            "name": "ml: train",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "ml/src/ml/cmd/cli.py",
+            "console": "integratedTerminal",
+            "args": [
+                "train",
+                "-c", "./ml/configs/default.toml",
+                "--track-metrics"
+            ]
         }
     ]
 }
