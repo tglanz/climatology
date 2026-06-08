@@ -13,10 +13,10 @@ from rich.table import Table
 from ml.config import load as load_config
 from ml.data.isca_dataset import make_loaders, load_latitudes
 from ml.diagnostics import persistence_prediction
-from ml.model import build_model
-from ml.training import create_loss_fn
+from ml.training.model import build_model
+from ml.training.loss import create_loss_fn
 from ml.diagnostics.spatial import cosine_latitude_weights
-from ml.training_info import TrainingSummary, list_training_summaries
+from ml.training.info import TrainingSummary, list_training_summaries
 
 
 @click.group()

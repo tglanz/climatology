@@ -1,4 +1,5 @@
 from dataclasses import asdict, dataclass, field, fields
+from enum import StrEnum
 from pathlib import Path
 import tomllib
 
@@ -224,8 +225,13 @@ class SFNOModelConfig:
     n_layers: int = 4
 
 
+class LossKind(StrEnum):
+    MSE = "mse"
+    RELATIVE_L2 = "relative_l2"
+    LAT_WEIGHTED_RELATIVE_L2 = "lat_weighted_relative_l2"
+
+
 VALID_ARCHITECTURES = ("fno", "sfno")
-VALID_LOSSES = ("mse", "relative_l2", "lat_weighted_relative_l2")
 VALID_OPTIMIZERS = ("adam", "adamw")
 VALID_SCHEDULERS = ("step", "cosine", "plateau", "none")
 VALID_MONITORS = ("val", "train")
@@ -352,8 +358,8 @@ class TrainingConfig:
     regularization: RegularizationConfig = field(default_factory=RegularizationConfig)
 
     def __post_init__(self):
-        assert self.loss in VALID_LOSSES, (
-            f"unknown loss: {self.loss} (valid: {VALID_LOSSES})"
+        assert self.loss in LossKind, (
+            f"unknown loss: {self.loss!r} (valid: {[e.value for e in LossKind]})"
         )
         assert self.optimizer in VALID_OPTIMIZERS, (
             f"unknown optimizer: {self.optimizer} (valid: {VALID_OPTIMIZERS})"

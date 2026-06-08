@@ -3,16 +3,17 @@ import shutil
 from pathlib import Path
 
 import click
+import torch
 
 from ml.config import load as load_config
 from ml.common.logging import setup_logging
-from ml.model import build_model
+from ml.training.model import build_model
 
 from ml.diagnostics.spatial import cosine_latitude_weights
 
 from ml.data.isca_dataset import make_loaders, load_latitudes
-from ml.training import Trainer
-from ml.training_info import rotate_training_dir
+from ml.training.trainer import Trainer
+from ml.training.info import rotate_training_dir
 
 
 @click.command()
@@ -41,7 +42,7 @@ def train(config_path: Path, track_metrics: bool):
     lat_weights = None
     if cfg.training.loss == "lat_weighted_relative_l2":
         latitudes = load_latitudes(cfg)
-        lat_weights = cosine_latitude_weights(latitudes)
+        lat_weights = torch.from_numpy(cosine_latitude_weights(latitudes)).float()
 
     Trainer(model, cfg, lat_weights=lat_weights).fit(
         train_loader, val_loader, track_metrics=track_metrics

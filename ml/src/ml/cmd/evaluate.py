@@ -10,7 +10,7 @@ import xarray as xr
 from ml.config import load as load_config
 from ml.common.logging import setup_logging
 from ml.diagnostics import rms_error
-from ml.model import build_model
+from ml.training.model import build_model
 from ml.inference import Autoregressor
 from ml.data.isca_segment import read_segment
 

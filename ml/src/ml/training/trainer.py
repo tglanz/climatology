@@ -1,10 +1,7 @@
 import logging
-import math
 import time
 from datetime import datetime, timezone
-from typing import Callable
 
-import numpy as np
 import torch
 import torch.nn as nn
 from torch.utils.data import DataLoader
@@ -14,62 +11,14 @@ from neuralop.data.transforms.normalizers import UnitGaussianNormalizer
 
 from ml.config import Config, SchedulerConfig
 from ml.common.training_metrics import TrainingMetrics
-from ml.diagnostics import (
-    lat_weighted_relative_l2_torch,
-)
-from ml.early_stopping import CompositeEarlyStopper, EarlyStoppingInfo
-from ml.training_info import TrainingInfo
-
-
-LossFn = Callable[[torch.Tensor, torch.Tensor], torch.Tensor]
-
-def create_loss_fn(kind: str, lat_weights: torch.Tensor | None = None) -> LossFn:
-    if kind == "mse":
-        return nn.MSELoss()
-
-    if kind == "relative_l2":
-
-        def relative_l2(pred: torch.Tensor, target: torch.Tensor) -> torch.Tensor:
-            return torch.mean(
-                torch.norm(pred - target, dim=(-2, -1))
-                / torch.norm(target, dim=(-2, -1))
-            )
-
-        return relative_l2
-
-    if kind == "lat_weighted_relative_l2":
-        assert lat_weights is not None, (
-            "lat_weighted_relative_l2 requires lat_weights"
-        )
-        # The lat_weights tensor needs to live on the same device as the
-        # prediction. We stash it on a single-element holder so the
-        # device move can happen lazily on the first call (the trainer
-        # decides the device after constructing the loss).
-        weights_holder = {"w": lat_weights}
-
-        def lat_weighted_relative_l2_loss(
-            pred: torch.Tensor, target: torch.Tensor
-        ) -> torch.Tensor:
-            w = weights_holder["w"]
-            if w.device != pred.device:
-                w = w.to(pred.device)
-                weights_holder["w"] = w
-            return lat_weighted_relative_l2_torch(pred, target, w)
-
-        return lat_weighted_relative_l2_loss
-
-    raise ValueError(f"unknown loss: {kind}")
+from ml.training.early_stopping import CompositeEarlyStopper, EarlyStoppingInfo
+from ml.training.loss import LossFn, create_loss_fn
+from ml.training.info import TrainingInfo
 
 
 def build_scheduler(
     optimizer: torch.optim.Optimizer, cfg: SchedulerConfig, total_epochs: int
 ):
-    """
-    Construct a (scheduler, mode) tuple where mode is one of:
-      'epoch'   - call scheduler.step() once per epoch
-      'plateau' - call scheduler.step(val_loss) once per epoch (requires val)
-      'none'    - no scheduler
-    """
     if cfg.kind == "none":
         return None, "none"
     if cfg.kind == "step":
@@ -164,13 +113,12 @@ class Trainer:
         batch_size = train_loader.batch_size
         for x, y in train_loader:
             if normalizer_y is None:
-                # If its a clim (clim is currently (B, C, H))
                 if y.ndim == 3:
                     normalizer_y = UnitGaussianNormalizer(dim=[0])
                 elif y.ndim == 4:
                     normalizer_y = UnitGaussianNormalizer(dim=[0, 2, 3])
                 else:
-                    raise ValueError(f"Unexpected y dimension {y.ndim}")
+                    raise ValueError(f"unexpected y ndim: {y.ndim}")
 
             normalizer_x.partial_fit(x, batch_size=batch_size)
             normalizer_y.partial_fit(y, batch_size=batch_size)
@@ -204,9 +152,7 @@ class Trainer:
         if self.scheduler is None:
             return
         if self.scheduler_mode == "plateau":
-            assert val_loss is not None, (
-                "plateau scheduler requires a validation loader"
-            )
+            assert val_loss is not None, "plateau scheduler requires a validation loader"
             self.scheduler.step(val_loss)
         else:
             self.scheduler.step()
@@ -234,11 +180,8 @@ class Trainer:
         stopped_early = False
         start_time = datetime.now(timezone.utc)
 
-        # persist run metadata once now (end_time is null until finalize)
         self.info.save(self.cfg.paths.training_info_file)
-        self.log.info(
-            "wrote run metadata to %s", self.cfg.paths.training_info_file
-        )
+        self.log.info("wrote run metadata to %s", self.cfg.paths.training_info_file)
 
         for epoch in tqdm(range(1, self.cfg.training.epochs + 1), desc="epochs"):
             t0 = time.monotonic()

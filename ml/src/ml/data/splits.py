@@ -52,10 +52,11 @@ class Splits:
         with open(splits_path) as f:
             splits_json = json.load(f)
 
+        base = splits_path.parent
         return Splits(
-            test=Splits.make_paths(splits_path, splits_json.get(KEY_TEST, [])),
-            validation=Splits.make_paths(splits_path, splits_json.get(KEY_VALIDATION, [])),
-            train=Splits.make_paths(splits_path, splits_json.get(KEY_TRAIN, [])),
+            test=Splits.make_paths(base, splits_json.get(KEY_TEST, [])),
+            validation=Splits.make_paths(base, splits_json.get(KEY_VALIDATION, [])),
+            train=Splits.make_paths(base, splits_json.get(KEY_TRAIN, [])),
         )
 
     @staticmethod
