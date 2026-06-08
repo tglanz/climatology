@@ -19,26 +19,31 @@ class IscaDataset(Dataset):
         self.h5_path = h5_path
         with h5py.File(h5_path, "r") as f:
             self.length = f["x"].shape[0]
+        self._file: h5py.File | None = None
         log.info("dataset: %d pairs from %s", self.length, h5_path)
 
     def __len__(self) -> int:
         return self.length
 
     def __getitem__(self, idx: int) -> tuple[torch.Tensor, torch.Tensor]:
-        with h5py.File(self.h5_path, "r") as f:
-            x = torch.from_numpy(f["x"][idx])
-            y = torch.from_numpy(f["y"][idx])
+        if self._file is None:
+            import weakref
+            self._file = h5py.File(self.h5_path, "r")
+            weakref.finalize(self, self._file.close)
+        x = torch.from_numpy(self._file["x"][idx])
+        y = torch.from_numpy(self._file["y"][idx])
         return x, y
 
 
-def make_loader(path: Path, batch_size: int, shuffle: bool) -> DataLoader | None:
+def make_loader(path: Path, batch_size: int, shuffle: bool, num_workers: int = 4) -> DataLoader | None:
     assert (
         path.exists()
     ), f"preprocessed file missing: {path} - run preprocess-training-data first"
     ds = IscaDataset(path)
     if len(ds) == 0:
         return None
-    return DataLoader(ds, batch_size=batch_size, shuffle=shuffle)
+    return DataLoader(ds, batch_size=batch_size, shuffle=shuffle,
+                      num_workers=num_workers, persistent_workers=num_workers > 0)
 
 
 def make_loaders(
