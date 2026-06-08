@@ -25,7 +25,7 @@ length = 5
 # gap between consecutive window starts. 6 = K + 1 (tumbling-equivalent).
 stride = 6
 # optional cap on windows per simulation; omit for no cap.
-limit = 2
+limit = 15
 
 [data.spinup]
 z_threshold = 2.0
@@ -73,7 +73,7 @@ in_channels = 5
 out_channels = 1
 
 [training]
-epochs = 300
+epochs = 100
 batch_size = 64
 learning_rate = 1e-3
 # mse | relative_l2 | lat_weighted_relative_l2
@@ -94,13 +94,13 @@ dropout      = 0.1    # forwarded to FNO as channel_mlp_dropout
 [training.early_stopping.target_loss]
 value = 0.1
 # val | train
-monitor = "train" 
+monitor = "val" 
 
 [training.early_stopping.patience]
 patience = 20
 min_delta = 1e-4
 # val | train
-monitor = "train"
+monitor = "val"
 
 # TODO: this can just be training.scheduler
 [training.scheduler]

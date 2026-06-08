@@ -63,18 +63,26 @@ class TrainingMetrics:
     def update(self, model: nn.Module, val_loader: DataLoader) -> None:
         """
         Run the model on the val loader and write per-epoch diagnostic
-        artifacts to metrics.h5:
+        artifacts to metrics.h5.
 
-        - spatial_error:    per-pixel mean absolute error map (H, W)
-        - zonal_mean_error: spatial_error averaged over longitude   (H,)
-        - error_power:      mean residual zonal power spectrum   (W//2+1,)
-        - signal_power:     mean target  zonal power spectrum    (W//2+1,)
+        Step mode (y ndim=4):
+          - spatial_error:    mean absolute error map              (H, W)
+          - zonal_mean_error: spatial_error averaged over lon      (H,)
+          - error_power:      mean residual zonal power spectrum   (W//2+1,)
+          - signal_power:     mean target  zonal power spectrum    (W//2+1,)
+
+        Climatology mode (y ndim=3):
+          - spatial_error:    mean absolute error per latitude     (H,)
+          - profile_pred:     mean predicted u(lat) profile        (H,)
+          - profile_truth:    mean true      u(lat) profile        (H,)
         """
         model.eval()
         spatial_acc: torch.Tensor | None = None
         power_acc: torch.Tensor | None = None
         target_power_acc: torch.Tensor | None = None
-        has_zonal_dimension: bool | None = None
+        pred_acc: torch.Tensor | None = None
+        truth_acc: torch.Tensor | None = None
+        is_clim: bool | None = None
         n_samples = 0
 
         with torch.no_grad():
@@ -85,24 +93,21 @@ class TrainingMetrics:
                     model(self._normalizer_x.transform(x))
                 )
 
-                # Drop the channel dim; downstream reductions assume (B, H, W).
+                # Drop the channel dim; downstream reductions assume (B, H) or (B, H, W).
                 pred_b = pred.squeeze(1)
                 truth_b = y.squeeze(1)
 
-                # Basically for
-                # - (B, H) we want the error per latitude, it gives (H)
-                # - (B, H, W) we want the error per (longitude, latitude) pair, it gives (H, W)
+                is_clim = y.ndim == 3
+
                 err_abs = absolute_error(pred_b, truth_b).sum(0)
                 spatial_acc = err_abs if spatial_acc is None else spatial_acc + err_abs
 
-                has_zonal_dimension = y.ndim == 4
-
-                if has_zonal_dimension:
-                    # Zonal power spectrum of the residual and the target,
-                    # summed over (batch, lat) so the accumulator is 1D.
+                if is_clim:
+                    pred_acc  = pred_b.sum(0)  if pred_acc  is None else pred_acc  + pred_b.sum(0)
+                    truth_acc = truth_b.sum(0) if truth_acc is None else truth_acc + truth_b.sum(0)
+                else:
                     error_power  = zonal_power_spectrum_torch(pred_b - truth_b).sum(dim=(0, 1))
                     target_power = zonal_power_spectrum_torch(truth_b).sum(dim=(0, 1))
-
                     power_acc        = error_power  if power_acc        is None else power_acc        + error_power
                     target_power_acc = target_power if target_power_acc is None else target_power_acc + target_power
 
@@ -114,8 +119,11 @@ class TrainingMetrics:
         spatial_error = (spatial_acc / n_samples).cpu().numpy().astype(np.float32)
         tmp = self._metrics_path.with_suffix(".tmp.h5")
         with h5py.File(tmp, "w") as f:
-            f.create_dataset("spatial_error",    data=spatial_error)
-            if has_zonal_dimension:
+            f.create_dataset("spatial_error", data=spatial_error)
+            if is_clim:
+                f.create_dataset("profile_pred",  data=(pred_acc  / n_samples).cpu().numpy().astype(np.float32))
+                f.create_dataset("profile_truth", data=(truth_acc / n_samples).cpu().numpy().astype(np.float32))
+            else:
                 f.create_dataset("zonal_mean_error", data=zonal_mean(spatial_error).astype(np.float32))
                 f.create_dataset("error_power",      data=(power_acc        / (n_samples * H)).cpu().numpy().astype(np.float32))
                 f.create_dataset("signal_power",     data=(target_power_acc / (n_samples * H)).cpu().numpy().astype(np.float32))

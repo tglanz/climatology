@@ -114,7 +114,7 @@ class Trainer:
         for x, y in train_loader:
             if normalizer_y is None:
                 if y.ndim == 3:
-                    normalizer_y = UnitGaussianNormalizer(dim=[0])
+                    normalizer_y = UnitGaussianNormalizer(dim=[0, 2])
                 elif y.ndim == 4:
                     normalizer_y = UnitGaussianNormalizer(dim=[0, 2, 3])
                 else:
@@ -271,8 +271,7 @@ class Trainer:
         with torch.no_grad():
             for x, y in tqdm(loader, desc="val", leave=False):
                 x, y = x.to(self.device), y.to(self.device)
-                pred = self.normalizer_y.inverse_transform(
-                    self.model(self.normalizer_x.transform(x))
-                )
-                total += self.loss_fn(pred, y).item()
+                x = self.normalizer_x.transform(x)
+                y = self.normalizer_y.transform(y)
+                total += self.loss_fn(self.model(x), y).item()
         return total / len(loader)

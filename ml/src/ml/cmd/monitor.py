@@ -109,7 +109,7 @@ def _run_terminal(state: MonitorState, interval: float) -> None:
 
 # --- GUI ---
 
-def _run_gui(state: MonitorState, interval: float) -> None:
+def _run_gui_step(state: MonitorState, interval: float) -> None:
     import matplotlib.pyplot as mpl
     import matplotlib.ticker as ticker
 
@@ -231,6 +231,114 @@ def _run_gui(state: MonitorState, interval: float) -> None:
         fig.canvas.draw()
         fig.canvas.flush_events()
         mpl.pause(interval)
+
+
+def _run_gui_climatology(state: MonitorState, interval: float) -> None:
+    import matplotlib.pyplot as mpl
+    import matplotlib.ticker as ticker
+
+    mpl.ion()
+    fig = mpl.figure(figsize=(14, 6))
+    gs = fig.add_gridspec(2, 3)
+    ax_info    = fig.add_subplot(gs[0, 0])
+    ax_chart   = fig.add_subplot(gs[0, 1:])
+    ax_profile = fig.add_subplot(gs[1, :])
+
+    ax_info.axis("off")
+    info_title = ax_info.text(
+        0.05, 0.99, "", transform=ax_info.transAxes,
+        verticalalignment="top", fontfamily="monospace", fontsize=9, fontweight="bold",
+    )
+    info_left = ax_info.text(
+        0.05, 0.88, "", transform=ax_info.transAxes,
+        verticalalignment="top", fontfamily="monospace", fontsize=9,
+    )
+    info_right = ax_info.text(
+        0.52, 0.88, "", transform=ax_info.transAxes,
+        verticalalignment="top", fontfamily="monospace", fontsize=9,
+    )
+
+    ax_chart.set_yscale("linear")
+    fig.subplots_adjust(left=0.07, right=0.97, top=0.95, bottom=0.08, hspace=0.45, wspace=0.3)
+    ax_chart.set_title("loss per epoch")
+    ax_chart.set_xlabel("epoch")
+    ax_chart.set_ylabel("loss")
+    ax_chart.grid(True, alpha=0.3)
+    ax_chart.xaxis.set_major_locator(ticker.MaxNLocator(integer=True))
+
+    if state.target_loss is not None:
+        ax_chart.axhline(
+            state.target_loss, color="red", linestyle=":", linewidth=1,
+            label=f"target ({state.target_loss})",
+        )
+
+    ax_profile.set_title("zonal mean u(lat): predicted vs truth", fontsize=9, pad=3)
+    ax_profile.set_xlabel("latitude")
+    ax_profile.set_ylabel("u (m/s)")
+    ax_profile.grid(True, alpha=0.3)
+
+    n_hist = MonitorState._PROFILE_HISTORY_LEN
+    pred_lines = [
+        ax_profile.plot([], [], color="tab:blue" if k == 0 else "gray",
+                        alpha=1.0 if k == 0 else max(0.08, 1 - k / (n_hist - 1)),
+                        label="pred" if k == 0 else None)[0]
+        for k in range(n_hist - 1, -1, -1)
+    ]
+    pred_lines.reverse()  # index 0 = latest
+    truth_line, = ax_profile.plot([], [], color="tab:orange", linestyle="--", label="truth")
+    ax_profile.legend(fontsize=8)
+
+    loss_lines: dict[str, mpl.Line2D] = {}
+
+    while mpl.fignum_exists(fig.number):
+        state.update()
+        title, left, right = _sections_to_two_columns(state.title, state.sections)
+        info_title.set_text(title)
+        info_left.set_text(left)
+        info_right.set_text(right)
+
+        for s in state.series:
+            prefix = f"{s.label} " if s.label else ""
+            train_key = f"{s.run_id}_train"
+            val_key = f"{s.run_id}_val"
+            if train_key not in loss_lines:
+                (loss_lines[train_key],) = ax_chart.plot(s.epochs, s.train_losses, label=f"{prefix}train")
+                (loss_lines[val_key],)   = ax_chart.plot(s.epochs, s.val_losses,   label=f"{prefix}val", linestyle="--")
+                ax_chart.legend()
+            else:
+                loss_lines[train_key].set_data(s.epochs, s.train_losses)
+                loss_lines[val_key].set_data(s.epochs, s.val_losses)
+        ax_chart.relim()
+        ax_chart.autoscale_view()
+
+        if state.profile_pred_history:
+            lats = np.linspace(-90, 90, len(state.profile_pred_history[0]))
+            history = state.profile_pred_history
+            for k, line in enumerate(pred_lines):
+                idx = len(history) - 1 - k
+                if idx >= 0:
+                    line.set_data(lats, history[idx])
+                else:
+                    line.set_data([], [])
+            ax_profile.relim()
+            ax_profile.autoscale_view()
+
+        if state.profile_truth is not None:
+            lats = np.linspace(-90, 90, len(state.profile_truth))
+            truth_line.set_data(lats, state.profile_truth)
+            ax_profile.relim()
+            ax_profile.autoscale_view()
+
+        fig.canvas.draw()
+        fig.canvas.flush_events()
+        mpl.pause(interval)
+
+
+def _run_gui(state: MonitorState, interval: float) -> None:
+    if state.is_climatology:
+        _run_gui_climatology(state, interval)
+    else:
+        _run_gui_step(state, interval)
 
 
 # --- CLI ---
