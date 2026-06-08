@@ -159,9 +159,19 @@ class Trainer:
 
     def _fit_normalizers(self, train_loader: DataLoader):
         normalizer_x = UnitGaussianNormalizer(dim=[0, 2, 3])
-        normalizer_y = UnitGaussianNormalizer(dim=[0, 2, 3])
+        normalizer_y = None
+
         batch_size = train_loader.batch_size
         for x, y in train_loader:
+            if normalizer_y is None:
+                # If its a clim (clim is currently (B, C, H))
+                if y.ndim == 3:
+                    normalizer_y = UnitGaussianNormalizer(dim=[0])
+                elif y.ndim == 4:
+                    normalizer_y = UnitGaussianNormalizer(dim=[0, 2, 3])
+                else:
+                    raise ValueError(f"Unexpected y dimension {y.ndim}")
+
             normalizer_x.partial_fit(x, batch_size=batch_size)
             normalizer_y.partial_fit(y, batch_size=batch_size)
         self.normalizer_x = normalizer_x.to(self.device)
