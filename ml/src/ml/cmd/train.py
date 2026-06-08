@@ -7,6 +7,7 @@ import torch
 
 from ml.config import load as load_config
 from ml.common.logging import setup_logging
+from ml.data.climatology import is_climatology_var
 from ml.training.model import build_model
 
 from ml.diagnostics.spatial import cosine_latitude_weights
@@ -36,7 +37,8 @@ def train(config_path: Path, track_metrics: bool):
     cfg.paths.training_dir.mkdir(parents=True, exist_ok=True)
     shutil.copy2(config_path, cfg.paths.training_dir / "config.toml")
 
-    model = build_model(cfg.model, dropout=cfg.training.regularization.dropout)
+    clim_target = all(is_climatology_var(v) for v in cfg.data.y_vars)
+    model = build_model(cfg.model, dropout=cfg.training.regularization.dropout, zonal_mean=clim_target)
     train_loader, val_loader, _ = make_loaders(cfg)
 
     lat_weights = None

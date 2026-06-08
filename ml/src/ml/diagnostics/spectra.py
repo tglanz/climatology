@@ -17,9 +17,7 @@ def zonal_power_spectrum(field: np.ndarray) -> np.ndarray:
 
 def zonal_power_spectrum_torch(field: torch.Tensor) -> torch.Tensor:
     """
-    Torch counterpart of `zonal_power_spectrum`, used by the per-epoch
-    metrics writer. Numerical semantics identical.
-
+    Torch counterpart of `zonal_power_spectrum`
     Args:    field of shape (..., H, W).
     Returns: tensor of shape (..., H, W//2 + 1).
     """

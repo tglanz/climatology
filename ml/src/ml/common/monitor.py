@@ -48,13 +48,14 @@ class MonitorState:
             import h5py
             with h5py.File(self._cfg.paths.metrics_file, "r") as f:
                 self.spatial_error = f["spatial_error"][:]
-                self.error_power   = f["error_power"][:]
-                self.signal_power  = f["signal_power"][:]
-                zonal = f["zonal_mean_error"][:]
-            if not self.zonal_mean_history or not np.array_equal(zonal, self.zonal_mean_history[-1]):
-                self.zonal_mean_history.append(zonal)
-                if len(self.zonal_mean_history) > self._ZONAL_HISTORY_LEN:
-                    self.zonal_mean_history.pop(0)
+                self.error_power  = f["error_power"][:] if "error_power" in f else None
+                self.signal_power = f["signal_power"][:] if "signal_power" in f else None
+                zonal = f["zonal_mean_error"][:] if "zonal_mean_error" in f else None
+            if zonal is not None:
+                if not self.zonal_mean_history or not np.array_equal(zonal, self.zonal_mean_history[-1]):
+                    self.zonal_mean_history.append(zonal)
+                    if len(self.zonal_mean_history) > self._ZONAL_HISTORY_LEN:
+                        self.zonal_mean_history.pop(0)
 
 
 def _read_metrics(path: Path) -> list[dict]:

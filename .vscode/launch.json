@@ -39,6 +39,18 @@
                 "-c", "./ml/configs/default.toml",
                 "--track-metrics"
             ]
+        },
+                        {
+            "name": "ml: monitor",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "ml/src/ml/cmd/cli.py",
+            "console": "integratedTerminal",
+            "args": [
+                "monitor",
+                "training",
+                "-c", "./ml/configs/default.toml"
+            ]
         }
     ]
 }

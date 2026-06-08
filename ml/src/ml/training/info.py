@@ -161,7 +161,6 @@ def _collect_artifacts(cfg: "Config") -> dict[str, Any]:
         "parameters":     p.checkpoint_dir / "parameters.pt",
         "normalization":  p.checkpoint_dir / "normalization.pt",
         "epoch_metrics":  p.epoch_metrics_file,
-        "runs":           p.runs_file,
         "metrics":        p.metrics_file,
         "training_info":  p.training_info_file,
         "splits_manifest": p.preprocessed_dir / "splits.json",
@@ -332,16 +331,11 @@ class TrainingSummary:
 
 def load_summary(training_dir: Path) -> TrainingSummary:
     """
-    Best-effort summary load.
-
-    Pulls structured info from training.json when present; otherwise
-    falls back to runs.csv (last row) and epoch-metrics.csv. Designed
-    so legacy run directories without training.json still produce a
-    useful row.
+    Best-effort summary load. Pulls from training.json when present,
+    falls back to epoch-metrics.csv for legacy directories.
     """
     s = TrainingSummary(name=training_dir.name, path=training_dir)
     _augment_from_training_json(s, training_dir / "training.json")
-    _augment_from_runs_csv(s, training_dir / "runs.csv")
     _augment_from_epoch_metrics(s, training_dir / "epoch-metrics.csv")
     return s
 
@@ -395,33 +389,6 @@ def _augment_from_training_json(s: TrainingSummary, path: Path) -> None:
     s.scheduler = sched.get("kind")
     model = info.get("model") or {}
     s.n_params = model.get("total_params")
-
-
-def _augment_from_runs_csv(s: TrainingSummary, path: Path) -> None:
-    if not path.exists():
-        return
-    try:
-        with open(path, newline="") as f:
-            rows = list(csv.DictReader(f))
-    except OSError:
-        return
-    if not rows:
-        return
-    last = rows[-1]
-    if s.start_time is None:
-        s.start_time = last.get("start_time") or None
-    if s.end_time is None:
-        s.end_time = last.get("end_time") or None
-    if s.total_epochs is None:
-        s.total_epochs = _maybe_int(last.get("total_epochs"))
-    if s.best_val_loss is None:
-        s.best_val_loss = _maybe_float(last.get("best_val_loss"))
-    if s.best_val_epoch is None:
-        s.best_val_epoch = _maybe_int(last.get("best_val_epoch"))
-    if s.stopped_early is None:
-        raw = last.get("stopped_early")
-        if raw in ("True", "False"):
-            s.stopped_early = raw == "True"
 
 
 def _augment_from_epoch_metrics(s: TrainingSummary, path: Path) -> None:

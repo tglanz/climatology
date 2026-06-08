@@ -178,7 +178,6 @@ class Trainer:
         best_val = float("inf")
         best_val_epoch = -1
         stopped_early = False
-        start_time = datetime.now(timezone.utc)
 
         self.info.save(self.cfg.paths.training_info_file)
         self.log.info("wrote run metadata to %s", self.cfg.paths.training_info_file)
@@ -239,17 +238,6 @@ class Trainer:
                 )
                 stopped_early = True
                 break
-
-        if training_metrics is not None:
-            training_metrics.log_run(
-                self.run_id,
-                start_time,
-                datetime.now(timezone.utc),
-                epoch,
-                best_val,
-                best_val_epoch,
-                stopped_early,
-            )
 
         self.info.finalize(
             total_epochs=epoch,

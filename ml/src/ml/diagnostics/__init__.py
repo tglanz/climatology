@@ -22,9 +22,14 @@ def lat_weighted_relative_l2_torch(
     truth: torch.Tensor,
     lat_weights: torch.Tensor,
 ) -> torch.Tensor:
-    wb = lat_weights.view(1, 1, -1, 1)
-    num = ((pred - truth).pow(2) * wb).sum(dim=(-2, -1)).sqrt()
-    den = (truth.pow(2) * wb).sum(dim=(-2, -1)).sqrt()
+    if pred.ndim == 4:
+        wb = lat_weights.view(1, 1, -1, 1)
+        num = ((pred - truth).pow(2) * wb).sum(dim=(-2, -1)).sqrt()
+        den = (truth.pow(2) * wb).sum(dim=(-2, -1)).sqrt()
+    else:
+        wb = lat_weights.view(1, 1, -1)
+        num = ((pred - truth).pow(2) * wb).sum(dim=-1).sqrt()
+        den = (truth.pow(2) * wb).sum(dim=-1).sqrt()
     return (num / den).mean()
 
 def persistence_prediction(x: Union[np.ndarray, torch.Tensor], vor_t_channel: int) -> Union[np.ndarray, torch.Tensor]:

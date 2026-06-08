@@ -1,11 +1,21 @@
 from dataclasses import asdict
 
+import torch.nn as nn
 from neuralop.models import FNO
 
 from ml.config import ModelConfig
 
 
-def build_model(cfg: ModelConfig, dropout: float | None = None):
+class ZonalMeanWrapper(nn.Module):
+    def __init__(self, model: nn.Module):
+        super().__init__()
+        self.model = model
+
+    def forward(self, x):
+        return self.model(x).mean(dim=-1)
+
+
+def build_model(cfg: ModelConfig, dropout: float | None = None, zonal_mean: bool = False):
     """
     Build the neural operator selected by `cfg.architecture` ("fno" or
     "sfno"). `dropout` (if provided) is forwarded as `channel_mlp_dropout`,
@@ -20,8 +30,8 @@ def build_model(cfg: ModelConfig, dropout: float | None = None):
         kwargs["channel_mlp_dropout"] = dropout
 
     if cfg.architecture == "fno":
-        return FNO(**kwargs)
-    if cfg.architecture == "sfno":
+        model = FNO(**kwargs)
+    elif cfg.architecture == "sfno":
         try:
             from neuralop.models import SFNO
         except ImportError as e:
@@ -29,5 +39,8 @@ def build_model(cfg: ModelConfig, dropout: float | None = None):
                 "SFNO requires torch_harmonics; install it via "
                 "`uv add torch_harmonics` or switch architecture to 'fno'"
             ) from e
-        return SFNO(**kwargs)
-    raise ValueError(f"unknown architecture: {cfg.architecture}")
+        model = SFNO(**kwargs)
+    else:
+        raise ValueError(f"unknown architecture: {cfg.architecture}")
+
+    return ZonalMeanWrapper(model) if zonal_mean else model

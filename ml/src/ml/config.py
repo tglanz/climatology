@@ -392,8 +392,6 @@ class PathsConfig:
     training_dir: Path | None = None
     # per-epoch scalar metrics CSV; derived from training_dir if omitted
     epoch_metrics_file: Path | None = None
-    # run summary CSV; derived from training_dir if omitted
-    runs_file: Path | None = None
     # spatial/spectral metrics HDF5; derived from training_dir if omitted
     metrics_file: Path | None = None
     # JSON snapshot of run metadata; derived from training_dir if omitted
@@ -401,7 +399,7 @@ class PathsConfig:
 
     def __post_init__(self):
         for field in ("checkpoint_dir", "preprocessed_dir", "training_dir",
-                      "epoch_metrics_file", "runs_file", "metrics_file",
+                      "epoch_metrics_file", "metrics_file",
                       "training_info_file"):
             v = getattr(self, field)
             if v is not None:
@@ -561,7 +559,6 @@ def load(path: Path) -> Config:
         preprocessed_dir=p.get("preprocessed_dir", None),
         training_dir=p.get("training_dir", None),
         epoch_metrics_file=p.get("epoch_metrics_file", None),
-        runs_file=p.get("runs_file", None),
         metrics_file=p.get("metrics_file", None),
         training_info_file=p.get("training_info_file", None),
     )
@@ -574,8 +571,6 @@ def load(path: Path) -> Config:
         paths.checkpoint_dir = paths.training_dir
     if paths.epoch_metrics_file is None:
         paths.epoch_metrics_file = paths.training_dir / "epoch-metrics.csv"
-    if paths.runs_file is None:
-        paths.runs_file = paths.training_dir / "runs.csv"
     if paths.metrics_file is None:
         paths.metrics_file = paths.training_dir / "metrics.h5"
     if paths.training_info_file is None:

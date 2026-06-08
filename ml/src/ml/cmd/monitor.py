@@ -205,7 +205,7 @@ def _run_gui(state: MonitorState, interval: float) -> None:
         ax_chart.relim()
         ax_chart.autoscale_view()
 
-        if state.spatial_error is not None:
+        if state.spatial_error is not None and state.spatial_error.ndim == 2:
             spatial_im.set_data(state.spatial_error)
             spatial_im.set_clim(vmin=0, vmax=state.spatial_error.max())
 
