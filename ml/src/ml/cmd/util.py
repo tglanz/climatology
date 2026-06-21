@@ -10,11 +10,11 @@ import torch
 from rich.console import Console
 from rich.table import Table
 
-from ml.config import load as load_config
+from ml.config import load as load_config, LossKind
 from ml.data.isca_dataset import make_loaders, load_latitudes
-from ml.diagnostics import persistence_prediction
 from ml.training.model import build_model
 from ml.training.loss import create_loss_fn
+from ml.training import baselines
 from ml.diagnostics.spatial import cosine_latitude_weights
 from ml.training.info import TrainingSummary, list_training_summaries
 
@@ -68,49 +68,63 @@ def model_info(config_path: Path):
             print(f"{split:5}  {n_sims:4} sims  {n_samples:6,} samples  {ratio:.0f} params/sample")
 
 
-@util.command("persistence-score")
-@click.option(
-    "-c", "--config", "config_path",
-    required=True,
-    type=click.Path(exists=True, path_type=Path),
-)
-def persistence_score(config_path: Path):
-    """Compute baseline loss scores on the val set (no model required)."""
-    cfg = load_config(config_path)
+@util.group("baseline-score")
+def baseline_score():
+    """
+    Compute no-model baseline scores on the val set.
+
+    TODO: those are pretty hardcoded to specific vars; with time we might want to enhance for flexibility.
+    """
+    pass
+
+
+def _make_loss_fn(cfg):
     lat_weights = None
-    if cfg.training.loss == "lat_weighted_relative_l2":
-        lat_weights = cosine_latitude_weights(load_latitudes(cfg))
-    loss_fn = create_loss_fn(cfg.training.loss, lat_weights=lat_weights)
+    if cfg.training.loss == LossKind.LAT_WEIGHTED_RELATIVE_L2:
+        lat_weights = torch.from_numpy(cosine_latitude_weights(load_latitudes(cfg)))
+    return create_loss_fn(cfg.training.loss, lat_weights=lat_weights)
 
-    _, val_loader, _ = make_loaders(cfg)
+
+def _baseline_options(fn):
+    fn = click.option("-c", "--config", "config_path", required=True, type=click.Path(exists=True, path_type=Path))(fn)
+    fn = click.option("--workers", default=0, show_default=True, help="DataLoader worker processes.")(fn)
+    return fn
+
+
+@baseline_score.command("zero")
+@_baseline_options
+def baseline_zero(config_path: Path, workers: int):
+    """Predict zero for every sample."""
+    cfg = load_config(config_path)
+    _, val_loader, _ = make_loaders(cfg, num_workers=workers)
     assert val_loader is not None, "val split is empty"
+    score = baselines.score_zero(val_loader, _make_loss_fn(cfg))
+    print(json.dumps({"loss_fn": cfg.training.loss, "val_samples": len(val_loader.dataset), "loss": score}, indent=2))
 
-    # The most recent vor channel under the lag-stacked input layout
-    # (oldest-to-newest, x_vars-major within each timestep).
-    assert "vor" in cfg.data.x_vars, (
-        f"persistence baseline assumes 'vor' is in x_vars, got {cfg.data.x_vars}"
+
+@baseline_score.command("mean")
+@_baseline_options
+def baseline_mean(config_path: Path, workers: int):
+    """Predict the training-set mean for every sample."""
+    cfg = load_config(config_path)
+    train_loader, val_loader, _ = make_loaders(cfg, num_workers=workers)
+    assert val_loader is not None, "val split is empty"
+    score = baselines.score_mean(train_loader, val_loader, _make_loss_fn(cfg))
+    print(json.dumps({"loss_fn": cfg.training.loss, "val_samples": len(val_loader.dataset), "loss": score}, indent=2))
+
+
+@baseline_score.command("persistence")
+@_baseline_options
+def baseline_persistence(config_path: Path, workers: int):
+    """Predict next-step vorticity as equal to current vorticity."""
+    cfg = load_config(config_path)
+    _, val_loader, _ = make_loaders(cfg, num_workers=workers)
+    assert val_loader is not None, "val split is empty"
+    score = baselines.score_persistence(
+        val_loader, _make_loss_fn(cfg),
+        cfg.data.x_vars, cfg.data.y_vars, cfg.data.windows.length,
     )
-    K = cfg.data.windows.length
-    n_vars = len(cfg.data.x_vars)
-    vor_t_channel = (K - 1) * n_vars + cfg.data.x_vars.index("vor")
-
-    persistence_total = 0.0
-    zero_total = 0.0
-    n = 0
-
-    with torch.no_grad():
-        for x, y in val_loader:
-            persistence_pred = persistence_prediction(x, vor_t_channel)
-            zero_pred = torch.zeros_like(y)
-
-            persistence_total += loss_fn(persistence_pred, y).item()
-            zero_total += loss_fn(zero_pred, y).item()
-            n += 1
-
-    print(f"loss:        {cfg.training.loss}")
-    print(f"val samples: {len(val_loader.dataset)}")
-    print(f"persistence: {persistence_total / n:.4f}  (predict vor(t+1) = vor(t))")
-    print(f"zero:        {zero_total / n:.4f}  (predict zero everywhere)")
+    print(json.dumps({"loss_fn": cfg.training.loss, "val_samples": len(val_loader.dataset), "loss": score}, indent=2))
 
 
 @util.command("summarize-trainings")

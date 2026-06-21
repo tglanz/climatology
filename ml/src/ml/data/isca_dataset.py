@@ -35,7 +35,7 @@ class IscaDataset(Dataset):
         return x, y
 
 
-def make_loader(path: Path, batch_size: int, shuffle: bool, num_workers: int = 4) -> DataLoader | None:
+def make_loader(path: Path, batch_size: int, shuffle: bool, num_workers: int = 0) -> DataLoader | None:
     assert (
         path.exists()
     ), f"preprocessed file missing: {path} - run preprocess-training-data first"
@@ -48,13 +48,14 @@ def make_loader(path: Path, batch_size: int, shuffle: bool, num_workers: int = 4
 
 def make_loaders(
     cfg: Config,
+    num_workers: int = 0,
 ) -> tuple[DataLoader, DataLoader | None, DataLoader | None]:
     out_dir = cfg.paths.preprocessed_dir
     bs = cfg.training.batch_size
     return (
-        make_loader(out_dir / "train.h5", bs, shuffle=True),
-        make_loader(out_dir / "val.h5", bs, shuffle=False),
-        make_loader(out_dir / "test.h5", bs, shuffle=False),
+        make_loader(out_dir / "train.h5", bs, shuffle=True, num_workers=num_workers),
+        make_loader(out_dir / "val.h5", bs, shuffle=False, num_workers=num_workers),
+        make_loader(out_dir / "test.h5", bs, shuffle=False, num_workers=num_workers),
     )
 
 

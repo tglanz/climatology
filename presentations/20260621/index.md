@@ -8,7 +8,7 @@ math: katex
 marp: true
 ---
 
-# **2026-06-09**
+# **2026-06-21**
 
 Climatology prediction
 
@@ -93,3 +93,20 @@ Then $t_c = t_s + i^*$, where $i^*$ is the first index such that $\text{err}(i^*
 # **Training state**
 
 ![w:1100px h:500px](training.png)
+
+---
+
+# Hypothesis
+
+Our SFNO model converges to the _mean predictor_.
+
+```bash
+uv run ml util baseline-score mean -c ml/configs/default.toml
+{
+  "loss_fn": "lat_weighted_relative_l2",
+  "val_samples": 1452,
+  "loss": 0.3295591851451405
+}
+```
+
+Next steps: Vary stirring configuration
