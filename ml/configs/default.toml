@@ -21,9 +21,9 @@ start_at = "spinup"
 # "end" | "convergence". "convergence" requires [data.convergence].
 end_at = "end"
 # K consecutive snapshots per input.
-length = 5
+length = 10
 # gap between consecutive window starts. 6 = K + 1 (tumbling-equivalent).
-stride = 6
+stride = 11
 # optional cap on windows per simulation; omit for no cap.
 limit = 15
 
@@ -67,9 +67,9 @@ out_channels = 1
 
 [model.sfno]
 n_modes = [32, 64]
-hidden_channels = 64
-n_layers = 4
-in_channels = 5
+hidden_channels = 32
+n_layers = 3
+in_channels = 10
 out_channels = 1
 
 [training]

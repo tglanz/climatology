@@ -87,6 +87,45 @@ def _extract_pairs(
     )
 
 
+def _config_key(sim_dir: Path) -> str:
+    name = sim_dir.name
+    if '-' in name:
+        return name.rsplit('-', 1)[0]
+    return ''
+
+
+def _stratified_splits(
+    exp_dirs: list[Path],
+    test_ratio: float,
+    val_ratio: float,
+    test_limit: int | None,
+    val_limit: int | None,
+    train_limit: int | None,
+) -> tuple[list[Path], list[Path], list[Path]]:
+    from collections import defaultdict
+    groups: dict[str, list[Path]] = defaultdict(list)
+    for d in exp_dirs:
+        groups[_config_key(d)].append(d)
+
+    test_dirs, val_dirs, train_dirs = [], [], []
+    for group in groups.values():
+        n = len(group)
+        nt = max(1, int(n * test_ratio))
+        nv = max(1, int(n * val_ratio))
+        test_dirs.extend(group[:nt])
+        val_dirs.extend(group[nt:nt + nv])
+        train_dirs.extend(group[nt + nv:])
+
+    if test_limit:
+        test_dirs = test_dirs[:test_limit]
+    if val_limit:
+        val_dirs = val_dirs[:val_limit]
+    if train_limit:
+        train_dirs = train_dirs[:train_limit]
+
+    return test_dirs, val_dirs, train_dirs
+
+
 def run(config_path: Path, n_workers: int = 0) -> None:
     cfg = load_config(config_path)
     data_cfg = cfg.data
@@ -94,19 +133,23 @@ def run(config_path: Path, n_workers: int = 0) -> None:
     exp_dirs = list_simulation_dirs(data_cfg)
 
     split_cfg = data_cfg.split
-    n = len(exp_dirs)
-    n_test       = min(int(n * split_cfg.test),       split_cfg.test_limit       or n)
-    n_validation = min(int(n * split_cfg.validation), split_cfg.validation_limit or n)
-    n_train      = min(n - n_test - n_validation,     split_cfg.train_limit      or n)
+    test_dirs, val_dirs, train_dirs = _stratified_splits(
+        exp_dirs,
+        test_ratio=split_cfg.test,
+        val_ratio=split_cfg.validation,
+        test_limit=split_cfg.test_limit,
+        val_limit=split_cfg.validation_limit,
+        train_limit=split_cfg.train_limit,
+    )
     log.info(
         "processing data; total=%d, n_train=%d, n_val=%d, n_test=%d",
-        n, n_train, n_validation, n_test,
+        len(exp_dirs), len(train_dirs), len(val_dirs), len(test_dirs),
     )
 
     splits = Splits(
-        test=exp_dirs[:n_test],
-        validation=exp_dirs[n_test : n_test + n_validation],
-        train=exp_dirs[n_test + n_validation : n_test + n_validation + n_train],
+        test=test_dirs,
+        validation=val_dirs,
+        train=train_dirs,
     )
 
     log.info("extracting val pairs")

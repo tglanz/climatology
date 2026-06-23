@@ -17,7 +17,8 @@ CONVERGENCE_DIAGNOSTIC_VAR = "ucomp"
 
 
 def sort_simulation_dirs(exp_dirs: list[Path]) -> list[Path]:
-    return list(sorted(exp_dirs, key=lambda p: int(str(p).split("/")[-1])))
+    # return list(sorted(exp_dirs, key=lambda p: int(str(p).split("/")[-1])))
+    return list(sorted(exp_dirs, key=lambda p: str(p).split("/")[-1]))
 
 
 def list_simulation_dirs(cfg: IscaDataConfig, should_sort: bool = True) -> list[Path]:

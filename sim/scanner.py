@@ -35,7 +35,7 @@ def main():
     parser.add_argument('--experiment-name',  type=str,   default=None,  help='Output directory name under output/. Defaults to barotropic_stirring-T<harmonics>.')
 
     parser.add_argument('--cores',            type=int,   default=8,     help='Number of MPI cores.')
-    parser.add_argument('--segments',         type=int,   default=30,    help='Number of run segments.')
+    parser.add_argument('--segments',         type=int,   default=20,    help='Number of run segments.')
     parser.add_argument('--segment-days',     type=int,   default=7,     help='Simulated days per segment.')
     parser.add_argument('--dt-atmos',         type=int,   default=600,   help='Model timestep in seconds.')
     parser.add_argument('--fourier-harmonics',type=int,   default=85,    help='Spectral truncation T (triangular). Grid size is derived automatically.')

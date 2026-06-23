@@ -9,8 +9,8 @@ Run all commands from the repository root.
 Wrap any command with `caffeinate -i` to keep the machine awake:
 
 ```bash
-caffeinate -i parallel -j 8 conda run -n isca_env python -m sim.scanner \
-    --stirring-lat0 30 37.5 45 52.5 60 \
+caffeinate -i parallel -j 4 conda run -n isca_env python -m sim.scanner \
+    --stirring-lat0 30 37.5 45 52.5 60 --cores 2 \
     --index {} ::: $(seq 0 99)
 ```
 
@@ -25,6 +25,10 @@ A `sweep.json` is written at the experiment root mapping each code to its param 
 Re-runs are safe: each `(code, index)` checks for the last segment file and skips if
 it already completed.
 
+**Note on parallelism:** each simulation uses `--cores` MPI processes. Keep
+`--cores * -j <= ~8` on a Mac to avoid MPI oversubscription and SIGSEGV crashes.
+The recommended settings are `--cores 2 -j 4`.
+
 ### Step 1: compile once (must be done before any parallel run)
 
 Compilation writes shared build files and must not run in parallel.
@@ -36,8 +40,8 @@ conda run -n isca_env python -m sim.scanner --compile
 ### Step 2: sweep lat0 across 5 values, 100 replicates each
 
 ```bash
-caffeinate -i parallel -j 8 conda run -n isca_env python -m sim.scanner \
-    --stirring-lat0 30 37.5 45 52.5 60 \
+caffeinate -i parallel -j 4 conda run -n isca_env python -m sim.scanner \
+    --stirring-lat0 30 37.5 45 52.5 60 --cores 2 \
     --index {} ::: $(seq 0 99)
 ```
 
@@ -49,9 +53,9 @@ This produces 500 simulations (5 configs x 100 replicates) under
 Multiple values on any stirring argument are swept as a cartesian product:
 
 ```bash
-parallel -j 8 conda run -n isca_env python -m sim.scanner \
+caffeinate -i parallel -j 4 conda run -n isca_env python -m sim.scanner \
     --stirring-lat0 30 45 60 \
-    --stirring-amplitude 1e-10 2e-10 \
+    --stirring-amplitude 1e-10 2e-10 --cores 2 \
     --index {} ::: $(seq 0 99)
 ```
 
