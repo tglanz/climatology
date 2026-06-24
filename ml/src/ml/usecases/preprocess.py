@@ -94,7 +94,7 @@ def _config_key(sim_dir: Path) -> str:
     return ''
 
 
-def _stratified_splits(
+def _config_split(
     exp_dirs: list[Path],
     test_ratio: float,
     val_ratio: float,
@@ -107,14 +107,18 @@ def _stratified_splits(
     for d in exp_dirs:
         groups[_config_key(d)].append(d)
 
-    test_dirs, val_dirs, train_dirs = [], [], []
-    for group in groups.values():
-        n = len(group)
-        nt = max(1, int(n * test_ratio))
-        nv = max(1, int(n * val_ratio))
-        test_dirs.extend(group[:nt])
-        val_dirs.extend(group[nt:nt + nv])
-        train_dirs.extend(group[nt + nv:])
+    codes = sorted(groups.keys())
+    n = len(codes)
+    n_test  = max(1, round(n * test_ratio))
+    n_val   = max(1, round(n * val_ratio))
+
+    test_codes  = codes[:n_test]
+    val_codes   = codes[n_test:n_test + n_val]
+    train_codes = codes[n_test + n_val:]
+
+    test_dirs  = [d for c in test_codes  for d in groups[c]]
+    val_dirs   = [d for c in val_codes   for d in groups[c]]
+    train_dirs = [d for c in train_codes for d in groups[c]]
 
     if test_limit:
         test_dirs = test_dirs[:test_limit]
@@ -133,7 +137,7 @@ def run(config_path: Path, n_workers: int = 0) -> None:
     exp_dirs = list_simulation_dirs(data_cfg)
 
     split_cfg = data_cfg.split
-    test_dirs, val_dirs, train_dirs = _stratified_splits(
+    test_dirs, val_dirs, train_dirs = _config_split(
         exp_dirs,
         test_ratio=split_cfg.test,
         val_ratio=split_cfg.validation,

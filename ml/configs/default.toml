@@ -81,7 +81,7 @@ loss = "lat_weighted_relative_l2"
 # adam | adamw
 optimizer = "adamw"
 # gradient norm clipping
-# grad_clip = 1.0
+grad_clip = 1.0
 
 # Regularization. No defaults; absent fields are not applied.
 [training.regularization]
@@ -113,7 +113,7 @@ gamma = 0.5
 
 [training.scheduler.cosine]
 # t_max defaults to training.epochs when omitted
-eta_min = 0.0
+eta_min = 1e-5
 
 [training.scheduler.plateau]
 patience = 15
