@@ -67,8 +67,10 @@ out_channels = 1
 
 [model.sfno]
 n_modes = [32, 64]
-hidden_channels = 32
-n_layers = 3
+# hidden_channels = 32
+hidden_channels = 16
+# n_layers = 3
+n_layers = 2
 in_channels = 10
 out_channels = 1
 

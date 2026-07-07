@@ -58,9 +58,6 @@ def find_zonal_mean_convergence_time(
     consecutive entries.
 
     Pass t_s = 0 when no spin-up has been detected.
-
-    Raises ValueError when the convergence criterion is not met
-    anywhere within the trajectory.
     """
     errors = zonal_mean_convergence_errors(field, latitudes_deg, t_s)
     if len(errors) < hold:
