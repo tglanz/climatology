@@ -175,9 +175,6 @@ class IscaDataConfig:
 
     def __post_init__(self):
         self.experiment_dir = Path(self.experiment_dir)
-        assert (
-            self.experiment_dir.exists()
-        ), f"experiment_dir not found: {self.experiment_dir}"
         if self.windows.start_at == "spinup":
             assert self.spinup is not None, (
                 "windows.start_at = 'spinup' requires [data.spinup] section"

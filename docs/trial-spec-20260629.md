@@ -5,7 +5,7 @@
 # Parameter space
 
 ## Latitude (lat0)
-Values: 0, 30, 40, 50, 60, 70
+Values: -10, 0, 30, 40, 50, 60, 70
 
 Effect: shifts the latitude of stochastic forcing and determines where eddy momentum is injected and where jets form
 
@@ -94,19 +94,19 @@ All windows from same simulation share identical target
 
 # Dataset scale
 
-54 parameter combinations from full grid
-216 simulations using four replicates each
-1296 total samples
+63 parameter combinations from full grid
+252 simulations using four replicates each
+1512 total samples
 
 ---
 
 # Execution command
 
 ```bash
-caffeinate -i parallel -j 4 \
+caffeinate -i parallel -j 3 \
   conda run -n isca_env python -m sim.scanner \
     --segments 150 \
-    --stirring-lat0 0 30 40 50 60 70 \
+    --stirring-lat0 -10 0 30 40 50 60 70 \
     --stirring-amplitude 0.75e-10 1.0e-10 1.25e-10 \
     --stirring-widthy 8 12 16 \
     --cores 2 \
@@ -114,7 +114,7 @@ caffeinate -i parallel -j 4 \
   ::: $(seq 0 3)
 ```
 
-Runs 4 parallel jobs (one per replicate index 0-3), each sweeping all 54 parameter combinations. At -j 4 concurrency with --cores 2 per job, peak load is 8 MPI processes.
+Runs 3 parallel jobs across replicate indices 0-3, each sweeping all 63 parameter combinations. At -j 3 concurrency with --cores 2 per job, peak load is 6 MPI processes.
 
 ---
 

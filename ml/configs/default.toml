@@ -42,9 +42,9 @@ end_at = "end"
 
 
 [data.split]
-validation = 0.1
-test = 0.1
-train = 0.8
+validation = 0.05
+test = 0.05
+train = 0.9
 # Just for debug, i want preprocessing to be quick
 # train_limit=5
 # test_limit=1
@@ -67,10 +67,8 @@ out_channels = 1
 
 [model.sfno]
 n_modes = [32, 64]
-# hidden_channels = 32
-hidden_channels = 16
-# n_layers = 3
-n_layers = 2
+hidden_channels = 64
+n_layers = 4
 in_channels = 10
 out_channels = 1
 

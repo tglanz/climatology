@@ -30,7 +30,8 @@ def _next_index(simulations_dir: Path, code: str) -> int:
 
 def main():
     parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-    parser.add_argument('--compile',          action='store_true', help='Compile the codebase and exit.')
+    parser.add_argument('--compile',              action='store_true', help='Compile the codebase and exit.')
+    parser.add_argument('--only-update-sweep-file', action='store_true', help='Merge new param codes into sweep.json without running simulations.')
     parser.add_argument('--index',            type=int,   default=None,  help='Replicate index per param config. Auto-incremented if omitted.')
     parser.add_argument('--experiment-name',  type=str,   default=None,  help='Output directory name under output/. Defaults to barotropic_stirring-T<harmonics>.')
 
@@ -65,7 +66,17 @@ def main():
 
     sweep_path = OUTPUT_DIR / experiment_name / 'sweep.json'
     sweep_path.parent.mkdir(parents=True, exist_ok=True)
-    sweep_path.write_text(json.dumps(codes, indent=2))
+
+    existing = json.loads(sweep_path.read_text()) if sweep_path.exists() else {}
+    new_codes = {k: v for k, v in codes.items() if k not in existing}
+    merged = {**existing, **new_codes}
+    sweep_path.write_text(json.dumps(merged, indent=2))
+    if new_codes:
+        print(f"[sweep] added {len(new_codes)} new code(s): {list(new_codes)}")
+    codes = merged
+
+    if args.only_update_sweep_file:
+        return
 
     if args.compile:
         BarotropicStirring(BarotropicStirringParams()).compile()
