@@ -42,13 +42,12 @@ end_at = "end"
 
 
 [data.split]
-validation = 0.05
-test = 0.05
-train = 0.9
-# Just for debug, i want preprocessing to be quick
-# train_limit=5
-# test_limit=1
-# validation_limit=1
+validation_ratio = 0.05
+test_ratio = 0.05
+
+# hold_out_matrix example (mutually exclusive with test_ratio):
+# [data.split.test_hold_out]
+# stirring_lat0 = [70.0]
 
 # Architecture selector. Valid: "fno" | "sfno".
 # Per-architecture options live in [model.<arch>]; only the active
@@ -67,8 +66,8 @@ out_channels = 1
 
 [model.sfno]
 n_modes = [32, 64]
-hidden_channels = 64
-n_layers = 4
+hidden_channels = 32
+n_layers = 3
 in_channels = 10
 out_channels = 1
 

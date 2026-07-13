@@ -87,73 +87,16 @@ def _extract_pairs(
     )
 
 
-def _config_key(sim_dir: Path) -> str:
-    name = sim_dir.name
-    if '-' in name:
-        return name.rsplit('-', 1)[0]
-    return ''
-
-
-def _config_split(
-    exp_dirs: list[Path],
-    test_ratio: float,
-    val_ratio: float,
-    test_limit: int | None,
-    val_limit: int | None,
-    train_limit: int | None,
-) -> tuple[list[Path], list[Path], list[Path]]:
-    from collections import defaultdict
-    groups: dict[str, list[Path]] = defaultdict(list)
-    for d in exp_dirs:
-        groups[_config_key(d)].append(d)
-
-    codes = sorted(groups.keys())
-    n = len(codes)
-    n_test  = max(1, round(n * test_ratio))
-    n_val   = max(1, round(n * val_ratio))
-
-    test_codes  = codes[:n_test]
-    val_codes   = codes[n_test:n_test + n_val]
-    train_codes = codes[n_test + n_val:]
-
-    test_dirs  = [d for c in test_codes  for d in groups[c]]
-    val_dirs   = [d for c in val_codes   for d in groups[c]]
-    train_dirs = [d for c in train_codes for d in groups[c]]
-
-    if test_limit:
-        test_dirs = test_dirs[:test_limit]
-    if val_limit:
-        val_dirs = val_dirs[:val_limit]
-    if train_limit:
-        train_dirs = train_dirs[:train_limit]
-
-    return test_dirs, val_dirs, train_dirs
-
-
-def run(config_path: Path, n_workers: int = 0) -> None:
+def run(config_path: Path, split_path: Path, n_workers: int = 0) -> None:
+    import shutil
     cfg = load_config(config_path)
-    data_cfg = cfg.data
     out_dir = cfg.paths.preprocessed_dir
-    exp_dirs = list_simulation_dirs(data_cfg)
+    out_dir.mkdir(parents=True, exist_ok=True)
 
-    split_cfg = data_cfg.split
-    test_dirs, val_dirs, train_dirs = _config_split(
-        exp_dirs,
-        test_ratio=split_cfg.test,
-        val_ratio=split_cfg.validation,
-        test_limit=split_cfg.test_limit,
-        val_limit=split_cfg.validation_limit,
-        train_limit=split_cfg.train_limit,
-    )
+    splits = Splits.load(split_path)
     log.info(
-        "processing data; total=%d, n_train=%d, n_val=%d, n_test=%d",
-        len(exp_dirs), len(train_dirs), len(val_dirs), len(test_dirs),
-    )
-
-    splits = Splits(
-        test=test_dirs,
-        validation=val_dirs,
-        train=train_dirs,
+        "processing data; n_train=%d, n_val=%d, n_test=%d",
+        len(splits.train), len(splits.validation), len(splits.test),
     )
 
     log.info("extracting val pairs")
@@ -163,5 +106,5 @@ def run(config_path: Path, n_workers: int = 0) -> None:
     log.info("extracting train pairs")
     _extract_pairs(splits.train,      config_path, out_dir / "train.h5", n_workers=n_workers)
 
-    splits.save(cfg.paths)
+    shutil.copy2(split_path, out_dir / "splits.json")
     log.info("finished preprocessing")

@@ -202,6 +202,8 @@ def _collect_data(cfg: "Config") -> dict[str, Any]:
         manifest = json.load(f)
 
     for split_name, sim_dirs in manifest.items():
+        if split_name == "meta":
+            continue
         h5_path = cfg.paths.preprocessed_dir / f"{split_name}.h5"
         n_pairs = None
         if h5_path.exists():

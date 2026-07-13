@@ -60,7 +60,7 @@ def make_loaders(
 
 
 def load_latitudes(cfg: Config) -> np.ndarray:
-    splits = Splits.from_config(cfg.paths)
+    splits = Splits.load(cfg.paths.preprocessed_dir / "splits.json")
     assert splits.train, "no train simulations in splits"
     nc_files = list_segment_files(splits.train[0], cfg.data)
     assert nc_files, f"no NC files in {splits.train[0]} matching {cfg.data.segment_pattern}"

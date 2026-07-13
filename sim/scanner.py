@@ -2,7 +2,10 @@ import argparse
 import hashlib
 import itertools
 import json
+import shutil
 from pathlib import Path
+
+from isca.experiment import FailedRunError
 
 from sim.barotropic_stirring import BarotropicStirring, BarotropicStirringParams
 from sim.simulation import ExecutionParams
@@ -35,6 +38,7 @@ def main():
     parser.add_argument('--index',            type=int,   default=None,  help='Replicate index per param config. Auto-incremented if omitted.')
     parser.add_argument('--experiment-name',  type=str,   default=None,  help='Output directory name under output/. Defaults to barotropic_stirring-T<harmonics>.')
 
+    parser.add_argument('--max-retries',    type=int,   default=3,     help='Max retry attempts per simulation before marking as crashed.')
     parser.add_argument('--cores',            type=int,   default=8,     help='Number of MPI cores.')
     parser.add_argument('--segments',         type=int,   default=20,    help='Number of run segments.')
     parser.add_argument('--segment-days',     type=int,   default=7,     help='Simulated days per segment.')
@@ -111,7 +115,26 @@ def main():
             num_cores       = args.cores,
             n_segments      = args.segments,
         )
-        sim.execute(ep)
+
+        crashed_log = OUTPUT_DIR / experiment_name / 'crashed-sims.txt'
+        for attempt in range(1, args.max_retries + 1):
+            try:
+                sim.execute(ep)
+                break
+            except FailedRunError:
+                sim_out_dir  = ep.simulations_dir / ep.sim_name
+                sim_work_dir = sim.work_dir(ep)
+                if sim_out_dir.exists():
+                    shutil.rmtree(sim_out_dir)
+                if sim_work_dir.exists():
+                    shutil.rmtree(sim_work_dir)
+
+                if attempt < args.max_retries:
+                    print(f"[retry] {sim_name}: attempt {attempt} failed, retrying...")
+                else:
+                    print(f"[failed] {sim_name}: all {args.max_retries} attempts failed, skipping")
+                    with crashed_log.open('a') as f:
+                        f.write(f"{sim_out_dir}\n{sim_work_dir}\n")
 
 
 if __name__ == '__main__':

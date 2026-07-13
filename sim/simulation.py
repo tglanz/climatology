@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from pathlib import Path
 
-from isca import BarotropicCodeBase, DiagTable, Experiment, Namelist
+from isca import GFDL_WORK, BarotropicCodeBase, DiagTable, Experiment, Namelist
 
 
 @dataclass
@@ -27,6 +27,9 @@ class Simulation(ABC):
 
     @abstractmethod
     def write_metadata(self, sim_dir: Path) -> None: ...
+
+    def work_dir(self, ep: ExecutionParams) -> Path:
+        return Path(GFDL_WORK) / 'experiment' / ep.sim_name
 
     def compile(self) -> None:
         self.codebase.compile()

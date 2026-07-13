@@ -35,7 +35,7 @@ def autoregression(config_path: Path, input_path: Path, t0: int, T: int, output_
     if output_path is None:
         output_path = cfg.data.experiment_dir / "eval" / "autoregression.nc"
 
-    splits = Splits.from_config(cfg.paths)
+    splits = Splits.load(cfg.paths.preprocessed_dir / "splits.json")
 
     sim_dir = input_path.parent.parent.resolve()
     assert splits.has_test(sim_dir), (

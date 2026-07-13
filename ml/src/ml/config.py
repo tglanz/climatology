@@ -136,19 +136,21 @@ class WindowsConfig:
 
 @dataclass
 class SplitConfig:
-    """
-    validation + test + train must be equal to 1.
-    """
-    validation: float 
-    test: float 
-    train: float 
-    validation_limit: int | None = None
-    test_limit: int | None = None
-    train_limit: int | None = None
+    validation_ratio: float
+    test_ratio: float | None = None
+    test_hold_out: dict | None = None
 
     def __post_init__(self):
-        values = [self.validation, self.train, self.test]
-        assert abs(sum(values) - 1.0) < 1e-6, f"split parts {values} must equal to 1"
+        assert (self.test_ratio is None) != (self.test_hold_out is None), (
+            "exactly one of test_ratio or test_hold_out must be set"
+        )
+        assert 0.0 < self.validation_ratio < 1.0, (
+            f"validation_ratio must be in (0, 1), got {self.validation_ratio}"
+        )
+        if self.test_ratio is not None:
+            assert 0.0 < self.test_ratio < 1.0, (
+                f"test_ratio must be in (0, 1), got {self.test_ratio}"
+            )
 
 @dataclass
 class IscaDataConfig:
@@ -393,11 +395,13 @@ class PathsConfig:
     metrics_file: Path | None = None
     # JSON snapshot of run metadata; derived from training_dir if omitted
     training_info_file: Path | None = None
+    # directory for split JSON files; derived from experiment_dir if omitted
+    splits_dir: Path | None = None
 
     def __post_init__(self):
         for field in ("checkpoint_dir", "preprocessed_dir", "training_dir",
                       "epoch_metrics_file", "metrics_file",
-                      "training_info_file"):
+                      "training_info_file", "splits_dir"):
             v = getattr(self, field)
             if v is not None:
                 setattr(self, field, Path(v))
@@ -433,6 +437,14 @@ class Config:
     paths: PathsConfig
 
 
+def _parse_split_config(s: dict) -> SplitConfig:
+    return SplitConfig(
+        validation_ratio=s["validation_ratio"],
+        test_ratio=s.get("test_ratio"),
+        test_hold_out=s.get("test_hold_out"),
+    )
+
+
 def load(path: Path) -> Config:
     with open(path, "rb") as f:
         raw = tomllib.load(f)
@@ -449,7 +461,7 @@ def load(path: Path) -> Config:
         segment_pattern=d["segment_pattern"],
         x_vars=list(d["x_vars"]),
         y_vars=list(d["y_vars"]),
-        split=SplitConfig(**d["split"]),
+        split=_parse_split_config(d["split"]),
         windows=WindowsConfig(**d["windows"]),
         spinup=SpinupConfig(**d["spinup"]) if "spinup" in d else None,
         convergence=ConvergenceConfig(**d["convergence"]) if "convergence" in d else None,
@@ -558,6 +570,7 @@ def load(path: Path) -> Config:
         epoch_metrics_file=p.get("epoch_metrics_file", None),
         metrics_file=p.get("metrics_file", None),
         training_info_file=p.get("training_info_file", None),
+        splits_dir=p.get("splits_dir", None),
     )
 
     if paths.preprocessed_dir is None:
@@ -572,6 +585,8 @@ def load(path: Path) -> Config:
         paths.metrics_file = paths.training_dir / "metrics.h5"
     if paths.training_info_file is None:
         paths.training_info_file = paths.training_dir / "training.json"
+    if paths.splits_dir is None:
+        paths.splits_dir = data.experiment_dir / "splits"
 
     expected_in_channels = data.windows.length * len(data.x_vars)
     active = model.active_sub_config()

@@ -8,8 +8,8 @@
 experiment_dir = "./output/barotropic_stirring-T85"
 simulation_pattern = "simulations/*"
 segment_pattern = "run*/atmos_daily.nc"
-x_vars = ["vor", "stirring"]
-y_vars = ["vor"]
+x_vars = ["vor"]
+y_vars = ["time_mean_zonal_mean_ucomp"]
 
 # Windowing surface. See docs/pre-processing.md for semantics.
 # [data.spinup] and [data.convergence] are optional; omit either
@@ -21,26 +21,32 @@ start_at = "spinup"
 # "end" | "convergence". "convergence" requires [data.convergence].
 end_at = "end"
 # K consecutive snapshots per input.
-length = 5
+length = 10
 # gap between consecutive window starts. 6 = K + 1 (tumbling-equivalent).
-stride = 6
+stride = 11
 # optional cap on windows per simulation; omit for no cap.
-limit = 2
+limit = 15
 
 [data.spinup]
 z_threshold = 2.0
 stable_time = 3
 window_size = 10
 
+[data.convergence]
+threshold = 0.05
+hold = 3
+
+[data.climatology]
+start_at = "convergence"
+end_at = "end"
+
 
 [data.split]
-validation = 0.1
-test = 0.1
-train = 0.8
-# Just for debug, i want preprocessing to be quick
-# train_limit=5
-# test_limit=1
-# validation_limit=1
+validation_ratio = 0.05
+# test_ratio = 0.05
+
+[data.split.test_hold_out]
+stirring_lat0 = [-10.0]
 
 # Architecture selector. Valid: "fno" | "sfno".
 # Per-architecture options live in [model.<arch>]; only the active
@@ -54,18 +60,18 @@ n_modes = [32, 64]
 hidden_channels = 64
 n_layers = 4
 # in_channels MUST equal data.windows.length * len(data.x_vars). Validated at config load.
-in_channels = 10
+in_channels = 5
 out_channels = 1
 
 [model.sfno]
 n_modes = [32, 64]
-hidden_channels = 64
-n_layers = 4
+hidden_channels = 32
+n_layers = 3
 in_channels = 10
 out_channels = 1
 
 [training]
-epochs = 300
+epochs = 100
 batch_size = 64
 learning_rate = 1e-3
 # mse | relative_l2 | lat_weighted_relative_l2
@@ -73,7 +79,7 @@ loss = "lat_weighted_relative_l2"
 # adam | adamw
 optimizer = "adamw"
 # gradient norm clipping
-# grad_clip = 1.0
+grad_clip = 1.0
 
 # Regularization. No defaults; absent fields are not applied.
 [training.regularization]
@@ -86,13 +92,13 @@ dropout      = 0.1    # forwarded to FNO as channel_mlp_dropout
 [training.early_stopping.target_loss]
 value = 0.1
 # val | train
-monitor = "train" 
+monitor = "val" 
 
 [training.early_stopping.patience]
 patience = 20
 min_delta = 1e-4
 # val | train
-monitor = "train"
+monitor = "val"
 
 # TODO: this can just be training.scheduler
 [training.scheduler]
@@ -105,7 +111,7 @@ gamma = 0.5
 
 [training.scheduler.cosine]
 # t_max defaults to training.epochs when omitted
-eta_min = 0.0
+eta_min = 1e-5
 
 [training.scheduler.plateau]
 patience = 15

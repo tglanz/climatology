@@ -10,14 +10,26 @@ def preprocess():
     pass
 
 
+@preprocess.command("generate-splits")
+@click.option("-c", "--config", "config_path", required=True, type=click.Path(exists=True, path_type=Path))
+@click.option("--name", required=True, help="Split name; written to splits/<name>.json")
+@click.option("--description", default="", help="Human-readable description stored in meta")
+def generate_splits(config_path: Path, name: str, description: str):
+    from ml.usecases.generate_splits import run
+    cfg = load_config(config_path)
+    setup_logging(cfg.logging)
+    run(config_path, name, description)
+
+
 @preprocess.command("training-data")
 @click.option("-c", "--config", "config_path", required=True, type=click.Path(exists=True, path_type=Path))
+@click.option("--split", "split_path", required=True, type=click.Path(exists=True, path_type=Path), help="Path to split JSON file")
 @click.option("--workers", default=0, show_default=True, help="Parallel worker processes. 0 = serial.")
-def preprocess_training_data(config_path: Path, workers: int):
+def preprocess_training_data(config_path: Path, split_path: Path, workers: int):
     from ml.usecases.preprocess import run
     cfg = load_config(config_path)
     setup_logging(cfg.logging)
-    run(config_path, n_workers=workers)
+    run(config_path, Path(split_path), n_workers=workers)
 
 
 @preprocess.command("validate-simulations")

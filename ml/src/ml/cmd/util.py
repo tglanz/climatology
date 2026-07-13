@@ -233,6 +233,73 @@ def _fmt_params(n: int | None) -> str:
     return str(n)
 
 
+@util.command("summarize-simulations")
+@click.option(
+    "-c", "--config", "config_path",
+    required=True,
+    type=click.Path(exists=True, path_type=Path),
+)
+@click.option(
+    "--segments", default=150, show_default=True,
+    help="Total number of segments per simulation.",
+)
+def summarize_simulations(config_path: Path, segments: int):
+    """Print a progress summary of simulations in the experiment's simulations/ directory."""
+    cfg = load_config(config_path)
+    experiment_dir = cfg.data.experiment_dir
+    sim_dir = experiment_dir / "simulations"
+    sweep_path = experiment_dir / "sweep.json"
+
+    if not sim_dir.exists():
+        print(f"no simulations directory at {sim_dir}")
+        return
+
+    total_codes = None
+    if sweep_path.exists():
+        total_codes = len(json.loads(sweep_path.read_text()))
+
+    by_code: dict[str, list[tuple[str, str, bool]]] = {}
+    for d in sim_dir.iterdir():
+        parts = d.name.rsplit("-", 1)
+        if len(parts) != 2:
+            continue
+        code, idx = parts
+        runs = sorted([x.name for x in d.iterdir() if x.name.startswith("run")], reverse=True)
+        last = runs[0] if runs else ""
+        done = last == f"run{segments:04d}"
+        by_code.setdefault(code, []).append((idx, last, done))
+
+    total_sims = sum(len(v) for v in by_code.values())
+    done_sims = sum(sum(x[2] for x in v) for v in by_code.values())
+    complete_codes = sum(1 for v in by_code.values() if all(x[2] for x in v))
+
+    in_progress = []
+    for code, reps in by_code.items():
+        for idx, last, done in reps:
+            if last and not done:
+                pct = int(last[3:]) / segments * 100
+                in_progress.append((f"{code}-{idx}", last, pct))
+    in_progress.sort(key=lambda x: -x[2])
+
+    codes_str = f"{complete_codes}/{total_codes}" if total_codes else str(complete_codes)
+    not_started = (total_codes - len(by_code)) if total_codes else 0
+
+    print(f"experiment:  {experiment_dir.name}")
+    print(f"sims done:   {done_sims}/{total_sims}")
+    print(f"codes done:  {codes_str}  (all replicates complete)")
+    if total_codes:
+        print(f"not started: {not_started}")
+
+    if in_progress:
+        print()
+        print("in progress:")
+        bar_width = 20
+        for name, last, pct in in_progress:
+            filled = int(bar_width * pct / 100)
+            bar = "#" * filled + "." * (bar_width - filled)
+            print(f"  {name:<16}  {last}  [{bar}]  {pct:5.1f}%")
+
+
 @util.command("preprocess-fingerprint")
 @click.option(
     "-c", "--config", "config_path",
