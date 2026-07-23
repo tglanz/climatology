@@ -26,6 +26,7 @@ from ml.visualization.evaluation import (
     plot_jet_scatter,
     plot_model_vs_noise_floor,
     plot_noise_floor_summary,
+    plot_training_curve,
 )
 
 log = logging.getLogger(__name__)
@@ -60,10 +61,9 @@ def evaluate_model(training_dir: Path, n_workers: int, batch_size: int):
     sweep_path = exp_dir / "sweep.json"
     sweep = SweepFile(sweep_path) if sweep_path.exists() else None
 
-    splits_manifest = exp_dir / "data" / "splits.json"
-    if not splits_manifest.exists():
-        splits_manifest = exp_dir / "splits" / "lat0-intra-hold-out.json"
-    assert splits_manifest.exists(), f"splits manifest not found: {splits_manifest}"
+    splits_manifest = training_dir / "splits.json"
+    assert splits_manifest.exists(), f"splits.json not found in training dir: {splits_manifest}"
+    log.info("using splits: %s", splits_manifest)
     splits = Splits.load(splits_manifest)
 
     test_set = set(splits.test)
@@ -99,14 +99,28 @@ def evaluate_model(training_dir: Path, n_workers: int, batch_size: int):
     for sr in sim_results:
         sr.pred_profile = _infer_mean_profile(model, norm, sr.x_windows, device, batch_size)
 
-    _section1_baselines(sim_results, lat, splits, sweep, fig_dir)
+    has_training_curve = _section0_training_curve(training_dir, fig_dir)
+    nearest_rows = _section1_baselines(sim_results, lat, splits, sweep, fig_dir)
     noise_floor_data = _section2_noise_floor(sim_results, lat, fig_dir)
     _section3_generalization(sim_results, lat, sweep, splits, fig_dir)
     _section4_error_structure(sim_results, lat, splits, fig_dir)
     _section5_summary_scatter(noise_floor_data, sim_results, splits, fig_dir)
 
-    _write_report(out_dir, fig_dir)
+    _write_report(out_dir, fig_dir, has_training_curve=has_training_curve, nearest_rows=nearest_rows, splits=splits, sim_results=sim_results, sweep=sweep)
     log.info("evaluation complete: %s", out_dir)
+
+
+def _section0_training_curve(training_dir: Path, fig_dir: Path) -> bool:
+    import matplotlib.pyplot as plt
+    csv_path = training_dir / "epoch-metrics.csv"
+    if not csv_path.exists():
+        log.warning("epoch-metrics.csv not found; skipping training curve")
+        return False
+    log.info("section 0: training curve")
+    fig = plot_training_curve(csv_path)
+    fig.savefig(fig_dir / "training_curve.png", dpi=150)
+    plt.close(fig)
+    return True
 
 
 def _load_model(cfg, training_dir: Path):
@@ -171,14 +185,14 @@ def _section1_baselines(
     splits: Splits,
     sweep,
     fig_dir: Path,
-):
+) -> list[dict]:
     log.info("section 1: baselines")
     test_results = [sr for sr in sim_results if sr.sim_dir in set(splits.test)]
     train_results = [sr for sr in sim_results if sr.sim_dir in set(splits.train)]
 
     if not test_results:
         log.warning("no test-split sims found; skipping baselines")
-        return
+        return []
 
     truth_test = np.stack([sr.truth_profile for sr in test_results])
     train_truths = np.stack([sr.truth_profile for sr in train_results]) if train_results else truth_test
@@ -192,8 +206,27 @@ def _section1_baselines(
     model_score = _rl2_all(lambda sr: sr.pred_profile)
 
     nearest_score = mean_score
+    nearest_rows = []
     if sweep is not None and train_results:
         nearest_score = _rl2_all(lambda sr: _nearest_config_pred(sr.code, train_results, sweep))
+        seen_codes = set()
+        for sr in test_results:
+            if sr.code in seen_codes:
+                continue
+            seen_codes.add(sr.code)
+            info = _nearest_config_info(sr.code, train_results, sweep)
+            if info is None:
+                continue
+            _, nearest_code, dist = info
+            test_params = sweep.params_for(sr.code) or {}
+            nearest_params = sweep.params_for(nearest_code) or {}
+            nearest_rows.append({
+                "test_code": sr.code,
+                "test_params": test_params,
+                "nearest_code": nearest_code,
+                "nearest_params": nearest_params,
+                "distance": dist,
+            })
 
     names = ["zero", "train mean", "nearest config", "model"]
     scores = [zero_score, mean_score, nearest_score, model_score]
@@ -212,20 +245,22 @@ def _section1_baselines(
     fig.savefig(fig_dir / "baselines_profiles.png", dpi=150)
     plt.close(fig)
 
+    return nearest_rows
 
-def _nearest_config_pred(
+
+def _nearest_config_info(
     code: str,
     train_results: list,
     sweep: SweepFile,
-) -> np.ndarray:
-    """Predict with the training config code nearest in normalized param space."""
+) -> tuple[np.ndarray, str, float] | None:
+    """Return (pred_profile, nearest_code, distance) for the nearest training config."""
     varying = sweep.varying_keys()
     if not varying:
-        return np.mean([sr.truth_profile for sr in train_results], axis=0)
+        return None
 
     test_params = sweep.params_for(code)
     if test_params is None:
-        return np.mean([sr.truth_profile for sr in train_results], axis=0)
+        return None
 
     train_codes_seen: dict[str, list] = defaultdict(list)
     for sr in train_results:
@@ -242,7 +277,15 @@ def _nearest_config_pred(
     dists = np.linalg.norm(norm_matrix - norm_test, axis=1)
     best_idx = int(np.argmin(dists))
     best_code = list(train_codes_seen.keys())[best_idx]
-    return np.mean(train_codes_seen[best_code], axis=0)
+    pred = np.mean(train_codes_seen[best_code], axis=0)
+    return pred, best_code, float(dists[best_idx])
+
+
+def _nearest_config_pred(code: str, train_results: list, sweep: SweepFile) -> np.ndarray:
+    info = _nearest_config_info(code, train_results, sweep)
+    if info is None:
+        return np.mean([sr.truth_profile for sr in train_results], axis=0)
+    return info[0]
 
 
 def _section2_noise_floor(sim_results: list, lat: np.ndarray, fig_dir: Path) -> dict:
@@ -439,11 +482,12 @@ def _section5_summary_scatter(
     plt.close(fig)
 
 
-def _write_report(out_dir: Path, fig_dir: Path):
+def _write_report(out_dir: Path, fig_dir: Path, has_training_curve: bool = True, nearest_rows: list[dict] | None = None, splits: Splits | None = None, sim_results: list | None = None, sweep=None):
     log.info("writing report.md")
     png_files = sorted(fig_dir.glob("*.png"))
 
     captions = {
+        "training_curve.png": "Train and validation loss per epoch.",
         "baselines_bar.png": "relL2 of each predictor on the test split.",
         "baselines_profiles.png": "Mean truth and predictor profiles on the test split.",
         "noise_floor_summary.png": "Across-replicate noise floor (bars) vs model relL2 (dots) per config code, sorted ascending.",
@@ -459,17 +503,69 @@ def _write_report(out_dir: Path, fig_dir: Path):
         [f.name for f in png_files if f.name.startswith("generalization_") and f.name != "generalization_worst.png"]
     )
 
+    training_figs = ["training_curve.png"] if has_training_curve else []
     sections = [
+        ("Training", training_figs),
         ("Baselines", ["baselines_bar.png", "baselines_profiles.png"]),
         ("Noise Floor", ["noise_floor_summary.png", "model_vs_noise_floor.png"]),
         ("Generalization", generalization_figs + ["generalization_worst.png"]),
         ("Error Structure", ["error_bias.png", "error_histogram.png", "error_jet_lat.png", "error_jet_amp.png"]),
     ]
 
-    lines = ["# Evaluation Report", ""]
+    lines = [
+        "---",
+        "header-includes:",
+        "  - \\usepackage{float}",
+        "  - \\floatplacement{figure}{H}",
+        "---",
+        "",
+        "# Evaluation Report",
+        "",
+    ]
+
+    if splits is not None and sim_results is not None:
+        test_set = set(splits.test)
+        val_set = set(splits.validation)
+        train_set = set(splits.train)
+
+        by_code: dict[str, list] = defaultdict(list)
+        for sr in sim_results:
+            by_code[sr.code].append(sr)
+
+        def _split_label(srs):
+            if any(sr.sim_dir in test_set for sr in srs): return "test"
+            if any(sr.sim_dir in val_set for sr in srs): return "val"
+            if any(sr.sim_dir in train_set for sr in srs): return "train"
+            return "unknown"
+
+        lines.append("## Split Summary")
+        lines.append("")
+        lines.append(f"| | count |")
+        lines.append(f"|---|---|")
+        lines.append(f"| train | {len(splits.train)} |")
+        lines.append(f"| val | {len(splits.validation)} |")
+        lines.append(f"| test | {len(splits.test)} |")
+        lines.append("")
+
+        if sweep is not None:
+            varying = sweep.varying_keys()
+            if varying:
+                header = "| code | split | " + " | ".join(varying) + " |"
+                sep = "|---|---|" + "---|" * len(varying)
+                lines.append(header)
+                lines.append(sep)
+                for code, srs in sorted(by_code.items(), key=lambda kv: (_split_label(kv[1]), kv[0])):
+                    label = _split_label(srs)
+                    params = sweep.params_for(code)
+                    param_vals = " | ".join(str(params.get(k, "")) for k in varying) if params else " | ".join("" for _ in varying)
+                    lines.append(f"| {code} | {label} | {param_vals} |")
+                lines.append("")
     for section_num, (section_title, fig_names) in enumerate(sections, start=1):
         lines.append(f"## {section_num}. {section_title}")
         lines.append("")
+        if not fig_names and section_title == "Training":
+            lines.append("> No training metrics available.")
+            lines.append("")
         for fname in fig_names:
             if not (fig_dir / fname).exists():
                 continue
@@ -482,6 +578,19 @@ def _write_report(out_dir: Path, fig_dir: Path):
             if caption:
                 lines.append(caption)
                 lines.append("")
+        if section_title == "Baselines" and nearest_rows:
+            varying_keys = list(nearest_rows[0]["test_params"].keys())
+            header = "| test code | " + " | ".join(varying_keys) + " | nearest code | " + " | ".join(f"nearest {k}" for k in varying_keys) + " | distance |"
+            sep = "|---|" + "---|" * len(varying_keys) + "---|" + "---|" * len(varying_keys) + "---|"
+            lines.append("### Nearest training config per test code")
+            lines.append("")
+            lines.append(header)
+            lines.append(sep)
+            for row in sorted(nearest_rows, key=lambda r: r["test_code"]):
+                test_vals = " | ".join(str(row["test_params"].get(k, "")) for k in varying_keys)
+                near_vals = " | ".join(str(row["nearest_params"].get(k, "")) for k in varying_keys)
+                lines.append(f"| {row['test_code']} | {test_vals} | {row['nearest_code']} | {near_vals} | {row['distance']:.3f} |")
+            lines.append("")
 
     report_path = out_dir / "report.md"
     report_path.write_text("\n".join(lines))

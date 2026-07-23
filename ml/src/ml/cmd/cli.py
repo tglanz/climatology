@@ -7,6 +7,7 @@ from ml.cmd.monitor import monitor
 from ml.cmd.util import util
 from ml.cmd.evaluate import evaluate
 from ml.cmd.data import data
+from ml.cmd.tmp import tmp
 
 
 @click.group()
@@ -20,6 +21,7 @@ cli.add_command(monitor)
 cli.add_command(util)
 cli.add_command(evaluate)
 cli.add_command(data)
+cli.add_command(tmp)
 
 if __name__ == '__main__':
     cli()

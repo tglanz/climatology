@@ -6,6 +6,7 @@ is done here -- that is the orchestrator's responsibility.
 """
 from __future__ import annotations
 
+from pathlib import Path
 from typing import Sequence
 
 import numpy as np
@@ -47,6 +48,27 @@ def plot_baselines_profiles(
     ax.set_xlabel("u [m/s]")
     ax.set_ylabel("lat [deg]")
     ax.set_title("Mean profiles: truth vs predictors")
+    ax.legend(fontsize=8)
+    ax.grid(alpha=0.3)
+    fig.tight_layout()
+    return fig
+
+
+def plot_training_curve(csv_path: Path) -> plt.Figure:
+    import csv
+    epochs, train_loss, val_loss = [], [], []
+    with open(csv_path) as f:
+        for row in csv.DictReader(f):
+            epochs.append(int(row["epoch"]))
+            train_loss.append(float(row["train_loss"]))
+            val_loss.append(float(row["val_loss"]))
+
+    fig, ax = plt.subplots(figsize=(8, 4))
+    ax.plot(epochs, train_loss, label="train", color="tab:blue")
+    ax.plot(epochs, val_loss, label="val", color="tab:orange", linestyle="--")
+    ax.set_xlabel("epoch")
+    ax.set_ylabel("loss")
+    ax.set_title("Training curve")
     ax.legend(fontsize=8)
     ax.grid(alpha=0.3)
     fig.tight_layout()

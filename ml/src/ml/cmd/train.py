@@ -32,6 +32,9 @@ def train(config_path: Path, track_metrics: bool, workers: int):
 
     cfg.paths.training_dir.mkdir(parents=True, exist_ok=True)
     shutil.copy2(config_path, cfg.paths.training_dir / "config.toml")
+    splits_src = cfg.paths.preprocessed_dir / "splits.json"
+    assert splits_src.exists(), f"splits.json not found in preprocessed dir: {splits_src}"
+    shutil.copy2(splits_src, cfg.paths.training_dir / "splits.json")
 
     clim_target = all(is_climatology_var(v) for v in cfg.data.y_vars)
     model = build_model(cfg.model, dropout=cfg.training.regularization.dropout, zonal_mean=clim_target)
