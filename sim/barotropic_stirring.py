@@ -42,21 +42,25 @@ class BarotropicStirringParams:
 
 
 _cb = BarotropicCodeBase.from_directory(GFDL_BASE)
+# GCC 14 hard-errors on implicit function declarations by default; mosaic_util.h
+# is missing a prototype for isHeadNode (defined in mosaic_util.c, used in
+# create_xgrid.c), so relax that back to a warning to match older compilers.
+_cb.compile_flags.append('-Wno-error=implicit-function-declaration')
 
 _diag = DiagTable()
 _diag.add_file('atmos_daily', 1, 'days', time_units='days')
 _diag.add_field('barotropic_diagnostics', 'ucomp',       time_avg=True)
 _diag.add_field('barotropic_diagnostics', 'vcomp',       time_avg=True)
 _diag.add_field('barotropic_diagnostics', 'vor',         time_avg=True)
-_diag.add_field('barotropic_diagnostics', 'pv',          time_avg=True)
+# _diag.add_field('barotropic_diagnostics', 'pv',          time_avg=True)
 _diag.add_field('barotropic_diagnostics', 'stream',      time_avg=True)
-_diag.add_field('barotropic_diagnostics', 'trs',         time_avg=True)
-_diag.add_field('barotropic_diagnostics', 'tr',          time_avg=True)
-_diag.add_field('barotropic_diagnostics', 'eddy_vor',    time_avg=True)
-_diag.add_field('barotropic_diagnostics', 'delta_u',     time_avg=True)
-_diag.add_field('stirring_mod',           'stirring',     time_avg=True)
-_diag.add_field('stirring_mod',           'stirring_amp', time_avg=True)
-_diag.add_field('stirring_mod',           'stirring_sqr', time_avg=True)
+# _diag.add_field('barotropic_diagnostics', 'trs',         time_avg=True)
+# _diag.add_field('barotropic_diagnostics', 'tr',          time_avg=True)
+# _diag.add_field('barotropic_diagnostics', 'eddy_vor',    time_avg=True)
+# _diag.add_field('barotropic_diagnostics', 'delta_u',     time_avg=True)
+# _diag.add_field('stirring_mod',           'stirring',     time_avg=True)
+# _diag.add_field('stirring_mod',           'stirring_amp', time_avg=True)
+# _diag.add_field('stirring_mod',           'stirring_sqr', time_avg=True)
 
 
 class BarotropicStirring(Simulation):

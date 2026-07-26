@@ -5,6 +5,7 @@
 
 log.txt
 output/
+slurm/output/
 
 .isca_work
 .isca_data
