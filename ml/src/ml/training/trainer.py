@@ -113,12 +113,7 @@ class Trainer:
         batch_size = train_loader.batch_size
         for x, y in train_loader:
             if normalizer_y is None:
-                if y.ndim == 3:
-                    normalizer_y = UnitGaussianNormalizer(dim=[0, 2])
-                elif y.ndim == 4:
-                    normalizer_y = UnitGaussianNormalizer(dim=[0, 2, 3])
-                else:
-                    raise ValueError(f"unexpected y ndim: {y.ndim}")
+                normalizer_y = UnitGaussianNormalizer(dim=[0, 2])
 
             normalizer_x.partial_fit(x, batch_size=batch_size)
             normalizer_y.partial_fit(y, batch_size=batch_size)

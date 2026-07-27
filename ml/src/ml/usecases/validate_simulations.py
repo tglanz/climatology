@@ -5,7 +5,7 @@ from pathlib import Path
 from tqdm import tqdm
 
 from ml.config import load as load_config
-from ml.data.climatology import is_climatology_var, nc_var_for, resolve_window
+from ml.data.climatology import nc_var_for, resolve_window
 from ml.diagnostics.convergence import find_zonal_mean_convergence_time
 from ml.diagnostics.enstrophy import mean_enstrophy
 from ml.diagnostics.spinup import find_spinup_time
@@ -38,12 +38,11 @@ def _validate_one(
     if not nc_files:
         return SimResult(sim_dir, n_runs, n_samples, False, "no segments matching segment_pattern")
 
-    step_y_vars = [v for v in cfg.data.y_vars if not is_climatology_var(v)]
     segments_cache = {}
     for nc_path in nc_files:
         try:
             segment_samples_count, _ = validate_segment(
-                nc_path, cfg.data.x_vars, step_y_vars, cache=segments_cache)
+                nc_path, cfg.data.x_vars, [], cache=segments_cache)
         except (AssertionError, OSError, ValueError) as e:
             return SimResult(sim_dir, n_runs, n_samples, False, f"{nc_path.name}: {e}")
         n_samples += segment_samples_count
@@ -91,11 +90,8 @@ def _validate_one(
                 return SimResult(sim_dir, n_runs, n_samples, False, "convergence not reached")
 
     if validate_climatology:
-        clim_cfg = cfg.data.climatology
-        if clim_cfg is None:
-            return SimResult(sim_dir, n_runs, n_samples, False, "validate_climatology requires [data.climatology] section")
         try:
-            resolve_window(clim_cfg, t_s, t_c, n_samples)
+            resolve_window(cfg.data.climatology, t_s, t_c, n_samples)
         except AssertionError as e:
             return SimResult(sim_dir, n_runs, n_samples, False, f"climatology window invalid: {e}")
 

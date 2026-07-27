@@ -5,7 +5,7 @@ import numpy as np
 import xarray as xr
 
 from ml.config import IscaDataConfig, load as load_config
-from ml.data.climatology import compute_climatology, is_climatology_var, nc_var_for, resolve_window
+from ml.data.climatology import compute_climatology, nc_var_for, resolve_window
 from ml.data.isca_segment import aggregated_read_field, read_segment, validate_segment
 from ml.data.window_selector import build_selector
 from ml.diagnostics import find_spinup_time, find_zonal_mean_convergence_time
@@ -47,10 +47,6 @@ def process_one_sim(
     K = data_cfg.windows.length
     selector = build_selector(data_cfg.windows)
 
-    step_y_vars = [v for v in data_cfg.y_vars if not is_climatology_var(v)]
-    clim_y_vars = [v for v in data_cfg.y_vars if is_climatology_var(v)]
-    is_clim = bool(clim_y_vars)
-
     nc_files = sorted(exp_dir.glob(data_cfg.segment_pattern))
     if not nc_files:
         log.warning("no NC files in %s", exp_dir)
@@ -59,7 +55,7 @@ def process_one_sim(
     timeline: list[tuple[Path, int]] = []
     spatial_shape: tuple | None = None
     for path in nc_files:
-        T, spatial = validate_segment(path, data_cfg.x_vars, step_y_vars)
+        T, spatial = validate_segment(path, data_cfg.x_vars, [])
         if spatial_shape is None:
             spatial_shape = spatial
         timeline.extend((path, t) for t in range(T))
@@ -94,14 +90,13 @@ def process_one_sim(
                     f"convergence not reached for {exp_dir}; "
                     "run validate-simulations --validate-convergence before preprocessing"
                 )
-        if clim_y_vars:
-            a, b = resolve_window(data_cfg.climatology, t_s, t_c, M)
-            clim_array = np.stack([
-                compute_climatology(
-                    diag, aggregated_read_field(nc_files, nc_var_for(diag), ds_cache), a, b
-                )
-                for diag in clim_y_vars
-            ], axis=0).astype(np.float32)
+        a, b = resolve_window(data_cfg.climatology, t_s, t_c, M)
+        clim_array = np.stack([
+            compute_climatology(
+                diag, aggregated_read_field(nc_files, nc_var_for(diag), ds_cache), a, b
+            )
+            for diag in data_cfg.y_vars
+        ], axis=0).astype(np.float32)
     finally:
         for d in ds_cache.values():
             d.close()
@@ -123,12 +118,7 @@ def process_one_sim(
                 for v in data_cfg.x_vars:
                     x_channels.append(ds_k[v].isel(time=t_k).values)
             xs.append(np.stack(x_channels, axis=0))
-            if is_clim:
-                ys.append(clim_array)
-            else:
-                path_y, t_y = timeline[t_0 + K]
-                ds_y = read_segment(path_y, ds_cache)
-                ys.append(np.stack([ds_y[v].isel(time=t_y).values for v in step_y_vars], axis=0))
+            ys.append(clim_array)
     finally:
         for d in ds_cache.values():
             d.close()

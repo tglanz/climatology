@@ -113,19 +113,6 @@ def baseline_mean(config_path: Path, workers: int):
     print(json.dumps({"loss_fn": cfg.training.loss, "val_samples": len(val_loader.dataset), "loss": score}, indent=2))
 
 
-@baseline_score.command("persistence")
-@_baseline_options
-def baseline_persistence(config_path: Path, workers: int):
-    """Predict next-step vorticity as equal to current vorticity."""
-    cfg = load_config(config_path)
-    _, val_loader, _ = make_loaders(cfg, num_workers=workers)
-    assert val_loader is not None, "val split is empty"
-    score = baselines.score_persistence(
-        val_loader, _make_loss_fn(cfg),
-        cfg.data.x_vars, cfg.data.y_vars, cfg.data.windows.length,
-    )
-    print(json.dumps({"loss_fn": cfg.training.loss, "val_samples": len(val_loader.dataset), "loss": score}, indent=2))
-
 
 @util.command("summarize-trainings")
 @click.option(

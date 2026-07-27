@@ -128,10 +128,7 @@ def _load_one_sim(sim_dir: Path, data_cfg: IscaDataConfig) -> SimResult | None:
                 log.warning("convergence not reached in %s; using end of trajectory", sim_dir)
                 t_c = timeline_len - 1
 
-        if data_cfg.climatology is None:
-            a, b = 0, timeline_len
-        else:
-            a, b = resolve_window(data_cfg.climatology, t_s, t_c, timeline_len)
+        a, b = resolve_window(data_cfg.climatology, t_s, t_c, timeline_len)
         truth_profile = compute_climatology(diag_name, clim_field, a, b).astype(np.float32)
 
         from ml.data.window_selector import build_selector

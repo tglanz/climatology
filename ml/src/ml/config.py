@@ -168,12 +168,11 @@ class IscaDataConfig:
     split: SplitConfig
     # window-extraction strategy: length, selection bounds, optional cap
     windows: WindowsConfig
+    climatology: ClimatologyConfig
     # optional dynamic spin-up detector; required when windows.start_at == "spinup"
     spinup: SpinupConfig | None = None
     # optional dynamic convergence detector; required when windows.end_at == "convergence"
     convergence: ConvergenceConfig | None = None
-    # optional climatology window; required when any y_var is a climatology diagnostic
-    climatology: ClimatologyConfig | None = None
 
     def __post_init__(self):
         self.experiment_dir = Path(self.experiment_dir)
@@ -185,15 +184,14 @@ class IscaDataConfig:
             assert self.convergence is not None, (
                 "windows.end_at = 'convergence' requires [data.convergence] section"
             )
-        if self.climatology is not None:
-            if self.climatology.start_at == "spinup" or self.climatology.end_at == "spinup":
-                assert self.spinup is not None, (
-                    "climatology anchor 'spinup' requires [data.spinup] section"
-                )
-            if self.climatology.start_at == "convergence" or self.climatology.end_at == "convergence":
-                assert self.convergence is not None, (
-                    "climatology anchor 'convergence' requires [data.convergence] section"
-                )
+        if self.climatology.start_at == "spinup" or self.climatology.end_at == "spinup":
+            assert self.spinup is not None, (
+                "climatology anchor 'spinup' requires [data.spinup] section"
+            )
+        if self.climatology.start_at == "convergence" or self.climatology.end_at == "convergence":
+            assert self.convergence is not None, (
+                "climatology anchor 'convergence' requires [data.convergence] section"
+            )
 
 
 @dataclass
@@ -463,9 +461,9 @@ def load(path: Path) -> Config:
         y_vars=list(d["y_vars"]),
         split=_parse_split_config(d["split"]),
         windows=WindowsConfig(**d["windows"]),
+        climatology=ClimatologyConfig(**d["climatology"]),
         spinup=SpinupConfig(**d["spinup"]) if "spinup" in d else None,
         convergence=ConvergenceConfig(**d["convergence"]) if "convergence" in d else None,
-        climatology=ClimatologyConfig(**d["climatology"]) if "climatology" in d else None,
     )
 
     model_raw = raw["model"]

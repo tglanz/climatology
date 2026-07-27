@@ -7,7 +7,6 @@ import torch
 
 from ml.config import load as load_config
 from ml.common.logging import setup_logging
-from ml.data.climatology import is_climatology_var
 from ml.training.model import build_model
 
 from ml.diagnostics.spatial import cosine_latitude_weights
@@ -36,8 +35,7 @@ def train(config_path: Path, track_metrics: bool, workers: int):
     assert splits_src.exists(), f"splits.json not found in preprocessed dir: {splits_src}"
     shutil.copy2(splits_src, cfg.paths.training_dir / "splits.json")
 
-    clim_target = all(is_climatology_var(v) for v in cfg.data.y_vars)
-    model = build_model(cfg.model, dropout=cfg.training.regularization.dropout, zonal_mean=clim_target)
+    model = build_model(cfg.model, dropout=cfg.training.regularization.dropout)
     train_loader, val_loader, _ = make_loaders(cfg, num_workers=workers)
 
     lat_weights = None

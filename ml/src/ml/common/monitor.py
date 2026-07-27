@@ -5,7 +5,6 @@ from pathlib import Path
 import numpy as np
 
 from ml.config import Config
-from ml.data.climatology import is_climatology_var
 
 
 @dataclass
@@ -34,18 +33,11 @@ class MonitorState:
             if cfg.training.early_stopping.target_loss is not None
             else None
         )
-        self.is_climatology: bool = all(is_climatology_var(v) for v in cfg.data.y_vars)
         self.spatial_error: np.ndarray | None = None
-        # step mode
-        self.zonal_mean_history: list[np.ndarray] = []
-        self.error_power: np.ndarray | None = None
-        self.signal_power: np.ndarray | None = None
-        # climatology mode
         self.profile_pred_history: list[np.ndarray] = []
         self.profile_pred_std: np.ndarray | None = None
         self.profile_truth: np.ndarray | None = None
 
-    _ZONAL_HISTORY_LEN = 10
     _PROFILE_HISTORY_LEN = 10
 
     def update(self) -> None:
@@ -55,18 +47,10 @@ class MonitorState:
         if self._cfg.paths.metrics_file.exists():
             import h5py
             with h5py.File(self._cfg.paths.metrics_file, "r") as f:
-                self.spatial_error = f["spatial_error"][:]
-                self.error_power  = f["error_power"][:] if "error_power" in f else None
-                self.signal_power = f["signal_power"][:] if "signal_power" in f else None
-                zonal        = f["zonal_mean_error"][:] if "zonal_mean_error" in f else None
+                self.spatial_error   = f["spatial_error"][:]
                 profile_pred     = f["profile_pred"][:]     if "profile_pred"     in f else None
                 profile_pred_std = f["profile_pred_std"][:] if "profile_pred_std" in f else None
                 profile_truth    = f["profile_truth"][:]    if "profile_truth"    in f else None
-            if zonal is not None:
-                if not self.zonal_mean_history or not np.array_equal(zonal, self.zonal_mean_history[-1]):
-                    self.zonal_mean_history.append(zonal)
-                    if len(self.zonal_mean_history) > self._ZONAL_HISTORY_LEN:
-                        self.zonal_mean_history.pop(0)
             if profile_pred is not None:
                 if not self.profile_pred_history or not np.array_equal(profile_pred, self.profile_pred_history[-1]):
                     self.profile_pred_history.append(profile_pred)

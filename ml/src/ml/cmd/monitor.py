@@ -110,130 +110,6 @@ def _run_terminal(state: MonitorState, interval: float) -> None:
 
 # --- GUI ---
 
-def _run_gui_step(state: MonitorState, interval: float) -> None:
-    import matplotlib.pyplot as mpl
-    import matplotlib.ticker as ticker
-
-    mpl.ion()
-    fig = mpl.figure(figsize=(14, 8))
-    gs = fig.add_gridspec(3, 3)
-    ax_info    = fig.add_subplot(gs[0, 0])
-    ax_chart   = fig.add_subplot(gs[0, 1:])
-    ax_spatial = fig.add_subplot(gs[1, :2])
-    ax_zonal   = fig.add_subplot(gs[1, 2])
-    ax_power   = fig.add_subplot(gs[2, :])
-
-    ax_info.axis("off")
-    info_title = ax_info.text(
-        0.05, 0.99, "", transform=ax_info.transAxes,
-        verticalalignment="top", fontfamily="monospace", fontsize=9, fontweight="bold",
-    )
-    info_left = ax_info.text(
-        0.05, 0.88, "", transform=ax_info.transAxes,
-        verticalalignment="top", fontfamily="monospace", fontsize=9,
-    )
-    info_right = ax_info.text(
-        0.52, 0.88, "", transform=ax_info.transAxes,
-        verticalalignment="top", fontfamily="monospace", fontsize=9,
-    )
-
-    ax_chart.set_yscale("linear")
-    fig.subplots_adjust(left=0.05, right=0.97, top=0.96, bottom=0.06, hspace=0.45, wspace=0.3)
-    ax_chart.set_title("loss per epoch")
-    ax_chart.set_xlabel("epoch")
-    ax_chart.set_ylabel("loss")
-    ax_chart.grid(True, alpha=0.3)
-    ax_chart.xaxis.set_major_locator(ticker.MaxNLocator(integer=True))
-
-    if state.target_loss is not None:
-        ax_chart.axhline(
-            state.target_loss, color="red", linestyle=":", linewidth=1,
-            label=f"target ({state.target_loss})",
-        )
-
-    ax_spatial.set_title("spatial mean error", fontsize=9, pad=3)
-    ax_spatial.set_xlabel("lon")
-    ax_spatial.set_ylabel("lat")
-    spatial_im = ax_spatial.imshow(
-        [[0]], aspect="auto", origin="lower", cmap="viridis",
-        extent=[0, 360, -90, 90],
-    )
-    fig.colorbar(spatial_im, ax=ax_spatial, fraction=0.02, pad=0.01)
-
-    ax_zonal.set_title("zonal mean error")
-    ax_zonal.set_xlabel("error")
-    ax_zonal.set_ylabel("lat")
-    ax_zonal.set_ylim(-90, 90)
-    n_hist = MonitorState._ZONAL_HISTORY_LEN
-    zonal_lines = [
-        ax_zonal.plot([], [], color="tab:blue" if k == 0 else "gray", alpha=1.0 if k == 0 else max(0.08, 1 - k / (n_hist - 1)))[0]
-        for k in range(n_hist - 1, -1, -1)
-    ]
-    zonal_lines.reverse()  # index 0 = latest
-
-    ax_power.set_title("power spectrum", fontsize=9, pad=3)
-    ax_power.set_xlabel("zonal wavenumber")
-    ax_power.set_ylabel("power")
-    ax_power.set_yscale("log")
-    ax_power.set_xscale("log")
-    error_power_line,  = ax_power.plot([], [], label="error",  color="tab:red")
-    signal_power_line, = ax_power.plot([], [], label="signal", color="tab:blue")
-    cutoff = state._cfg.model.active_sub_config().n_modes[0]
-    ax_power.axvline(cutoff, color="gray", linestyle=":", linewidth=1, label=f"n_modes={cutoff}")
-    ax_power.legend(fontsize=8)
-
-    lines: dict[str, mpl.Line2D] = {}
-
-    while mpl.fignum_exists(fig.number):
-        state.update()
-        title, left, right = _sections_to_two_columns(state.title, state.sections)
-        info_title.set_text(title)
-        info_left.set_text(left)
-        info_right.set_text(right)
-
-        for s in state.series:
-            prefix = f"{s.label} " if s.label else ""
-            train_key = f"{s.run_id}_train"
-            val_key = f"{s.run_id}_val"
-            if train_key not in lines:
-                (lines[train_key],) = ax_chart.plot(s.epochs, s.train_losses, label=f"{prefix}train")
-                (lines[val_key],)   = ax_chart.plot(s.epochs, s.val_losses,   label=f"{prefix}val", linestyle="--")
-                ax_chart.legend()
-            else:
-                lines[train_key].set_data(s.epochs, s.train_losses)
-                lines[val_key].set_data(s.epochs, s.val_losses)
-
-        ax_chart.relim()
-        ax_chart.autoscale_view()
-
-        if state.spatial_error is not None and state.spatial_error.ndim == 2:
-            spatial_im.set_data(state.spatial_error)
-            spatial_im.set_clim(vmin=0, vmax=state.spatial_error.max())
-
-        if state.zonal_mean_history:
-            lats = np.linspace(-90, 90, len(state.zonal_mean_history[0]))
-            history = state.zonal_mean_history
-            for k, line in enumerate(zonal_lines):
-                idx = len(history) - 1 - k
-                if idx >= 0:
-                    line.set_data(history[idx], lats)
-                else:
-                    line.set_data([], [])
-            ax_zonal.relim()
-            ax_zonal.autoscale_view(scaley=False)
-
-        if state.error_power is not None and state.signal_power is not None:
-            wavenumbers = np.arange(1, len(state.error_power) + 1)  # start at 1 for log scale
-            error_power_line.set_data(wavenumbers, state.error_power)
-            signal_power_line.set_data(wavenumbers, state.signal_power)
-            ax_power.relim()
-            ax_power.autoscale_view()
-
-        fig.canvas.draw()
-        fig.canvas.flush_events()
-        mpl.pause(interval)
-
-
 def _run_gui_climatology(state: MonitorState, interval: float) -> None:
     import matplotlib.pyplot as mpl
     import matplotlib.ticker as ticker
@@ -314,13 +190,6 @@ def _run_gui_climatology(state: MonitorState, interval: float) -> None:
         mpl.pause(interval)
 
 
-def _run_gui(state: MonitorState, interval: float) -> None:
-    if state.is_climatology:
-        _run_gui_climatology(state, interval)
-    else:
-        _run_gui_step(state, interval)
-
-
 # --- CLI ---
 
 @click.group()
@@ -338,6 +207,6 @@ def training(config_path: Path, interval: float, gui: bool):
     cfg = load_config(config_path)
     state = MonitorState(cfg)
     if gui:
-        _run_gui(state, interval)
+        _run_gui_climatology(state, interval)
     else:
         _run_terminal(state, interval)

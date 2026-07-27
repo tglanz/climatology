@@ -15,7 +15,7 @@ class ZonalMeanWrapper(nn.Module):
         return self.model(x).mean(dim=-1)
 
 
-def build_model(cfg: ModelConfig, dropout: float | None = None, zonal_mean: bool = False):
+def build_model(cfg: ModelConfig, dropout: float | None = None):
     """
     Build the neural operator selected by `cfg.architecture` ("fno" or
     "sfno"). `dropout` (if provided) is forwarded as `channel_mlp_dropout`,
@@ -43,4 +43,4 @@ def build_model(cfg: ModelConfig, dropout: float | None = None, zonal_mean: bool
     else:
         raise ValueError(f"unknown architecture: {cfg.architecture}")
 
-    return ZonalMeanWrapper(model) if zonal_mean else model
+    return ZonalMeanWrapper(model)

@@ -6,7 +6,6 @@ import h5py
 from tqdm import tqdm
 
 from ml.config import load as load_config
-from ml.data.climatology import is_climatology_var
 from ml.data.isca_preprocessing import list_simulation_dirs, process_one_sim, sort_simulation_dirs
 from ml.data.splits import Splits
 
@@ -22,11 +21,6 @@ def _extract_pairs(
     cfg = load_config(config_path)
     data_cfg = cfg.data
     windows_cfg = data_cfg.windows
-
-    step_y_vars = [v for v in data_cfg.y_vars if not is_climatology_var(v)]
-    clim_y_vars = [v for v in data_cfg.y_vars if is_climatology_var(v)]
-    is_clim = bool(clim_y_vars)
-    active_y_vars = clim_y_vars if is_clim else step_y_vars
 
     exp_dirs = sort_simulation_dirs(exp_dirs)
     output_path.parent.mkdir(parents=True, exist_ok=True)
@@ -67,8 +61,8 @@ def _extract_pairs(
                     maxshape=(None, *y_arr.shape[1:]),
                     dtype="float32",
                 )
-                y_ds.attrs["vars"] = active_y_vars
-                y_ds.attrs["kind"] = "climatology" if is_clim else "step"
+                y_ds.attrs["vars"] = data_cfg.y_vars
+                y_ds.attrs["kind"] = "climatology"
 
             x_ds.resize((written + n, *x_ds.shape[1:]))
             x_ds[written : written + n] = x_arr
@@ -83,7 +77,7 @@ def _extract_pairs(
         "wrote %d pairs to %s (K=%d, start_at=%s, end_at=%s, stride=%d, limit=%s, y_kind=%s, y_vars=%s)",
         written, output_path, windows_cfg.length,
         windows_cfg.start_at, windows_cfg.end_at, windows_cfg.stride, windows_cfg.limit,
-        "climatology" if is_clim else "step", active_y_vars,
+        "climatology", data_cfg.y_vars,
     )
 
 

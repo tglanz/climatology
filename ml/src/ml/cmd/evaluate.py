@@ -124,7 +124,7 @@ def _section0_training_curve(training_dir: Path, fig_dir: Path) -> bool:
 
 
 def _load_model(cfg, training_dir: Path):
-    model = build_model(cfg.model, dropout=None, zonal_mean=True)
+    model = build_model(cfg.model, dropout=None)
     params_path = training_dir / "parameters.pt"
     assert params_path.exists(), f"model parameters not found: {params_path}"
     state = torch.load(params_path, map_location="cpu", weights_only=False)
