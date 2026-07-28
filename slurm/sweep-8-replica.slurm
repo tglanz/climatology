@@ -5,25 +5,23 @@
 
 #SBATCH --nodes=1
 #SBATCH --ntasks=4
-#SBATCH --cpus-per-task=1
-#SBATCH --mem=4g
+#SBATCH --cpus-per-task=2
+#SBATCH --mem=8g
 #SBATCH --time=08:00:00
 
-#SBATCH --job-name=tglanz-sweep-10-replica
+#SBATCH --job-name=tglanz-sweep-8-replica
 #SBATCH --output=output/%x-%A_%a.out
 #SBATCH --error=output/%x-%A_%a.err
 
 ## Matrix
-##   10 lat0 values x 3 amplitude values x 3 widthy values x 10 replicas
-##   = 900 simulations, task ids 0..899
-#SBATCH --array=0-899%10
+##   10 lat0 values x 3 amplitude values x 3 widthy values x 8 replicas
+##   = 720 simulations, task ids 0..719
+#SBATCH --array=0-719%30
 
 LAT0=(-10 0 10 20 30 40 50 60 70 80)
 AMPLITUDE=(0.75e-10 1.0e-10 1.25e-10)
 WIDTHY=(8 12 16)
-REPLICATES=10
-
-## fixed parameters (docs/trial-spec-20260629.md)
+REPLICATES=8
 
 SEGMENTS=200
 

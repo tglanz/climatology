@@ -119,7 +119,7 @@ def main():
                 else:
                     print(f"[failed] {sim_name}: all {args.max_retries} attempts failed, skipping")
                     with crashed_log.open('a') as f:
-                        f.write(f"{sim_out_dir}\n{sim_work_dir}\n")
+                        f.write(f"{sim_out_dir.resolve()}\n{sim_work_dir.resolve()}\n")
 
 
 if __name__ == '__main__':

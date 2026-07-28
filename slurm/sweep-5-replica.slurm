@@ -5,8 +5,8 @@
 
 #SBATCH --nodes=1
 #SBATCH --ntasks=4
-#SBATCH --cpus-per-task=1
-#SBATCH --mem=4g
+#SBATCH --cpus-per-task=2
+#SBATCH --mem=8g
 #SBATCH --time=08:00:00
 
 #SBATCH --job-name=tglanz-sweep-5-replica
@@ -16,14 +16,12 @@
 ## Matrix
 ##   10 lat0 values x 3 amplitude values x 3 widthy values x 5 replicas
 ##   = 450 simulations, task ids 0..449
-#SBATCH --array=0-449%10
+#SBATCH --array=0-449%30
 
 LAT0=(-10 0 10 20 30 40 50 60 70 80)
 AMPLITUDE=(0.75e-10 1.0e-10 1.25e-10)
 WIDTHY=(8 12 16)
 REPLICATES=5
-
-## fixed parameters (docs/trial-spec-20260629.md)
 
 SEGMENTS=200
 
