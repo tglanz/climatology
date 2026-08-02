@@ -145,7 +145,7 @@ def _rel_to(target: Path, base: Path) -> str:
 def _collect_paths(cfg: "Config") -> dict[str, Any]:
     p = cfg.paths
     return {
-        "experiment_dir": str(cfg.data.experiment_dir),
+        "experiment_dir": str(cfg.paths.experiment_dir),
         "training_dir": str(p.training_dir),
         "checkpoint_dir": str(p.checkpoint_dir),
         "preprocessed_dir": str(p.preprocessed_dir),

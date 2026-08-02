@@ -72,11 +72,11 @@ def _within_group_loss(
 def run(config_path: Path, n_workers: int = 0) -> None:
     cfg = load_config(config_path)
     latitudes = load_latitudes(cfg)
-    sim_dirs = list_simulation_dirs(cfg.data)
+    sim_dirs = list_simulation_dirs(cfg.data, cfg.paths.experiment_dir)
     log.info("found %d simulation dirs", len(sim_dirs))
 
     sweep = None
-    sweep_path = cfg.data.experiment_dir / "sweep.json"
+    sweep_path = cfg.paths.experiment_dir / "sweep.json"
     if sweep_path.exists():
         sweep = SweepFile(sweep_path)
 

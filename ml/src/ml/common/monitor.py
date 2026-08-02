@@ -25,7 +25,7 @@ class RunSeries:
 class MonitorState:
     def __init__(self, cfg: Config):
         self._cfg = cfg
-        self.title: str = cfg.data.experiment_dir.name
+        self.title: str = cfg.paths.experiment_dir.name
         self.sections: list[Section] = []
         self.series: list[RunSeries] = []
         self.target_loss: float | None = (
@@ -147,7 +147,7 @@ def _build_sections(cfg: Config, rows: list[dict]) -> tuple[str, list[Section]]:
         Section("[Early Stopping]", _early_stopping_items(t)),
     ]
 
-    return cfg.data.experiment_dir.name, sections
+    return cfg.paths.experiment_dir.name, sections
 
 
 def _build_series(rows: list[dict]) -> list[RunSeries]:

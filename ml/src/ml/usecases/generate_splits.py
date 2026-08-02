@@ -14,11 +14,11 @@ def run(config_path: Path, name: str, description: str) -> Path:
     data_cfg = cfg.data
     split_config = data_cfg.split
 
-    sim_dirs = list_simulation_dirs(data_cfg)
+    sim_dirs = list_simulation_dirs(data_cfg, cfg.paths.experiment_dir)
 
     sweep = None
     if split_config.test_hold_out is not None:
-        sweep = SweepFile.from_experiment_dir(data_cfg.experiment_dir)
+        sweep = SweepFile.from_experiment_dir(cfg.paths.experiment_dir)
 
     splits = generate(split_config, sim_dirs, sweep)
 

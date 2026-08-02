@@ -233,7 +233,7 @@ def _fmt_params(n: int | None) -> str:
 def summarize_simulations(config_path: Path, segments: int):
     """Print a progress summary of simulations in the experiment's simulations/ directory."""
     cfg = load_config(config_path)
-    experiment_dir = cfg.data.experiment_dir
+    experiment_dir = cfg.paths.experiment_dir
     sim_dir = experiment_dir / "simulations"
     sweep_path = experiment_dir / "sweep.json"
 

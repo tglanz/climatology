@@ -21,10 +21,10 @@ def sort_simulation_dirs(exp_dirs: list[Path]) -> list[Path]:
     return list(sorted(exp_dirs, key=lambda p: str(p).split("/")[-1]))
 
 
-def list_simulation_dirs(cfg: IscaDataConfig, should_sort: bool = True) -> list[Path]:
-    log.debug("listing simulations from %s/%s", cfg.experiment_dir, cfg.simulation_pattern)
-    sim_dirs = list(cfg.experiment_dir.glob(cfg.simulation_pattern))
-    assert sim_dirs, f"no simulations found: {cfg.experiment_dir}/{cfg.simulation_pattern}"
+def list_simulation_dirs(cfg: IscaDataConfig, experiment_dir: Path, should_sort: bool = True) -> list[Path]:
+    log.debug("listing simulations from %s/%s", experiment_dir, cfg.simulation_pattern)
+    sim_dirs = list(experiment_dir.glob(cfg.simulation_pattern))
+    assert sim_dirs, f"no simulations found: {experiment_dir}/{cfg.simulation_pattern}"
     if should_sort:
         sim_dirs = sort_simulation_dirs(sim_dirs)
     return sim_dirs

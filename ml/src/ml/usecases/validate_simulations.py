@@ -108,7 +108,7 @@ def run(
 ) -> int:
     """Returns the number of invalid simulations."""
     cfg = load_config(config_path)
-    sim_dirs = list_simulation_dirs(cfg.data)
+    sim_dirs = list_simulation_dirs(cfg.data, cfg.paths.experiment_dir)
     n_invalid = 0
 
     if workers == 0:

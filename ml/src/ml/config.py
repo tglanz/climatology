@@ -154,8 +154,6 @@ class SplitConfig:
 
 @dataclass
 class IscaDataConfig:
-    # root directory of the experiment (contains simulations/, data/, training/)
-    experiment_dir: Path
     # glob pattern under experiment_dir to find individual simulation directories
     simulation_pattern: str
     # glob pattern within each simulation directory to find NC files
@@ -175,7 +173,6 @@ class IscaDataConfig:
     convergence: ConvergenceConfig | None = None
 
     def __post_init__(self):
-        self.experiment_dir = Path(self.experiment_dir)
         if self.windows.start_at == "spinup":
             assert self.spinup is not None, (
                 "windows.start_at = 'spinup' requires [data.spinup] section"
@@ -381,8 +378,8 @@ class LoggingConfig:
 
 @dataclass
 class PathsConfig:
-    # directory for saving model checkpoints; derived from experiment_dir if omitted
-    checkpoint_dir: Path | None = None
+    # root directory of the experiment (contains simulations/, splits/)
+    experiment_dir: Path
     # directory where preprocessed HDF5 splits are written and read from; derived if omitted
     preprocessed_dir: Path | None = None
     # directory for training outputs; derived from experiment_dir if omitted
@@ -391,18 +388,19 @@ class PathsConfig:
     epoch_metrics_file: Path | None = None
     # spatial/spectral metrics HDF5; derived from training_dir if omitted
     metrics_file: Path | None = None
-    # JSON snapshot of run metadata; derived from training_dir if omitted
-    training_info_file: Path | None = None
     # directory for split JSON files; derived from experiment_dir if omitted
     splits_dir: Path | None = None
+    # always derived: checkpoint artifacts live alongside other training outputs
+    checkpoint_dir: Path | None = None
+    # always derived: run metadata JSON written to training_dir
+    training_info_file: Path | None = None
 
     def __post_init__(self):
-        for field in ("checkpoint_dir", "preprocessed_dir", "training_dir",
-                      "epoch_metrics_file", "metrics_file",
-                      "training_info_file", "splits_dir"):
-            v = getattr(self, field)
+        for f in ("experiment_dir", "preprocessed_dir", "training_dir",
+                  "epoch_metrics_file", "metrics_file", "splits_dir"):
+            v = getattr(self, f)
             if v is not None:
-                setattr(self, field, Path(v))
+                setattr(self, f, Path(v))
 
 
 @dataclass
@@ -454,7 +452,6 @@ def load(path: Path) -> Config:
             "for the configuration surface."
         )
     data = IscaDataConfig(
-        experiment_dir=d["experiment_dir"],
         simulation_pattern=d["simulation_pattern"],
         segment_pattern=d["segment_pattern"],
         x_vars=list(d["x_vars"]),
@@ -561,30 +558,29 @@ def load(path: Path) -> Config:
     )
 
     p = raw.get("paths", {})
+    if "experiment_dir" not in p:
+        raise ValueError("[paths.experiment_dir] is required")
     paths = PathsConfig(
-        checkpoint_dir=p.get("checkpoint_dir", None),
-        preprocessed_dir=p.get("preprocessed_dir", None),
-        training_dir=p.get("training_dir", None),
-        epoch_metrics_file=p.get("epoch_metrics_file", None),
-        metrics_file=p.get("metrics_file", None),
-        training_info_file=p.get("training_info_file", None),
-        splits_dir=p.get("splits_dir", None),
+        experiment_dir=p["experiment_dir"],
+        preprocessed_dir=p.get("preprocessed_dir"),
+        training_dir=p.get("training_dir"),
+        epoch_metrics_file=p.get("epoch_metrics_file"),
+        metrics_file=p.get("metrics_file"),
+        splits_dir=p.get("splits_dir"),
     )
 
     if paths.preprocessed_dir is None:
-        paths.preprocessed_dir = data.experiment_dir / "data"
+        paths.preprocessed_dir = paths.experiment_dir / "data"
     if paths.training_dir is None:
-        paths.training_dir = data.experiment_dir / "training"
-    if paths.checkpoint_dir is None:
-        paths.checkpoint_dir = paths.training_dir
+        paths.training_dir = paths.experiment_dir / "training"
+    paths.checkpoint_dir = paths.training_dir
     if paths.epoch_metrics_file is None:
         paths.epoch_metrics_file = paths.training_dir / "epoch-metrics.csv"
     if paths.metrics_file is None:
         paths.metrics_file = paths.training_dir / "metrics.h5"
-    if paths.training_info_file is None:
-        paths.training_info_file = paths.training_dir / "training.json"
+    paths.training_info_file = paths.training_dir / "training.json"
     if paths.splits_dir is None:
-        paths.splits_dir = data.experiment_dir / "splits"
+        paths.splits_dir = paths.experiment_dir / "splits"
 
     expected_in_channels = data.windows.length * len(data.x_vars)
     active = model.active_sub_config()
