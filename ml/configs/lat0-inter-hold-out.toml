@@ -123,7 +123,8 @@ eta_min = 0.0
 level = "INFO"
 stdout = true
 
-# [paths]
-# checkpoint_dir = ...     # defaults to <experiment_dir>/training
+[paths]
+training_dir = "./output/barotropic_stirring-T85/training-inter"
+# checkpoint_dir = ...     # defaults to <training_dir>
 # preprocessed_dir = ...   # defaults to <experiment_dir>/data
-# training_info_file = ... # defaults to <experiment_dir>/training/training.json
+# training_info_file = ... # defaults to <training_dir>/training.json
