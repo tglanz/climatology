@@ -24,7 +24,7 @@ source .venv/bin/activate
 
 EXPERIMENT_DIR=$(python -c "from ml.config import load; import sys; print(load(sys.argv[1]).paths.experiment_dir)" "${CONFIGS[0]}")
 
-ml preprocess create-sweep-file \
+uv run ml preprocess create-sweep-file \
     --experiment-dir "$EXPERIMENT_DIR" \
     --key stirring_lat0=stirring_nml.lat0 \
     --key stirring_amplitude=stirring_nml.amplitude \

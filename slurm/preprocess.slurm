@@ -35,17 +35,17 @@ source .venv/bin/activate
 SPLITS_DIR=$(python -c "from ml.config import load; import sys; print(load(sys.argv[1]).paths.splits_dir)" "$CONFIG")
 
 # Step 1: validate simulations
-ml preprocess validate-simulations -c "$CONFIG" \
+uv run ml preprocess validate-simulations -c "$CONFIG" \
     --validate-spinup \
     --validate-convergence \
     --validate-climatology \
     --workers 4
 
 # Step 2: generate splits
-ml preprocess generate-splits -c "$CONFIG" --name "$SPLIT_NAME"
+uv run ml preprocess generate-splits -c "$CONFIG" --name "$SPLIT_NAME"
 
 # Step 3: extract windows into HDF5
-ml preprocess training-data -c "$CONFIG" \
+uv run ml preprocess training-data -c "$CONFIG" \
     --split "$SPLITS_DIR/$SPLIT_NAME.json" \
     --workers 4
 
