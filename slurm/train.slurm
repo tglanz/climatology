@@ -13,22 +13,19 @@
 #SBATCH --output=output/%x-%j.out
 #SBATCH --error=output/%x-%j.err
 
-## usage: sbatch train.slurm <config.toml> [extra uv run ml train args...]
+## usage: sbatch ./slurm/train.slurm <config.toml> [extra args...]
 
 set -e
-set -x
 
 CONFIG="$1"
 shift
 
 if [ -z "$CONFIG" ]; then
-  echo "usage: sbatch train.slurm <config.toml> [extra uv run ml train args...]" >&2
+  echo "usage: sbatch ./slurm/train.slurm <config.toml> [extra args...]" >&2
   exit 1
 fi
 
-cd ../ml
-
-source .venv/bin/activate
+source ./ml/.venv/bin/activate
 
 uv run ml train -c "$CONFIG" "$@"
 curl -s -d "$(basename "$CONFIG" .toml) train done" ntfy.sh/tglanz-general-51189

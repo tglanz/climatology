@@ -1,15 +1,17 @@
 #!/bin/bash
-# Run from the slurm/ directory: bash train.sh
 
 set -e
-set -x
 
 CONFIGS=(
-    "configs/lat0-inter-hold-out.toml"
-    "configs/lat0-extra-low-hold-out.toml"
-    "configs/lat0-extra-hi-hold-out.toml"
+    "./ml/configs/lat0-inter-hold-out.toml"
+    "./ml/configs/lat0-extra-low-hold-out.toml"
+    "./ml/configs/lat0-extra-hi-hold-out.toml"
 )
 
-for config in "${CONFIGS[@]}"; do
-    sbatch train.slurm "$config"
+cd "$(dirname "$0")/.."
+
+source ./ml/.venv/bin/activate
+
+for i in "${!CONFIGS[@]}"; do
+    sbatch ./slurm/train.slurm "${CONFIGS[$i]}"
 done
