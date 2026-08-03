@@ -9,11 +9,11 @@
 #SBATCH --gres=shard:1
 #SBATCH --qos=gpu
 
-#SBATCH --job-name=tglanz-train
+#SBATCH --job-name=tglanz-evaluate
 #SBATCH --output=output/%x-%j.out
 #SBATCH --error=output/%x-%j.err
 
-## usage: sbatch ./slurm/train.slurm <config.toml> [extra args...]
+## usage: sbatch ./slurm/evaluate.slurm <config.toml>
 
 set -e
 
@@ -23,19 +23,20 @@ if [[ "$SLURM_SUBMIT_DIR" != */climatology/slurm ]]; then
 fi
 
 CONFIG="$1"
-shift
 
 if [ -z "$CONFIG" ]; then
-  echo "usage: sbatch ./slurm/train.slurm <config.toml> [extra args...]" >&2
+  echo "usage: sbatch ./evaluate.slurm <config.toml>" >&2
   exit 1
 fi
 
 if [ ! -f "$CONFIG" ]; then
   echo "config file not found: $CONFIG" >&2
+  exit 1
 fi
 
 cd $SLURM_SUBMIT_DIR/..
 source ./ml/.venv/bin/activate
 
-uv run ml train -c "$CONFIG" --workers 8 --track-metrics
-curl -s -d "train $(basename "$CONFIG" .toml) done" ntfy.sh/tglanz-general-51189
+TRAINING_DIR=$(python -c "from ml.config import load; import sys; print(load(sys.argv[1]).paths.training_dir)" "$CONFIG")
+uv run ml evaluate model --training-dir "$TRAINING_DIR" --n-workers 4
+curl -s -d "$(basename "$CONFIG" .toml) eval done" ntfy.sh/tglanz-general-51189

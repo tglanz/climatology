@@ -124,5 +124,5 @@ stdout = true
 
 [paths]
 experiment_dir = "./output/barotropic_stirring-T85"
-training_dir = "./output/barotropic_stirring-T85/training-inter"
-preprocessed_dir = "./output/barotropic_stirring-T85/data-inter"
+training_dir = "./output/barotropic_stirring-T85/training-lat0-inter"
+preprocessed_dir = "./output/barotropic_stirring-T85/data-lat0-inter"

@@ -1,10 +1,6 @@
 #!/bin/bash
 
-SPLIT_NAMES=(
-    "lat0-inter"
-    "lat0-extra-low"
-    "lat0-extra-hi"
-)
+set -e
 
 cd "$(dirname "$0")/.."
 
@@ -24,8 +20,5 @@ done
 
 cd ./slurm
 for i in "${!CONFIGS[@]}"; do
-    set -x
-    sbatch ./preprocess.slurm "${CONFIGS[$i]}" "${SPLIT_NAMES[$i]}"
-    set +x
+    sbatch ./evaluate.slurm "${CONFIGS[$i]}"
 done
-

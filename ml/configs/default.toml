@@ -5,7 +5,6 @@
 # need to think - but i think we could have "[data] + [simulation]" sections and also extract the "experiment_dir" into [path].
 # not sure if we need a "[experiment]". however, now that i think of it, maybe the best thing to do is to replace [path] with [experiment].
 [data]
-experiment_dir = "./output/barotropic_stirring-T85"
 simulation_pattern = "simulations/*"
 segment_pattern = "run*/atmos_daily.nc"
 x_vars = ["vor"]
@@ -43,11 +42,10 @@ end_at = "end"
 
 [data.split]
 validation_ratio = 0.05
-test_ratio = 0.05
+# test_ratio = 0.05
 
-# hold_out_matrix example (mutually exclusive with test_ratio):
-# [data.split.test_hold_out]
-# stirring_lat0 = [70.0]
+[data.split.test_hold_out]
+stirring_lat0 = [70.0]
 
 # Architecture selector. Valid: "fno" | "sfno".
 # Per-architecture options live in [model.<arch>]; only the active
@@ -124,7 +122,7 @@ eta_min = 0.0
 level = "INFO"
 stdout = true
 
-# [paths]
-# checkpoint_dir = ...     # defaults to <experiment_dir>/training
-# preprocessed_dir = ...   # defaults to <experiment_dir>/data
-# training_info_file = ... # defaults to <experiment_dir>/training/training.json
+[paths]
+experiment_dir = "./output/barotropic_stirring-T85"
+training_dir = "./output/barotropic_stirring-T85/training-extra-hi"
+preprocessed_dir = "./output/barotropic_stirring-T85/data-extra-hi"
