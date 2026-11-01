@@ -11,8 +11,9 @@ The guide includes worked examples, self-checks, answers, and references.
 The current implementation claims refer to the source pins listed in the
 deck, inspected on 2026-11-01. Proposed heads are labeled as proposals.
 
-The related work items are [the harmonic-head study](../../action-items/20-harmonic-head.md)
-and [the architecture review](../../action-items/architecture-review.md).
+For the repository work, see the [workplan](../../docs/workplan.md) and
+[pipeline reconsideration](../../action-items/03-pipeline.md).
+The output-head comparison remains a separate research direction.
 
 ## Editing and rebuilding
 
