@@ -66,9 +66,12 @@ These changes should each have one main owner.
 
 ## Order of work
 
-1. Fix numerical and data contracts in 01-07, then define artifact identity and stage interfaces in 21-22.
-2. Prove one small complete run and independent evaluation in 19 and 24.
-3. Establish the complete model bundle in 23, then run the controlled head comparison in 20.
+1. Thin the baseline in 25: remove verified obsolete paths and redundant material, and preserve live behavior.
+2. Fix numerical and data contracts in 01-07 and establish the fast iteration profile in 19.
+3. Define artifact and stage contracts in 21-23, then persist independent evaluation evidence in 24.
+4. Complete live-path refactoring and client migration in 08-10, audit retained documents, and run the head comparison in 20.
+
+The [workplan](../docs/workplan.md) gives the phase order and implementation, verification, and review gates.
 
 ## Architectural acceptance scenarios
 

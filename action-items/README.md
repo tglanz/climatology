@@ -10,6 +10,7 @@ Existing Isca submodule changes were preserved.
 
 Read the [system architecture review](architecture-review.md) for the end-to-end assessment and target structure.
 
+Start with [25: thin the baseline](25-thin-baseline.md), then follow the [phased workplan](../docs/workplan.md).
 Fix numerical contracts before comparing models. Build the small iteration profile early.
 Use each item as a separate change where practical.
 
@@ -22,7 +23,7 @@ Use each item as a separate change where practical.
 | [05](05-netcdf-lifetime.md) | P1 | NetCDF cache and ownership |
 | [06](06-simulation-preparation.md) | P1 | One sample and target preparation path |
 | [07](07-preprocessing-and-splits.md) | P2 | Deterministic, bounded data preparation |
-| [08](08-remove-legacy-code.md) | P2 | Remove old paths and split responsibilities |
+| [08](08-remove-legacy-code.md) | P2 | Refactor live code and split responsibilities |
 | [09](09-visualization-api.md) | P2 | One plotting contract |
 | [10](10-notebooks.md) | P2 | Thin, consistent notebooks |
 | [11](11-environments.md) | P2 | Supported dependencies and setup |
@@ -39,6 +40,7 @@ Use each item as a separate change where practical.
 | [22](22-stage-interfaces.md) | P2 | Stage interfaces and one runnable recipe |
 | [23](23-model-contract.md) | P2 | Complete target and model bundle |
 | [24](24-evaluation-artifacts.md) | P1 | Frozen evaluation protocols and reusable results |
+| [25](25-thin-baseline.md) | P1 | Initial cleanup and behavior-preserving refactors |
 
 P1 means address before trusting a new scientific comparison. P2 means simplify or repair the workflow.
 These priorities describe review risk, not a measured model quality result.
@@ -77,6 +79,7 @@ The documentation work is split by ownership. Check every listed family when clo
 
 | Documents | Item |
 |---|---|
+| Redundant setup instructions and competing maintained presentation sources | 25, then 13 |
 | Root README, ML README, sim README, heat README and getting-started | 13 |
 | `docs/pre-processing.md` | 06, 13 |
 | `docs/model-evaluation.md`, `docs/norms.md`, `docs/notations.md` | 02, 03, 14 |

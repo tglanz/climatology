@@ -1,6 +1,6 @@
 # 13. Refresh project and operating documents
 
-Priority: P2. Coordinate with 14-16.
+Priority: P2. Coordinate with 14-16. Initial pruning belongs to 25.
 
 ## Evidence
 
@@ -13,6 +13,8 @@ The dated trial spec, Slurm sweep matrix, and current TOML files describe differ
 
 ## Work
 
+Use the retained document set and canonical sources selected in 25.
+Complete the accuracy and coverage audit against the implemented pipeline.
 Create one short restart path covering simulation, validation, split creation, preprocessing, training, evaluation, and notebooks.
 Name each artifact, its owner, and its directory.
 Use one source for current setup and commands. Link to it from overlapping guides.

@@ -1,6 +1,6 @@
 # 18. Consolidate local and Slurm scripts
 
-Priority: P2. Follow 11 and 17.
+Priority: P2. Follow 11 and 17. Initial obsolete-entry-point removal belongs to 25.
 
 ## Evidence
 
@@ -19,7 +19,7 @@ Resolve root/config paths once. Pass arguments unchanged.
 Validate required inputs and fail correctly.
 Align MPI ranks and allocated resources.
 Keep notification topics and cluster choices configurable.
-Remove stale wrappers, debugger targets, and comments after caller checks.
+Start from the retained entry points selected in 25. Remove replaced implementations after migrating their callers.
 
 ## Verify
 

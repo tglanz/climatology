@@ -21,7 +21,29 @@ A required check that cannot run stays pending. Either run it before closure or 
 Do not treat a skipped check as a pass.
 Keep earlier phase checks passing as later phases change their consumers.
 
-## Phase 1. Supported environments
+## Phase 1. Cleanup and small refactors
+
+**Outcome:** a thinner baseline with fewer obsolete paths and explicit owners.
+
+- [25. Thin the baseline](../action-items/25-thin-baseline.md)
+
+Record the retained public surface and current check results first.
+Remove verified unused code, obsolete entry points, redundant document sources, and comment noise.
+Merge exact duplicates and make small behavior-preserving moves.
+Where implementations disagree, keep the difference visible for its later correctness repair.
+Bootstrap only the existing dependencies needed to check the affected surface.
+
+**Verification:** check caller evidence for each removal and the destination for each merge.
+Compare fixed-input behavior for live moves.
+Rerun imports, command help, config loading, shell syntax, and document-link checks.
+Require no new failures, unresolved references, or loss of unique historical evidence.
+Record existing failures against their later repair items.
+
+**Exit:** the smaller supported surface is verified and independently reviewed.
+No scientific behavior has changed.
+The later phases start from this baseline.
+
+## Phase 2. Supported environments
 
 **Outcome:** the required tools and runtimes can be installed and checked.
 
@@ -34,7 +56,7 @@ Keep simulation and ML runtimes separate.
 
 **Exit:** supported environments, exact commands, and platform limits are documented and reviewed.
 
-## Phase 2. Data and numerical correctness
+## Phase 3. Data and numerical correctness
 
 **Outcome:** one reliable interpretation of coordinates, diagnostics, samples, and targets.
 
@@ -50,12 +72,12 @@ Implement in this order:
 Check ownership, harmonic reconstruction, quadrature, metric values, window bounds, target agreement, empty splits, and failure cleanup.
 Serial and parallel preparation must produce the same identified samples.
 
-Add and run regression tests now. CI integration follows in Phase 3.
+Add and run regression tests now. CI integration follows in Phase 4.
 
 **Exit:** preprocessing and evaluation agree on sample and target semantics.
 Coordinates, rejection policies, and data provenance are explicit.
 
-## Phase 3. Training and fast feedback
+## Phase 4. Training and fast feedback
 
 **Outcome:** a small complete ML run gives reliable results and quick feedback.
 
@@ -70,12 +92,12 @@ Record time and memory on named hardware.
 Run the same checks in a clean CI checkout and prove a deliberate failure fails the job.
 
 Complete the fixture pipeline before closing item 12.
-Extend CI with the regression tests from Phase 2.
+Extend CI with the regression tests from Phase 3.
 
 **Exit:** one documented CPU recipe completes within its measured budget, produces usable artifacts, and runs in CI.
 Development outputs cannot overwrite full results.
 
-## Phase 4. Reproducible pipeline and artifact contracts
+## Phase 5. Reproducible pipeline and artifact contracts
 
 **Outcome:** stages consume identified, complete artifacts and preserve experiment history.
 
@@ -92,15 +114,15 @@ Stop after preparation, then continue without rebuilding it.
 Load a moved model bundle without raw-data path assumptions.
 
 Use tiny profile and coefficient test heads to verify the bundle interface.
-The scientific head design and comparison remain in Phase 8.
-Establish stable stage interfaces here. Final legacy deletion and client migration belong to Phase 6.
+The scientific head design and comparison remain in Phase 9.
+Establish stable stage interfaces here. Client migration and live-path refactoring belong to Phase 7.
 
 **Exit:** the small end-to-end recipe uses explicit artifact references.
 Changes to scientific inputs invalidate the right artifacts.
 Resource changes do not alter scientific identity.
 Failures stop dependent stages.
 
-## Phase 5. Scientific evaluation
+## Phase 6. Scientific evaluation
 
 **Outcome:** scores and research claims have explicit definitions and reproducible evidence.
 
@@ -118,11 +140,11 @@ Check citations and remove unsupported claims.
 Model comparisons use that protocol.
 Stored evidence supports every reported score.
 
-## Phase 6. Shared APIs and thin notebooks
+## Phase 7. Shared APIs and thin notebooks
 
 **Outcome:** CLI commands and notebooks use the same library behavior.
 
-- [08. Remove legacy code and clarify owners](../action-items/08-remove-legacy-code.md)
+- [08. Refactor live code and clarify owners](../action-items/08-remove-legacy-code.md)
 - [09. Consistent visualization API](../action-items/09-visualization-api.md)
 - [10. Thin, consistent notebooks](../action-items/10-notebooks.md)
 
@@ -134,10 +156,10 @@ Require agreement with CLI predictions, targets, and scores.
 For the heat demonstration, verify its extracted solver and time labels or record the explicit archive decision.
 
 **Exit:** each reusable responsibility has one owner.
-Clients preserve the contracts from Phases 2-5.
+Clients preserve the contracts from Phases 3-6.
 No retained notebook contains copied pipeline logic, stale results, or saved exceptions.
 
-## Phase 7. Documentation and book
+## Phase 8. Documentation and book
 
 **Outcome:** operating instructions describe the system, and the book teaches correct standalone theory.
 
@@ -155,7 +177,7 @@ This phase completes the repository-wide audit and removes remaining duplication
 
 **Exit:** current instructions work, historical records remain clearly dated, and the book requires no knowledge of the implementation.
 
-## Phase 8. Harmonic-head research
+## Phase 9. Harmonic-head research
 
 **Outcome:** a controlled experiment answers whether a different output head offers a useful benefit.
 
