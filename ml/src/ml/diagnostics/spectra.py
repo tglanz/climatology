@@ -1,5 +1,7 @@
 import numpy as np
 
+from ml.diagnostics.spatial import cosine_latitude_weights
+
 
 def zonal_power_spectrum(field: np.ndarray) -> np.ndarray:
     """

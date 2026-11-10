@@ -4,6 +4,24 @@ Completed [action item 01](01-compaction.md) on branch `compaction`, with the
 verification limits below. Computational behavior and saved artifact formats are
 unchanged. Correctness and pipeline redesign remain separate phases.
 
+## Missing import followup
+
+The missing `cosine_latitude_weights` import in `diagnostics/spectra.py` is now
+repaired. This restores the intended function call without changing the spectrum
+formula. Deferring this wiring repair was unnecessary.
+
+The ML suite now has 19 passing tests. A new regression checks a known Fourier
+mode and batch scaling against analytical power values. Both previously blocked
+notebooks, barotropic visualization and other visualizations, now pass fresh
+kernel execution on the same bounded fixtures. All nine notebooks have therefore
+passed bounded checks across the original run and this followup. Saved notebook
+outputs remain unchanged. The spectrum module's undefined-name check passes.
+
+The tables below retain the original compaction measurements and historical
+failures; their equivalence results predate this intentional failure-to-success
+repair. GPU, full real-data, scheduler, and native Quarto verification limits
+remain unchanged.
+
 ## Completed batches
 
 | Batch | Result |
@@ -83,7 +101,7 @@ entry points even if they had no import callers.
 No raw data, prepared experiment data, saved model, log, historical notebook
 output, or unique research result was deleted.
 
-## Numerical and command verification
+## Original numerical and command verification
 
 | Check | Result |
 |---|---|
@@ -112,7 +130,7 @@ The ML run emits a NumPy/netCDF import warning. The original wind-direction
 layout also emits a Matplotlib tight-layout warning. Neither was counted as a
 failed test or silently suppressed in the recorded suite.
 
-## Fresh kernel notebook checks
+## Original fresh kernel notebook checks
 
 Every notebook ran in a separate kernel. Temporary copies selected synthetic
 simulation directories and a tiny FNO checkpoint. CPU selection was explicit.
@@ -215,5 +233,5 @@ uv run --no-sync --project ml python "$EVIDENCE/final_checks.py" "$EVIDENCE"
 ```
 
 GPU execution, a full real-data notebook run, a fresh simulation, and scheduler
-execution were not performed. The preserved spectrum failures and unavailable
-Quarto checks are the remaining verification limits.
+execution were not performed. Native Quarto checks remain unavailable. The
+historical spectrum failures listed above are resolved by the import followup.

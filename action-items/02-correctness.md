@@ -21,7 +21,7 @@ Start in `ml/src/ml/training/`, `config.py`, and the shared prediction code.
 
 ## Evaluation
 
-- Correct latitude-weighted profile errors and the broken spectrum helper.
+- Correct latitude-weighted profile errors.
 - Build train baselines from train data only. The current fallback can use test targets.
 - Describe replicate variability accurately; it is not automatically a minimum possible prediction error.
 - Make scores, plot labels, and reports agree with what was computed. Do not include figures left over from a previous evaluation.
