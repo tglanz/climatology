@@ -32,7 +32,7 @@ cat "$CONFIG"
 echo ""
 
 echo "Validating: "
-uv run ml preprocess validate-simulations -c "$CONFIG" \
+uv run --project ml ml preprocess validate-simulations -c "$CONFIG" \
     --validate-spinup \
     --validate-convergence \
     --validate-climatology \

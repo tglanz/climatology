@@ -1,75 +1,47 @@
 # Climatology
 
-Research repository on Global Physical Climatology and Machine Learning (PINNs, Neural Operators, Numerical Systems).
+Research on global physical climatology, idealized simulations, and neural operators.
+
+| Directory | Purpose |
+|---|---|
+| [sim](sim/README.md) | Isca barotropic simulations and parameter sweeps |
+| [ml](ml/README.md) | Preparation, diagnostics, training, evaluation, and plots |
+| [heat-simulation](heat-simulation/README.md) | Separate heat-equation demonstration |
+| [book](book/README.md) | General mathematics, fluid dynamics, and operator learning |
+| [docs](docs/workplan.md) | Project methods, operation, and maintenance phases |
+| [presentations](presentations/) | Talks and study material |
+| [action-items](action-items/README.md) | Maintenance scope, plans, and verification records |
+
+Experiment data and saved runs live under `output/` and are not tracked in Git.
+Run ML commands from this directory with `uv run --project ml ...`.
+Use the Isca conda environment for simulation commands.
 
 ## Submodules
 
-This repository uses Git submodules to track external dependencies at specific commits.
+[Isca](https://github.com/ExeClim/Isca) and
+[neuraloperator](https://github.com/neuraloperator/neuraloperator) are pinned under
+`submodules/`. Keep their recorded revisions and local patches explicit.
 
-### Isca
-
-[Isca](https://github.com/ExeClim/Isca) is a framework for idealized global circulation model (GCM) experiments developed at the University of Exeter.
-
-Located at: `submodules/isca`
-
----
-
-### Cloning with Submodules
-
-When cloning this repository for the first time, initialize and fetch all submodules:
+Clone with both dependencies:
 
 ```bash
-git clone --recurse-submodules https://github.com/your-org/climatology
+git clone --recurse-submodules git@github.com:tglanz/climatology.git
 ```
 
-If you already cloned without `--recurse-submodules`:
+For an existing checkout, initialize or restore the recorded revisions:
 
 ```bash
 git submodule update --init --recursive
-```
-
----
-
-### Pulling Submodule Updates
-
-To update all submodules to the commit recorded in the superproject:
-
-```bash
-git submodule update --recursive
-```
-
-To pull each submodule to the latest commit on its tracked remote branch:
-
-```bash
-git submodule update --remote --recursive
-```
-
-After running `--remote`, the superproject index will show the submodules as modified. Commit the changes to record the new commit SHAs:
-
-```bash
-git add submodules/
-git commit -m "update submodules to latest"
-```
-
----
-
-### Pinning a Submodule to a Specific Commit
-
-```bash
-cd submodules/isca
-git fetch
-git checkout <commit-sha>   # or a tag/branch name
-cd ../..
-git add submodules/isca
-git commit -m "pin isca to <commit-sha>"
-```
-
----
-
-### Checking Submodule Status
-
-```bash
 git submodule status
 ```
 
-A leading `-` means the submodule is not yet initialized. A leading `+` means the checked-out commit differs from what the superproject recorded.
+A leading `-` means uninitialized; `+` means the checkout differs from the pin.
+Check local changes inside a submodule before updating it.
+
+To deliberately select a new revision, enter the relevant submodule, fetch and
+check out that revision, then stage the submodule path in the parent repository.
+`git submodule update --remote --recursive` instead selects tracked remote branch
+tips. Either operation requires a parent commit to record the new pins.
+
+The Isca patch under [patches/isca](patches/isca/) and runtime neuraloperator
+patches under [ml/src/ml/patches](ml/src/ml/patches/) remain separate from upstream.

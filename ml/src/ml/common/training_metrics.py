@@ -11,7 +11,7 @@ from neuralop.data.transforms.normalizers import UnitGaussianNormalizer
 
 from ml.config import PathsConfig
 
-from ml.diagnostics import absolute_error
+from ml.diagnostics.errors import absolute_error
 
 
 _EPOCH_HEADER = ["run_id", "epoch", "timestamp", "elapsed_seconds", "learning_rate", "train_loss", "val_loss"]

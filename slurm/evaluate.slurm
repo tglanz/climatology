@@ -38,5 +38,5 @@ cd $SLURM_SUBMIT_DIR/..
 source ./ml/.venv/bin/activate
 
 TRAINING_DIR=$(python -c "from ml.config import load; import sys; print(load(sys.argv[1]).paths.training_dir)" "$CONFIG")
-uv run ml evaluate model --training-dir "$TRAINING_DIR" --n-workers 4
+uv run --project ml ml evaluate model --training-dir "$TRAINING_DIR" --n-workers 4
 curl -s -d "$(basename "$CONFIG" .toml) eval done" ntfy.sh/tglanz-general-51189

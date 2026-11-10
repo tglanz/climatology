@@ -12,7 +12,7 @@ The functions $\phi_n(x) = \frac{1}{\sqrt{2\pi}} e^{inx}$, $n \in \mathbb{Z}$, f
 
 $$f(x) = \sum_{n=-\infty}^{\infty} c_n\, e^{inx}, \qquad c_n = \frac{1}{2\pi}\int_{-\pi}^{\pi} f(x)\, e^{-inx}\, dx.$$
 
-The $c_n = \langle f, \phi_n\rangle$ are the generalized Fourier coefficients from the abstract theory. The series converges in $L^2$; Parseval's identity gives $\frac{1}{2\pi}\int_{-\pi}^\pi |f|^2\,dx = \sum_n |c_n|^2$.
+With this normalized basis, $\langle f, \phi_n\rangle = \sqrt{2\pi}\,c_n$. Thus $f = \sum_n \langle f,\phi_n\rangle\phi_n = \sum_n c_n e^{inx}$. The series converges in $L^2$; Parseval's identity gives $\frac{1}{2\pi}\int_{-\pi}^\pi |f|^2\,dx = \sum_n |c_n|^2$.
 
 **Real form.** For real $f$, writing $e^{inx} = \cos(nx) + i\sin(nx)$:
 
@@ -57,4 +57,4 @@ The Fourier series is
 
 $$f(x) = \frac{4}{\pi}\sum_{k=0}^{\infty} \frac{\sin((2k+1)x)}{2k+1} = \frac{4}{\pi}\left(\sin x + \frac{\sin 3x}{3} + \frac{\sin 5x}{5} + \cdots\right).$$
 
-The coefficients decay as $O(1/n)$, consistent with $f \in C^0$ but $f \notin C^1$ (jump discontinuities). Near the jumps, the partial sums overshoot by approximately $18\%$ regardless of how many terms are included (Gibbs phenomenon).
+The coefficients decay as $O(1/n)$, consistent with jump discontinuities: this square wave is not continuous. Near each jump, the limiting overshoot is approximately $9\%$ of the jump height, or $18\%$ of the unit plateau magnitude (Gibbs phenomenon).

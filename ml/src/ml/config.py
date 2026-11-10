@@ -1,4 +1,4 @@
-from dataclasses import asdict, dataclass, field, fields
+from dataclasses import asdict, dataclass, field
 from enum import StrEnum
 from pathlib import Path
 import tomllib
@@ -16,8 +16,8 @@ class SpinupConfig:
     """Parameters for dynamic spin-up detection on the enstrophy series.
 
     Consumed by `find_spinup_time` in
-    `ml/src/ml/diagnostics/convergence.py`. Present only when the user
-    opts into spin-up detection by declaring `[data.windows.spinup]`.
+    `ml/src/ml/diagnostics/spinup.py`. Present only when the user
+    opts into spin-up detection by declaring `[data.spinup]`.
     """
 
     z_threshold: float
@@ -39,10 +39,10 @@ class ConvergenceConfig:
     """Parameters for dynamic convergence detection on the running
     time-mean of the diagnostic.
 
-    Consumed by `find_convergence_time` in
+    Consumed by `find_zonal_mean_convergence_time` in
     `ml/src/ml/diagnostics/convergence.py`. Present only when the user
     opts into convergence detection by declaring
-    `[data.windows.convergence]`.
+    `[data.convergence]`.
     """
 
     threshold: float
@@ -104,8 +104,8 @@ class WindowsConfig:
     Bounds:
         t_0_min = 0   if start_at == "beginning"
         t_0_min = t_s if start_at == "spinup"
-        t_0_max = M - K     if end_at == "end"
-        t_0_max = t_c       if end_at == "convergence"
+        t_0_max = M - K - 1 if end_at == "end"
+        t_0_max = min(t_c, M - K - 1) if end_at == "convergence"
 
     Cross-section validation (start_at requires [data.spinup],
     end_at requires [data.convergence]) lives in

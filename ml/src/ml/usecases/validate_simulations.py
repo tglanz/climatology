@@ -5,12 +5,13 @@ from pathlib import Path
 from tqdm import tqdm
 
 from ml.config import load as load_config
-from ml.data.climatology import nc_var_for, resolve_window
+from ml.data.climatology import resolve_window
 from ml.diagnostics.convergence import find_zonal_mean_convergence_time
 from ml.diagnostics.enstrophy import mean_enstrophy
 from ml.diagnostics.spinup import find_spinup_time
 from ml.data.isca_segment import read_segment, validate_segment, aggregated_read_field
-from ml.data.isca_preprocessing import CONVERGENCE_DIAGNOSTIC_VAR, list_simulation_dirs, list_segment_files
+from ml.data.simulation_data import CONVERGENCE_DIAGNOSTIC_VAR
+from ml.data.isca_preprocessing import list_simulation_dirs, list_segment_files
 
 
 @dataclass

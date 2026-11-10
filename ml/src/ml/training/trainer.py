@@ -12,7 +12,7 @@ from neuralop.data.transforms.normalizers import UnitGaussianNormalizer
 from ml.config import Config, SchedulerConfig
 from ml.common.training_metrics import TrainingMetrics
 from ml.training.early_stopping import CompositeEarlyStopper, EarlyStoppingInfo
-from ml.training.loss import LossFn, create_loss_fn
+from ml.training.loss import create_loss_fn
 from ml.training.info import TrainingInfo
 
 

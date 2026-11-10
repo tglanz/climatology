@@ -10,12 +10,6 @@ from isca.experiment import FailedRunError
 from sim.barotropic_stirring import BarotropicStirring, BarotropicStirringParams
 from sim.simulation import ExecutionParams
 
-# NOTE: This scanner is currently hardcoded to BarotropicStirring. The Simulation
-# abstraction was designed to eventually support multiple simulation types with
-# different parameter sets. The scanner should be generalized (e.g. simulation type
-# as a CLI argument, sweep params loaded from a config file) when a second simulation
-# type is introduced.
-
 OUTPUT_DIR = Path('output')
 
 

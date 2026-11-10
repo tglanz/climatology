@@ -29,9 +29,9 @@ def area_mean(field: np.ndarray, latitudes_deg: np.ndarray) -> np.ndarray:
     Area-weighted spatial mean of a field on a regular lat-lon grid.
 
     Why it is meaningful: this is the natural global spatial average for
-    a quantity defined on the sphere. Equivalent to the integral over
-    the sphere divided by the surface area when latitudes_deg samples a
-    Gaussian or uniform grid.
+    a quantity defined on the sphere. Approximates the integral divided by the surface area on uniformly
+    spaced latitude grids. This implementation also uses cosine weights on
+    Gaussian latitudes; it does not apply Gaussian quadrature weights.
 
     See https://en.wikipedia.org/wiki/Spherical_coordinate_system
     (the area element).

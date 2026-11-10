@@ -6,7 +6,7 @@ import h5py
 from tqdm import tqdm
 
 from ml.config import load as load_config
-from ml.data.isca_preprocessing import list_simulation_dirs, process_one_sim, sort_simulation_dirs
+from ml.data.isca_preprocessing import process_one_sim, sort_simulation_dirs
 from ml.data.splits import Splits
 
 log = logging.getLogger(__name__)

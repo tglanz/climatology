@@ -4,7 +4,7 @@ import torch
 import torch.nn as nn
 
 from ml.config import LossKind
-from ml.diagnostics import lat_weighted_relative_l2_torch
+from ml.diagnostics.errors import lat_weighted_relative_l2_torch
 
 
 LossFn = Callable[[torch.Tensor, torch.Tensor], torch.Tensor]

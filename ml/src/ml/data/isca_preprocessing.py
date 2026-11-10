@@ -8,20 +8,26 @@ from ml.config import IscaDataConfig, load as load_config
 from ml.data.climatology import compute_climatology, nc_var_for, resolve_window
 from ml.data.isca_segment import aggregated_read_field, read_segment, validate_segment
 from ml.data.window_selector import build_selector
-from ml.diagnostics import find_spinup_time, find_zonal_mean_convergence_time
+from ml.diagnostics.spinup import find_spinup_time
+from ml.diagnostics.convergence import find_zonal_mean_convergence_time
 from ml.diagnostics.enstrophy import mean_enstrophy
+
+from ml.data.simulation_data import (
+    CONVERGENCE_DIAGNOSTIC_VAR,
+    build_timeline,
+    stack_input_windows,
+)
 
 log = logging.getLogger(__name__)
 
-CONVERGENCE_DIAGNOSTIC_VAR = "ucomp"
-
 
 def sort_simulation_dirs(exp_dirs: list[Path]) -> list[Path]:
-    # return list(sorted(exp_dirs, key=lambda p: int(str(p).split("/")[-1])))
     return list(sorted(exp_dirs, key=lambda p: str(p).split("/")[-1]))
 
 
-def list_simulation_dirs(cfg: IscaDataConfig, experiment_dir: Path, should_sort: bool = True) -> list[Path]:
+def list_simulation_dirs(
+    cfg: IscaDataConfig, experiment_dir: Path, should_sort: bool = True
+) -> list[Path]:
     log.debug("listing simulations from %s/%s", experiment_dir, cfg.simulation_pattern)
     sim_dirs = list(experiment_dir.glob(cfg.simulation_pattern))
     assert sim_dirs, f"no simulations found: {experiment_dir}/{cfg.simulation_pattern}"
@@ -52,13 +58,8 @@ def process_one_sim(
         log.warning("no NC files in %s", exp_dir)
         return None
 
-    timeline: list[tuple[Path, int]] = []
-    spatial_shape: tuple | None = None
-    for path in nc_files:
-        T, spatial = validate_segment(path, data_cfg.x_vars, [])
-        if spatial_shape is None:
-            spatial_shape = spatial
-        timeline.extend((path, t) for t in range(T))
+    lengths = [validate_segment(path, data_cfg.x_vars, [])[0] for path in nc_files]
+    timeline = build_timeline(nc_files, lengths)
 
     M = len(timeline)
     t_s: int | None = None
@@ -78,9 +79,12 @@ def process_one_sim(
             )
         if data_cfg.convergence is not None:
             lat = read_segment(nc_files[0], ds_cache)["lat"].values
-            u_full = aggregated_read_field(nc_files, CONVERGENCE_DIAGNOSTIC_VAR, ds_cache)
+            u_full = aggregated_read_field(
+                nc_files, CONVERGENCE_DIAGNOSTIC_VAR, ds_cache
+            )
             t_c = find_zonal_mean_convergence_time(
-                u_full, lat,
+                u_full,
+                lat,
                 t_s if t_s is not None else 0,
                 threshold=data_cfg.convergence.threshold,
                 hold=data_cfg.convergence.hold,
@@ -91,12 +95,18 @@ def process_one_sim(
                     "run validate-simulations --validate-convergence before preprocessing"
                 )
         a, b = resolve_window(data_cfg.climatology, t_s, t_c, M)
-        clim_array = np.stack([
-            compute_climatology(
-                diag, aggregated_read_field(nc_files, nc_var_for(diag), ds_cache), a, b
-            )
-            for diag in data_cfg.y_vars
-        ], axis=0).astype(np.float32)
+        clim_array = np.stack(
+            [
+                compute_climatology(
+                    diag,
+                    aggregated_read_field(nc_files, nc_var_for(diag), ds_cache),
+                    a,
+                    b,
+                )
+                for diag in data_cfg.y_vars
+            ],
+            axis=0,
+        ).astype(np.float32)
     finally:
         for d in ds_cache.values():
             d.close()
@@ -104,23 +114,16 @@ def process_one_sim(
 
     selected_t0 = selector.select(M, t_s=t_s, t_c=t_c)
     if not selected_t0:
-        log.warning("skipping %s: no valid windows (M=%d, t_s=%s, t_c=%s)", exp_dir, M, t_s, t_c)
+        log.warning(
+            "skipping %s: no valid windows (M=%d, t_s=%s, t_c=%s)", exp_dir, M, t_s, t_c
+        )
         return None
 
-    xs: list[np.ndarray] = []
-    ys: list[np.ndarray] = []
     try:
-        for t_0 in selected_t0:
-            x_channels = []
-            for k in range(K):
-                path_k, t_k = timeline[t_0 + k]
-                ds_k = read_segment(path_k, ds_cache)
-                for v in data_cfg.x_vars:
-                    x_channels.append(ds_k[v].isel(time=t_k).values)
-            xs.append(np.stack(x_channels, axis=0))
-            ys.append(clim_array)
+        xs = stack_input_windows(timeline, selected_t0, K, data_cfg.x_vars, ds_cache)
+        ys = np.stack([clim_array for _ in selected_t0], axis=0)
     finally:
         for d in ds_cache.values():
             d.close()
 
-    return np.stack(xs, axis=0), np.stack(ys, axis=0)
+    return xs, ys

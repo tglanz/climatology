@@ -1,52 +1,11 @@
-# Getting Started
+# Getting started
 
-## Setup
+See the [heat demonstration README](../README.md) for environment setup, the
+notebook entry point, numerical assumptions, and tests.
 
-### Create and activate virtual environment
-
-Create
-```bash
-python -m venv .venv
-```
-
-Activate
-```bash
-source .venv/bin/activate
-```
-
-If uv is not installed globally:
-```bash
-pip install uv
-```
-
-### Install dependencies
+Run formatting or lint checks from the repository root:
 
 ```bash
-uv sync --all-groups
-```
-
-## Running
-
-```bash
-python -m heat_simulation.main
-```
-
-## Testing
-
-```bash
-pytest
-```
-
-## Linting and Formatting
-
-### Format code
-
-```bash
-black .
-```
-
-### Run linter
-
-```bash
-pylint src/
+uv run --project heat-simulation --group dev black --check heat-simulation/src heat-simulation/tests
+uv run --project heat-simulation --group dev pylint heat-simulation/src
 ```

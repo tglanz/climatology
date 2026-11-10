@@ -3,7 +3,6 @@ import time
 from pathlib import Path
 
 import click
-import numpy as np
 import plotext as plt
 from rich.console import Console
 from rich.layout import Layout
@@ -12,7 +11,7 @@ from rich.panel import Panel
 from rich.table import Table
 from rich.text import Text
 
-from ml.config import Config, load as load_config
+from ml.config import load as load_config
 from ml.common.monitor import MonitorState, Section, RunSeries
 from ml.visualization.meridional_profile import setup_meridional_profile_axes, update_meridional_profile
 
