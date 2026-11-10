@@ -2,6 +2,7 @@
 *.pyc
 *.egg-info
 .ipynb_checkpoints
+.DS_Store
 
 log.txt
 output/
