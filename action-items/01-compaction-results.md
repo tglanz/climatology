@@ -1,8 +1,25 @@
 # Compaction implementation results
 
 Completed [action item 01](01-compaction.md) on branch `compaction`, with the
-verification limits below. Computational behavior and saved artifact formats are
-unchanged. Correctness and pipeline redesign remain separate phases.
+verification limits below. Retained ML and simulation behavior and saved artifact
+formats are unchanged. The standalone heat demo was retired in the followup
+below. Correctness and pipeline redesign remain separate phases.
+
+## Heat demo retirement and CI followup
+
+The standalone heat-equation demo and its CI workflow were removed at the user's
+request after confirming that Isca and ML have no callers or imports of the heat
+package. The retired source, notebook, tests, and lockfile remain in Git history
+at commit `7ea4477`. The earlier heat comparisons below describe the original
+compaction work; they are historical results, not checks of a retained project.
+
+The retained CI checks are `ml / lint` and `ml / tests`. Both run on every pull
+request to main. ML CI initializes the pinned neuraloperator submodule, installs
+locked dependencies, checks pylint errors and Black formatting, and runs the
+19-test suite independently of lint. Both checks passed on GitHub before the
+heat retirement. Python files were formatted for the new gate; syntax-tree
+comparison confirmed that formatting preserved their code. The two colormap
+lookups now use the equivalent `get_cmap` API.
 
 ## Missing import followup
 
@@ -218,10 +235,11 @@ Run durable suites from the repository root:
 
 ```bash
 uv run --project ml --group dev --group train --group vis pytest ml/tests
-uv run --frozen --project heat-simulation --group dev pytest heat-simulation/tests
 ```
 
-To regenerate the comparison evidence with the original local data still present:
+The original comparison harness also expects the retired heat project. To
+regenerate the original compaction evidence, use its pre-retirement checkout
+(commit `7ea4477`) and the original local data:
 
 ```bash
 EVIDENCE=/Users/tal.glanzman/obsidian/reviews/1011-climatology-compaction/evidence

@@ -6,7 +6,6 @@ Research on global physical climatology, idealized simulations, and neural opera
 |---|---|
 | [sim](sim/README.md) | Isca barotropic simulations and parameter sweeps |
 | [ml](ml/README.md) | Preparation, diagnostics, training, evaluation, and plots |
-| [heat-simulation](heat-simulation/README.md) | Separate heat-equation demonstration |
 | [book](book/README.md) | General mathematics, fluid dynamics, and operator learning |
 | [docs](docs/workplan.md) | Project methods, operation, and maintenance phases |
 | [presentations](presentations/) | Talks and study material |

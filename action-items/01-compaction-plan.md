@@ -5,6 +5,10 @@ Implement [action item 01](01-compaction.md) in eight small batches. The result 
 **Status:** completed on branch `compaction`, with recorded verification limits. See the
 [implementation results](01-compaction-results.md) for progress and verification.
 
+This is the original implementation plan. A later scope decision retired the
+standalone heat demo and its CI; batch 6 below is historical. The retained CI
+checks are ML lint and tests. See the results for the retirement and CI followup.
+
 Read the overview first. Each batch below states what to change and how to decide whether it is complete.
 
 ## Scope and boundaries
@@ -141,7 +145,7 @@ Execute each retained notebook from a fresh kernel on bounded inputs. Use a temp
 
 **Complete when:** no retained notebook owns a reusable scientific implementation. Every original notebook has a disposition, and every retained notebook has a recorded check result.
 
-## 6 Move the heat demonstration into its own package
+## 6 Move the heat demonstration into its own package (historical)
 
 **Main files:** `heat-simulation/notebooks/heat_equation_2d.ipynb` and `heat-simulation/src/heat_simulation/`.
 
@@ -193,7 +197,6 @@ Run ML checks from the repository root with the required dependency groups, for 
 ```bash
 uv run --project ml --group dev --group train --group vis pytest ml/tests
 uv run --project ml --group train --group vis ml --help
-uv run --project heat-simulation --group dev pytest heat-simulation/tests
 ```
 
 Add focused tests under `ml/tests/` during implementation; that directory is not present in the current tracked tree. Select the changed tests for each batch, then run the retained suite at the end. Use the Isca conda environment for simulation-related import or help checks. Do not compile Isca or start a new simulation for compaction.
