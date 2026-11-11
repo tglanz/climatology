@@ -1,4 +1,4 @@
-"""Convergence diagnostic figures, preserving the original notebook curves."""
+"""Finite-reference convergence figures with explicit index conventions."""
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -8,12 +8,12 @@ def plot_enstrophy(enstrophy):
     fig, ax = plt.subplots(figsize=(8, 3.5))
     plt.plot(enstrophy)
     ax.set_title("Mean Enstrophy over time")
-    ax.set_xlabel("Time")
-    ax.set_ylabel("Mean Enstrophy")
+    ax.set_xlabel("snapshot index")
+    ax.set_ylabel("global mean enstrophy [s^-2]")
 
 
 def plot_spinup(enstrophy, spinup_time):
-    if spinup_time:
+    if spinup_time is not None:
         fig, ax = plt.subplots(figsize=(8, 3.5))
         ax.plot(enstrophy, marker="o", markersize=3)
         ax.axvline(
@@ -24,7 +24,7 @@ def plot_spinup(enstrophy, spinup_time):
             label=rf"$t_s = {spinup_time}$",
         )
         ax.set_xlabel("snapshot index")
-        ax.set_ylabel("global mean enstrophy")
+        ax.set_ylabel("global mean enstrophy [s^-2]")
         ax.set_title("Enstrophy time series with detected spinup_time")
         ax.legend()
         plt.tight_layout()
@@ -44,18 +44,22 @@ def plot_convergence(
         label=f"threshold = {convergence_config.threshold}",
     )
     ax.axvline(
-        spinup_time,
+        0,
         color="C2",
         linestyle="-",
         linewidth=1.2,
-        label=rf"$t_s = {spinup_time}$",
+        label=rf"$i=0$ at $t_s={spinup_time}$",
     )
     if t_c is not None:
         ax.axvline(
-            t_c, color="C3", linestyle="-", linewidth=1.2, label=rf"$t_c = {t_c}$"
+            t_c - spinup_time,
+            color="C3",
+            linestyle="-",
+            linewidth=1.2,
+            label=rf"$i=t_c-t_s={t_c-spinup_time}$",
         )
     ax.set_xlabel(r"Window length $i$  (snapshots past $t_s$)")
-    ax.set_ylabel(r"$\| D(t_s, t_s+i) - D(t_c, M) \| / \| D(t_c, M) \|$")
+    ax.set_ylabel(r"$\| D(t_s, t_s+i) - D(t_s, M) \| / \| D(t_s, M) \|$")
     ax.set_title(
         f"Convergence of diagnostic = time-mean zonal-mean u  ($t_s$ = {spinup_time}, M = {num_samples})"
     )

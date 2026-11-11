@@ -5,12 +5,7 @@ from pathlib import Path
 from tqdm import tqdm
 
 from ml.config import load as load_config
-from ml.data.climatology import resolve_window
-from ml.diagnostics.convergence import find_zonal_mean_convergence_time
-from ml.diagnostics.enstrophy import mean_enstrophy
-from ml.diagnostics.spinup import find_spinup_time
-from ml.data.isca_segment import read_segment, validate_segment, aggregated_read_field
-from ml.data.simulation_data import CONVERGENCE_DIAGNOSTIC_VAR
+from ml.data.simulation_data import open_simulation, select_samples
 from ml.data.isca_preprocessing import list_simulation_dirs, list_segment_files
 
 
@@ -31,97 +26,18 @@ def _validate_one(
     validate_climatology: bool,
 ) -> SimResult:
     cfg = load_config(config_path)
-    K = cfg.data.windows.length
-    nc_files = list_segment_files(sim_dir, cfg.data)
-    n_runs = len(nc_files)
+    n_runs = len(list_segment_files(sim_dir, cfg.data))
     n_samples = 0
-
-    if not nc_files:
-        return SimResult(
-            sim_dir, n_runs, n_samples, False, "no segments matching segment_pattern"
-        )
-
-    segments_cache = {}
-    for nc_path in nc_files:
-        try:
-            segment_samples_count, _ = validate_segment(
-                nc_path, cfg.data.x_vars, [], cache=segments_cache
-            )
-        except (AssertionError, OSError, ValueError) as e:
-            return SimResult(sim_dir, n_runs, n_samples, False, f"{nc_path.name}: {e}")
-        n_samples += segment_samples_count
-
-    if n_samples < K + 1:
-        return SimResult(
-            sim_dir,
-            n_runs,
-            n_samples,
-            False,
-            f"timeline too short: {n_samples} < {K + 1}",
-        )
-
-    t_s: int | None = None
-    t_c: int | None = None
-
-    validate_convergence = validate_convergence or validate_climatology
-    validate_spinup = validate_spinup or validate_convergence
-
-    if validate_spinup or validate_convergence or validate_climatology:
-        lats = read_segment(nc_files[0], cache=segments_cache)["lat"].values
-
-        if cfg.data.spinup is not None:
-            vorticities = aggregated_read_field(nc_files, "vor", cache=segments_cache)
-            enstrophy = mean_enstrophy(vorticities, lats)
-            try:
-                t_s = find_spinup_time(
-                    diagnostic=enstrophy,
-                    stable_time=cfg.data.spinup.stable_time,
-                    window_size=cfg.data.spinup.window_size,
-                    z_threshold=cfg.data.spinup.z_threshold,
-                )
-                if validate_spinup and not t_s:
-                    raise ValueError(
-                        f"unable to infer spinup time with {cfg.data.spinup}"
-                    )
-            except Exception as e:
-                return SimResult(sim_dir, n_runs, n_samples, False, str(e))
-
-        if (
-            validate_convergence or validate_climatology
-        ) and cfg.data.convergence is not None:
-            u_full = aggregated_read_field(
-                nc_files, CONVERGENCE_DIAGNOSTIC_VAR, cache=segments_cache
-            )
-            try:
-                t_c = find_zonal_mean_convergence_time(
-                    u_full,
-                    lats,
-                    t_s if t_s is not None else 0,
-                    threshold=cfg.data.convergence.threshold,
-                    hold=cfg.data.convergence.hold,
-                )
-            except Exception as e:
-                return SimResult(
-                    sim_dir,
-                    n_runs,
-                    n_samples,
-                    False,
-                    f"convergence detection failed: {e}",
-                )
-            if validate_convergence and t_c is None:
-                return SimResult(
-                    sim_dir, n_runs, n_samples, False, "convergence not reached"
-                )
-
-    if validate_climatology:
-        try:
-            resolve_window(cfg.data.climatology, t_s, t_c, n_samples)
-        except AssertionError as e:
-            return SimResult(
-                sim_dir, n_runs, n_samples, False, f"climatology window invalid: {e}"
-            )
-
-    return SimResult(sim_dir, n_runs, n_samples, True, "")
+    try:
+        with open_simulation(sim_dir, cfg.data) as source:
+            n_samples = source.length
+            if n_samples < cfg.data.windows.length:
+                raise ValueError("timeline is shorter than one input window")
+            if validate_spinup or validate_convergence or validate_climatology:
+                select_samples(source, cfg.data)
+        return SimResult(sim_dir, n_runs, n_samples, True, "")
+    except (ValueError, OSError, KeyError) as exc:
+        return SimResult(sim_dir, n_runs, n_samples, False, str(exc))
 
 
 def run(
@@ -133,6 +49,8 @@ def run(
     workers: int = 8,
 ) -> int:
     """Returns the number of invalid simulations."""
+    if workers < 0:
+        raise ValueError("worker count must be nonnegative")
     cfg = load_config(config_path)
     sim_dirs = list_simulation_dirs(cfg.data, cfg.paths.experiment_dir)
     n_invalid = 0

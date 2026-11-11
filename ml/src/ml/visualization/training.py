@@ -7,7 +7,7 @@ def plot_loss_curve(
     epochs: list[int],
     train_losses: list[float],
     val_losses: list[float],
-    threshold: float | None = 0.1,
+    threshold: float | None = None,
 ) -> None:
     ax.plot(epochs, train_losses, label="train")
     val_arr = np.array(val_losses)
@@ -22,14 +22,13 @@ def plot_loss_curve(
             label=f"threshold ({threshold})",
         )
     ax.set_xlabel("epoch")
-    ax.set_ylabel("loss")
-    ax.set_ylim(0, 1)
+    ax.set_ylabel("normalized-target loss")
     ax.legend()
     ax.grid(True, alpha=0.3)
 
 
 def plot_notebook_training_curve(csv_path):
-    """Historical notebook loss curve, including its default threshold line."""
+    """Notebook objective curve without an invented stopping threshold."""
     import csv
     import matplotlib.pyplot as plt
 

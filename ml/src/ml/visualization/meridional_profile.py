@@ -48,13 +48,16 @@ def update_meridional_profile(
     pred_history: list[np.ndarray],
     truth: np.ndarray | None,
     pred_std: np.ndarray | None = None,
+    latitudes: np.ndarray | None = None,
 ) -> None:
     # remove previous std band if any
     for coll in list(ax.collections):
         coll.remove()
 
     if pred_history:
-        lats = np.linspace(-90, 90, len(pred_history[0]))
+        if latitudes is None or len(latitudes) != len(pred_history[0]):
+            raise ValueError("profile coordinates are missing or incompatible")
+        lats = latitudes
         for k, line in enumerate(pred_lines):
             idx = len(pred_history) - 1 - k
             if idx >= 0:
@@ -70,7 +73,9 @@ def update_meridional_profile(
         ax.autoscale_view(scaley=False)
 
     if truth is not None:
-        lats = np.linspace(-90, 90, len(truth))
+        if latitudes is None or len(latitudes) != len(truth):
+            raise ValueError("truth coordinates are missing or incompatible")
+        lats = latitudes
         truth_line.set_data(truth, lats)
         ax.relim()
         ax.autoscale_view(scaley=False)

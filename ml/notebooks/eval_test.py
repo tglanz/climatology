@@ -24,16 +24,16 @@ def main():
     parser.add_argument("--limit", type=int, default=None)
     args = parser.parse_args()
     args.output_dir.mkdir(parents=True, exist_ok=True)
-    pred, truth, lat, rmses, rels = run(args.training_dir, limit=args.limit)
-    print_metrics(rmses, rels)
-    for name, fn, values in [
-        ("profiles", plot_sample_profiles, (pred, truth, lat)),
-        ("errors", plot_sample_errors, (pred, truth, lat)),
-        ("scatter", plot_sample_scatter, (pred, truth)),
-        ("distribution", plot_sample_distribution, (rmses, rels)),
+    result = run(args.training_dir, limit=args.limit)
+    print_metrics(result)
+    for name, fn in [
+        ("profiles", plot_sample_profiles),
+        ("errors", plot_sample_errors),
+        ("scatter", plot_sample_scatter),
+        ("distribution", plot_sample_distribution),
     ]:
-        fn(*values)
-        plt.gcf().savefig(args.output_dir / f"{name}.png")
+        for target, figure in zip(result.metadata.y_vars, fn(result), strict=True):
+            figure.savefig(args.output_dir / f"{target}-{name}.png")
         plt.close("all")
 
 

@@ -1,38 +1,56 @@
+"""Validated configuration for the retained preparation/training/evaluation stages."""
+
 from dataclasses import asdict, dataclass, field
 from enum import StrEnum
 from pathlib import Path
+import math
 import tomllib
+
+from ml.data.climatology import diagnostic_for
+
+
+def _require(condition: bool, message: str) -> None:
+    if not condition:
+        raise ValueError(message)
+
+
+def _integer(name: str, value: int, minimum: int = 1) -> None:
+    _require(
+        isinstance(value, int) and not isinstance(value, bool) and value >= minimum,
+        f"{name} must be an integer >= {minimum}",
+    )
+
+
+def _number(name: str, value: float, minimum: float = 0, strict: bool = False) -> None:
+    _require(
+        isinstance(value, (int, float))
+        and not isinstance(value, bool)
+        and math.isfinite(value)
+        and (value > minimum if strict else value >= minimum),
+        f"{name} must be finite and {'>' if strict else '>='} {minimum}",
+    )
+
+
+def _choice(name: str, value: str, choices) -> None:
+    _require(value in choices, f"unknown {name}: {value!r}; expected {tuple(choices)}")
+
 
 VALID_START_AT = ("beginning", "spinup")
 VALID_END_AT = ("end", "convergence")
-
 VALID_CLIMATOLOGY_START_AT = ("spinup", "convergence")
 VALID_CLIMATOLOGY_END_AT = ("convergence", "end")
 
 
 @dataclass
 class SpinupConfig:
-    """Parameters for dynamic spin-up detection on the enstrophy series.
-
-    Consumed by `find_spinup_time` in
-    `ml/src/ml/diagnostics/spinup.py`. Present only when the user
-    opts into spin-up detection by declaring `[data.spinup]`.
-    """
-
     z_threshold: float
     stable_time: int
     window_size: int = 10
 
     def __post_init__(self):
-        assert (
-            self.z_threshold > 0.0
-        ), f"spinup.z_threshold must be positive, got {self.z_threshold}"
-        assert (
-            self.stable_time >= 1
-        ), f"spinup.stable_time must be >= 1, got {self.stable_time}"
-        assert (
-            self.window_size >= 2
-        ), f"spinup.window_size must be >= 2, got {self.window_size}"
+        _number("spinup.z_threshold", self.z_threshold, strict=True)
+        _integer("spinup.stable_time", self.stable_time)
+        _integer("spinup.window_size", self.window_size, 2)
 
     def to_kwargs(self) -> dict:
         return asdict(self)
@@ -40,84 +58,39 @@ class SpinupConfig:
 
 @dataclass
 class ConvergenceConfig:
-    """Parameters for dynamic convergence detection on the running
-    time-mean of the diagnostic.
-
-    Consumed by `find_zonal_mean_convergence_time` in
-    `ml/src/ml/diagnostics/convergence.py`. Present only when the user
-    opts into convergence detection by declaring
-    `[data.convergence]`.
-    """
-
     threshold: float
     hold: int
 
     def __post_init__(self):
-        assert (
-            self.threshold > 0.0
-        ), f"convergence.threshold must be positive, got {self.threshold}"
-        assert self.hold >= 1, f"convergence.hold must be >= 1, got {self.hold}"
+        _number("convergence.threshold", self.threshold, strict=True)
+        _integer("convergence.hold", self.hold)
 
-    def to_kwargs(self):
+    def to_kwargs(self) -> dict:
         return asdict(self)
 
 
 @dataclass
 class ClimatologyConfig:
-    """Window over which per-simulation climatology diagnostics are computed.
-
-    Exactly two of (start_at, end_at, length) must be provided; the third
-    is derived. start_at and end_at are symbolic anchors resolved at
-    preprocessing time against the detected t_s and t_c.
-
-    Anchor cross-section validation (e.g. start_at='convergence' requires
-    [data.convergence]) lives in IscaDataConfig.__post_init__.
-    """
-
     start_at: str | None = None
     end_at: str | None = None
     length: int | None = None
 
     def __post_init__(self):
-        provided = sum(v is not None for v in [self.start_at, self.end_at, self.length])
-        assert (
-            provided == 2
-        ), f"exactly 2 of (start_at, end_at, length) must be set, got {provided}"
+        _require(
+            sum(v is not None for v in (self.start_at, self.end_at, self.length)) == 2,
+            "exactly two of climatology start_at, end_at, and length must be set",
+        )
         if self.start_at is not None:
-            assert self.start_at in VALID_CLIMATOLOGY_START_AT, (
-                f"unknown climatology start_at: {self.start_at!r} "
-                f"(valid: {VALID_CLIMATOLOGY_START_AT})"
-            )
+            _choice("climatology.start_at", self.start_at, VALID_CLIMATOLOGY_START_AT)
         if self.end_at is not None:
-            assert self.end_at in VALID_CLIMATOLOGY_END_AT, (
-                f"unknown climatology end_at: {self.end_at!r} "
-                f"(valid: {VALID_CLIMATOLOGY_END_AT})"
-            )
+            _choice("climatology.end_at", self.end_at, VALID_CLIMATOLOGY_END_AT)
         if self.length is not None:
-            assert (
-                self.length >= 1
-            ), f"climatology length must be >= 1, got {self.length}"
+            _integer("climatology.length", self.length)
 
 
 @dataclass
 class WindowsConfig:
-    """Configuration of the input-window selector.
-
-    A window is `length` consecutive snapshots. The selector emits
-    window-start indices `t_0` stepping by `stride` from `t_0_min`
-    to `t_0_max`, optionally capped by `limit`.
-
-    Bounds:
-        t_0_min = 0   if start_at == "beginning"
-        t_0_min = t_s if start_at == "spinup"
-        t_0_max = M - K - 1 if end_at == "end"
-        t_0_max = min(t_c, M - K - 1) if end_at == "convergence"
-
-    Cross-section validation (start_at requires [data.spinup],
-    end_at requires [data.convergence]) lives in
-    `IscaDataConfig.__post_init__`, where the sibling sections are
-    visible.
-    """
+    """Convergence caps starts; complete windows occupy [start, start + length)."""
 
     start_at: str
     end_at: str
@@ -126,16 +99,12 @@ class WindowsConfig:
     limit: int | None = None
 
     def __post_init__(self):
-        assert (
-            self.start_at in VALID_START_AT
-        ), f"unknown start_at: {self.start_at} (valid: {VALID_START_AT})"
-        assert (
-            self.end_at in VALID_END_AT
-        ), f"unknown end_at: {self.end_at} (valid: {VALID_END_AT})"
-        assert self.length >= 1, f"length must be >= 1, got {self.length}"
-        assert self.stride >= 1, f"stride must be >= 1, got {self.stride}"
+        _choice("windows.start_at", self.start_at, VALID_START_AT)
+        _choice("windows.end_at", self.end_at, VALID_END_AT)
+        _integer("windows.length", self.length)
+        _integer("windows.stride", self.stride)
         if self.limit is not None:
-            assert self.limit >= 1, f"limit must be >= 1 when set, got {self.limit}"
+            _integer("windows.limit", self.limit)
 
 
 @dataclass
@@ -145,86 +114,91 @@ class SplitConfig:
     test_hold_out: dict | None = None
 
     def __post_init__(self):
-        assert (self.test_ratio is None) != (
-            self.test_hold_out is None
-        ), "exactly one of test_ratio or test_hold_out must be set"
-        assert (
-            0.0 < self.validation_ratio < 1.0
-        ), f"validation_ratio must be in (0, 1), got {self.validation_ratio}"
+        _require(
+            (self.test_ratio is None) != (self.test_hold_out is None),
+            "exactly one of test_ratio or test_hold_out must be set",
+        )
+        _number("validation_ratio", self.validation_ratio, strict=True)
+        _require(self.validation_ratio < 1, "validation_ratio must be < 1")
         if self.test_ratio is not None:
-            assert (
-                0.0 < self.test_ratio < 1.0
-            ), f"test_ratio must be in (0, 1), got {self.test_ratio}"
+            _number("test_ratio", self.test_ratio, strict=True)
+            _require(
+                self.validation_ratio + self.test_ratio < 1,
+                "test_ratio + validation_ratio must leave a training split",
+            )
+        if self.test_hold_out is not None:
+            _require(
+                bool(self.test_hold_out)
+                and all(isinstance(v, list) and v for v in self.test_hold_out.values()),
+                "test_hold_out must contain nonempty parameter lists",
+            )
 
 
 @dataclass
 class IscaDataConfig:
-    # glob pattern under experiment_dir to find individual simulation directories
     simulation_pattern: str
-    # glob pattern within each simulation directory to find NC files
     segment_pattern: str
-    # input variable names
     x_vars: list[str]
-    # target variable names
     y_vars: list[str]
-
     split: SplitConfig
-    # window-extraction strategy: length, selection bounds, optional cap
     windows: WindowsConfig
     climatology: ClimatologyConfig
-    # optional dynamic spin-up detector; required when windows.start_at == "spinup"
     spinup: SpinupConfig | None = None
-    # optional dynamic convergence detector; required when windows.end_at == "convergence"
     convergence: ConvergenceConfig | None = None
 
     def __post_init__(self):
-        if self.windows.start_at == "spinup":
-            assert (
-                self.spinup is not None
-            ), "windows.start_at = 'spinup' requires [data.spinup] section"
-        if self.windows.end_at == "convergence":
-            assert (
-                self.convergence is not None
-            ), "windows.end_at = 'convergence' requires [data.convergence] section"
-        if self.climatology.start_at == "spinup" or self.climatology.end_at == "spinup":
-            assert (
-                self.spinup is not None
-            ), "climatology anchor 'spinup' requires [data.spinup] section"
-        if (
-            self.climatology.start_at == "convergence"
-            or self.climatology.end_at == "convergence"
+        for name, variables in (("x_vars", self.x_vars), ("y_vars", self.y_vars)):
+            _require(
+                bool(variables)
+                and all(isinstance(v, str) and v for v in variables)
+                and len(set(variables)) == len(variables),
+                f"{name} must be a nonempty list of distinct variables",
+            )
+        for name in self.y_vars:
+            diagnostic_for(name)
+        if self.windows.start_at == "spinup" or self.climatology.start_at == "spinup":
+            _require(self.spinup is not None, "spinup anchor requires [data.spinup]")
+        if self.windows.end_at == "convergence" or "convergence" in (
+            self.climatology.start_at,
+            self.climatology.end_at,
         ):
-            assert (
-                self.convergence is not None
-            ), "climatology anchor 'convergence' requires [data.convergence] section"
+            _require(
+                self.convergence is not None,
+                "convergence anchor requires [data.convergence]",
+            )
 
 
 @dataclass
-class FNOModelConfig:
-    # number of Fourier modes to retain per spatial dimension
+class OperatorModelConfig:
     n_modes: tuple[int, int]
-    # width of the FNO lifting/projection layers
     hidden_channels: int
-    # number of input fields
     in_channels: int
-    # number of predicted fields
     out_channels: int
-    # number of FNO blocks stacked in sequence
     n_layers: int = 4
+
+    def __post_init__(self):
+        _require(
+            len(self.n_modes) == 2, "n_modes must contain latitude and longitude counts"
+        )
+        for name, value in (
+            ("latitude modes", self.n_modes[0]),
+            ("longitude modes", self.n_modes[1]),
+            ("hidden_channels", self.hidden_channels),
+            ("in_channels", self.in_channels),
+            ("out_channels", self.out_channels),
+            ("n_layers", self.n_layers),
+        ):
+            _integer(name, value)
 
 
 @dataclass
-class SFNOModelConfig:
-    # number of spherical-harmonic modes retained per spatial dimension
-    n_modes: tuple[int, int]
-    # width of the SFNO lifting/projection layers
-    hidden_channels: int
-    # number of input fields
-    in_channels: int
-    # number of predicted fields
-    out_channels: int
-    # number of SFNO blocks stacked in sequence
-    n_layers: int = 4
+class FNOModelConfig(OperatorModelConfig):
+    pass
+
+
+@dataclass
+class SFNOModelConfig(OperatorModelConfig):
+    pass
 
 
 class LossKind(StrEnum):
@@ -241,170 +215,173 @@ VALID_MONITORS = ("val", "train")
 
 @dataclass
 class TargetLossStopConfig:
-    # stop when monitored loss drops at or below this value
     value: float
-    # 'val' or 'train'
     monitor: str = "val"
 
     def __post_init__(self):
-        assert (
-            self.monitor in VALID_MONITORS
-        ), f"unknown monitor: {self.monitor} (valid: {VALID_MONITORS})"
+        _number("target_loss.value", self.value)
+        _choice("monitor", self.monitor, VALID_MONITORS)
 
 
 @dataclass
 class PatienceStopConfig:
-    # epochs without improvement before training stops
     patience: int = 10
-    # minimum improvement required to reset the patience counter
     min_delta: float = 1e-4
-    # 'val' or 'train'
     monitor: str = "val"
 
     def __post_init__(self):
-        assert self.patience > 0, f"patience must be positive, got {self.patience}"
-        assert (
-            self.min_delta >= 0
-        ), f"min_delta must be non-negative, got {self.min_delta}"
-        assert (
-            self.monitor in VALID_MONITORS
-        ), f"unknown monitor: {self.monitor} (valid: {VALID_MONITORS})"
+        _integer("patience", self.patience)
+        _number("min_delta", self.min_delta)
+        _choice("monitor", self.monitor, VALID_MONITORS)
 
 
 @dataclass
 class EarlyStoppingConfig:
-    # absent subsection (None) disables that criterion
     target_loss: TargetLossStopConfig | None = None
     patience: PatienceStopConfig | None = None
 
 
 @dataclass
 class RegularizationConfig:
-    # AdamW weight decay coefficient; only applied when optimizer = "adamw"
     weight_decay: float | None = None
-    # FNO channel_mlp_dropout; passed to neuraloperator.models.FNO
     dropout: float | None = None
 
     def __post_init__(self):
         if self.weight_decay is not None:
-            assert (
-                self.weight_decay >= 0
-            ), f"weight_decay must be non-negative, got {self.weight_decay}"
+            _number("weight_decay", self.weight_decay)
         if self.dropout is not None:
-            assert (
-                0.0 <= self.dropout < 1.0
-            ), f"dropout must be in [0, 1), got {self.dropout}"
+            _number("dropout", self.dropout)
+            _require(self.dropout < 1, "dropout must be < 1")
 
 
 @dataclass
 class StepSchedulerConfig:
-    # epochs between LR decays
     step_size: int = 100
-    # multiplicative factor applied to LR at each step
     gamma: float = 0.5
+
+    def __post_init__(self):
+        _integer("scheduler.step_size", self.step_size)
+        _number("scheduler.gamma", self.gamma, strict=True)
 
 
 @dataclass
 class CosineSchedulerConfig:
-    # number of epochs over which LR anneals to eta_min; None defaults to training.epochs
     t_max: int | None = None
-    # minimum learning rate floor at the end of the schedule
     eta_min: float = 0.0
+
+    def __post_init__(self):
+        if self.t_max is not None:
+            _integer("scheduler.t_max", self.t_max)
+        _number("scheduler.eta_min", self.eta_min)
 
 
 @dataclass
 class PlateauSchedulerConfig:
-    # epochs without improvement before LR is reduced
     patience: int = 15
-    # multiplicative factor applied to LR when triggered
     factor: float = 0.5
-    # relative improvement threshold below which a step counts as no-progress
     threshold: float = 1e-4
-    # minimum learning rate floor
     eta_min: float = 0.0
+
+    def __post_init__(self):
+        _integer("scheduler.plateau.patience", self.patience, 0)
+        _number("scheduler.factor", self.factor, strict=True)
+        _require(self.factor < 1, "plateau factor must be < 1")
+        _number("scheduler.threshold", self.threshold)
+        _number("scheduler.eta_min", self.eta_min)
 
 
 @dataclass
 class SchedulerConfig:
-    # 'step' (StepLR), 'cosine' (CosineAnnealingLR), 'plateau' (ReduceLROnPlateau), 'none'
     kind: str = "cosine"
     step: StepSchedulerConfig = field(default_factory=StepSchedulerConfig)
     cosine: CosineSchedulerConfig = field(default_factory=CosineSchedulerConfig)
     plateau: PlateauSchedulerConfig = field(default_factory=PlateauSchedulerConfig)
 
     def __post_init__(self):
-        assert (
-            self.kind in VALID_SCHEDULERS
-        ), f"unknown scheduler kind: {self.kind} (valid: {VALID_SCHEDULERS})"
+        _choice("scheduler", self.kind, VALID_SCHEDULERS)
 
 
 @dataclass
 class TrainingConfig:
-    # total training epochs
     epochs: int
-    # number of samples per gradient step
     batch_size: int
-    # initial learning rate
     learning_rate: float = 1e-3
-    # loss function: see VALID_LOSSES
+    seed: int = 0
     loss: str = "lat_weighted_relative_l2"
-    # optimizer: see VALID_OPTIMIZERS
     optimizer: str = "adam"
-    # max gradient norm for clipping; None disables
     grad_clip: float | None = None
-    # learning rate scheduler configuration
     scheduler: SchedulerConfig = field(default_factory=SchedulerConfig)
-    # early stopping criteria; any one firing stops training
     early_stopping: EarlyStoppingConfig = field(default_factory=EarlyStoppingConfig)
-    # regularization knobs; fields default to None (no implicit regularization)
     regularization: RegularizationConfig = field(default_factory=RegularizationConfig)
 
     def __post_init__(self):
-        assert (
-            self.loss in LossKind
-        ), f"unknown loss: {self.loss!r} (valid: {[e.value for e in LossKind]})"
-        assert (
-            self.optimizer in VALID_OPTIMIZERS
-        ), f"unknown optimizer: {self.optimizer} (valid: {VALID_OPTIMIZERS})"
+        _integer("seed", self.seed, 0)
+        _integer("epochs", self.epochs)
+        _integer("batch_size", self.batch_size)
+        _number("learning_rate", self.learning_rate, strict=True)
+        _choice("loss", self.loss, LossKind)
+        _choice("optimizer", self.optimizer, VALID_OPTIMIZERS)
+        if self.grad_clip is not None:
+            _number("grad_clip", self.grad_clip, strict=True)
         if self.scheduler.cosine.t_max is None:
             self.scheduler.cosine.t_max = self.epochs
+        eta_min = (
+            self.scheduler.cosine.eta_min
+            if self.scheduler.kind == "cosine"
+            else self.scheduler.plateau.eta_min
+        )
+        _require(
+            eta_min <= self.learning_rate,
+            "scheduler minimum exceeds initial learning rate",
+        )
+
+    def validate_loaders(self, train_loader, val_loader) -> None:
+        _require(
+            train_loader is not None and len(train_loader.dataset) > 0,
+            "training requires usable samples",
+        )
+        if val_loader is not None and len(val_loader.dataset) > 0:
+            return
+        criteria = (self.early_stopping.target_loss, self.early_stopping.patience)
+        _require(
+            self.scheduler.kind != "plateau"
+            and not any(
+                criterion is not None and criterion.monitor == "val"
+                for criterion in criteria
+            ),
+            "validation-dependent settings require validation samples",
+        )
 
 
 @dataclass
 class LoggingConfig:
-    # logging level: DEBUG, INFO, WARNING, ERROR
     level: str = "INFO"
-    # path to log file; None disables file logging
     output_file: Path | None = None
-    # whether to also emit logs to stdout
     stdout: bool = True
 
     def __post_init__(self):
+        _choice(
+            "logging.level",
+            self.level.upper(),
+            ("DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"),
+        )
         if self.output_file is not None:
             self.output_file = Path(self.output_file)
 
 
 @dataclass
 class PathsConfig:
-    # root directory of the experiment (contains simulations/, splits/)
     experiment_dir: Path
-    # directory where preprocessed HDF5 splits are written and read from; derived if omitted
     preprocessed_dir: Path | None = None
-    # directory for training outputs; derived from experiment_dir if omitted
     training_dir: Path | None = None
-    # per-epoch scalar metrics CSV; derived from training_dir if omitted
     epoch_metrics_file: Path | None = None
-    # spatial/spectral metrics HDF5; derived from training_dir if omitted
     metrics_file: Path | None = None
-    # directory for split JSON files; derived from experiment_dir if omitted
     splits_dir: Path | None = None
-    # always derived: checkpoint artifacts live alongside other training outputs
     checkpoint_dir: Path | None = None
-    # always derived: run metadata JSON written to training_dir
     training_info_file: Path | None = None
 
     def __post_init__(self):
-        for f in (
+        for name in (
             "experiment_dir",
             "preprocessed_dir",
             "training_dir",
@@ -412,9 +389,9 @@ class PathsConfig:
             "metrics_file",
             "splits_dir",
         ):
-            v = getattr(self, f)
-            if v is not None:
-                setattr(self, f, Path(v))
+            value = getattr(self, name)
+            if value is not None:
+                setattr(self, name, Path(value))
 
 
 @dataclass
@@ -424,17 +401,12 @@ class ModelConfig:
     sfno: SFNOModelConfig | None = None
 
     def __post_init__(self):
-        assert self.architecture in VALID_ARCHITECTURES, (
-            f"unknown architecture: {self.architecture} "
-            f"(valid: {VALID_ARCHITECTURES})"
-        )
-        active = self.active_sub_config()
-        assert active is not None, (
-            f"architecture={self.architecture} but "
-            f"[model.{self.architecture}] section is missing"
+        _choice("architecture", self.architecture, VALID_ARCHITECTURES)
+        _require(
+            self.active_sub_config() is not None, "active model section is missing"
         )
 
-    def active_sub_config(self) -> FNOModelConfig | SFNOModelConfig | None:
+    def active_sub_config(self) -> FNOModelConfig | SFNOModelConfig:
         return self.fno if self.architecture == "fno" else self.sfno
 
 
@@ -445,6 +417,27 @@ class Config:
     training: TrainingConfig
     logging: LoggingConfig
     paths: PathsConfig
+
+    def __post_init__(self):
+        active = self.model.active_sub_config()
+        _require(
+            active.in_channels == self.data.windows.length * len(self.data.x_vars),
+            "model input channels do not match window length * input variables",
+        )
+        _require(
+            active.out_channels == len(self.data.y_vars),
+            "model output channels do not match target variables",
+        )
+        if (
+            self.paths.preprocessed_dir is not None
+            and self.paths.training_dir is not None
+        ):
+            _require(
+                not self.paths.preprocessed_dir.resolve().is_relative_to(
+                    self.paths.training_dir.resolve()
+                ),
+                "training directory must not contain the prepared data directory",
+            )
 
 
 def _parse_split_config(s: dict) -> SplitConfig:
@@ -558,6 +551,7 @@ def load(path: Path) -> Config:
         epochs=t["epochs"],
         batch_size=t["batch_size"],
         learning_rate=t.get("learning_rate", 1e-3),
+        seed=t.get("seed", 0),
         loss=t.get("loss", "lat_weighted_relative_l2"),
         optimizer=t.get("optimizer", "adam"),
         grad_clip=t.get("grad_clip", None),
@@ -597,14 +591,6 @@ def load(path: Path) -> Config:
     paths.training_info_file = paths.training_dir / "training.json"
     if paths.splits_dir is None:
         paths.splits_dir = paths.experiment_dir / "splits"
-
-    expected_in_channels = data.windows.length * len(data.x_vars)
-    active = model.active_sub_config()
-    assert active.in_channels == expected_in_channels, (
-        f"model.{model.architecture}.in_channels={active.in_channels} does not match "
-        f"data.windows.length * len(x_vars) = "
-        f"{data.windows.length} * {len(data.x_vars)} = {expected_in_channels}"
-    )
 
     return Config(
         data=data, model=model, training=training, logging=logging_cfg, paths=paths

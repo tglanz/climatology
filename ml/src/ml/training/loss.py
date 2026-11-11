@@ -1,5 +1,6 @@
-from typing import Callable
+"""Training objectives reduce each target channel before averaging samples."""
 
+from typing import Callable
 import torch
 import torch.nn as nn
 
@@ -12,31 +13,15 @@ LossFn = Callable[[torch.Tensor, torch.Tensor], torch.Tensor]
 def create_loss_fn(kind: str, lat_weights: torch.Tensor | None = None) -> LossFn:
     if kind == LossKind.MSE:
         return nn.MSELoss()
+    if kind not in (LossKind.RELATIVE_L2, LossKind.LAT_WEIGHTED_RELATIVE_L2):
+        raise ValueError(f"unknown loss: {kind}")
+    if kind == LossKind.LAT_WEIGHTED_RELATIVE_L2 and lat_weights is None:
+        raise ValueError("latitude-weighted loss requires grid weights")
 
-    if kind == LossKind.RELATIVE_L2:
+    def loss(pred: torch.Tensor, truth: torch.Tensor) -> torch.Tensor:
+        weights = lat_weights if kind == LossKind.LAT_WEIGHTED_RELATIVE_L2 else None
+        if weights is None:
+            weights = torch.ones(pred.shape[2], dtype=pred.dtype, device=pred.device)
+        return lat_weighted_relative_l2_torch(pred, truth, weights)
 
-        def relative_l2(pred: torch.Tensor, target: torch.Tensor) -> torch.Tensor:
-            return torch.mean(
-                torch.norm(pred - target, dim=(-2, -1))
-                / torch.norm(target, dim=(-2, -1))
-            )
-
-        return relative_l2
-
-    if kind == LossKind.LAT_WEIGHTED_RELATIVE_L2:
-        assert lat_weights is not None, "lat_weighted_relative_l2 requires lat_weights"
-        # lat_weights lives on CPU at construction time; move lazily to match pred device
-        weights_holder = {"w": lat_weights}
-
-        def lat_weighted_relative_l2_loss(
-            pred: torch.Tensor, target: torch.Tensor
-        ) -> torch.Tensor:
-            w = weights_holder["w"]
-            if w.device != pred.device:
-                w = w.to(pred.device)
-                weights_holder["w"] = w
-            return lat_weighted_relative_l2_torch(pred, target, w)
-
-        return lat_weighted_relative_l2_loss
-
-    raise ValueError(f"unknown loss: {kind}")
+    return loss

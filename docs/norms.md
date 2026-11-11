@@ -1,65 +1,96 @@
 # Norms
 
-## Latitude-weighted relative L2 (relL2)
+Metrics use the actual [Gaussian grid](grids.md). Let $\phi_h$ be latitude,
+$q_h$ its Gauss-Legendre weight, and $w_h=q_h/\sum_jq_j$.
+These weights integrate in $\mu=\sin\phi$; another cosine changes the rule.
+See [ECMWF](https://confluence.ecmwf.int/pages/viewpage.action?pageId=50039496)
+and [Gauss quadrature](https://dlmf.nist.gov/3.5#v).
 
-Primary metric throughout evaluation. For a predicted profile $\hat{y}$ and truth $y$, both of shape $(H,)$:
+## Profile errors
 
-$$\text{relL2}(\hat{y}, y) = \sqrt{\frac{\sum_h w_h (\hat{y}_h - y_h)^2}{\sum_h w_h y_h^2}}$$
+For prediction $\hat y$, truth $y$, and error $e=\hat y-y$, all shaped $(H,)$,
 
-where $w_h = \cos(\phi_h)$ and $\phi_h$ is the latitude of grid row $h$. For uniformly spaced latitudes, cosine weights approximate relative cell areas. The current code also applies these weights to Isca Gaussian latitudes; they are not Gaussian quadrature weights. For nonzero truth and without a denominator epsilon, the zero predictor has relative error 1. A perfect prediction has error 0. Existing implementations differ in epsilon and profile broadcasting; [action item 02](../action-items/02-correctness.md) reconciles them.
+$$
+\operatorname{RMSE}_w=\sqrt{\sum_hw_he_h^2},
+\qquad
+\operatorname{relL2}_w=
+\frac{\sqrt{\sum_hw_he_h^2}}{\sqrt{\sum_hw_hy_h^2}}.
+$$
 
-## Latitude-weighted RMSE
+RMSE has the target's units. Relative L2 is dimensionless. For nonzero truth, a
+perfect prediction scores zero and the zero predictor scores one.
+Relative L2 is undefined for zero-norm truth, including zero prediction against
+zero truth. NumPy metrics return NaN for that ratio. Summaries exclude undefined
+ratios and report included and undefined counts. If none are defined, the relative
+summary is unavailable. RMSE remains defined.
 
-Used where an absolute error in physical units (m/s) is more interpretable than a relative quantity:
+[Metrics](../ml/src/ml/diagnostics/errors.py) require equal shapes before
+broadcasting. Arrays `(B,C,H)` reduce latitude independently for each sample and
+target. Relative scores can then average targets and samples.
+Absolute errors with different physical units remain separate.
 
-$$\text{RMSE}(\hat{y}, y) = \sqrt{\frac{\sum_h w_h (\hat{y}_h - y_h)^2}{\sum_h w_h}}$$
+## Training objectives and normalization
 
-Same weights as relL2. The denominator is the sum of weights rather than the weighted signal energy, so the result is in m/s rather than dimensionless. Prefer relL2 when comparing across forcing configurations with different jet magnitudes.
+Fit per-channel population means and standard deviations from training samples
+only. Stable streaming moments make fitting independent of batch partitioning.
+Input statistics reduce sample, latitude, and longitude axes; target statistics
+reduce sample and latitude axes. This is a scaling convention, not an estimate
+of a spherical area mean.
 
-## Normalized parameter distance
+For mean $\mu$, population standard deviation $\sigma$, and saved positive
+epsilon $\epsilon$, use
 
-Used for the nearest-training-config baseline. For a configuration with parameter vector $p$ and a training configuration $p'$, both normalized by the observed range of each parameter across the available training configurations:
+$$
+z=\frac{x-\mu}{\sigma+\epsilon},
+\qquad
+x=z(\sigma+\epsilon)+\mu.
+$$
 
-$$d(p, p') = \left\| \frac{p - p'}{\text{range}} \right\|_2$$
+Training and loaded inference share these operations. Standard deviation uses
+population correction zero; see [PyTorch](https://docs.pytorch.org/docs/2.11/generated/torch.std.html).
+The default epsilon is $10^{-7}$ in each channel's units and is saved explicitly.
 
-Normalization ensures parameters with different physical scales contribute equally.
+MSE averages squared normalized errors. Unweighted relative L2 uses equal
+latitude weights; Gaussian-weighted relative L2 uses $w_h$. Each relative loss
+reduces targets separately before averaging. Relative training losses reject a
+zero target norm with guidance to use MSE or change targets. Zero prediction
+error uses a zero subgradient.
 
----
+Epoch loss is $\sum_bn_bL_b/\sum_bn_b$, where $L_b$ is the batch mean and $n_b$
+its sample count. Fixed-model validation is independent of batch partitioning
+within floating-point tolerance. Training follows changing weights, so different
+training batches need not produce the same trajectory.
 
-## Appendix: cosine latitude weights
+Training curves describe normalized-target objectives. Evaluation describes
+physical-unit predictions and does not equate its errors with those curves.
 
-The current implementation uses $w_h = \cos(\phi_h)$. The derivation below assumes uniform latitude spacing. Gaussian grids require their quadrature weights for the corresponding integration rule.
+## Aggregation and baselines
 
-### Area element on the sphere
+Prepared-window evaluation weights windows equally. CLI evaluation averages window
+predictions within a simulation, then scores simulations equally. Error of the
+averaged prediction differs from average window error.
 
-On a sphere of radius $R$, the infinitesimal area element in spherical coordinates is
+The global training baseline averages one profile per training simulation.
+Nearest-configuration prediction averages replicas of the chosen training
+configuration. Neither uses test targets.
+Parameter distance is Euclidean after dividing each varying parameter by its range
+among loaded training configurations. Constant ranges become one.
+This is a chosen parameter scaling, not a physical distance.
 
-$$dA = R^2 \cos\phi \, d\phi \, d\lambda$$
+## Replicate variability
 
-where $\phi \in [-\pi/2, \pi/2]$ is latitude and $\lambda \in [0, 2\pi)$ is longitude. The $\cos\phi$ factor is the distance from the rotation axis: near the equator a longitude step $d\lambda$ spans a large arc; near the poles the same $d\lambda$ spans almost nothing.
+For $R\geq2$ replica targets in one configuration, let $\bar Y=R^{-1}\sum_rY_r$.
+The reported statistic is
 
-### Discrete grid
+$$
+\frac{1}{R}\sum_r\operatorname{relL2}_w(Y_r,\bar Y),
+$$
 
-A regular lat-lon grid partitions the sphere into cells with uniform spacing $\Delta\phi$ in latitude and $\Delta\lambda$ in longitude. The area of the cell at latitude $\phi_h$ is
+subject to the same undefined-ratio policy. It is mean relative deviation from a
+finite replica mean. It is neither a standard deviation nor an estimate of an
+irreducible-error bound. One replica cannot estimate variability.
+An input window may explain variation that a configuration-only mean cannot.
 
-$$A_h = R^2 \cos(\phi_h) \, \Delta\phi \, \Delta\lambda$$
-
-Since $R$, $\Delta\phi$, $\Delta\lambda$ are the same for every cell, the area is proportional to $\cos(\phi_h)$ alone:
-
-$$A_h \propto \cos(\phi_h)$$
-
-### Area-weighted global mean
-
-The true global mean of a field $f$ is
-
-$$\langle f \rangle = \frac{\iint f \, dA}{\iint dA}$$
-
-For a zonal-mean profile $y_h$ (already averaged over longitude), the longitude integral just contributes a factor of $2\pi$ and cancels between numerator and denominator. The discrete approximation is
-
-$$\langle y \rangle = \frac{\sum_h y_h A_h}{\sum_h A_h} = \frac{\sum_h y_h \cos(\phi_h)}{\sum_h \cos(\phi_h)}$$
-
-This is exactly $\sum_h w_h y_h / \sum_h w_h$ with $w_h = \cos(\phi_h)$.
-
-### Consequence for error metrics
-
-Replacing the flat sum with the area-weighted sum in relL2 and RMSE ensures that errors at high latitudes, which affect a small fraction of the atmosphere, are penalized proportionally to the area they represent rather than to the number of grid rows they happen to occupy.
+A conditional mean minimizes expected squared error under finite second moments.
+That result does not establish optimality for mean relative L2.
+See [Gneiting, Making and Evaluating Point Forecasts](https://arxiv.org/html/0912.0902v2).

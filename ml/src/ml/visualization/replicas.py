@@ -1,163 +1,90 @@
-"""Figures comparing predictions and truth across replicas."""
-
-import numpy as np
-import matplotlib.pyplot as plt
-from ml.diagnostics.errors import notebook_profile_rel_l2 as rel_l2
-
-
-def plot_code(label: str, results: list[dict]):
-    n = len(results)
-    fig, axes = plt.subplots(1, 3, figsize=(14, 5), constrained_layout=True)
-    fig.suptitle(label, fontsize=10)
-    lat = results[0]["lat"]
-
-    pred_colors = plt.get_cmap("tab10")(np.linspace(0, 0.9, n))
-    gray_levels = np.linspace(0.3, 0.65, n)
-    truth_colors = [np.array([v, v, v, 1.0]) for v in gray_levels]
-
-    ax = axes[0]
-    for i, res in enumerate(results):
-        ax.plot(
-            res["truth"],
-            lat,
-            color=truth_colors[i],
-            linestyle="--",
-            linewidth=1.4,
-            label=f"truth r{i}",
-        )
-        ax.plot(
-            res["mean_pred"],
-            lat,
-            color=pred_colors[i],
-            linewidth=1.5,
-            label=f"pred r{i}",
-        )
-    ax.axvline(0.0, color="k", linewidth=0.4, alpha=0.4)
-    ax.set_xlabel("u [m/s]")
-    ax.set_ylabel("lat [deg]")
-    ax.set_title("truth (gray dashed) vs prediction (colored)")
-    ax.legend(fontsize=7)
-    ax.grid(True, alpha=0.3)
-
-    ax = axes[1]
-    for i, res in enumerate(results):
-        err = res["mean_pred"] - res["truth"]
-        rl = rel_l2(res["mean_pred"], res["truth"], lat)
-        ax.plot(err, lat, color=pred_colors[i], linewidth=1.2, label=f"r{i}  {rl:.3f}")
-    ax.axvline(0.0, color="k", linewidth=0.8, linestyle="--")
-    ax.set_xlabel("error (pred - truth) [m/s]")
-    ax.set_title("error per replicate")
-    ax.legend(fontsize=7)
-    ax.grid(True, alpha=0.3)
-
-    ax = axes[2]
-    for i, res in enumerate(results):
-        ax.plot(
-            res["predictions"].std(axis=0),
-            lat,
-            color=pred_colors[i],
-            linewidth=1.2,
-            label=f"r{i}",
-        )
-    ax.set_xlabel("prediction std [m/s]")
-    ax.set_title("within-sim window variance")
-    ax.legend(fontsize=7)
-    ax.grid(True, alpha=0.3)
-
-    plt.show()
-
+"""Target-aware figures for predicted and observed replicate variability."""
 
 from pathlib import Path
-from tqdm.auto import tqdm
-from ml.data.evaluation import load_profile
+import numpy as np
+import matplotlib.pyplot as plt
+
+from ml.data.climatology import diagnostic_for
+from ml.data.simulation_data import SimulationSamples, try_read_simulation
 from ml.data.sweep_file import SweepFile
+from ml.diagnostics.errors import profile_rel_l2
 
 
-def _plot_code(
-    code: str, profiles: np.ndarray, latitudes: np.ndarray, t_cs: list, ax, sweep
-):
-    mean_profile = profiles.mean(axis=0)
-    std_profile = profiles.std(axis=0)
-    params = sweep.params_for(code)
-    lat0 = params["stirring_lat0"] if params else None
-    jet_lat = latitudes[np.argmax(np.abs(mean_profile))]
-    valid_t_cs = [t for t in t_cs if t is not None]
-    mean_t_c = np.mean(valid_t_cs) if valid_t_cs else float("nan")
-
-    for profile in profiles:
-        ax.plot(profile, latitudes, color="tab:blue", alpha=0.08, linewidth=0.8)
-    ax.fill_betweenx(
-        latitudes,
-        mean_profile - std_profile,
-        mean_profile + std_profile,
-        color="gray",
-        alpha=0.35,
-        label="mean +/- std",
-    )
-    ax.plot(mean_profile, latitudes, color="tab:orange", linewidth=2, label="mean")
-    ax.axvline(0, color="k", linewidth=0.5, linestyle="--")
-    if lat0 is not None:
-        ax.axhline(
-            lat0, color="tab:red", linewidth=1.2, linestyle="--", label=f"lat0={lat0}"
-        )
-    ax.axhline(
-        jet_lat,
-        color="tab:green",
-        linewidth=1.2,
-        linestyle="--",
-        label=f"jet={jet_lat:.1f}",
-    )
-    ax.set_xlabel("zonal-mean zonal wind [m/s]")
-    ax.set_ylabel("latitude [deg]")
-    ax.set_ylim(-90, 90)
-    ax.set_title(
-        f"{sweep.describe(code)}  [{code}]\nconv={mean_t_c:.1f} days  std={std_profile.mean():.3f}"
-    )
-    ax.legend(fontsize=7)
+def plot_code(label: str, results: list[SimulationSamples]):
+    if not results:
+        return
+    lat = results[0].lat
+    for channel, name in enumerate(results[0].metadata.y_vars):
+        target = diagnostic_for(name)
+        fig, axes = plt.subplots(1, 3, figsize=(14, 5), constrained_layout=True)
+        fig.suptitle(f"{label}: {target.label}")
+        for index, result in enumerate(results):
+            truth, pred = result.truth_profile[channel], result.pred_profile[channel]
+            axes[0].plot(truth, lat, "--", label=f"truth r{index}")
+            axes[0].plot(pred, lat, label=f"prediction r{index}")
+            relative = profile_rel_l2(pred, truth, lat)
+            axes[1].plot(pred - truth, lat, label=f"r{index}: relL2={relative:.3f}")
+            axes[2].plot(result.predictions[:, channel].std(0), lat, label=f"r{index}")
+        for ax, title in zip(
+            axes,
+            (
+                "Replica profiles",
+                "Error per replica",
+                "Within-simulation prediction standard deviation",
+            ),
+            strict=True,
+        ):
+            ax.set_title(title)
+            ax.set_xlabel(f"[{target.units}]")
+            ax.set_ylabel("latitude [deg]")
+            ax.legend()
+            ax.grid(alpha=0.3)
+        plt.show()
 
 
-def plot_noise_floor(
-    codes: list[str], experiment_dir: Path, spinup_cfg, convergence_cfg, ncols: int = 3
+def plot_replicate_variability(
+    codes: list[str], experiment_dir: Path, data_cfg, ncols: int = 3
 ):
     sweep = SweepFile.from_experiment_dir(experiment_dir)
-    nrows = -(-len(codes) // ncols)
-
-    jobs = [
-        (code, d)
-        for code in codes
-        for d in sorted(
-            (experiment_dir / "simulations").glob(code + "-*"),
-            key=lambda p: p.name,
+    groups = {}
+    for code in codes:
+        results = []
+        for path in sorted((experiment_dir / "simulations").glob(f"{code}-*")):
+            outcome = try_read_simulation(path, data_cfg)
+            if outcome.samples is not None:
+                results.append(outcome.samples)
+        if results:
+            groups[code] = results
+    if not groups:
+        raise ValueError("no simulations satisfy the configured sample contract")
+    for channel, name in enumerate(data_cfg.y_vars):
+        target = diagnostic_for(name)
+        nrows = (len(groups) + ncols - 1) // ncols
+        fig, axes = plt.subplots(
+            nrows, ncols, figsize=(5 * ncols, 5 * nrows), squeeze=False
         )
-        if list(d.glob("run*/atmos_daily.nc"))
-    ]
-
-    raw = {code: [] for code in codes}
-    for code, d in tqdm(jobs, desc="loading"):
-        lat, profile, t_c = load_profile(d, spinup_cfg, convergence_cfg)
-        raw[code].append((lat, profile, t_c))
-
-    fig, axes = plt.subplots(nrows, ncols, figsize=(ncols * 5, nrows * 5))
-    axes_flat = np.array(axes).flat
-
-    for code, ax in zip(codes, axes_flat):
-        latitudes = raw[code][0][0]
-        profiles = np.stack([r[1] for r in raw[code]])
-        t_cs = [r[2] for r in raw[code]]
-        _plot_code(code, profiles, latitudes, t_cs, ax, sweep)
-
-    for ax in list(axes_flat)[len(codes) :]:
-        ax.set_visible(False)
-
-    plt.tight_layout()
-    plt.show()
-
-    # std bar chart
-    labels = [sweep.describe(c) for c in codes]
-    stds = [np.stack([r[1] for r in raw[c]]).std(axis=0).mean() for c in codes]
-    fig2, ax2 = plt.subplots(figsize=(len(codes) * 1.5, 4))
-    ax2.bar(labels, stds, color="tab:blue")
-    ax2.set_ylabel("mean std of climatology profiles")
-    ax2.set_title("within-config noise floor per parameter config")
-    plt.tight_layout()
-    plt.show()
+        for ax, (code, results) in zip(axes.flat, groups.items()):
+            lat = results[0].lat
+            profiles = np.stack([r.truth_profile[channel] for r in results])
+            mean = profiles.mean(0)
+            for profile in profiles:
+                ax.plot(profile, lat, alpha=0.2)
+            ax.plot(mean, lat, label="replica mean")
+            if len(results) > 1:
+                std = profiles.std(0)
+                ax.fill_betweenx(
+                    lat,
+                    mean - std,
+                    mean + std,
+                    alpha=0.2,
+                    label="mean +/- population std",
+                )
+            ax.set_title(f"{sweep.describe(code)}; replicas={len(results)}")
+            ax.set_xlabel(f"{target.label} [{target.units}]")
+            ax.set_ylabel("latitude [deg]")
+            ax.legend()
+        for ax in list(axes.flat)[len(groups) :]:
+            ax.set_visible(False)
+        fig.suptitle(f"Observed replicate variability: {target.label}")
+        plt.tight_layout()
+        plt.show()

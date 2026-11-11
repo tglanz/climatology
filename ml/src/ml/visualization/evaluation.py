@@ -26,7 +26,8 @@ def plot_baselines_bar(
     """Bar chart of relL2 for each baseline predictor plus the model."""
     fig, ax = plt.subplots(figsize=(7, 4))
     colors = ["tab:gray"] * len(names)
-    colors[highlight_idx] = "tab:blue"
+    if highlight_idx >= 0:
+        colors[highlight_idx] = "tab:blue"
     ax.bar(names, scores, color=colors, edgecolor="black", linewidth=0.6)
     ax.set_ylabel("mean relL2")
     ax.set_title("Baseline comparison (test split)")
@@ -39,6 +40,8 @@ def plot_baselines_profiles(
     lat: np.ndarray,
     truth_mean: np.ndarray,
     pred_profiles: dict[str, np.ndarray],
+    quantity: str = "zonal wind",
+    units: str = "m/s",
 ) -> plt.Figure:
     """Overlay of mean truth and each baseline predictor's mean prediction."""
     fig, ax = plt.subplots(figsize=(6, 5))
@@ -47,7 +50,7 @@ def plot_baselines_profiles(
     for i, (name, profile) in enumerate(pred_profiles.items()):
         ls = linestyles[i % len(linestyles)]
         ax.plot(profile, lat, linestyle=ls, linewidth=1.4, label=name)
-    ax.set_xlabel("u [m/s]")
+    ax.set_xlabel(f"{quantity} [{units}]")
     ax.set_ylabel("lat [deg]")
     ax.set_title("Mean profiles: truth vs predictors")
     ax.legend(fontsize=8)
@@ -56,34 +59,40 @@ def plot_baselines_profiles(
     return fig
 
 
-def plot_training_curve(csv_path: Path) -> plt.Figure:
+def plot_training_curve(csv_path: Path, run_id: str | None = None) -> plt.Figure:
     import csv
 
-    epochs, train_loss, val_loss = [], [], []
-    with open(csv_path) as f:
-        for row in csv.DictReader(f):
-            epochs.append(int(row["epoch"]))
-            train_loss.append(float(row["train_loss"]))
-            val_loss.append(float(row["val_loss"]))
-
+    with open(csv_path) as handle:
+        rows = [
+            row
+            for row in csv.DictReader(handle)
+            if run_id is None or row["run_id"] == run_id
+        ]
+    if not rows:
+        raise ValueError("no epoch metrics for the current training run")
     fig, ax = plt.subplots(figsize=(8, 4))
-    ax.plot(epochs, train_loss, label="train", color="tab:blue")
-    ax.plot(epochs, val_loss, label="val", color="tab:orange", linestyle="--")
+    epochs = [int(row["epoch"]) for row in rows]
+    ax.plot(epochs, [float(row["train_loss"]) for row in rows], label="train")
+    ax.plot(
+        epochs,
+        [float(row["val_loss"]) if row["val_loss"] else np.nan for row in rows],
+        label="val",
+    )
     ax.set_xlabel("epoch")
-    ax.set_ylabel("loss")
-    ax.set_title("Training curve")
-    ax.legend(fontsize=8)
+    ax.set_ylabel("normalized-target loss")
+    ax.set_title("Training objective")
+    ax.legend()
     ax.grid(alpha=0.3)
     fig.tight_layout()
     return fig
 
 
-def plot_noise_floor_summary(
+def plot_replicate_variability(
     codes: list[str],
     noise_rels: list[float],
     model_rels: list[float],
 ) -> plt.Figure:
-    """Sorted bar chart of across-replicate noise floor with model relL2 overlaid."""
+    """Sorted bar chart of replicate relative deviation with model relL2 overlaid."""
     order = np.argsort(noise_rels)
     sorted_codes = [codes[i] for i in order]
     sorted_noise = [noise_rels[i] for i in order]
@@ -96,14 +105,14 @@ def plot_noise_floor_summary(
         sorted_noise,
         color="tab:gray",
         alpha=0.6,
-        label="noise floor",
+        label="replicate deviation",
         edgecolor="none",
     )
     ax.scatter(x, sorted_model, color="tab:blue", s=18, zorder=3, label="model relL2")
     ax.set_xticks(x)
     ax.set_xticklabels(sorted_codes, rotation=90, fontsize=6)
     ax.set_ylabel("relL2")
-    ax.set_title("Noise floor vs model relL2 (per config code)")
+    ax.set_title("Replicate variability vs model relL2 (per config code)")
     ax.legend(fontsize=8)
     ax.grid(axis="y", alpha=0.3)
     fig.tight_layout()
@@ -145,6 +154,8 @@ def plot_generalization_param(
 def plot_generalization_worst(
     lat: np.ndarray,
     worst_cases: list[tuple[str, np.ndarray, np.ndarray, float]],
+    quantity: str = "zonal wind",
+    units: str = "m/s",
 ) -> plt.Figure:
     """Profile overlays for the 6 worst-scoring config codes."""
     n = len(worst_cases)
@@ -153,7 +164,7 @@ def plot_generalization_worst(
     fig, axes = plt.subplots(
         nrows, ncols, figsize=(ncols * 3.5, nrows * 3.5), constrained_layout=True
     )
-    axes_flat = list(np.array(axes).flat) if n > 1 else [axes]
+    axes_flat = np.atleast_1d(axes).ravel()
     for k, (code, truth_p, pred_p, rel) in enumerate(worst_cases):
         ax = axes_flat[k]
         ax.plot(truth_p, lat, color="tab:orange", linewidth=1.4, label="truth")
@@ -161,7 +172,7 @@ def plot_generalization_worst(
             pred_p, lat, color="tab:blue", linewidth=1.4, linestyle="--", label="pred"
         )
         ax.set_title(f"{code}  relL2={rel:.3f}", fontsize=8)
-        ax.set_xlabel("u [m/s]", fontsize=7)
+        ax.set_xlabel(f"{quantity} [{units}]", fontsize=7)
         if k % ncols == 0:
             ax.set_ylabel("lat [deg]", fontsize=7)
         if k == 0:
@@ -176,15 +187,16 @@ def plot_generalization_worst(
 def plot_error_bias(
     lat: np.ndarray,
     errors: np.ndarray,
+    units: str = "m/s",
 ) -> plt.Figure:
-    """Fan plot of per-sample (pred - truth) vs latitude with mean bias."""
+    """Fan plot of per-simulation (pred - truth) vs latitude with mean bias."""
     fig, ax = plt.subplots(figsize=(6, 5))
     for i in range(min(errors.shape[0], 500)):
         ax.plot(errors[i], lat, color="tab:blue", linewidth=0.5, alpha=0.1)
     mean_err = errors.mean(axis=0)
     ax.plot(mean_err, lat, color="tab:red", linewidth=1.8, label="mean bias")
     ax.axvline(0.0, color="black", linewidth=0.8, linestyle="--")
-    ax.set_xlabel("error (pred - truth) [m/s]")
+    ax.set_xlabel(f"error (pred - truth) [{units}]")
     ax.set_ylabel("lat [deg]")
     ax.set_title("Prediction bias by latitude (test split)")
     ax.legend(fontsize=8)
@@ -196,7 +208,7 @@ def plot_error_bias(
 def plot_error_histogram(
     rel_l2_vals: np.ndarray,
 ) -> plt.Figure:
-    """Histogram of per-sample relL2."""
+    """Histogram of per-simulation relL2."""
     fig, ax = plt.subplots(figsize=(5, 4))
     ax.hist(rel_l2_vals, bins=40, edgecolor="black", linewidth=0.4)
     median = float(np.median(rel_l2_vals))
@@ -209,7 +221,7 @@ def plot_error_histogram(
     )
     ax.set_xlabel("relL2")
     ax.set_ylabel("count")
-    ax.set_title("Per-sample relL2 distribution (test split)")
+    ax.set_title("Per-simulation relL2 distribution (test split)")
     ax.legend(fontsize=8)
     ax.grid(alpha=0.3)
     fig.tight_layout()
@@ -238,16 +250,15 @@ def plot_jet_scatter(
     return fig
 
 
-def plot_model_vs_noise_floor(
+def plot_model_vs_variability(
     codes: list[str],
     noise_rels: list[float],
     model_rels: list[float],
     split_labels: list[str],
 ) -> plt.Figure:
-    """Scatter of model relL2 vs noise floor relL2, one point per config code.
+    """Scatter of model relL2 vs replicate relative deviation, one point per config code.
 
-    Points above the diagonal have model error exceeding the noise floor.
-    Points on or below the diagonal are near the achievable limit.
+    Points above the diagonal have model error exceeding the replicate deviation.
     """
     palette = {
         "train": "tab:blue",
@@ -263,11 +274,13 @@ def plot_model_vs_noise_floor(
         ax.scatter(nf, mr, color=color, s=40, alpha=0.85, label=label, zorder=3)
         added.add(spl)
     lo = 0.0
-    hi = max(max(noise_rels), max(model_rels)) * 1.1
-    ax.plot([lo, hi], [lo, hi], "k--", linewidth=0.8, label="model = noise floor")
-    ax.set_xlabel("noise floor relL2 (replicate std)")
+    hi = max(max(noise_rels), max(model_rels), 1e-6) * 1.1
+    ax.plot(
+        [lo, hi], [lo, hi], "k--", linewidth=0.8, label="model = replicate deviation"
+    )
+    ax.set_xlabel("mean relative deviation from replica mean")
     ax.set_ylabel("model relL2")
-    ax.set_title("Model error vs noise floor per config")
+    ax.set_title("Model error vs replicate deviation per config")
     ax.set_xlim(lo, hi)
     ax.set_ylim(lo, hi)
     ax.legend(fontsize=8)

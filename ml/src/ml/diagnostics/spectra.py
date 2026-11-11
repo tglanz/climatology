@@ -1,42 +1,21 @@
-import numpy as np
+"""Raw zonal Fourier power; FFT coefficients use NumPy's default normalization."""
 
-from ml.diagnostics.spatial import cosine_latitude_weights
+import numpy as np
+from ml.diagnostics.grid import gaussian_latitude_weights
 
 
 def zonal_power_spectrum(field: np.ndarray) -> np.ndarray:
-    """
-    - FFT along each latitude
-    - Compute the power (magnitude squared)
-
-    Given a 2d signal (lats, lons); The output is (lat, harmonics_amplitude_squared)
-    where len(harmonics_amplitude_squared) is about len(lons) // 2
-
-    See https://en.wikipedia.org/wiki/Spectral_density.
-    """
+    """Return |rfft(field)|**2 along longitude, without one-sided rescaling."""
     return np.abs(np.fft.rfft(field, axis=-1)) ** 2
 
 
 def lat_weighted_zonal_power_spectrum(
     field: np.ndarray, latitudes_deg: np.ndarray
 ) -> np.ndarray:
-    """
-    Cos-lat-weighted average of the zonal power spectrum over latitude:
-    `(|rfft(field, axis=-1)|**2 * w[:, None]).sum(axis=-2) / w.sum()`,
-    where `w = cos(lat)`. Collapses the latitude axis with proper area
-    weighting so polar rows do not overcount.
-
-    Why it is meaningful: a single 1D spectrum E(k) of how energy
-    distributes across zonal wavenumbers, averaged over the sphere.
-    The natural input to a k^-3 (enstrophy cascade) reference comparison.
-
-    See https://en.wikipedia.org/wiki/Spectral_density.
-
-    Args:
-        field:         (..., H, W) array.
-        latitudes_deg: 1D array of length H.
-
-    Returns: array of shape (..., W//2 + 1).
-    """
-    w = cosine_latitude_weights(latitudes_deg, normalize="none")
-    power = zonal_power_spectrum(field) * w[:, None]
-    return power.sum(axis=-2) / w.sum()
+    """Gaussian latitude average of raw zonal Fourier power."""
+    weights = gaussian_latitude_weights(latitudes_deg)
+    if np.ndim(field) < 2 or np.shape(field)[-2] != len(weights):
+        raise ValueError("spectrum field shape must end in (latitude, longitude)")
+    if not np.isfinite(field).all():
+        raise ValueError("spectrum field contains nonfinite values")
+    return np.sum(zonal_power_spectrum(field) * weights[:, None], axis=-2)

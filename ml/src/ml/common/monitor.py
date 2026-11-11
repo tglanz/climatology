@@ -5,6 +5,8 @@ from pathlib import Path
 import numpy as np
 
 from ml.config import Config
+from ml.data.metadata import DataMetadata
+from ml.data.climatology import diagnostic_for
 
 
 @dataclass
@@ -26,6 +28,8 @@ class MonitorState:
     def __init__(self, cfg: Config):
         self._cfg = cfg
         self.title: str = cfg.paths.experiment_dir.name
+        self.target = diagnostic_for(cfg.data.y_vars[0])
+        self.latitudes: np.ndarray | None = None
         self.sections: list[Section] = []
         self.series: list[RunSeries] = []
         self.target_loss: float | None = (
@@ -48,12 +52,15 @@ class MonitorState:
             import h5py
 
             with h5py.File(self._cfg.paths.metrics_file, "r") as f:
-                self.spatial_error = f["spatial_error"][:]
-                profile_pred = f["profile_pred"][:] if "profile_pred" in f else None
+                metadata = DataMetadata.read_hdf5(f)
+                metadata.validate_config(self._cfg.data)
+                self.latitudes = metadata.grid.latitudes
+                self.spatial_error = f["spatial_error"][0]
+                profile_pred = f["profile_pred"][0] if "profile_pred" in f else None
                 profile_pred_std = (
-                    f["profile_pred_std"][:] if "profile_pred_std" in f else None
+                    f["profile_pred_std"][0] if "profile_pred_std" in f else None
                 )
-                profile_truth = f["profile_truth"][:] if "profile_truth" in f else None
+                profile_truth = f["profile_truth"][0] if "profile_truth" in f else None
             if profile_pred is not None:
                 if not self.profile_pred_history or not np.array_equal(
                     profile_pred, self.profile_pred_history[-1]
@@ -201,7 +208,10 @@ def _build_series(rows: list[dict]) -> list[RunSeries]:
             label=f"run{i + 1}" if multi else "",
             epochs=[int(r["epoch"]) for r in run_rows],
             train_losses=[float(r["train_loss"]) for r in run_rows],
-            val_losses=[float(r["val_loss"]) for r in run_rows],
+            val_losses=[
+                float(r["val_loss"]) if r["val_loss"] else float("nan")
+                for r in run_rows
+            ],
         )
         for i, (run_id, run_rows) in enumerate(by_run.items())
     ]

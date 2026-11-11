@@ -7,7 +7,8 @@ import torch.nn as nn
 from torch.utils.data import DataLoader
 from tqdm import tqdm
 
-from neuralop.data.transforms.normalizers import UnitGaussianNormalizer
+from ml.data.metadata import DataMetadata
+from ml.training.normalization import Normalization, RunningMoments
 
 from ml.config import Config, SchedulerConfig
 from ml.common.training_metrics import TrainingMetrics
@@ -47,14 +48,20 @@ def build_scheduler(
 
 class Trainer:
     def __init__(
-        self, model: nn.Module, cfg: Config, lat_weights: torch.Tensor | None = None
+        self,
+        model: nn.Module,
+        cfg: Config,
+        lat_weights: torch.Tensor | None = None,
+        device: torch.device | None = None,
+        metadata: DataMetadata | None = None,
     ):
         self.cfg = cfg
         self.log = logging.getLogger(__name__)
         self.run_id = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
-        cfg.paths.checkpoint_dir.mkdir(parents=True, exist_ok=True)
 
-        if torch.cuda.is_available():
+        if device is not None:
+            self.device = device
+        elif torch.cuda.is_available():
             self.device = torch.device("cuda")
         elif torch.backends.mps.is_available():
             self.device = torch.device("mps")
@@ -63,6 +70,12 @@ class Trainer:
         self.log.info("device: %s", self.device)
 
         self.model = model.to(self.device)
+        self.metadata = metadata or DataMetadata.from_config(model.grid, cfg.data)
+        self.metadata.validate_config(cfg.data)
+        if not self.metadata.grid.matches(model.grid):
+            raise ValueError("model and training coordinates differ")
+        if lat_weights is None:
+            lat_weights = torch.tensor(model.grid.weights.copy(), dtype=torch.float32)
         self.loss_fn = create_loss_fn(cfg.training.loss, lat_weights=lat_weights)
         self.log.info("loss: %s", cfg.training.loss)
 
@@ -109,39 +122,22 @@ class Trainer:
         self.info = TrainingInfo.collect(cfg, self.run_id, self.model, self.device)
 
     def _fit_normalizers(self, train_loader: DataLoader):
-        normalizer_x = UnitGaussianNormalizer(dim=[0, 2, 3])
-        normalizer_y = None
-
-        batch_size = train_loader.batch_size
+        source_metadata = getattr(train_loader.dataset, "metadata", self.metadata)
+        if not self.metadata.matches(source_metadata):
+            raise ValueError("training data metadata differs from the model")
+        x_moments, y_moments = RunningMoments(), RunningMoments()
         for x, y in train_loader:
-            if normalizer_y is None:
-                normalizer_y = UnitGaussianNormalizer(dim=[0, 2])
-
-            normalizer_x.partial_fit(x, batch_size=batch_size)
-            normalizer_y.partial_fit(y, batch_size=batch_size)
-        self.normalizer_x = normalizer_x.to(self.device)
-        self.normalizer_y = normalizer_y.to(self.device)
-        self.log.info(
-            "normalizer_x mean=%s std=%s",
-            normalizer_x.mean.squeeze().tolist(),
-            normalizer_x.std.squeeze().tolist(),
-        )
-        self.log.info(
-            "normalizer_y mean=%s std=%s",
-            normalizer_y.mean.squeeze().tolist(),
-            normalizer_y.std.squeeze().tolist(),
+            x_moments.update(x)
+            y_moments.update(y)
+        self.normalization = Normalization(
+            x_moments.normalizer(), y_moments.normalizer(), self.metadata
+        ).to(self.device)
+        self.normalizer_x, self.normalizer_y = (
+            self.normalization.x,
+            self.normalization.y,
         )
         torch.save(
-            {
-                "x_mean": normalizer_x.mean.cpu(),
-                "x_std": normalizer_x.std.cpu(),
-                "y_mean": normalizer_y.mean.cpu(),
-                "y_std": normalizer_y.std.cpu(),
-            },
-            self.cfg.paths.checkpoint_dir / "normalization.pt",
-        )
-        self.log.info(
-            "saved normalization stats to %s",
+            self.normalization.to_dict(),
             self.cfg.paths.checkpoint_dir / "normalization.pt",
         )
 
@@ -165,10 +161,16 @@ class Trainer:
         val_loader: DataLoader | None,
         track_metrics: bool = False,
     ):
+        self.cfg.training.validate_loaders(train_loader, val_loader)
+        self.cfg.paths.checkpoint_dir.mkdir(parents=True, exist_ok=True)
         self._fit_normalizers(train_loader)
         training_metrics = (
             TrainingMetrics(
-                self.cfg.paths, self.normalizer_x, self.normalizer_y, self.device
+                self.cfg.paths,
+                self.normalizer_x,
+                self.normalizer_y,
+                self.device,
+                self.metadata,
             )
             if track_metrics
             else None
@@ -248,27 +250,49 @@ class Trainer:
 
     def train_epoch(self, loader: DataLoader) -> float:
         self.model.train()
-        total = 0.0
+        total, count = 0.0, 0
         for x, y in tqdm(loader, desc="train", leave=False):
             x, y = x.to(self.device), y.to(self.device)
-            x = self.normalizer_x.transform(x)
-            y = self.normalizer_y.transform(y)
-            loss = self.loss_fn(self.model(x), y)
-            self.optimizer.zero_grad()
+            self.optimizer.zero_grad(set_to_none=True)
+            loss = self.loss_fn(
+                self.model(self.normalizer_x.transform(x)),
+                self.normalizer_y.transform(y),
+            )
+            if not torch.isfinite(loss):
+                raise FloatingPointError(
+                    "nonfinite training loss; weights were not updated"
+                )
             loss.backward()
+            if any(
+                p.grad is not None and not torch.isfinite(p.grad).all()
+                for p in self.model.parameters()
+            ):
+                raise FloatingPointError("nonfinite gradient; weights were not updated")
             if self.grad_clip is not None:
-                torch.nn.utils.clip_grad_norm_(self.model.parameters(), self.grad_clip)
+                torch.nn.utils.clip_grad_norm_(
+                    self.model.parameters(), self.grad_clip, error_if_nonfinite=True
+                )
             self.optimizer.step()
-            total += loss.item()
-        return total / len(loader)
+            total += loss.item() * len(x)
+            count += len(x)
+        if count == 0:
+            raise ValueError("training loader is empty")
+        return total / count
 
     def evaluate(self, loader: DataLoader) -> float:
         self.model.eval()
-        total = 0.0
+        total, count = 0.0, 0
         with torch.no_grad():
             for x, y in tqdm(loader, desc="val", leave=False):
                 x, y = x.to(self.device), y.to(self.device)
-                x = self.normalizer_x.transform(x)
-                y = self.normalizer_y.transform(y)
-                total += self.loss_fn(self.model(x), y).item()
-        return total / len(loader)
+                loss = self.loss_fn(
+                    self.model(self.normalizer_x.transform(x)),
+                    self.normalizer_y.transform(y),
+                )
+                if not torch.isfinite(loss):
+                    raise FloatingPointError("nonfinite validation loss")
+                total += loss.item() * len(x)
+                count += len(x)
+        if count == 0:
+            raise ValueError("validation loader is empty")
+        return total / count

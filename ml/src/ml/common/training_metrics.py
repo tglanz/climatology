@@ -7,9 +7,10 @@ import torch
 import torch.nn as nn
 from torch.utils.data import DataLoader
 
-from neuralop.data.transforms.normalizers import UnitGaussianNormalizer
+from ml.training.normalization import ChannelNormalizer
 
 from ml.config import PathsConfig
+from ml.data.metadata import DataMetadata
 
 from ml.diagnostics.errors import absolute_error
 
@@ -37,9 +38,10 @@ class TrainingMetrics:
     def __init__(
         self,
         paths: PathsConfig,
-        normalizer_x: UnitGaussianNormalizer,
-        normalizer_y: UnitGaussianNormalizer,
+        normalizer_x: ChannelNormalizer,
+        normalizer_y: ChannelNormalizer,
         device: torch.device,
+        metadata: DataMetadata,
     ):
         paths.training_dir.mkdir(parents=True, exist_ok=True)
         self._epoch_metrics_path = paths.epoch_metrics_file
@@ -47,6 +49,7 @@ class TrainingMetrics:
         self._normalizer_x = normalizer_x
         self._normalizer_y = normalizer_y
         self._device = device
+        self._metadata = metadata
 
     def log_epoch(
         self,
@@ -76,10 +79,10 @@ class TrainingMetrics:
         """
         Run the model on the val loader and write per-epoch diagnostic
         artifacts to metrics.h5:
-          - spatial_error:    mean absolute error per latitude     (H,)
-          - profile_pred:     mean predicted u(lat) profile        (H,)
-          - profile_pred_std: std of predicted profile             (H,)
-          - profile_truth:    mean true u(lat) profile             (H,)
+          - spatial_error:    mean absolute error per target and latitude (C,H)
+          - profile_pred:     mean predicted u(lat) profile        (C,H)
+          - profile_pred_std: std of predicted profile             (C,H)
+          - profile_truth:    mean true u(lat) profile             (C,H)
         """
         model.eval()
         spatial_acc: torch.Tensor | None = None
@@ -96,8 +99,8 @@ class TrainingMetrics:
                     model(self._normalizer_x.transform(x))
                 )
 
-                pred_b = pred.squeeze(1)
-                truth_b = y.squeeze(1)
+                pred_b = pred.detach().cpu().double()
+                truth_b = y.detach().cpu().double()
 
                 err_abs = absolute_error(pred_b, truth_b).sum(0)
                 spatial_acc = err_abs if spatial_acc is None else spatial_acc + err_abs
@@ -122,6 +125,7 @@ class TrainingMetrics:
 
         tmp = self._metrics_path.with_suffix(".tmp.h5")
         with h5py.File(tmp, "w") as f:
+            self._metadata.write_hdf5(f)
             f.create_dataset("spatial_error", data=spatial_error)
             f.create_dataset(
                 "profile_pred", data=pred_mean.cpu().numpy().astype(np.float32)

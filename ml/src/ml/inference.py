@@ -1,27 +1,51 @@
-"""Checkpoint loading and batched climatology prediction.
+"""Versioned checkpoint loading and physical-unit predictions for all targets."""
 
-Loaded-model normalization intentionally retains the pre-compaction arithmetic.
-Training's normalization epsilon is reconciled in action item 02.
-"""
-
+from dataclasses import dataclass
 from pathlib import Path
 import numpy as np
 import torch
+
 from ml.training.model import build_model
+from ml.training.normalization import Normalization
 
 
-def load_model(cfg, training_dir: Path, dropout=None):
-    model = build_model(cfg.model, dropout=dropout)
-    params_path = training_dir / "parameters.pt"
-    assert params_path.exists(), f"model parameters not found: {params_path}"
-    state = torch.load(params_path, map_location="cpu", weights_only=False)
+@dataclass
+class Checkpoint:
+    model: torch.nn.Module
+    normalization: Normalization
+
+
+def load_checkpoint(cfg, training_dir: Path, dropout=None) -> Checkpoint:
+    norm = Normalization.from_dict(
+        torch.load(
+            training_dir / "normalization.pt", map_location="cpu", weights_only=True
+        )
+    )
+    norm.metadata.validate_config(cfg.data)
+    dropout = cfg.training.regularization.dropout if dropout is None else dropout
+    model = build_model(cfg.model, norm.metadata.grid, dropout=dropout)
+    state = torch.load(
+        training_dir / "parameters.pt", map_location="cpu", weights_only=True
+    )
     state.pop("_metadata", None)
     model.load_state_dict(state)
     model.eval()
-    return model
+    return Checkpoint(model, norm)
 
 
-def select_device() -> torch.device:
+def load_model(cfg, training_dir: Path, dropout=None):
+    return load_checkpoint(cfg, training_dir, dropout).model
+
+
+def select_device(requested: str = "auto") -> torch.device:
+    if requested not in ("auto", "cpu", "cuda", "mps"):
+        raise ValueError(f"unknown device: {requested}")
+    if requested != "auto":
+        if requested == "cuda" and not torch.cuda.is_available():
+            raise ValueError("CUDA is unavailable")
+        if requested == "mps" and not torch.backends.mps.is_available():
+            raise ValueError("MPS is unavailable")
+        return torch.device(requested)
     if torch.cuda.is_available():
         return torch.device("cuda")
     if torch.backends.mps.is_available():
@@ -30,37 +54,52 @@ def select_device() -> torch.device:
 
 
 def prepare_device(model, x_shape: tuple, device: torch.device):
+    if tuple(x_shape[-2:]) != model.grid.shape:
+        raise ValueError("prediction grid differs from the checkpoint")
     if device.type != "cpu":
         model.cpu()
         with torch.no_grad():
             model(torch.zeros(1, *x_shape))
-        for m in model.modules():
-            if hasattr(m, "_grid"):
-                m._grid = None
-    model.to(device)
-    return model
+    return model.to(device)
 
 
 def predict_windows(
     model,
-    norm: dict,
+    norm: Normalization | dict,
     x_windows: np.ndarray,
     device: torch.device,
     batch_size: int,
 ) -> np.ndarray:
-    x_mean = norm["x_mean"].to(device)
-    x_std = norm["x_std"].to(device)
-    y_mean = norm["y_mean"].to(device)
-    y_std = norm["y_std"].to(device)
-
-    x_tensor = torch.from_numpy(x_windows)
+    if batch_size < 1:
+        raise ValueError("prediction batch size must be positive")
+    normalization = Normalization.from_dict(norm) if isinstance(norm, dict) else norm
+    metadata = normalization.metadata
+    values = np.asarray(x_windows)
+    if values.ndim != 4 or values.shape[1:] != (
+        metadata.input_channels,
+        *metadata.grid.shape,
+    ):
+        raise ValueError("prediction input shape differs from saved metadata")
+    if not np.isfinite(values).all():
+        raise ValueError("prediction input contains nonfinite values")
+    if not model.grid.matches(metadata.grid):
+        raise ValueError("prediction coordinates differ from the checkpoint")
+    if len(values) == 0:
+        return np.empty(
+            (0, len(metadata.y_vars), metadata.grid.shape[0]), dtype=np.float32
+        )
+    normalization.to(device)
+    model.eval()
     preds = []
     with torch.no_grad():
-        for i in range(0, len(x_tensor), batch_size):
-            xb = x_tensor[i : i + batch_size].to(device)
-            xb_norm = (xb - x_mean) / x_std
-            yb_norm = model(xb_norm)
-            yb = yb_norm * y_std + y_mean
-            preds.append(yb.squeeze(1).cpu().numpy())
-    preds_all = np.concatenate(preds, axis=0)
-    return preds_all
+        for start in range(0, len(values), batch_size):
+            xb = torch.as_tensor(
+                values[start : start + batch_size], dtype=torch.float32, device=device
+            )
+            pred = normalization.y.inverse_transform(
+                model(normalization.x.transform(xb))
+            )
+            if not torch.isfinite(pred).all():
+                raise ValueError("model produced nonfinite predictions")
+            preds.append(pred.cpu().numpy())
+    return np.concatenate(preds, axis=0)

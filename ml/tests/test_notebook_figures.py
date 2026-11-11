@@ -39,7 +39,7 @@ def test_field_view_has_no_notebook_global_dependencies(name, monkeypatch):
         },
         coords={
             "time": np.arange(6),
-            "lat": [-65.0, -20.0, 20.0, 65.0],
+            "lat": np.rad2deg(np.arcsin(np.polynomial.legendre.leggauss(4)[0])),
             "lon": np.arange(16) * 22.5,
         },
     )

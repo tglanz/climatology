@@ -8,11 +8,11 @@ from rich.console import Console
 from rich.table import Table
 
 from ml.config import load as load_config, LossKind
-from ml.data.isca_dataset import make_loaders, load_latitudes
-from ml.training.model import build_model
+from ml.data.isca_dataset import make_loaders, load_grid
+from ml.training.model import model_parameter_counts
 from ml.training.loss import create_loss_fn
 from ml.training import baselines
-from ml.diagnostics.spatial import cosine_latitude_weights
+from ml.diagnostics.grid import gaussian_latitude_weights
 from ml.training.info import TrainingSummary, list_training_summaries
 
 
@@ -33,10 +33,10 @@ def util():
 def model_info(config_path: Path):
     """Print model architecture summary and parameter counts."""
     cfg = load_config(config_path)
-    model = build_model(cfg.model, dropout=cfg.training.regularization.dropout)
-
-    total = sum(p.numel() for p in model.parameters())
-    trainable = sum(p.numel() for p in model.parameters() if p.requires_grad)
+    counts = model_parameter_counts(
+        cfg.model, dropout=cfg.training.regularization.dropout
+    )
+    total, trainable = counts.total, counts.trainable
 
     sub = cfg.model.active_sub_config()
     print(f"architecture:    {cfg.model.architecture}")
@@ -59,7 +59,7 @@ def model_info(config_path: Path):
 
     print()
     for split in ("train", "val", "test"):
-        n_sims = len(manifest.get(split, []))
+        n_sims = len(manifest.get("validation" if split == "val" else split, []))
         h5 = preprocessed_dir / f"{split}.h5"
         if h5.exists():
             with h5py.File(h5, "r") as f:
@@ -82,7 +82,9 @@ def baseline_score():
 def _make_loss_fn(cfg):
     lat_weights = None
     if cfg.training.loss == LossKind.LAT_WEIGHTED_RELATIVE_L2:
-        lat_weights = torch.from_numpy(cosine_latitude_weights(load_latitudes(cfg)))
+        lat_weights = torch.from_numpy(
+            gaussian_latitude_weights(load_grid(cfg).latitudes)
+        )
     return create_loss_fn(cfg.training.loss, lat_weights=lat_weights)
 
 
@@ -100,6 +102,45 @@ def _baseline_options(fn):
     return fn
 
 
+def _print_baseline_scores(cfg, val_loader, simulation_targets):
+    from ml.data.climatology import diagnostic_for
+
+    loss_fn = _make_loss_fn(cfg)
+    records = []
+    for index, name in enumerate(cfg.data.y_vars):
+        target = diagnostic_for(name)
+        score = (
+            baselines.score_zero(val_loader, loss_fn, index)
+            if simulation_targets is None
+            else baselines.score_mean(simulation_targets, val_loader, loss_fn, index)
+        )
+        records.append(
+            {
+                "target": name,
+                "score": score,
+                "score_units": (
+                    f"({target.units})^2" if cfg.training.loss == LossKind.MSE else "1"
+                ),
+            }
+        )
+    print(
+        json.dumps(
+            {
+                "loss_fn": cfg.training.loss,
+                "coordinate_space": "physical targets",
+                "scoring_population": "validation windows",
+                "mean_predictor_population": (
+                    "training simulations" if simulation_targets is not None else None
+                ),
+                "val_samples": len(val_loader.dataset),
+                "targets": records,
+            },
+            indent=2,
+            allow_nan=False,
+        )
+    )
+
+
 @baseline_score.command("zero")
 @_baseline_options
 def baseline_zero(config_path: Path, workers: int):
@@ -107,17 +148,7 @@ def baseline_zero(config_path: Path, workers: int):
     cfg = load_config(config_path)
     _, val_loader, _ = make_loaders(cfg, num_workers=workers)
     assert val_loader is not None, "val split is empty"
-    score = baselines.score_zero(val_loader, _make_loss_fn(cfg))
-    print(
-        json.dumps(
-            {
-                "loss_fn": cfg.training.loss,
-                "val_samples": len(val_loader.dataset),
-                "loss": score,
-            },
-            indent=2,
-        )
-    )
+    _print_baseline_scores(cfg, val_loader, None)
 
 
 @baseline_score.command("mean")
@@ -127,17 +158,7 @@ def baseline_mean(config_path: Path, workers: int):
     cfg = load_config(config_path)
     train_loader, val_loader, _ = make_loaders(cfg, num_workers=workers)
     assert val_loader is not None, "val split is empty"
-    score = baselines.score_mean(train_loader, val_loader, _make_loss_fn(cfg))
-    print(
-        json.dumps(
-            {
-                "loss_fn": cfg.training.loss,
-                "val_samples": len(val_loader.dataset),
-                "loss": score,
-            },
-            indent=2,
-        )
-    )
+    _print_baseline_scores(cfg, val_loader, train_loader.dataset.simulation_targets)
 
 
 @util.command("summarize-trainings")
