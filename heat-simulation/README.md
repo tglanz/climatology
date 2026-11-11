@@ -34,3 +34,16 @@ time axis.
 
 The placeholder command and test were removed; the notebook is the demonstration
 entry point. Saved notebook outputs are historical results.
+
+## CI checks
+
+Every pull request to main runs separate lint and test jobs. Pushes to main
+also check changes to this project and its CI workflows. CI installs the locked
+development environment, runs full pylint on the package and Black on Python
+files, and runs the solver tests independently.
+
+```bash
+uv run --project heat-simulation --group dev pylint --rcfile=heat-simulation/pyproject.toml heat-simulation/src
+uv run --project heat-simulation --group dev black --check heat-simulation
+uv run --project heat-simulation --group dev pytest heat-simulation/tests
+```

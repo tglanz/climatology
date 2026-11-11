@@ -3,6 +3,8 @@
 import numpy as np
 
 
+# The stencil keeps the original numerical parameters explicit.
+# pylint: disable-next=too-many-arguments,too-many-positional-arguments
 def ftcs_step(u, u_new, alpha, dt, dx=1.0, dy=1.0):
     nx, ny = u.shape
 
@@ -43,6 +45,8 @@ def apply_heat_source(u, source_temp, source_x, source_y, source_size):
     u[x_start:x_end, y_start:y_end] = source_temp
 
 
+# Simulation settings stay explicit at the notebook call site.
+# pylint: disable-next=too-many-arguments
 def simulate(
     initial,
     *,

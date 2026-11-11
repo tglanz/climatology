@@ -1,11 +1,18 @@
-name: Heat Simulation
+name: heat-simulation
 
 on:
+  pull_request:
+    branches: [main]
   push:
+    branches: [main]
     paths:
       - 'heat-simulation/**'
       - '.github/workflows/heat-simulation.yml'
       - '.github/workflows/python-template.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
 
 jobs:
   heat-simulation:

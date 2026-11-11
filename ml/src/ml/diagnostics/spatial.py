@@ -2,10 +2,9 @@ from typing import Union
 import numpy as np
 import torch
 
+
 def cosine_latitude_weights(
-    latitudes: np.ndarray,
-    angle_units: str = "degree",
-    normalize: str = "mean1"
+    latitudes: np.ndarray, angle_units: str = "degree", normalize: str = "mean1"
 ) -> np.ndarray:
     if angle_units == "degree":
         rad = np.deg2rad(np.asarray(latitudes, dtype=np.float64))
@@ -23,6 +22,7 @@ def cosine_latitude_weights(
     if normalize == "none":
         return w
     raise ValueError(f"unknown normalize: {normalize!r}")
+
 
 def area_mean(field: np.ndarray, latitudes_deg: np.ndarray) -> np.ndarray:
     """
@@ -56,7 +56,9 @@ def area_l2_norm(field: np.ndarray, latitudes_deg: np.ndarray) -> np.ndarray:
     return np.sqrt(area_mean(field**2, latitudes_deg))
 
 
-def zonal_mean(field: Union[np.ndarray, torch.Tensor]) -> Union[np.ndarray, torch.Tensor]:
+def zonal_mean(
+    field: Union[np.ndarray, torch.Tensor],
+) -> Union[np.ndarray, torch.Tensor]:
     """
     Average over the longitude (last) axis
     See https://en.wikipedia.org/wiki/Zonal_and_meridional_flow.
@@ -64,7 +66,9 @@ def zonal_mean(field: Union[np.ndarray, torch.Tensor]) -> Union[np.ndarray, torc
     return field.mean(-1)
 
 
-def zonal_anomaly(field: Union[np.ndarray, torch.Tensor]) -> Union[np.ndarray, torch.Tensor]:
+def zonal_anomaly(
+    field: Union[np.ndarray, torch.Tensor],
+) -> Union[np.ndarray, torch.Tensor]:
     """
     Field minus its zonal mean: the "eddy" part with the latitudinal band structure removed
     See https://en.wikipedia.org/wiki/Zonal_and_meridional_flow.

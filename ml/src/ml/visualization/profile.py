@@ -8,9 +8,11 @@ from ml.visualization.common import VariableInfo, resolve_variable_info
 
 
 def plot_zonal_mean_profile(
-        ds: Dataset, variable_name: str,
-        time_fraction: float = 1.0,
-        variable_info: VariableInfo = None):
+    ds: Dataset,
+    variable_name: str,
+    time_fraction: float = 1.0,
+    variable_info: VariableInfo = None,
+):
 
     assert 0.0 < time_fraction <= 1.0, "time_fraction must be in (0, 1]"
 
@@ -23,7 +25,7 @@ def plot_zonal_mean_profile(
     variable = ds[variable_name].values[indices]
     zonal_mean = variable.mean(axis=2)
 
-    cmap = plt.cm.viridis
+    cmap = plt.get_cmap("viridis")
     colors = cmap(np.linspace(0, 1, num_plot))
 
     fig, ax = plt.subplots(figsize=(6, 7), layout="constrained")

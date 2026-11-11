@@ -1,6 +1,7 @@
 import numpy as np
 from numpy.typing import NDArray
 
+
 def find_spinup_time(
     diagnostic: NDArray[np.floating],
     window_size: int = 10,
@@ -29,7 +30,7 @@ def find_spinup_time(
     required = max(1, stable_time // window_size)
 
     for i in range(len(stable) - required + 1):
-        if stable[i:i + required].all():
+        if stable[i : i + required].all():
             return (i + 1) * window_size
 
     return None

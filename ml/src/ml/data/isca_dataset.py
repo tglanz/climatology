@@ -13,6 +13,7 @@ from ml.data.isca_preprocessing import list_segment_files
 
 log = logging.getLogger(__name__)
 
+
 class IscaDataset(Dataset):
     def __init__(self, h5_path: Path):
         assert h5_path.exists(), f"preprocessed file not found: {h5_path}"
@@ -28,6 +29,7 @@ class IscaDataset(Dataset):
     def __getitem__(self, idx: int) -> tuple[torch.Tensor, torch.Tensor]:
         if self._file is None:
             import weakref
+
             self._file = h5py.File(self.h5_path, "r")
             weakref.finalize(self, self._file.close)
         x = torch.from_numpy(self._file["x"][idx])
@@ -35,15 +37,22 @@ class IscaDataset(Dataset):
         return x, y
 
 
-def make_loader(path: Path, batch_size: int, shuffle: bool, num_workers: int = 0) -> DataLoader | None:
+def make_loader(
+    path: Path, batch_size: int, shuffle: bool, num_workers: int = 0
+) -> DataLoader | None:
     assert (
         path.exists()
     ), f"preprocessed file missing: {path} - run preprocess-training-data first"
     ds = IscaDataset(path)
     if len(ds) == 0:
         return None
-    return DataLoader(ds, batch_size=batch_size, shuffle=shuffle,
-                      num_workers=num_workers, persistent_workers=num_workers > 0)
+    return DataLoader(
+        ds,
+        batch_size=batch_size,
+        shuffle=shuffle,
+        num_workers=num_workers,
+        persistent_workers=num_workers > 0,
+    )
 
 
 def make_loaders(
@@ -63,7 +72,9 @@ def load_latitudes(cfg: Config) -> np.ndarray:
     splits = Splits.load(cfg.paths.preprocessed_dir / "splits.json")
     assert splits.train, "no train simulations in splits"
     nc_files = list_segment_files(splits.train[0], cfg.data)
-    assert nc_files, f"no NC files in {splits.train[0]} matching {cfg.data.segment_pattern}"
+    assert (
+        nc_files
+    ), f"no NC files in {splits.train[0]} matching {cfg.data.segment_pattern}"
     ds = read_segment(nc_files[0], {})
     lat = ds["lat"].values.astype(np.float32)
     ds.close()

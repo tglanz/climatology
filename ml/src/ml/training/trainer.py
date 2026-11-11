@@ -46,7 +46,9 @@ def build_scheduler(
 
 
 class Trainer:
-    def __init__(self, model: nn.Module, cfg: Config, lat_weights: torch.Tensor | None = None):
+    def __init__(
+        self, model: nn.Module, cfg: Config, lat_weights: torch.Tensor | None = None
+    ):
         self.cfg = cfg
         self.log = logging.getLogger(__name__)
         self.run_id = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
@@ -147,7 +149,9 @@ class Trainer:
         if self.scheduler is None:
             return
         if self.scheduler_mode == "plateau":
-            assert val_loss is not None, "plateau scheduler requires a validation loader"
+            assert (
+                val_loss is not None
+            ), "plateau scheduler requires a validation loader"
             self.scheduler.step(val_loss)
         else:
             self.scheduler.step()
@@ -253,9 +257,7 @@ class Trainer:
             self.optimizer.zero_grad()
             loss.backward()
             if self.grad_clip is not None:
-                torch.nn.utils.clip_grad_norm_(
-                    self.model.parameters(), self.grad_clip
-                )
+                torch.nn.utils.clip_grad_norm_(self.model.parameters(), self.grad_clip)
             self.optimizer.step()
             total += loss.item()
         return total / len(loader)

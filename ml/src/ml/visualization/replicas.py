@@ -11,7 +11,7 @@ def plot_code(label: str, results: list[dict]):
     fig.suptitle(label, fontsize=10)
     lat = results[0]["lat"]
 
-    pred_colors = plt.cm.tab10(np.linspace(0, 0.9, n))
+    pred_colors = plt.get_cmap("tab10")(np.linspace(0, 0.9, n))
     gray_levels = np.linspace(0.3, 0.65, n)
     truth_colors = [np.array([v, v, v, 1.0]) for v in gray_levels]
 

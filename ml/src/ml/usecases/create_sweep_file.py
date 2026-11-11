@@ -20,7 +20,9 @@ def run(experiment_dir: Path, key_specs: list[tuple[str, list[str]]]) -> None:
             node = namelist
             for part in path:
                 if not isinstance(node, dict) or part not in node:
-                    raise KeyError(f"{namelist_path}: path '{'.'.join(path)}' not found")
+                    raise KeyError(
+                        f"{namelist_path}: path '{'.'.join(path)}' not found"
+                    )
                 node = node[part]
             entry[alias] = node
         sweep[code] = entry

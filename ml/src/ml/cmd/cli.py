@@ -23,5 +23,5 @@ cli.add_command(evaluate)
 cli.add_command(data)
 cli.add_command(tmp)
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     cli()

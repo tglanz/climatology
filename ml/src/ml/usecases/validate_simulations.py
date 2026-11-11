@@ -37,19 +37,28 @@ def _validate_one(
     n_samples = 0
 
     if not nc_files:
-        return SimResult(sim_dir, n_runs, n_samples, False, "no segments matching segment_pattern")
+        return SimResult(
+            sim_dir, n_runs, n_samples, False, "no segments matching segment_pattern"
+        )
 
     segments_cache = {}
     for nc_path in nc_files:
         try:
             segment_samples_count, _ = validate_segment(
-                nc_path, cfg.data.x_vars, [], cache=segments_cache)
+                nc_path, cfg.data.x_vars, [], cache=segments_cache
+            )
         except (AssertionError, OSError, ValueError) as e:
             return SimResult(sim_dir, n_runs, n_samples, False, f"{nc_path.name}: {e}")
         n_samples += segment_samples_count
 
     if n_samples < K + 1:
-        return SimResult(sim_dir, n_runs, n_samples, False, f"timeline too short: {n_samples} < {K + 1}")
+        return SimResult(
+            sim_dir,
+            n_runs,
+            n_samples,
+            False,
+            f"timeline too short: {n_samples} < {K + 1}",
+        )
 
     t_s: int | None = None
     t_c: int | None = None
@@ -71,12 +80,18 @@ def _validate_one(
                     z_threshold=cfg.data.spinup.z_threshold,
                 )
                 if validate_spinup and not t_s:
-                    raise ValueError(f"unable to infer spinup time with {cfg.data.spinup}")
+                    raise ValueError(
+                        f"unable to infer spinup time with {cfg.data.spinup}"
+                    )
             except Exception as e:
                 return SimResult(sim_dir, n_runs, n_samples, False, str(e))
 
-        if (validate_convergence or validate_climatology) and cfg.data.convergence is not None:
-            u_full = aggregated_read_field(nc_files, CONVERGENCE_DIAGNOSTIC_VAR, cache=segments_cache)
+        if (
+            validate_convergence or validate_climatology
+        ) and cfg.data.convergence is not None:
+            u_full = aggregated_read_field(
+                nc_files, CONVERGENCE_DIAGNOSTIC_VAR, cache=segments_cache
+            )
             try:
                 t_c = find_zonal_mean_convergence_time(
                     u_full,
@@ -86,15 +101,25 @@ def _validate_one(
                     hold=cfg.data.convergence.hold,
                 )
             except Exception as e:
-                return SimResult(sim_dir, n_runs, n_samples, False, f"convergence detection failed: {e}")
+                return SimResult(
+                    sim_dir,
+                    n_runs,
+                    n_samples,
+                    False,
+                    f"convergence detection failed: {e}",
+                )
             if validate_convergence and t_c is None:
-                return SimResult(sim_dir, n_runs, n_samples, False, "convergence not reached")
+                return SimResult(
+                    sim_dir, n_runs, n_samples, False, "convergence not reached"
+                )
 
     if validate_climatology:
         try:
             resolve_window(cfg.data.climatology, t_s, t_c, n_samples)
         except AssertionError as e:
-            return SimResult(sim_dir, n_runs, n_samples, False, f"climatology window invalid: {e}")
+            return SimResult(
+                sim_dir, n_runs, n_samples, False, f"climatology window invalid: {e}"
+            )
 
     return SimResult(sim_dir, n_runs, n_samples, True, "")
 
@@ -114,13 +139,26 @@ def run(
 
     if workers == 0:
         results = (
-            _validate_one(sim_dir, config_path, should_validate_spinup, should_validate_convergence, should_validate_climatology)
+            _validate_one(
+                sim_dir,
+                config_path,
+                should_validate_spinup,
+                should_validate_convergence,
+                should_validate_climatology,
+            )
             for sim_dir in sim_dirs
         )
     else:
         executor = ProcessPoolExecutor(max_workers=workers)
         futures = {
-            executor.submit(_validate_one, sim_dir, config_path, should_validate_spinup, should_validate_convergence, should_validate_climatology): sim_dir
+            executor.submit(
+                _validate_one,
+                sim_dir,
+                config_path,
+                should_validate_spinup,
+                should_validate_convergence,
+                should_validate_climatology,
+            ): sim_dir
             for sim_dir in sim_dirs
         }
         results = (f.result() for f in as_completed(futures))

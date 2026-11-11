@@ -10,7 +10,9 @@ def tmp():
 
 
 @tmp.command("executive")
-@click.argument("sim_dir", type=click.Path(exists=True, file_okay=False, path_type=Path))
+@click.argument(
+    "sim_dir", type=click.Path(exists=True, file_okay=False, path_type=Path)
+)
 @click.option(
     "--output-dir",
     type=click.Path(path_type=Path),
@@ -20,4 +22,5 @@ def tmp():
 def executive(sim_dir: Path, output_dir: Path):
     """Generate executive summary plots for a single simulation."""
     from ml.usecases.executive import run
+
     run(sim_dir, output_dir)

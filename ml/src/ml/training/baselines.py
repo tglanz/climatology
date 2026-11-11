@@ -13,7 +13,9 @@ def score_zero(val_loader: DataLoader, loss_fn: nn.Module) -> float:
     return total / n
 
 
-def score_mean(train_loader: DataLoader, val_loader: DataLoader, loss_fn: nn.Module) -> float:
+def score_mean(
+    train_loader: DataLoader, val_loader: DataLoader, loss_fn: nn.Module
+) -> float:
     y_train = torch.cat([y for _, y in train_loader], dim=0)
     pred = y_train.mean(dim=0, keepdim=True)
     total = 0.0

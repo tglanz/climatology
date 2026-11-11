@@ -21,9 +21,9 @@ to CPU. Functionally identical to upstream on CUDA/CPU; unblocks MPS.
 Upstream method bodies are copied verbatim aside from the swap so future
 upstream bumps stay easy to merge.
 """
+
 from neuralop.layers.spherical_convolution import SHT
 from torch_harmonics import RealSHT, InverseRealSHT
-
 
 _PATCH_ATTR = "_dtype_device_order_patched"
 
@@ -47,9 +47,12 @@ def patch_sht_dtype_device_order() -> None:
         except KeyError:
             sht_mod = (
                 RealSHT(
-                    nlat=height, nlon=width,
-                    lmax=modes_height, mmax=modes_width,
-                    grid=grid, norm=norm,
+                    nlat=height,
+                    nlon=width,
+                    lmax=modes_height,
+                    mmax=modes_width,
+                    grid=grid,
+                    norm=norm,
                 )
                 .to(dtype=self.dtype)
                 .to(device=x.device)
@@ -73,9 +76,12 @@ def patch_sht_dtype_device_order() -> None:
         except KeyError:
             isht_mod = (
                 InverseRealSHT(
-                    nlat=height, nlon=width,
-                    lmax=modes_height, mmax=modes_width,
-                    grid=grid, norm=norm,
+                    nlat=height,
+                    nlon=width,
+                    lmax=modes_height,
+                    mmax=modes_width,
+                    grid=grid,
+                    norm=norm,
                 )
                 .to(dtype=self.dtype)
                 .to(device=x.device)

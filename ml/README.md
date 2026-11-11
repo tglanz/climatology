@@ -75,6 +75,20 @@ uv run --project ml --group train --group vis python -m ml.cmd.rotating_globe --
 
 ## Checks and remaining corrections
 
+Every pull request to main runs separate ML lint and test jobs. Pushes to main
+also check changes to ML, its neuraloperator pin, and the shared CI workflow.
+CI initializes the pinned neuraloperator submodule and installs all dependency
+groups from the lockfile. Tests run from the repository root.
+
+The ML lint gate checks pylint errors and Black formatting. Existing pylint
+style and refactoring warnings remain available locally. HDF5 group inference
+is excluded from member checking because dataset lookups share the same API.
+
+```bash
+uv run --project ml --all-groups pylint --rcfile=ml/pyproject.toml --errors-only ml/src
+uv run --project ml --all-groups black --check ml
+```
+
 ```bash
 uv run --project ml --group dev --group train --group vis pytest ml/tests
 ```

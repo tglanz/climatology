@@ -43,18 +43,18 @@ class WindowSelector:
         if self.cfg.start_at == "beginning":
             t0_min = 0
         else:
-            assert t_s is not None, (
-                "start_at='spinup' requires t_s to be supplied by the caller"
-            )
+            assert (
+                t_s is not None
+            ), "start_at='spinup' requires t_s to be supplied by the caller"
             t0_min = t_s
 
         natural_max = M - K - 1
         if self.cfg.end_at == "end":
             t0_max = natural_max
         else:
-            assert t_c is not None, (
-                "end_at='convergence' requires t_c to be supplied by the caller"
-            )
+            assert (
+                t_c is not None
+            ), "end_at='convergence' requires t_c to be supplied by the caller"
             t0_max = min(t_c, natural_max)
 
         if t0_min > t0_max:

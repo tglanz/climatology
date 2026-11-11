@@ -4,6 +4,7 @@ Reader for the sweep.json file produced by sim/scanner.py.
 sweep.json maps 6-character config codes to their stirring parameter dicts:
   {"<code>": {"stirring_lat0": 45.0, "stirring_amplitude": 1e-10, ...}, ...}
 """
+
 import json
 from pathlib import Path
 
@@ -28,10 +29,7 @@ class SweepFile:
         all_params = list(self._data.values())
         if len(all_params) <= 1:
             return list(all_params[0].keys()) if all_params else []
-        return [
-            k for k in all_params[0]
-            if len({p[k] for p in all_params}) > 1
-        ]
+        return [k for k in all_params[0] if len({p[k] for p in all_params}) > 1]
 
     def describe(self, code: str) -> str:
         """Short human-readable description showing only the varying params."""

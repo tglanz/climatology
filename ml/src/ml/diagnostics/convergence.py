@@ -11,6 +11,7 @@ import numpy as np
 
 from ml.diagnostics.spatial import cosine_latitude_weights, zonal_mean
 
+
 def compute_time_mean_zonal_mean(snapshots: np.ndarray, a: int, b: int) -> np.ndarray:
     assert (
         0 <= a < b <= snapshots.shape[0]
@@ -37,9 +38,7 @@ def zonal_mean_convergence_errors(
     for k in range(n_i):
         i = k + 1
         running = compute_time_mean_zonal_mean(field, t_s, t_s + i)
-        errors[k] = float(
-            np.sqrt(np.sum(w * (running - reference) ** 2) / ref_norm2)
-        )
+        errors[k] = float(np.sqrt(np.sum(w * (running - reference) ** 2) / ref_norm2))
     return errors
 
 

@@ -1,17 +1,16 @@
 """Snapshot and animation views for the heat demonstration."""
 
-import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
 
 
 def plot_snapshots(snapshots, snapshot_times, source_temp):
-    fig, axes = plt.subplots(2, 3, figsize=(15, 10))
+    _, axes = plt.subplots(2, 3, figsize=(15, 10))
     axes = axes.flatten()
 
     times = [0] + snapshot_times
 
-    for idx, (ax, snapshot, time) in enumerate(zip(axes, snapshots, times)):
+    for ax, snapshot, time in zip(axes, snapshots, times):
         im = ax.imshow(snapshot, cmap="hot", origin="lower", vmin=0, vmax=source_temp)
         ax.set_title(f"Time step: {time}")
         ax.set_xlabel("X")

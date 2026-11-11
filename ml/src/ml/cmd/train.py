@@ -17,9 +17,22 @@ from ml.training.info import rotate_training_dir
 
 
 @click.command()
-@click.option("-c", "--config", "config_path", required=True, type=click.Path(exists=True, path_type=Path))
-@click.option("--track-metrics", is_flag=True, default=False, help="Write spatial error, zonal mean, and power spectrum after each epoch.")
-@click.option("--workers", default=0, show_default=True, help="DataLoader worker processes.")
+@click.option(
+    "-c",
+    "--config",
+    "config_path",
+    required=True,
+    type=click.Path(exists=True, path_type=Path),
+)
+@click.option(
+    "--track-metrics",
+    is_flag=True,
+    default=False,
+    help="Write spatial error, zonal mean, and power spectrum after each epoch.",
+)
+@click.option(
+    "--workers", default=0, show_default=True, help="DataLoader worker processes."
+)
 def train(config_path: Path, track_metrics: bool, workers: int):
     cfg = load_config(config_path)
     setup_logging(cfg.logging)
@@ -32,7 +45,9 @@ def train(config_path: Path, track_metrics: bool, workers: int):
     cfg.paths.training_dir.mkdir(parents=True, exist_ok=True)
     shutil.copy2(config_path, cfg.paths.training_dir / "config.toml")
     splits_src = cfg.paths.preprocessed_dir / "splits.json"
-    assert splits_src.exists(), f"splits.json not found in preprocessed dir: {splits_src}"
+    assert (
+        splits_src.exists()
+    ), f"splits.json not found in preprocessed dir: {splits_src}"
     shutil.copy2(splits_src, cfg.paths.training_dir / "splits.json")
 
     model = build_model(cfg.model, dropout=cfg.training.regularization.dropout)

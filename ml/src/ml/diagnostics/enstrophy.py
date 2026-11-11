@@ -1,6 +1,7 @@
 """
 https://en.wikipedia.org/wiki/Enstrophy
 """
+
 from typing import Union
 
 from ml.diagnostics.spatial import area_mean
@@ -8,7 +9,10 @@ from ml.diagnostics.spatial import area_mean
 import numpy as np
 import torch
 
-def enstrophy_density(vorticity: Union[np.ndarray, torch.Tensor]) -> Union[np.ndarray, torch.Tensor]:
+
+def enstrophy_density(
+    vorticity: Union[np.ndarray, torch.Tensor],
+) -> Union[np.ndarray, torch.Tensor]:
     return 0.5 * vorticity**2
 
 

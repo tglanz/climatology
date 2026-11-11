@@ -1,0 +1,26 @@
+name: ml
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+    paths:
+      - 'ml/**'
+      - 'submodules/neuraloperator'
+      - '.gitmodules'
+      - '.github/workflows/ml.yml'
+      - '.github/workflows/python-template.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  ml:
+    uses: ./.github/workflows/python-template.yml
+    with:
+      project_dir: ml
+      submodule: submodules/neuraloperator
+      # Gate errors now; existing style warnings remain available in local pylint.
+      pylint_args: --errors-only
