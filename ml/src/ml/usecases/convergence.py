@@ -13,17 +13,25 @@ from ml.diagnostics.convergence import (
 
 
 def analyze(sim_dir: Path, spinup_config, convergence_config, n_frames: int = 12):
-    ds = read_segments(str(sim_dir / "run*" / "atmos_daily.nc"), decode_time=True)
-    vor, u, lat = ds.vor.values, ds.ucomp.values, ds.lat.values
-    num_samples, spatial_shape = validate_segment_dataset(ds, x_vars=[], y_vars=[])
+    if n_frames < 1:
+        raise ValueError("n_frames must be positive")
+    with read_segments(
+        str(sim_dir / "run*" / "atmos_daily.nc"), decode_time=True
+    ) as ds:
+        num_samples, spatial_shape = validate_segment_dataset(
+            ds, x_vars=["vor"], y_vars=["ucomp"]
+        )
+        vor, u, lat = ds.vor.values, ds.ucomp.values, ds.lat.values
     enstrophy = mean_enstrophy(vor, lat)
     spinup_time = find_spinup_time(diagnostic=enstrophy, **spinup_config.to_kwargs())
+    if spinup_time is None:
+        raise ValueError("Spinup stability criterion not reached")
     t_c = find_zonal_mean_convergence_time(
         u, lat, spinup_time, **convergence_config.to_kwargs()
     )
     if t_c is None:
         raise ValueError("Failed to reach convergence")
-    diagnostic_reference = compute_time_mean_zonal_mean(u, t_c, num_samples)
+    diagnostic_reference = compute_time_mean_zonal_mean(u, spinup_time, num_samples)
     errors = zonal_mean_convergence_errors(u, lat, spinup_time)
     i_values = np.arange(1, len(errors) + 1)
     i_frames = np.linspace(1, num_samples - spinup_time - 1, n_frames).astype(int)

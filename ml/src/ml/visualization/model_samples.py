@@ -1,110 +1,115 @@
-"""Prepared-sample evaluation figures."""
+"""Target-aware prepared-window figures using saved physical coordinates."""
 
 import numpy as np
 import matplotlib.pyplot as plt
-from ml.diagnostics.errors import notebook_profile_rel_l2 as rel_l2
+
+from ml.data.climatology import diagnostic_for
+from ml.diagnostics.errors import profile_rel_l2
+from ml.usecases.evaluate_samples import SampleEvaluation
 
 
-def plot_sample_profiles(preds_all, truth_all, lat, n_show=12):
-    N_SHOW = n_show
-    rng = np.random.default_rng(0)
-    idx = np.sort(
-        rng.choice(len(preds_all), size=min(N_SHOW, len(preds_all)), replace=False)
+def _channels(result: SampleEvaluation):
+    if len(result.predictions) == 0:
+        raise ValueError("no prepared test windows to plot")
+    for index, name in enumerate(result.metadata.y_vars):
+        yield index, diagnostic_for(name)
+
+
+def plot_sample_profiles(result: SampleEvaluation, n_show=12):
+    if n_show < 1:
+        raise ValueError("n_show must be positive")
+    indices = np.sort(
+        np.random.default_rng(0).choice(
+            len(result.predictions), min(n_show, len(result.predictions)), replace=False
+        )
     )
-
-    ncols = 4
-    nrows = (len(idx) + ncols - 1) // ncols
-    fig, axes = plt.subplots(
-        nrows,
-        ncols,
-        figsize=(ncols * 2.8, nrows * 3.2),
-        sharex=True,
-        sharey=True,
-        constrained_layout=True,
-    )
-    axes_flat = list(np.array(axes).flat)
-
-    for k, i in enumerate(idx):
-        ax = axes_flat[k]
-        ax.plot(preds_all[i], lat, color="tab:blue", linewidth=1.5, label="pred")
-        ax.plot(
-            truth_all[i],
-            lat,
-            color="tab:orange",
-            linestyle="--",
-            linewidth=1.5,
-            label="truth",
+    figures = []
+    for channel, target in _channels(result):
+        ncols = min(4, len(indices))
+        nrows = (len(indices) + ncols - 1) // ncols
+        fig, axes = plt.subplots(
+            nrows,
+            ncols,
+            figsize=(ncols * 2.8, nrows * 3.2),
+            squeeze=False,
+            constrained_layout=True,
         )
-        ax.axvline(0.0, color="k", linewidth=0.4, alpha=0.4)
-        rl = rel_l2(preds_all[i], truth_all[i], lat)
-        ax.set_title(f"sample {i}  relL2={rl:.3f}", fontsize=8)
-        ax.set_xlabel("u [m/s]", fontsize=8)
-        if k % ncols == 0:
-            ax.set_ylabel("lat [deg]")
-        if k == 0:
-            ax.legend(fontsize=8)
-
-    for ax in axes_flat[len(idx) :]:
-        ax.set_visible(False)
-
-    fig.suptitle("Truth (orange) vs prediction (blue): random test samples")
-    plt.show()
-
-
-def plot_sample_errors(preds_all, truth_all, lat):
-    fig, ax = plt.subplots(figsize=(6, 5))
-    for i in range(len(preds_all)):
-        ax.plot(
-            preds_all[i] - truth_all[i],
-            lat,
-            alpha=0.15,
-            linewidth=0.8,
-            color="tab:blue",
-        )
-    mean_err = (preds_all - truth_all).mean(axis=0)
-    ax.plot(mean_err, lat, color="tab:red", linewidth=1.5, label="mean error")
-    ax.axvline(0.0, color="k", linewidth=0.8, linestyle="--")
-    ax.set_xlabel("error  (pred - truth) [m/s]")
-    ax.set_ylabel("lat [deg]")
-    ax.set_title("Prediction error by latitude (all test samples)")
-    ax.legend()
-    ax.grid(True, alpha=0.3)
-    plt.tight_layout()
-    plt.show()
+        for ax, index in zip(axes.flat, indices):
+            prediction, truth = (
+                result.predictions[index, channel],
+                result.truth[index, channel],
+            )
+            ax.plot(prediction, result.latitudes, label="prediction")
+            ax.plot(truth, result.latitudes, "--", label="truth")
+            ax.set_title(
+                f"window {index}: relL2={profile_rel_l2(prediction,truth,result.latitudes):.3f}"
+            )
+            ax.set_xlabel(f"{target.label} [{target.units}]")
+            ax.set_ylabel("latitude [deg]")
+            ax.legend()
+        for ax in list(axes.flat)[len(indices) :]:
+            ax.set_visible(False)
+        figures.append(fig)
+        plt.show()
+    return figures
 
 
-def plot_sample_scatter(preds_all, truth_all):
-    fig, ax = plt.subplots(figsize=(5, 5))
-    ax.scatter(truth_all.ravel(), preds_all.ravel(), s=1, alpha=0.1, color="tab:blue")
-    lo = min(truth_all.min(), preds_all.min())
-    hi = max(truth_all.max(), preds_all.max())
-    ax.plot([lo, hi], [lo, hi], "k--", linewidth=0.8, label="y=x")
-    ax.set_xlabel("truth [m/s]")
-    ax.set_ylabel("prediction [m/s]")
-    ax.set_title("Truth vs prediction at each latitude (all test samples)")
-    ax.legend()
-    ax.grid(True, alpha=0.3)
-    plt.tight_layout()
-    plt.show()
-
-
-def plot_sample_distribution(rmses, rels):
-    fig, axes = plt.subplots(1, 2, figsize=(10, 3.5))
-
-    for ax, name, vals in [(axes[0], "RMSE", rmses), (axes[1], "relative L2", rels)]:
-        ax.hist(vals, bins=30, edgecolor="k", linewidth=0.4)
-        ax.axvline(
-            np.median(vals),
-            color="tab:red",
-            linewidth=1.2,
-            linestyle="--",
-            label=f"median={np.median(vals):.4f}",
-        )
-        ax.set_xlabel(name)
-        ax.set_ylabel("count")
-        ax.set_title(f"Per-sample {name} distribution")
+def plot_sample_errors(result: SampleEvaluation):
+    figures = []
+    for channel, target in _channels(result):
+        errors = result.predictions[:, channel] - result.truth[:, channel]
+        fig, ax = plt.subplots(figsize=(6, 5))
+        for error in errors:
+            ax.plot(error, result.latitudes, alpha=0.15)
+        ax.plot(errors.mean(0), result.latitudes, color="red", label="mean error")
+        ax.set_xlabel(f"prediction - truth [{target.units}]")
+        ax.set_ylabel("latitude [deg]")
+        ax.set_title(f"Prepared-window errors: {target.label}")
         ax.legend()
-        ax.grid(True, alpha=0.3)
+        figures.append(fig)
+        plt.show()
+    return figures
 
-    plt.tight_layout()
-    plt.show()
+
+def plot_sample_scatter(result: SampleEvaluation):
+    figures = []
+    for channel, target in _channels(result):
+        truth, prediction = result.truth[:, channel], result.predictions[:, channel]
+        fig, ax = plt.subplots(figsize=(5, 5))
+        ax.scatter(truth.ravel(), prediction.ravel(), s=1, alpha=0.1)
+        low, high = min(truth.min(), prediction.min()), max(
+            truth.max(), prediction.max()
+        )
+        ax.plot([low, high], [low, high], "k--")
+        ax.set_xlabel(f"truth [{target.units}]")
+        ax.set_ylabel(f"prediction [{target.units}]")
+        ax.set_title(f"Prepared windows: {target.label}")
+        figures.append(fig)
+        plt.show()
+    return figures
+
+
+def plot_sample_distribution(result: SampleEvaluation):
+    figures = []
+    for channel, target in _channels(result):
+        fig, axes = plt.subplots(1, 2, figsize=(10, 3.5))
+        for ax, name, values in (
+            (axes[0], f"RMSE [{target.units}]", result.rmses[:, channel]),
+            (axes[1], "relative L2", result.relatives[:, channel]),
+        ):
+            finite = values[np.isfinite(values)]
+            if len(finite):
+                ax.hist(finite, bins=30)
+                ax.axvline(
+                    np.median(finite),
+                    color="red",
+                    label=f"median={np.median(finite):.3g}",
+                )
+                ax.legend()
+            ax.set_xlabel(name)
+            ax.set_ylabel("windows")
+            ax.set_title(f"included={len(finite)}, undefined={len(values)-len(finite)}")
+        fig.suptitle(target.label)
+        figures.append(fig)
+        plt.show()
+    return figures

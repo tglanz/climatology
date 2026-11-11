@@ -1,12 +1,19 @@
+"""Write split arrays using the shared simulation contract and actual coordinates."""
+
+from concurrent.futures import ProcessPoolExecutor
+from itertools import repeat
+import json
 import logging
-from concurrent.futures import ProcessPoolExecutor, as_completed
 from pathlib import Path
 
 import h5py
+import numpy as np
 from tqdm import tqdm
 
 from ml.config import load as load_config
-from ml.data.isca_preprocessing import process_one_sim, sort_simulation_dirs
+from ml.data.climatology import diagnostic_for
+from ml.data.metadata import DataMetadata
+from ml.data.simulation_data import try_read_simulation
 from ml.data.splits import Splits
 
 log = logging.getLogger(__name__)
@@ -17,103 +24,121 @@ def _extract_pairs(
     config_path: Path,
     output_path: Path,
     n_workers: int,
-) -> None:
+    metadata: DataMetadata | None = None,
+) -> tuple[DataMetadata | None, int]:
     cfg = load_config(config_path)
-    data_cfg = cfg.data
-    windows_cfg = data_cfg.windows
-
-    exp_dirs = sort_simulation_dirs(exp_dirs)
-    output_path.parent.mkdir(parents=True, exist_ok=True)
-
-    if n_workers == 0:
-        results = (
-            process_one_sim(d, config_path)
-            for d in tqdm(exp_dirs, desc=output_path.stem)
-        )
-    else:
-        executor = ProcessPoolExecutor(max_workers=n_workers)
-        futures = {
-            executor.submit(process_one_sim, d, config_path): d for d in exp_dirs
-        }
-        results = (
-            f.result()
-            for f in tqdm(
-                as_completed(futures), total=len(exp_dirs), desc=output_path.stem
-            )
-        )
-
-    written = 0
-    x_ds = y_ds = None
-
-    with h5py.File(output_path, "w") as f:
-        for result in results:
-            if result is None:
-                continue
-            x_arr, y_arr = result
-            n = x_arr.shape[0]
-
-            if x_ds is None:
-                x_ds = f.create_dataset(
-                    "x",
-                    shape=(0, *x_arr.shape[1:]),
-                    maxshape=(None, *x_arr.shape[1:]),
-                    dtype="float32",
-                )
-                y_ds = f.create_dataset(
-                    "y",
-                    shape=(0, *y_arr.shape[1:]),
-                    maxshape=(None, *y_arr.shape[1:]),
-                    dtype="float32",
-                )
-                y_ds.attrs["vars"] = data_cfg.y_vars
-                y_ds.attrs["kind"] = "climatology"
-
-            x_ds.resize((written + n, *x_ds.shape[1:]))
-            x_ds[written : written + n] = x_arr
-            y_ds.resize((written + n, *y_ds.shape[1:]))
-            y_ds[written : written + n] = y_arr
-            written += n
-
-    if n_workers != 0:
-        executor.shutdown(wait=False)
-
-    log.info(
-        "wrote %d pairs to %s (K=%d, start_at=%s, end_at=%s, stride=%d, limit=%s, y_kind=%s, y_vars=%s)",
-        written,
-        output_path,
-        windows_cfg.length,
-        windows_cfg.start_at,
-        windows_cfg.end_at,
-        windows_cfg.stride,
-        windows_cfg.limit,
-        "climatology",
-        data_cfg.y_vars,
+    if n_workers < 0:
+        raise ValueError("worker count must be nonnegative")
+    paths = sorted(exp_dirs)
+    executor = ProcessPoolExecutor(max_workers=n_workers) if n_workers else None
+    results = (
+        executor.map(try_read_simulation, paths, repeat(cfg.data))
+        if executor
+        else (try_read_simulation(path, cfg.data) for path in paths)
     )
+    written, exclusions = 0, []
+    simulation_paths, simulation_targets = [], []
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    try:
+        with h5py.File(output_path, "x") as handle:
+            xs = ys = None
+            for outcome in tqdm(results, total=len(paths), desc=output_path.stem):
+                samples = outcome.samples
+                if samples is None:
+                    exclusions.append(
+                        {"simulation": str(outcome.sim_dir), "reason": outcome.reason}
+                    )
+                    log.warning("excluded %s: %s", outcome.sim_dir, outcome.reason)
+                    continue
+                if metadata is None:
+                    metadata = samples.metadata
+                if not metadata.matches(samples.metadata):
+                    raise ValueError(
+                        "sample coordinates or settings differ across simulations"
+                    )
+                if xs is None:
+                    xs = handle.create_dataset(
+                        "x",
+                        shape=(0, *samples.x_windows.shape[1:]),
+                        maxshape=(None, *samples.x_windows.shape[1:]),
+                        dtype="float32",
+                    )
+                    ys = handle.create_dataset(
+                        "y",
+                        shape=(0, *samples.y_windows.shape[1:]),
+                        maxshape=(None, *samples.y_windows.shape[1:]),
+                        dtype="float32",
+                    )
+                n = len(samples.x_windows)
+                xs.resize(written + n, axis=0)
+                ys.resize(written + n, axis=0)
+                xs[written : written + n], ys[written : written + n] = (
+                    samples.x_windows,
+                    samples.y_windows,
+                )
+                written += n
+                simulation_paths.append(str(samples.sim_dir))
+                simulation_targets.append(samples.truth_profile)
+            if metadata is not None:
+                metadata.write_hdf5(handle)
+                if xs is None:
+                    height, width = metadata.grid.shape
+                    handle.create_dataset(
+                        "x",
+                        shape=(0, metadata.input_channels, height, width),
+                        dtype="float32",
+                    )
+                    handle.create_dataset(
+                        "y", shape=(0, len(metadata.y_vars), height), dtype="float32"
+                    )
+                height, _ = metadata.grid.shape
+                targets = (
+                    np.stack(simulation_targets)
+                    if simulation_targets
+                    else np.empty((0, len(metadata.y_vars), height), dtype=np.float32)
+                )
+                handle.create_dataset("simulation_targets", data=targets)
+                handle.create_dataset(
+                    "simulation_paths",
+                    data=simulation_paths,
+                    dtype=h5py.string_dtype("utf-8"),
+                )
+                handle["y"].attrs["vars"] = list(metadata.y_vars)
+                handle["y"].attrs["units"] = [
+                    diagnostic_for(v).units for v in metadata.y_vars
+                ]
+                handle["y"].attrs["kind"] = "finite-run climatology"
+            handle.attrs["exclusions"] = json.dumps(exclusions)
+            handle.attrs["simulations_requested"] = len(paths)
+            handle.attrs["simulations_loaded"] = len(paths) - len(exclusions)
+    finally:
+        if executor is not None:
+            executor.shutdown(wait=True, cancel_futures=True)
+    log.info("wrote %d pairs to %s", written, output_path)
+    return metadata, written
 
 
 def run(config_path: Path, split_path: Path, n_workers: int = 0) -> None:
-    import shutil
-
     cfg = load_config(config_path)
-    out_dir = cfg.paths.preprocessed_dir
-    out_dir.mkdir(parents=True, exist_ok=True)
-
+    if n_workers < 0:
+        raise ValueError("worker count must be nonnegative")
     splits = Splits.load(split_path)
-    log.info(
-        "processing data; n_train=%d, n_val=%d, n_test=%d",
-        len(splits.train),
-        len(splits.validation),
-        len(splits.test),
+    splits.validate()
+    out_dir = cfg.paths.preprocessed_dir
+    if any(
+        (out_dir / name).exists()
+        for name in ("train.h5", "val.h5", "test.h5", "splits.json")
+    ):
+        raise FileExistsError("prepared output exists; choose a fresh preprocessed_dir")
+    metadata, count = _extract_pairs(
+        splits.train, config_path, out_dir / "train.h5", n_workers
     )
-
-    log.info("extracting val pairs")
+    if count == 0:
+        raise ValueError(
+            "no usable training samples; inspect train.h5 exclusion reasons"
+        )
     _extract_pairs(
-        splits.validation, config_path, out_dir / "val.h5", n_workers=n_workers
+        splits.validation, config_path, out_dir / "val.h5", n_workers, metadata
     )
-    log.info("extracting test pairs")
-    _extract_pairs(splits.test, config_path, out_dir / "test.h5", n_workers=n_workers)
-    log.info("extracting train pairs")
-    _extract_pairs(splits.train, config_path, out_dir / "train.h5", n_workers=n_workers)
-
-    shutil.copy2(split_path, out_dir / "splits.json")
-    log.info("finished preprocessing")
+    _extract_pairs(splits.test, config_path, out_dir / "test.h5", n_workers, metadata)
+    splits.save(out_dir, "splits", "Prepared simulation assignments", cfg.data.split)

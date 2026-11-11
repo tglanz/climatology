@@ -36,11 +36,15 @@ Evaluation takes a training directory and reads raw simulations again. See
 [evaluation](../docs/model-evaluation.md) and the
 [default configuration](configs/default.toml).
 
-These stages retain their existing configuration and directory assumptions.
-Older saved configurations with `data.experiment_dir` instead of
-`paths.experiment_dir` are incompatible with the current loader. Preserve the
-saved originals; any explicit compatibility copy should keep the original model
-and data settings.
+Prepared data and checkpoints carry versioned coordinates, channel identities,
+input units, and normalization conventions. The corrected loader rejects
+unversioned or incompatible artifacts. Preserve saved originals; regenerate data
+and retrain into fresh directories for the corrected path. Old configurations
+with `data.experiment_dir` also need the current `paths.experiment_dir` field.
+
+Training and evaluation accept `--device cpu` for bounded checks. Training uses
+the saved `training.seed` (default zero). Prepared splits retain one target per
+simulation so baseline fitting weights simulations equally.
 
 ## Library ownership
 
@@ -73,7 +77,7 @@ The rotating-globe entry point remains available:
 uv run --project ml --group train --group vis python -m ml.cmd.rotating_globe --help
 ```
 
-## Checks and remaining corrections
+## Checks and correctness
 
 Every pull request to main runs separate ML lint and test jobs. Pushes to main
 also check changes to ML, its neuraloperator pin, and the shared CI workflow.
@@ -93,9 +97,10 @@ uv run --project ml --all-groups black --check ml
 uv run --project ml --group dev --group train --group vis pytest ml/tests
 ```
 
-Compaction preserves existing scientific behavior, including known differences
-between preparation, CLI evaluation, and notebook evaluation.
-[Action item 02](../action-items/02-correctness.md) owns those corrections;
-[action item 03](../action-items/03-pipeline.md) owns workflow redesign.
-The [compaction results](../action-items/01-compaction-results.md) record checks,
-retention decisions, and verification limits.
+[Action item 02](../action-items/02-correctness.md) tracks the correctness
+implementation and its [progress](../action-items/02-correctness-plan-progress.md).
+The [sample contract](../docs/pre-processing.md), [grids](../docs/grids.md), and
+[norms](../docs/norms.md) define the scientific conventions.
+[Action item 03](../action-items/03-pipeline.md) owns broader workflow redesign.
+The [compaction results](../action-items/01-compaction-results.md) remain the
+historical verification record for phase 01.

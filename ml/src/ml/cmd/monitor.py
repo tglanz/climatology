@@ -173,7 +173,7 @@ def _run_gui_climatology(state: MonitorState, interval: float) -> None:
     )
     ax_chart.set_title("loss per epoch")
     ax_chart.set_xlabel("epoch")
-    ax_chart.set_ylabel("loss")
+    ax_chart.set_ylabel("normalized-target loss")
     ax_chart.grid(True, alpha=0.3)
     ax_chart.xaxis.set_major_locator(ticker.MaxNLocator(integer=True))
 
@@ -188,8 +188,8 @@ def _run_gui_climatology(state: MonitorState, interval: float) -> None:
 
     pred_lines, truth_line = setup_meridional_profile_axes(
         ax_profile,
-        title="zonal mean u(lat): predicted vs truth",
-        xlabel="u (m/s)",
+        title=f"{state.target.label}: prediction vs truth (first target)",
+        xlabel=f"{state.target.label} [{state.target.units}]",
         n_history=MonitorState._PROFILE_HISTORY_LEN,
     )
 
@@ -227,6 +227,7 @@ def _run_gui_climatology(state: MonitorState, interval: float) -> None:
             state.profile_pred_history,
             state.profile_truth,
             pred_std=state.profile_pred_std,
+            latitudes=state.latitudes,
         )
 
         fig.canvas.draw()

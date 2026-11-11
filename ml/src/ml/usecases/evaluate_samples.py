@@ -1,47 +1,66 @@
-"""Prepared-test-set evaluation, retaining the original notebook conventions."""
+"""Physical-unit evaluation of prepared test windows on their saved coordinates."""
 
+from dataclasses import dataclass
 from pathlib import Path
+
 import h5py
 import numpy as np
-import torch
-from ml import patches
+
 from ml.config import load
-from ml.inference import load_model, select_device, prepare_device, predict_windows
-from ml.diagnostics.errors import notebook_profile_rel_l2, profile_rmse
+from ml.data.climatology import diagnostic_for
+from ml.data.metadata import DataMetadata
+from ml.diagnostics.errors import ScoreSummary, profile_relative_l2_values
+from ml.inference import load_checkpoint, select_device, prepare_device, predict_windows
 
 
-def run(training_dir: Path, batch_size: int = 64, limit: int | None = None):
+@dataclass(frozen=True)
+class SampleEvaluation:
+    predictions: np.ndarray
+    truth: np.ndarray
+    metadata: DataMetadata
+    rmses: np.ndarray
+    relatives: np.ndarray
+
+    @property
+    def latitudes(self) -> np.ndarray:
+        return self.metadata.grid.latitudes
+
+
+def run(
+    training_dir: Path,
+    batch_size: int = 64,
+    limit: int | None = None,
+    device: str = "auto",
+) -> SampleEvaluation:
+    if limit is not None and limit < 1:
+        raise ValueError("sample limit must be positive")
     training_dir = training_dir.resolve()
     cfg = load(training_dir / "config.toml")
-    data_dir = training_dir.parent / "data"
-    model = load_model(cfg, training_dir, dropout=cfg.training.regularization.dropout)
-    norm = torch.load(
-        training_dir / "normalization.pt", map_location="cpu", weights_only=True
+    checkpoint = load_checkpoint(cfg, training_dir)
+    with h5py.File(cfg.paths.preprocessed_dir / "test.h5", "r") as handle:
+        metadata = DataMetadata.read_hdf5(handle)
+        if not checkpoint.normalization.metadata.matches(metadata):
+            raise ValueError("prepared test data differ from the saved checkpoint")
+        x, truth = handle["x"][:limit], handle["y"][:limit]
+    selected = select_device(device)
+    prepare_device(checkpoint.model, x.shape[1:], selected)
+    predictions = predict_windows(
+        checkpoint.model, checkpoint.normalization, x, selected, batch_size
     )
-    with h5py.File(data_dir / "test.h5", "r") as f:
-        x = f["x"][:limit]
-        truth = f["y"][:limit].squeeze(1)
-    device = select_device()
-    patches.apply()
-    prepare_device(model, x.shape[1:], device)
-    predictions = predict_windows(model, norm, x, device, batch_size)
-    # This notebook historically uses synthetic equiangular plotting coordinates.
-    # Actual-grid reconciliation belongs to action item 02.
-    lat = np.linspace(-90, 90, truth.shape[1])
-    rmses = np.array([profile_rmse(p, t, lat) for p, t in zip(predictions, truth)])
-    rels = np.array(
-        [notebook_profile_rel_l2(p, t, lat) for p, t in zip(predictions, truth)]
-    )
-    return predictions, truth, lat, rmses, rels
+    if truth.shape != predictions.shape or not np.isfinite(truth).all():
+        raise ValueError("prepared targets have invalid values or shapes")
+    rmses = np.sqrt(np.sum(metadata.grid.weights * (predictions - truth) ** 2, axis=-1))
+    relatives = profile_relative_l2_values(predictions, truth, metadata.grid.latitudes)
+    return SampleEvaluation(predictions, truth, metadata, rmses, relatives)
 
 
-def print_metrics(rmses, rels):
-    print(
-        f"{'metric':<10} {'mean':>10} {'median':>10} {'p75':>10} {'p95':>10} {'max':>10}"
-    )
-    print("-" * 60)
-    for name, vals in [("rmse", rmses), ("relL2", rels)]:
+def print_metrics(result: SampleEvaluation):
+    print("Prepared test windows; physical units; equal weight per window.")
+    for index, name in enumerate(result.metadata.y_vars):
+        target = diagnostic_for(name)
+        rmse = ScoreSummary.from_values(result.rmses[:, index])
+        relative = ScoreSummary.from_values(result.relatives[:, index])
         print(
-            f"{name:<10} {vals.mean():>10.4f} {np.median(vals):>10.4f}"
-            f" {np.percentile(vals, 75):>10.4f} {np.percentile(vals, 95):>10.4f} {vals.max():>10.4f}"
+            f"{name}: mean RMSE={rmse.mean} [{target.units}], mean relative L2={relative.mean}; "
+            f"included={relative.count}, undefined={relative.undefined}"
         )

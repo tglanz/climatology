@@ -1,5 +1,9 @@
 # 02. Correct preparation, training, and evaluation
 
+**Status:** complete with recorded verification limits; see the [results](02-correctness-results.md).
+
+[Implementation plan](02-correctness-plan.md), including proposed scientific contracts and verification gates.
+
 **Change:** fix the functional errors in the shared code left after step 01.
 
 ## Preparation

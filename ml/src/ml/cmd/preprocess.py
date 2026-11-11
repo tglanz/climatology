@@ -34,19 +34,19 @@ def preprocess():
     "--validate-spinup",
     is_flag=True,
     default=False,
-    help="If true, computes spinup time. If no spinup time is found, marks the simulation invalid",
+    help="Validate the full configured sample contract, including spinup",
 )
 @click.option(
     "--validate-convergence",
     is_flag=True,
     default=False,
-    help="If true, runs convergence detection. If convergence is not reached, marks the simulation invalid",
+    help="Validate the full configured sample contract, including convergence",
 )
 @click.option(
     "--validate-climatology",
     is_flag=True,
     default=False,
-    help="If true, resolves the climatology window and marks simulations invalid if it cannot be satisfied",
+    help="Validate the full configured sample contract, including targets",
 )
 @click.option(
     "--workers",

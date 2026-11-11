@@ -1,117 +1,106 @@
 # Preprocessing
 
-The preprocessing subsystem takes a set of simulations as input and produces three HDF5 splits: `train`, `val`, and `test`. Each split holds two `f32` datasets, `x` and `y`, whose aligned rows are training pairs $(X, Y)$.
+Preparation converts Isca trajectories into aligned float32 datasets
+`x=(B,K*V,H,W)` and `y=(B,C,H)`. Here $B$ counts windows, $K$ snapshots per
+window, $V$ input variables, $C$ targets, $H$ latitudes, and $W$ longitudes.
+Input channels follow time order, then configured variable order. Targets follow
+`data.y_vars` order and repeat for each window from the same simulation.
 
-> The training pipeline fits the model on `train` pairs, monitors generalisation on `val` pairs during training, and reports held-out performance on `test` pairs after training.
+[Simulation loading](../ml/src/ml/data/simulation_data.py) owns validation,
+detectors, intervals, windows, and targets. Preparation, raw CLI evaluation, and
+by-code evaluation use this owner. Prepared-window evaluation uses saved arrays
+and validates their metadata.
 
-At a high level, preprocessing extracts pairs from one simulation by:
+## Coordinates and acceptance
 
-1. Detecting the spinup time $t_s$.
-2. Detecting the convergence time $t_c$.
-3. Selecting $K$-length windows using the configured start, end, stride, and limit.
-4. For each window $W = (S_{j_1}, \dots, S_{j_K})$:
-   - Compute the input diagnostics $X_W$.
-   - Compute the target diagnostic $Y_W$.
-   - Write the pair $(X_W, Y_W)$ into the output HDF5.
+Segments must have matching full Gaussian coordinates, declared compatible units,
+chronological times, uniform snapshot cadence, and consistent averaging intervals.
+Longitudes cover one period with equal spacing and no duplicate endpoint.
+Fields must be finite with dimensions `(time,lat,lon)`.
+See [grids](grids.md) for coordinates and quadrature.
 
-The sections below describe each piece in turn.
+A configured detector must succeed. Missing required anchors, invalid target
+intervals, and absent complete windows exclude the simulation with a reason.
+Preparation stores exclusions and counts. An empty training assignment or zero
+usable training windows is an error.
 
-## Diagnostics
+All replicas of a forcing configuration belong to the same split. Assignments
+must be disjoint. Preparation writes train, validation, and test into a fresh
+directory. Each file stores coordinates, channel identities, settings, and a
+format identifier. These must agree across splits and with the checkpoint.
+Declared input units are checked across segments and stored in artifact identity.
+Known unit aliases are normalized; other fields require matching declared units.
+The prepared simulation table keeps one target per accepted trajectory, so baseline
+fitting is independent of its number of windows.
 
-A diagnostic is any quantity computed from a simulation. Three kinds appear in this pipeline.
+## Spinup stability criterion
 
-- A **step diagnostic** is a value attached to a single snapshot. For example, vorticity $\zeta_t$ at step $t$.
-- A **static diagnostic** is a value attached to the simulation as a whole, not to any individual step. For example, the stirring amplitude used to force the simulation. Static diagnostics are useful when conditioning the model on the forcing configuration.
-- A **climatology diagnostic** is a statistical summary computed over a range of snapshots. For example, the time-mean zonal-mean of zonal wind $u$ over $[a, b)$.
+The [detector](../ml/src/ml/diagnostics/spinup.py) compares adjacent nonoverlapping
+blocks of global mean enstrophy. Enstrophy density is half the squared relative
+vorticity. Its global mean uses Gaussian area weights.
 
-Each training pair labels its diagnostics by role:
-
-- An **input diagnostic** is one that contributes to $X$.
-- A **target diagnostic** is one that contributes to $Y$.
-
-A pair carries configured input variables in time order, then variable order within each snapshot. Its target channels are the configured climatology diagnostics. Each target is repeated for every retained window from the same simulation.
-
-## Spinup
-
-The spinup time $t_s$ is the first snapshot index after which a chosen scalar step diagnostic stays close to its long-run mean. The canonical choice is the global mean enstrophy $\eta_t = \overline{0.5\, \zeta_t^2}^{\,\text{area}}$.
-
-Let $\eta_0, \eta_1, \dots, \eta_{M-1}$ be the diagnostic series. The detector proceeds as follows.
-
-1. Smooth $\eta$ with a rolling mean of size $w$:
-   $$
-   \bar\eta_t = \frac{1}{w} \sum_{k = 0}^{w - 1} \eta_{t - w + 1 + k},
-   \qquad t = w - 1,\, w,\, \dots,\, M - 1.
-   $$
-2. Take the long-run reference as the average of the last $w$ smoothed values:
-   $$
-   \eta^* = \frac{1}{w} \sum_{t = M - w}^{M - 1} \bar\eta_t.
-   $$
-3. Return the smallest $t$ such that
-   $$
-   \frac{|\bar\eta_{t + k} - \eta^*|}{|\eta^*|} < \tau_s
-   \quad\text{for every}\ k = 0, 1, \dots, h_s - 1.
-   $$
-
-The threshold $\tau_s$ and the consecutive-count $h_s$ are exposed in the configuration. If no $t$ satisfies the condition, the simulation has not spun up under this criterion; downstream, the windowing step then drops it when configured to start at $t_s$.
-
-Spinup detection is optional. When it is omitted, no $t_s$ is computed and windowing starts at index $0$.
-
-## Convergence
-
-The convergence time $t_c$ is the first snapshot index at which the running time-mean of a chosen climatology diagnostic is within tolerance of the same diagnostic taken over the full reference window. The canonical choice of diagnostic is the zonal mean of the zonal wind, $\mathcal{F}(\zeta) = \overline{u(\zeta)}^{\,\text{lon}} \in \mathbb{R}^H$.
-
-Define the running estimator
-$$
-D(a, b) = \frac{1}{b - a} \sum_{t = a}^{b - 1} \mathcal{F}(\zeta_t).
-$$
-
-Set the reference start to $t_{\text{ref}} = t_s$ when spinup has been detected, and to $t_{\text{ref}} = 0$ otherwise. The reference is then $D(t_{\text{ref}}, M)$. The detector proceeds as follows.
-
-1. For each $i = 1, 2, \dots, M - t_{\text{ref}} - 1$, compute the cos-lat-weighted relative $L^2$ error between the running estimator and the reference:
-   $$
-   \varepsilon_i = \frac{\| D(t_{\text{ref}},\, t_{\text{ref}} + i) - D(t_{\text{ref}}, M) \|_w}
-                        {\| D(t_{\text{ref}}, M) \|_w},
-   \qquad
-   \| f \|_w = \sqrt{\sum_j w_j\, f_j^2},
-   $$
-   with weights $w_j = \cos(\mathrm{lat}_j)$ normalised so their mean is one.
-2. Return $t_c = t_{\text{ref}} + i^*$, where $i^*$ is the smallest $i$ such that $\varepsilon_{i + k} < \tau_c$ for every $k = 0, 1, \dots, h_c - 1$.
-
-The threshold $\tau_c$ and the consecutive-count $h_c$ are exposed in the configuration. If no $i$ satisfies the condition, the simulation has not converged under this criterion; preprocessing rejects that simulation when convergence detection is configured.
-
-Convergence detection is optional. When it is omitted, no $t_c$ is computed and windowing ends at the last admissible window-start index.
-
-## Windowing
-
-Given a trajectory of $M$ snapshots and the (possibly missing) $t_s$ and $t_c$, the windowing step emits a sorted list of window-start indices $t_0$. A window of length $K$ occupies snapshots $t_0, t_0 + 1, \dots, t_0 + K - 1$. The current selector retains the older next-step upper bound $0 \leq t_0 \leq M - K - 1$, even though the retained target is a climatology profile. This excludes the last complete input window; correcting that bound belongs to [action item 02](../action-items/02-correctness.md).
-
-The window-start range is
+Normalize the diagnostic by its maximum absolute value when nonzero. Divide it
+into complete blocks of `window_size` snapshots; ignore a trailing incomplete
+block. For block $i$, let $m_i$ be its mean, $s_i^2$ its sample variance, and $w$
+its size. With dimensionless floor $\delta=10^{-12}$, compare
 
 $$
-t_0^{\min} =
-\begin{cases}
-0 & \text{start\_at = beginning} \\
-t_s & \text{start\_at = spinup}
-\end{cases},
+A_i=\frac{|m_{i+1}-m_i|}
+{\sqrt{s_{i+1}^2/w}+\sqrt{s_i^2/w}+2\delta},
 \qquad
-t_0^{\max} =
-\begin{cases}
-M - K - 1 & \text{end\_at = end} \\
-\min(t_c,\ M - K - 1) & \text{end\_at = convergence}
-\end{cases}.
+B_i=|\log(s_{i+1}^2+\delta)-\log(s_i^2+\delta)|.
 $$
 
-The selector emits
+A comparison passes when both values are below `z_threshold`. Require
+$\max(1,\lceil\text{stable_time}/w\rceil)$ consecutive passing comparisons.
+Both duration settings count saved snapshots. Return $t_s=(i+1)w$ for the first
+qualifying sequence, where $i$ indexes its first comparison from zero.
+
+Constant series pass once enough complete blocks exist. Insufficient data cannot
+establish stability. This retrospective heuristic has no calibrated significance
+level and does not prove stationarity.
+
+## Finite-reference convergence criterion
+
+Let $D(a,b)$ be the time-mean zonal-mean zonal wind over $[a,b)$. The reference
+starts at detected spinup $t_s$, or zero when spinup detection is disabled.
+For every nonempty proper prefix, compare
 
 $$
-t_0 \in
-\big\{ t_0^{\min},\ t_0^{\min} + \sigma,\ t_0^{\min} + 2\sigma,\ \dots \big\}
-\cap
-[t_0^{\min},\ t_0^{\max}],
+\varepsilon_i=
+\frac{\|D(t_s,t_s+i)-D(t_s,M)\|_w}{\|D(t_s,M)\|_w}.
 $$
 
-stepping by the stride $\sigma$, and optionally truncates the result to its first $L$ entries when a per-simulation limit is configured. Two common stride choices: $\sigma = 1$ gives fully overlapping windows, $\sigma = K + 1$ gives disjoint tumbling windows.
+The norm uses [Gaussian weights](norms.md). A zero reference norm makes this
+relative criterion undefined and excludes the simulation. Return $t_c=t_s+i$
+for the first prefix followed by `hold` consecutive errors below `threshold`.
 
-If $t_0^{\min} > t_0^{\max}$ the admissible set is empty and the simulation contributes no pairs.
+The returned index is an exclusive prefix endpoint. Detection uses later
+observations and the full-run reference. Passing establishes this finite-reference
+criterion only; it proves neither stationarity nor infinite-time convergence.
 
-Each emitted $t_0$ defines a window $W$, from which $X_W$ and $Y_W$ are computed as described in the Diagnostics section.
+## Input windows and targets
+
+An input occupies $[t_0,t_0+K)$. Complete windows satisfy $0\leq t_0\leq M-K$.
+Start at zero or $t_s$, according to `windows.start_at`.
+`windows.end_at="convergence"` caps the **window start** at $t_c$.
+It does not require the entire window to end there. Apply stride, then the optional
+first-window limit. Stride $K$ gives adjacent disjoint windows; $K+1$ leaves a gap.
+
+Resolve exactly two of the climatology settings `start_at`, `end_at`, and `length`
+to $[a,b)$, with $0\leq a<b\leq M$. For target variable $v_c$,
+
+$$
+Y_{c,h}=\frac{1}{(b-a)W}
+\sum_{t=a}^{b-1}\sum_{\ell=0}^{W-1}v_c(t,h,\ell).
+$$
+
+Uniform sampling and equal longitude spacing justify these unweighted averages.
+This is a finite-trajectory estimate. An ensemble interpretation needs additional
+assumptions about stationarity, ergodic sampling, and finite means.
+Input and target intervals may overlap. The task does not establish independent
+future forecasting.
+
+`validate-simulations` always checks structure, units, coordinates, and cadence.
+Any diagnostic-validation flag additionally checks the entire sample contract.
+The existing spinup, convergence, and climatology flag spellings remain available.

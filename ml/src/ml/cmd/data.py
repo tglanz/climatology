@@ -27,7 +27,7 @@ def data():
     help="Parallel worker processes. 0 = serial.",
 )
 def climatology_analysis(config_path: Path, workers: int):
-    """Within-config climatology variance analysis and noise floor estimate."""
+    """Descriptive within-configuration replicate variability for each target."""
     from ml.usecases.climatology_analysis import run
 
     cfg = load_config(config_path)

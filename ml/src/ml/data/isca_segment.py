@@ -1,60 +1,116 @@
+"""NetCDF readers with explicit dataset ownership and cache lifetime."""
+
+from dataclasses import dataclass, field
 from pathlib import Path
 
 import numpy as np
 import xarray as xr
+from ml.data.climatology import known_units
 
 type SegmentsCache = dict[Path, xr.Dataset]
 
+_UNIT_ALIASES = {
+    "vor": {"1/s", "s-1", "s^-1"},
+    "ucomp": {"m/s", "ms-1", "ms^-1"},
+    "vcomp": {"m/s", "ms-1", "ms^-1"},
+}
 
-# Isca's no-calendar metadata is not CF-decodable. Use a valid epoch and
-# a 360-day calendar so xarray can decode it for visualization.
+
 def fix_time_units(ds: xr.Dataset) -> xr.Dataset:
-    for v in ds.variables:
-        if "units" in ds[v].attrs and "0000-00-00" in ds[v].attrs["units"]:
-            ds[v].attrs["units"] = (
-                ds[v].attrs["units"].replace("0000-00-00", "0001-01-01")
-            )
-        if ds[v].attrs.get("calendar") == "NO_CALENDAR":
-            ds[v].attrs["calendar"] = "360_day"
+    for name in ds.variables:
+        attrs = ds[name].attrs
+        if "0000-00-00" in attrs.get("units", ""):
+            attrs["units"] = attrs["units"].replace("0000-00-00", "0001-01-01")
+        if attrs.get("calendar") == "NO_CALENDAR":
+            attrs["calendar"] = "360_day"
     return ds
 
 
 def read_segment(nc_path: Path, cache: SegmentsCache | None = None) -> xr.Dataset:
-    if cache and nc_path in cache:
+    if cache is not None and nc_path in cache:
         return cache[nc_path]
-    ds = xr.open_dataset(nc_path, decode_times=False)
-    ds = fix_time_units(ds)
-    if cache:
+    ds = fix_time_units(xr.open_dataset(nc_path, decode_times=False))
+    if cache is not None:
         cache[nc_path] = ds
     return ds
 
 
+@dataclass
+class SegmentReader:
+    cache: SegmentsCache = field(default_factory=dict)
+
+    def read(self, path: Path) -> xr.Dataset:
+        return read_segment(path, self.cache)
+
+    def __enter__(self) -> "SegmentReader":
+        return self
+
+    def __exit__(self, *_):
+        for ds in self.cache.values():
+            ds.close()
+        self.cache.clear()
+
+
 def aggregated_read_field(
     nc_paths: list[Path], field_name: str, cache: SegmentsCache | None = None
-):
-    arrays = [read_segment(nc_path, cache)[field_name] for nc_path in nc_paths]
-    return np.concatenate(arrays, axis=0)
+) -> np.ndarray:
+    if cache is None:
+        with SegmentReader() as reader:
+            return aggregated_read_field(nc_paths, field_name, reader.cache)
+    return np.concatenate(
+        [read_segment(p, cache)[field_name].values for p in nc_paths], axis=0
+    )
+
+
+def field_units(ds: xr.Dataset, variable: str) -> str:
+    units = ds[variable].attrs.get("units", "").replace(" ", "").replace("**", "^")
+    if not units or (
+        variable in _UNIT_ALIASES and units not in _UNIT_ALIASES[variable]
+    ):
+        raise ValueError(f"incompatible or missing units for {variable}: {units!r}")
+    return known_units(variable) or units
+
+
+def _finite_coordinate(values: np.ndarray, name: str) -> bool:
+    if np.issubdtype(values.dtype, np.number):
+        return bool(np.isfinite(values).all())
+    if np.issubdtype(values.dtype, np.datetime64):
+        return bool((~np.isnat(values)).all())
+    if name == "time":
+        try:
+            xr.CFTimeIndex(values)
+            return True
+        except (TypeError, ValueError):
+            return False
+    return False
 
 
 def validate_segment_dataset(ds: xr.Dataset, x_vars: list[str], y_vars: list[str]):
-    all_vars = list(dict.fromkeys(x_vars + y_vars))
-    for var in all_vars:
-        assert var in ds, f"variable '{var}' not in dataset"
-        assert (
-            "time" in ds[var].dims
-        ), f"variable '{var}' has no time dimension in dataset"
-
+    for coordinate in ("time", "lat", "lon"):
+        if coordinate not in ds.coords or ds[coordinate].dims != (coordinate,):
+            raise ValueError(f"missing or invalid {coordinate} coordinate")
+        if not _finite_coordinate(ds[coordinate].values, coordinate):
+            raise ValueError(f"nonfinite {coordinate} coordinate")
+    for var in dict.fromkeys(x_vars + y_vars):
+        if var not in ds or ds[var].dims != ("time", "lat", "lon"):
+            raise ValueError(f"variable {var!r} must have dimensions (time, lat, lon)")
+        field_units(ds, var)
+        if not np.isfinite(ds[var].values).all():
+            raise ValueError(f"nonfinite values in {var}")
+    if ds.sizes["time"] == 0:
+        raise ValueError("empty segment")
     if "average_DT" in ds:
-        dt = ds["average_DT"].values
-        # its a timedelta64 when read with decode_time
+        dt = np.atleast_1d(ds["average_DT"].values)
         if np.issubdtype(dt.dtype, np.timedelta64):
             dt = dt.astype(np.float64)
-        assert np.allclose(dt, dt[0], rtol=1e-3), f"inconsistent time steps in dataset"
-
-    num_samples = ds.sizes["time"]
-    spatial_shape = (ds.sizes["lat"], ds.sizes["lon"])
-    ds.close()
-    return num_samples, spatial_shape
+        if (
+            dt.size == 0
+            or not np.isfinite(dt).all()
+            or np.any(dt <= 0)
+            or not np.allclose(dt, dt[0], rtol=1e-6)
+        ):
+            raise ValueError("inconsistent time averaging intervals")
+    return ds.sizes["time"], (ds.sizes["lat"], ds.sizes["lon"])
 
 
 def validate_segment(
@@ -63,8 +119,10 @@ def validate_segment(
     y_vars: list[str],
     cache: SegmentsCache | None = None,
 ) -> tuple[int, tuple]:
-    ds = read_segment(nc_path, cache)
-    return validate_segment_dataset(ds, x_vars, y_vars)
+    if cache is None:
+        with SegmentReader() as reader:
+            return validate_segment_dataset(reader.read(nc_path), x_vars, y_vars)
+    return validate_segment_dataset(read_segment(nc_path, cache), x_vars, y_vars)
 
 
 def read_segments(
@@ -79,19 +137,12 @@ def read_segments(
         decode_times=False,
         preprocess=fix_time_units,
     )
-
-    if decode_time:
-        ds = _decode_time(ds)
-
-    return ds
+    return _decode_time(ds) if decode_time else ds
 
 
 def _decode_time(ds: xr.Dataset) -> xr.Dataset:
-    """Used for visualization"""
-    ds = xr.decode_cf(
+    return xr.decode_cf(
         ds,
         decode_times=xr.coders.CFDatetimeCoder(use_cftime=True),
         decode_timedelta=True,
     )
-
-    return ds

@@ -21,12 +21,35 @@ class Splits:
         self.validation = validation
         self.train = train
 
+    def validate(self) -> None:
+        if not self.train:
+            raise ValueError("split has no training simulations")
+        groups = {}
+        seen = set()
+        for name, paths in (
+            ("train", self.train),
+            ("validation", self.validation),
+            ("test", self.test),
+        ):
+            for path in paths:
+                resolved = path.resolve()
+                if resolved in seen:
+                    raise ValueError(
+                        "simulation appears more than once in split assignments"
+                    )
+                seen.add(resolved)
+                code = _config_key(path)
+                if code in groups and groups[code] != name:
+                    raise ValueError("configuration replicas cross split boundaries")
+                groups[code] = name
+
     def save(
         self, splits_dir: Path, name: str, description: str, split_config: SplitConfig
     ) -> Path:
         splits_dir.mkdir(parents=True, exist_ok=True)
         path = splits_dir / f"{name}.json"
         base = path.parent
+        self.validate()
         with open(path, "w") as f:
             json.dump(
                 {
@@ -69,10 +92,13 @@ def generate(
     sweep: "SweepFile | None" = None,
 ) -> Splits:
     if config.test_ratio is not None:
-        return _ratio_split(sim_dirs, config.test_ratio, config.validation_ratio)
-    return _hold_out_matrix_split(
-        sim_dirs, config.test_hold_out, config.validation_ratio, sweep
-    )
+        splits = _ratio_split(sim_dirs, config.test_ratio, config.validation_ratio)
+    else:
+        splits = _hold_out_matrix_split(
+            sim_dirs, config.test_hold_out, config.validation_ratio, sweep
+        )
+    splits.validate()
+    return splits
 
 
 def _config_key(sim_dir: Path) -> str:
