@@ -11,10 +11,17 @@ from neuralop.data.transforms.normalizers import UnitGaussianNormalizer
 
 from ml.config import PathsConfig
 
-from ml.diagnostics import absolute_error
+from ml.diagnostics.errors import absolute_error
 
-
-_EPOCH_HEADER = ["run_id", "epoch", "timestamp", "elapsed_seconds", "learning_rate", "train_loss", "val_loss"]
+_EPOCH_HEADER = [
+    "run_id",
+    "epoch",
+    "timestamp",
+    "elapsed_seconds",
+    "learning_rate",
+    "train_loss",
+    "val_loss",
+]
 
 
 def _append_csv(path: Path, header: list, row: list) -> None:
@@ -51,10 +58,19 @@ class TrainingMetrics:
         train_loss: float,
         val_loss: float | None,
     ) -> None:
-        _append_csv(self._epoch_metrics_path, _EPOCH_HEADER, [
-            run_id, epoch, timestamp, f"{elapsed:.3f}", f"{lr:.2e}",
-            f"{train_loss:.6f}", f"{val_loss:.6f}" if val_loss is not None else "",
-        ])
+        _append_csv(
+            self._epoch_metrics_path,
+            _EPOCH_HEADER,
+            [
+                run_id,
+                epoch,
+                timestamp,
+                f"{elapsed:.3f}",
+                f"{lr:.2e}",
+                f"{train_loss:.6f}",
+                f"{val_loss:.6f}" if val_loss is not None else "",
+            ],
+        )
 
     def update(self, model: nn.Module, val_loader: DataLoader) -> None:
         """
@@ -85,9 +101,17 @@ class TrainingMetrics:
 
                 err_abs = absolute_error(pred_b, truth_b).sum(0)
                 spatial_acc = err_abs if spatial_acc is None else spatial_acc + err_abs
-                pred_acc    = pred_b.sum(0)        if pred_acc    is None else pred_acc    + pred_b.sum(0)
-                pred_sq_acc = pred_b.pow(2).sum(0) if pred_sq_acc is None else pred_sq_acc + pred_b.pow(2).sum(0)
-                truth_acc   = truth_b.sum(0)       if truth_acc   is None else truth_acc   + truth_b.sum(0)
+                pred_acc = (
+                    pred_b.sum(0) if pred_acc is None else pred_acc + pred_b.sum(0)
+                )
+                pred_sq_acc = (
+                    pred_b.pow(2).sum(0)
+                    if pred_sq_acc is None
+                    else pred_sq_acc + pred_b.pow(2).sum(0)
+                )
+                truth_acc = (
+                    truth_b.sum(0) if truth_acc is None else truth_acc + truth_b.sum(0)
+                )
                 n_samples += x.shape[0]
 
         assert spatial_acc is not None and n_samples > 0
@@ -98,9 +122,16 @@ class TrainingMetrics:
 
         tmp = self._metrics_path.with_suffix(".tmp.h5")
         with h5py.File(tmp, "w") as f:
-            f.create_dataset("spatial_error",    data=spatial_error)
-            f.create_dataset("profile_pred",     data=pred_mean.cpu().numpy().astype(np.float32))
-            f.create_dataset("profile_pred_std", data=pred_std.cpu().numpy().astype(np.float32))
-            f.create_dataset("profile_truth",    data=(truth_acc / n_samples).cpu().numpy().astype(np.float32))
+            f.create_dataset("spatial_error", data=spatial_error)
+            f.create_dataset(
+                "profile_pred", data=pred_mean.cpu().numpy().astype(np.float32)
+            )
+            f.create_dataset(
+                "profile_pred_std", data=pred_std.cpu().numpy().astype(np.float32)
+            )
+            f.create_dataset(
+                "profile_truth",
+                data=(truth_acc / n_samples).cpu().numpy().astype(np.float32),
+            )
         # atomic rename so the monitor never reads a partially-written file
         tmp.replace(self._metrics_path)

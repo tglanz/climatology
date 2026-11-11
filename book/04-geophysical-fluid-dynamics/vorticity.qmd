@@ -77,4 +77,4 @@ $$
 
 where $\psi$ is the streamfunction defined by $u = -\partial \psi / \partial y$, $v = \partial \psi / \partial x$, and $J(\psi, \zeta) = \frac{\partial \psi}{\partial x}\frac{\partial \zeta}{\partial y} - \frac{\partial \psi}{\partial y}\frac{\partial \zeta}{\partial x}$ is the Jacobian. Since $\zeta = \nabla^2 \psi$, this is a single prognostic equation for $\psi$.
 
-This is the **Barotropic Vorticity Equation (BVE)** - the PDE that the GSNO will be trained to solve.
+This is the **barotropic vorticity equation (BVE)** under the stated beta-plane, non-divergent, inviscid assumptions. Forcing and dissipation add terms to its right-hand side.

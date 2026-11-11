@@ -31,7 +31,7 @@ If you see `OK`, the package is installed and all dependencies are available.
 To run any command in the environment, prefix it with `conda run -n isca_env`:
 
 ```bash
-conda run -n isca_env python sim/barotropic_stirring.py
+conda run -n isca_env python -m sim.scanner --help
 conda run -n isca_env python -c "import isca; print(isca.__file__)"
 ```
 
@@ -55,3 +55,5 @@ source ~/.zshrc
 ```
 
 These variables are required at import time by the `isca` Python package and control where compiled code and model output are stored.
+
+For compilation and simulation commands, use the [simulation README](../sim/README.md).

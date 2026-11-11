@@ -6,7 +6,7 @@ Primary metric throughout evaluation. For a predicted profile $\hat{y}$ and trut
 
 $$\text{relL2}(\hat{y}, y) = \sqrt{\frac{\sum_h w_h (\hat{y}_h - y_h)^2}{\sum_h w_h y_h^2}}$$
 
-where $w_h = \cos(\phi_h)$ and $\phi_h$ is the latitude of grid row $h$. The cosine weighting corrects for the over-representation of polar grid cells in a regular lat-lon grid. A value of 1.0 is equivalent to the zero predictor; 0.0 is a perfect prediction.
+where $w_h = \cos(\phi_h)$ and $\phi_h$ is the latitude of grid row $h$. For uniformly spaced latitudes, cosine weights approximate relative cell areas. The current code also applies these weights to Isca Gaussian latitudes; they are not Gaussian quadrature weights. For nonzero truth and without a denominator epsilon, the zero predictor has relative error 1. A perfect prediction has error 0. Existing implementations differ in epsilon and profile broadcasting; [action item 02](../action-items/02-correctness.md) reconciles them.
 
 ## Latitude-weighted RMSE
 
@@ -18,7 +18,7 @@ Same weights as relL2. The denominator is the sum of weights rather than the wei
 
 ## Normalized parameter distance
 
-Used for the nearest-training-config baseline. For a configuration with parameter vector $p$ and a training configuration $p'$, both normalized by the observed range of each parameter across all available configurations:
+Used for the nearest-training-config baseline. For a configuration with parameter vector $p$ and a training configuration $p'$, both normalized by the observed range of each parameter across the available training configurations:
 
 $$d(p, p') = \left\| \frac{p - p'}{\text{range}} \right\|_2$$
 
@@ -28,7 +28,7 @@ Normalization ensures parameters with different physical scales contribute equal
 
 ## Appendix: cosine latitude weights
 
-We use the area weight of $w_h = \cos(\phi_h)$ for a row $h$ in lat-lon grids.
+The current implementation uses $w_h = \cos(\phi_h)$. The derivation below assumes uniform latitude spacing. Gaussian grids require their quadrature weights for the corresponding integration rule.
 
 ### Area element on the sphere
 

@@ -1,5 +1,7 @@
 # 01. Compact the code and documents
 
+[Detailed implementation plan](01-compaction-plan.md)
+
 **Change:** keep the current computational logic and make the project smaller and easier to follow.
 
 - Remove unused code, unused APIs, obsolete commands, and redundant documents. Check notebooks, scripts, and other callers before deleting them.

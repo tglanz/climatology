@@ -8,7 +8,7 @@
 - Keep the last valid input window and honor every configured target variable.
 - Make the reader's cache work, stop validation from closing a caller's dataset, and reject splits with no training samples.
 
-Start in `ml/src/ml/data/` and `ml/src/ml/diagnostics/evaluation.py`.
+Start in `ml/src/ml/data/` and `ml/src/ml/data/evaluation.py` and `ml/src/ml/diagnostics/errors.py`.
 
 ## Training
 
@@ -21,12 +21,12 @@ Start in `ml/src/ml/training/`, `config.py`, and the shared prediction code.
 
 ## Evaluation
 
-- Correct latitude-weighted profile errors and the broken spectrum helper.
+- Correct latitude-weighted profile errors.
 - Build train baselines from train data only. The current fallback can use test targets.
 - Describe replicate variability accurately; it is not automatically a minimum possible prediction error.
 - Make scores, plot labels, and reports agree with what was computed. Do not include figures left over from a previous evaluation.
 
-Start in `ml/src/ml/diagnostics/` and the evaluation code extracted from `cmd/evaluate.py`.
+Start in `ml/src/ml/diagnostics/` and `ml/src/ml/usecases/evaluate.py`.
 
 **Why:** these errors can change which samples are used, what the model learns, and the scores used to judge it. Source inspection and small checks established the defects; their effect on overall model quality has not been measured.
 

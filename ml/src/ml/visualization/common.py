@@ -15,7 +15,9 @@ KNOWN_VARIABLES = {
 }
 
 
-def resolve_variable_info(variable_name: str, variable_info: VariableInfo = None) -> VariableInfo:
+def resolve_variable_info(
+    variable_name: str, variable_info: VariableInfo = None
+) -> VariableInfo:
     if variable_info:
         return variable_info
     if variable_name not in KNOWN_VARIABLES:

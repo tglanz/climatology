@@ -1,5 +1,11 @@
 # Dataset Proposal: Vorticity to Climatological Jet Learning
 
+Historical proposal from 2026-06-29. Settings and expected sample counts below
+record the proposal; current configuration and actual results may differ.
+Use the [simulation README](../sim/README.md) and [ML README](../ml/README.md)
+for current commands.
+
+
 ---
 
 # Parameter space

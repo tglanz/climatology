@@ -67,354 +67,60 @@ exp/test_cases/barotropic_vorticity_equation/barotropic_vor_eq_stirring_test.py
 
 ---
 
-## Setup and Installation
-
-For full installation instructions see https://execlim.github.io/Isca/.
-
-> If running inside the `sim` devcontainer, steps 1-3 below are handled automatically
-> at container creation: the conda environment is created, the `isca` Python package is
-> installed, and all environment variables are set. Skip directly to step 4 to verify.
-
-### 1. Create the Isca conda environment
-
-```bash
-conda env create -f submodules/isca/ci/environment-py.yml
-conda activate isca_env
-```
-
-This installs all required dependencies: `gfortran`, `openmpi`, `netcdf-fortran`,
-`numpy`, `xarray`, `pandas`, `f90nml`, `jinja2`, `sh`, and `tqdm`.
-
-### 2. Install the Isca Python package
-
-```bash
-cd submodules/isca/src/extra/python
-pip install -e .
-```
-
-The `-e` flag installs in editable mode: changes to the source are immediately
-reflected without reinstalling.
-
-### 3. Set required environment variables
-
-Add these to your `~/.bashrc` so they persist across sessions:
-
-```bash
-# Root of the Isca source tree
-export GFDL_BASE=/path/to/climatology/submodules/isca
-
-# Selects the compiler env file from $GFDL_BASE/src/extra/env/
-# 'ubuntu_conda' is appropriate for Linux + conda + gfortran
-export GFDL_ENV=ubuntu_conda
-
-# Where compiled binaries and run directories are written
-export GFDL_WORK=/path/to/isca_work
-
-# Where completed run output is stored
-export GFDL_DATA=/path/to/isca_data
-```
-
-Then reload:
-
-```bash
-source ~/.bashrc
-```
-
-`GFDL_BASE` and `GFDL_ENV` are required at import time by the `isca` Python package.
-`GFDL_WORK` and `GFDL_DATA` control where compiled code and model output land.
-
-The env files in `$GFDL_BASE/src/extra/env/` set compiler variables (`F90=mpifort`,
-`CC=mpicc`) and the Makefile template. For HPC clusters a different env file is
-typically needed -- see `src/extra/env/` for available options.
-
-### 4. Verify
-
-```bash
-python -c "from isca import BarotropicCodeBase; print('OK')"
-```
-
----
-
-## Running the Test Case
-
-The experiment script is at `sim/barotropic_stirring.py`. Run it with:
-
-```bash
-conda activate isca_env
-python sim/barotropic_stirring.py
-```
-
-The script automatically detects the number of available CPUs and rounds down to the
-nearest power of 2 (the requirement imposed by Isca's MPI domain decomposition).
-
-`cb.compile()` compiles to `$GFDL_WORK/codebase`. Subsequent runs reuse the compiled
-binary unless recompilation is requested.
-
----
-
-## Namelist Parameters
-
-All namelists are passed as a dict to `Experiment.namelist`.
-
-### `main_nml` -- Integration control
-
-| Parameter | Type | Default | Description |
-|---|---|---|---|
-| `days` | int | -- | Run segment length in days |
-| `hours` | int | -- | Additional hours |
-| `minutes` | int | -- | Additional minutes |
-| `seconds` | int | -- | Additional seconds |
-| `dt_atmos` | int (s) | -- | Model time step in seconds |
-| `calendar` | str | -- | Use `'no_calendar'` for the barotropic model |
-
-### `barotropic_dynamics_nml` -- Spectral dynamics
-
-Source: `barotropic_dynamics.F90`, lines 119-160.
-
-**Grid and spectral resolution**
-
-| Parameter | Type | Default | Description |
-|---|---|---|---|
-| `num_lat` | int | 128 | Number of Gaussian latitude grid points |
-| `num_lon` | int | 256 | Number of longitude grid points |
-| `num_fourier` | int | 85 | Maximum retained zonal [wavenumber](#spherical-harmonics-and-spectral-truncation) $m_{\max}$ |
-| `num_spherical` | int | 86 | Maximum retained total wavenumber index ($= m_{\max} + 1$ for [triangular truncation](#spherical-harmonics-and-spectral-truncation)) |
-| `fourier_inc` | int | 1 | Zonal wavenumber increment (1 = no skip) |
-| `triang_trunc` | bool | `.true.` | Use [triangular truncation](#spherical-harmonics-and-spectral-truncation) |
-
-The test case uses T85 resolution (128 Gaussian latitudes, 256 longitudes).
-
-**Diffusion**
-
-The model applies [spectral hyperdiffusion](#spectral-hyperdiffusion) of the form
-$D(\zeta) = -\nu (-\nabla^2)^p \zeta$ where $p$ is `damping_order`.
-
-| Parameter | Type | Default | Description |
-|---|---|---|---|
-| `damping_option` | str | `'resolution_dependent'` | Diffusion scheme. `'resolution_dependent'` scales the coefficient with resolution |
-| `damping_order` | int | 4 | Order $p$ of hyperdiffusion ($p=1$: Laplacian, $p=2$: biharmonic, etc.) |
-| `damping_coeff` | real (s$^{-1}$) | `1e-4` | Hyperdiffusion coefficient $\nu$ |
-| `damping_coeff_r` | real (s$^{-1}$) | `0.0` | Linear (Rayleigh) drag coefficient; applied at all wavenumbers |
-
-The stirring test case uses `damping_order=2` and `damping_coeff_r=1.929e-6`
-(a weak linear drag with timescale $\approx 6$ days) to prevent the zonal-mean flow
-from growing without bound.
-
-**Time filter**
-
-| Parameter | Type | Default | Description |
-|---|---|---|---|
-| `robert_coeff` | real | `0.04` | [Robert-Asselin filter](#robert-asselin-filter) coefficient for the leapfrog scheme |
-
-**Initial conditions**
-
-| Parameter | Type | Default | Description |
-|---|---|---|---|
-| `initial_zonal_wind` | str | `'two_jets'` | `'two_jets'`: analytic two-jet profile; `'zero'`: no initial mean flow |
-| `zeta_0` | real (s$^{-1}$) | `8e-5` | Amplitude of the superimposed initial [vorticity](#vorticity) perturbation |
-| `m_0` | int | 4 | Zonal [wavenumber](#spherical-harmonics-and-spectral-truncation) of the initial vorticity perturbation |
-| `eddy_lat` | real (deg) | 45.0 | Latitude of the initial vorticity perturbation |
-| `eddy_width` | real (deg) | 15.0 | Meridional Gaussian half-width of the initial perturbation |
-
-Set `zeta_0=0.0` for a purely zonal initial state with no perturbation.
-
-**Passive tracers**
-
-| Parameter | Type | Default | Description |
-|---|---|---|---|
-| `spec_tracer` | bool | `.true.` | Advect a passive tracer in spectral space |
-| `grid_tracer` | bool | `.true.` | Advect a passive tracer in grid space |
-
-Both tracers are initialized to $+1$ between 10-20 N and $-1$ poleward of 70 N.
-
----
-
-### `stirring_nml` -- Stochastic vorticity forcing
-
-Source: `stirring.F90`.
-
-The stirring scheme follows Vallis et al. (2004), equation A.6. At each time step, the
-spectral stirring field is updated as an [AR(1) process](#ar1-process):
-
-$$S^{n+1} = e^{-\Delta t/\tau} \, S^n + A \sqrt{1 - e^{-2\Delta t/\tau}} \, \xi^n$$
-
-where $\tau$ is `decay_time`, $A$ is `amplitude`, and $\xi^n$ is white noise in
-[spectral space](#spherical-harmonics-and-spectral-truncation). The forcing is then
-localized in physical space by a Gaussian envelope before being transformed back to
-spectral space and added to $\partial\zeta/\partial t$.
-
-**Reference:** Vallis, G. K., Gerber, E. P., Kushner, P. J., & Cash, B. A. (2004).
-A mechanism and simple dynamical model of the North Atlantic Oscillation and annular modes.
-*Journal of the Atmospheric Sciences*, 61(3), 264-280.
-https://doi.org/10.1175/1520-0469(2004)061<0264:AMASDM>2.0.CO;2
-
-| Parameter | Type | Default | Description |
-|---|---|---|---|
-| `amplitude` | real (s$^{-2}$) | `0.0` | Forcing amplitude $A$. **Must be non-zero** to activate stirring |
-| `decay_time` | real (s) | `172800` (2 days) | e-folding timescale $\tau$ of the [AR(1) process](#ar1-process); controls temporal correlation of the forcing |
-| `lat0` | real (deg) | `45.0` | Central latitude of the meridional Gaussian localization |
-| `widthy` | real (deg) | `12.0` | Meridional Gaussian half-width of the localization |
-| `lon0` | real (deg) | `180.0` | Central longitude for zonal localization (only active when `B != 0`) |
-| `widthx` | real (deg) | `45.0` | Zonal Gaussian half-width (only active when `B != 0`) |
-| `B` | real | `0.0` | Zonal modulation amplitude. `B=0`: forcing is zonally uniform; `B>0`: applies a zonal Gaussian of amplitude $B$ centered at `lon0` |
-| `do_localize` | bool | `.true.` | If `.false.`, the forcing is applied uniformly everywhere with no spatial envelope |
-| `n_total_forcing_min` | int | `9` | Only modes with total wavenumber $m+n >$ this value are forced |
-| `n_total_forcing_max` | int | `15` | Only modes with total wavenumber $m+n <$ this value are forced |
-| `zonal_forcing_min` | int | `3` | Only modes with zonal wavenumber $m >$ this value are forced |
-
-The wave mask selects spectral modes satisfying all three conditions simultaneously:
-$m > 3$, $m+n > 9$, $m+n < 15$. This targets synoptic-scale eddies and excludes the
-largest scales and the zonal mean.
-
-The test case value `amplitude=3e-11` with `decay_time=172800` (2 days) produces
-moderate mid-latitude stirring at T85.
-
----
-
-### `fms_nml` -- FMS runtime settings
-
-| Parameter | Type | Description |
-|---|---|---|
-| `print_memory_usage` | bool | Print memory usage to log |
-| `domains_stack_size` | int | Stack size for domain decomposition; increase if the model aborts with a stack error |
-
-### `fms_io_nml` -- I/O settings
-
-| Parameter | Type | Description |
-|---|---|---|
-| `threading_write` | str | `'single'`: one process writes output |
-| `fileset_write` | str | `'single'`: write a single output file, not one per MPI rank |
-
----
+## Setup and operation
+
+Use the [Isca environment instructions](conda-isca-env.md) for installation and
+environment variables. The [simulation README](../sim/README.md) owns compilation,
+single-run, and sweep commands. The entry point is `python -m sim.scanner`.
+
+Compiler configuration files under `submodules/isca/src/extra/env/` define
+`F90`, `CC`, and the Makefile template. Select one appropriate to the platform.
+Compilation writes shared build files and must finish before parallel runs.
+
+## Namelist parameters
+
+The [namelist reference](barotropic-namelist.md) owns source defaults, units, and
+parameter descriptions. Project settings are generated by
+[BarotropicStirring](../sim/barotropic_stirring.py); inspect a simulation's
+`namelist.json` for the settings that actually ran.
+
+The upstream stirring example uses T85 (128 Gaussian latitudes and 256
+longitudes), second-order hyperdiffusion, and linear drag
+`damping_coeff_r=1.929e-6` (about six days). Its example forcing amplitude is
+`3e-11`. These are upstream example settings, not the current scanner defaults.
+
+The stirring update and its localization are explained under
+[stochastic stirring](#stochastic-stirring) and [AR1 process](#ar1-process).
+The default wave mask requires all of `m > 3`, `m+n > 9`, and `m+n < 15`;
+it excludes the zonal mean and the largest scales.
 
 ## Diagnostics
 
-Diagnostics are registered via `DiagTable`. Fields from two modules are available.
+The [diagnostic field reference](barotropic-diagnostics.md) owns available fields,
+units, and source locations. The project's diagnostic table lives in
+[sim/barotropic_stirring.py](../sim/barotropic_stirring.py). Available Isca fields
+are not necessarily enabled in this table.
 
-### `barotropic_diagnostics`
+## Inspecting output
 
-| Field | Units | Description |
-|---|---|---|
-| `ucomp` | m s$^{-1}$ | Zonal wind $u$ |
-| `vcomp` | m s$^{-1}$ | Meridional wind $v$ |
-| `vor` | s$^{-1}$ | [Relative vorticity](#vorticity) $\zeta$ |
-| `pv` | s$^{-1}$ | [Absolute vorticity](#vorticity) $\zeta + f$ (labeled `pv` in the barotropic context) |
-| `stream` | m$^2$ s$^{-1}$ | [Streamfunction](#streamfunction) $\psi$ |
-| `trs` | -- | Spectral passive tracer |
-| `tr` | -- | Grid-space passive tracer |
-| `eddy_vor` | s$^{-1}$ | Non-zonal (eddy) component of $\zeta$ |
-| `delta_u` | m s$^{-1}$ | Change in zonal-mean zonal wind from initial state |
+The scanner writes
+`output/<experiment>/simulations/<code>-<replica>/runNNNN/atmos_daily.nc`
+and stores each simulation's namelist beside its segments. See the
+[ncdump reference](ncdump-cheatsheet.md) for file inspection commands.
 
-### `stirring_mod`
-
-| Field | Units | Description |
-|---|---|---|
-| `stirring` | s$^{-2}$ | Instantaneous stirring field $S$ in grid space |
-| `stirring_amp` | -- | Spatial amplitude envelope of the stirring |
-| `stirring_sqr` | s$^{-4}$ | Time-mean of $S^2$ over the full integration |
-
-Example diagnostic table configuration:
+Use the ML reader to handle Isca's nonstandard time metadata:
 
 ```python
-diag = DiagTable()
-diag.add_file('atmos_monthly', 30, 'days', time_units='days')
+from ml.data.isca_segment import read_segments
 
-diag.add_field('barotropic_diagnostics', 'ucomp',    time_avg=True)
-diag.add_field('barotropic_diagnostics', 'vcomp',    time_avg=True)
-diag.add_field('barotropic_diagnostics', 'vor',      time_avg=True)
-diag.add_field('barotropic_diagnostics', 'pv',       time_avg=True)
-diag.add_field('barotropic_diagnostics', 'stream',   time_avg=True)
-diag.add_field('barotropic_diagnostics', 'eddy_vor', time_avg=True)
-diag.add_field('stirring_mod',           'stirring', time_avg=True)
-
-exp.diag_table = diag
-```
-
----
-
-## Inspecting Output
-
-Output is written to `$GFDL_DATA/<experiment_name>/` as NetCDF files, one per segment.
-For the example script the path is:
-
-```
-$GFDL_DATA/barotropic_stirring/run0001/atmos_monthly.nc
-$GFDL_DATA/barotropic_stirring/run0002/atmos_monthly.nc
-...
-```
-
-### Quick inspection with ncdump
-
-`ncdump` (provided by the `netcdf-bin` package) lets you inspect a file without writing
-any code.
-
-```bash
-# Show dimensions, variables, and global attributes
-ncdump -h $GFDL_DATA/barotropic_stirring/run0001/atmos_monthly.nc
-
-# Dump values of a specific variable
-ncdump -v vor $GFDL_DATA/barotropic_stirring/run0001/atmos_monthly.nc
-```
-
-### Loading with xarray
-
-xarray is the standard way to work with Isca output in Python. It understands NetCDF
-dimensions and coordinates natively.
-
-```python
-import xarray as xr
-import os
-
-data_dir = os.path.join(os.environ['GFDL_DATA'], 'barotropic_stirring')
-
-# Load a single segment
-ds = xr.open_dataset(f'{data_dir}/run0001/atmos_monthly.nc')
+ds = read_segments("output/<experiment>/simulations/<code>-<replica>/run*/atmos_daily.nc",
+                   decode_time=True)
 print(ds)
-
-# Load all segments at once along the time dimension
-ds = xr.open_mfdataset(f'{data_dir}/run*/atmos_monthly.nc', combine='by_coords')
+ds.close()
 ```
 
-The dataset will have dimensions `(time, lat, lon)` and variables matching what was
-registered in the `DiagTable`.
-
-### Basic plots with matplotlib
-
-```python
-import matplotlib.pyplot as plt
-
-# Time-mean relative vorticity
-vor_mean = ds['vor'].mean('time')
-
-fig, ax = plt.subplots()
-vor_mean.plot(ax=ax, cmap='RdBu_r')
-ax.set_title('Time-mean relative vorticity')
-plt.show()
-
-# Zonal-mean zonal wind evolution over time
-u_zonal = ds['ucomp'].mean('lon')
-u_zonal.plot(x='time', y='lat', cmap='RdBu_r')
-plt.show()
-```
-
-### Checking for problems
-
-Before analysing results it is worth verifying the output is physically reasonable:
-
-```python
-import numpy as np
-
-# Vorticity should be O(1e-5) to O(1e-4) s^-1 in mid-latitudes
-print(ds['vor'].max().values, ds['vor'].min().values)
-
-# NaN values indicate the model blew up
-assert not ds['vor'].isnull().any(), "NaN detected in vorticity output"
-
-# delta_u shows how much the zonal-mean wind has changed from the initial state
-ds['delta_u'].mean('lon').plot(x='time', y='lat')
-```
-
----
+The field notebooks and the rotating-globe command are listed in the
+[ML README](../ml/README.md). Check variable availability before choosing a view.
 
 ## References
 

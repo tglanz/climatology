@@ -30,4 +30,5 @@ Reconsider stages, data passed between them, configuration, saved results, and e
 
 **Done when:** one documented workflow can run, reuse prepared data, save and reload a model, and reproduce evaluation. A small run provides useful feedback for routine changes.
 
-All phases are planned. This document does not begin implementation.
+Phase 1 is complete with recorded verification limits. Its [implementation record](../action-items/01-compaction-results.md)
+tracks checks and remaining limits. Phases 2 and 3 remain planned.

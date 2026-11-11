@@ -1,8 +1,7 @@
-from dataclasses import asdict, dataclass, field, fields
+from dataclasses import asdict, dataclass, field
 from enum import StrEnum
 from pathlib import Path
 import tomllib
-
 
 VALID_START_AT = ("beginning", "spinup")
 VALID_END_AT = ("end", "convergence")
@@ -16,8 +15,8 @@ class SpinupConfig:
     """Parameters for dynamic spin-up detection on the enstrophy series.
 
     Consumed by `find_spinup_time` in
-    `ml/src/ml/diagnostics/convergence.py`. Present only when the user
-    opts into spin-up detection by declaring `[data.windows.spinup]`.
+    `ml/src/ml/diagnostics/spinup.py`. Present only when the user
+    opts into spin-up detection by declaring `[data.spinup]`.
     """
 
     z_threshold: float
@@ -25,33 +24,38 @@ class SpinupConfig:
     window_size: int = 10
 
     def __post_init__(self):
-        assert self.z_threshold > 0.0, (
-            f"spinup.z_threshold must be positive, got {self.z_threshold}"
-        )
-        assert self.stable_time >= 1, f"spinup.stable_time must be >= 1, got {self.stable_time}"
-        assert self.window_size >= 2, f"spinup.window_size must be >= 2, got {self.window_size}"
+        assert (
+            self.z_threshold > 0.0
+        ), f"spinup.z_threshold must be positive, got {self.z_threshold}"
+        assert (
+            self.stable_time >= 1
+        ), f"spinup.stable_time must be >= 1, got {self.stable_time}"
+        assert (
+            self.window_size >= 2
+        ), f"spinup.window_size must be >= 2, got {self.window_size}"
 
     def to_kwargs(self) -> dict:
         return asdict(self)
+
 
 @dataclass
 class ConvergenceConfig:
     """Parameters for dynamic convergence detection on the running
     time-mean of the diagnostic.
 
-    Consumed by `find_convergence_time` in
+    Consumed by `find_zonal_mean_convergence_time` in
     `ml/src/ml/diagnostics/convergence.py`. Present only when the user
     opts into convergence detection by declaring
-    `[data.windows.convergence]`.
+    `[data.convergence]`.
     """
 
     threshold: float
     hold: int
 
     def __post_init__(self):
-        assert self.threshold > 0.0, (
-            f"convergence.threshold must be positive, got {self.threshold}"
-        )
+        assert (
+            self.threshold > 0.0
+        ), f"convergence.threshold must be positive, got {self.threshold}"
         assert self.hold >= 1, f"convergence.hold must be >= 1, got {self.hold}"
 
     def to_kwargs(self):
@@ -76,9 +80,9 @@ class ClimatologyConfig:
 
     def __post_init__(self):
         provided = sum(v is not None for v in [self.start_at, self.end_at, self.length])
-        assert provided == 2, (
-            f"exactly 2 of (start_at, end_at, length) must be set, got {provided}"
-        )
+        assert (
+            provided == 2
+        ), f"exactly 2 of (start_at, end_at, length) must be set, got {provided}"
         if self.start_at is not None:
             assert self.start_at in VALID_CLIMATOLOGY_START_AT, (
                 f"unknown climatology start_at: {self.start_at!r} "
@@ -90,7 +94,9 @@ class ClimatologyConfig:
                 f"(valid: {VALID_CLIMATOLOGY_END_AT})"
             )
         if self.length is not None:
-            assert self.length >= 1, f"climatology length must be >= 1, got {self.length}"
+            assert (
+                self.length >= 1
+            ), f"climatology length must be >= 1, got {self.length}"
 
 
 @dataclass
@@ -104,8 +110,8 @@ class WindowsConfig:
     Bounds:
         t_0_min = 0   if start_at == "beginning"
         t_0_min = t_s if start_at == "spinup"
-        t_0_max = M - K     if end_at == "end"
-        t_0_max = t_c       if end_at == "convergence"
+        t_0_max = M - K - 1 if end_at == "end"
+        t_0_max = min(t_c, M - K - 1) if end_at == "convergence"
 
     Cross-section validation (start_at requires [data.spinup],
     end_at requires [data.convergence]) lives in
@@ -120,18 +126,16 @@ class WindowsConfig:
     limit: int | None = None
 
     def __post_init__(self):
-        assert self.start_at in VALID_START_AT, (
-            f"unknown start_at: {self.start_at} (valid: {VALID_START_AT})"
-        )
-        assert self.end_at in VALID_END_AT, (
-            f"unknown end_at: {self.end_at} (valid: {VALID_END_AT})"
-        )
+        assert (
+            self.start_at in VALID_START_AT
+        ), f"unknown start_at: {self.start_at} (valid: {VALID_START_AT})"
+        assert (
+            self.end_at in VALID_END_AT
+        ), f"unknown end_at: {self.end_at} (valid: {VALID_END_AT})"
         assert self.length >= 1, f"length must be >= 1, got {self.length}"
         assert self.stride >= 1, f"stride must be >= 1, got {self.stride}"
         if self.limit is not None:
-            assert self.limit >= 1, (
-                f"limit must be >= 1 when set, got {self.limit}"
-            )
+            assert self.limit >= 1, f"limit must be >= 1 when set, got {self.limit}"
 
 
 @dataclass
@@ -141,16 +145,17 @@ class SplitConfig:
     test_hold_out: dict | None = None
 
     def __post_init__(self):
-        assert (self.test_ratio is None) != (self.test_hold_out is None), (
-            "exactly one of test_ratio or test_hold_out must be set"
-        )
-        assert 0.0 < self.validation_ratio < 1.0, (
-            f"validation_ratio must be in (0, 1), got {self.validation_ratio}"
-        )
+        assert (self.test_ratio is None) != (
+            self.test_hold_out is None
+        ), "exactly one of test_ratio or test_hold_out must be set"
+        assert (
+            0.0 < self.validation_ratio < 1.0
+        ), f"validation_ratio must be in (0, 1), got {self.validation_ratio}"
         if self.test_ratio is not None:
-            assert 0.0 < self.test_ratio < 1.0, (
-                f"test_ratio must be in (0, 1), got {self.test_ratio}"
-            )
+            assert (
+                0.0 < self.test_ratio < 1.0
+            ), f"test_ratio must be in (0, 1), got {self.test_ratio}"
+
 
 @dataclass
 class IscaDataConfig:
@@ -174,21 +179,24 @@ class IscaDataConfig:
 
     def __post_init__(self):
         if self.windows.start_at == "spinup":
-            assert self.spinup is not None, (
-                "windows.start_at = 'spinup' requires [data.spinup] section"
-            )
+            assert (
+                self.spinup is not None
+            ), "windows.start_at = 'spinup' requires [data.spinup] section"
         if self.windows.end_at == "convergence":
-            assert self.convergence is not None, (
-                "windows.end_at = 'convergence' requires [data.convergence] section"
-            )
+            assert (
+                self.convergence is not None
+            ), "windows.end_at = 'convergence' requires [data.convergence] section"
         if self.climatology.start_at == "spinup" or self.climatology.end_at == "spinup":
-            assert self.spinup is not None, (
-                "climatology anchor 'spinup' requires [data.spinup] section"
-            )
-        if self.climatology.start_at == "convergence" or self.climatology.end_at == "convergence":
-            assert self.convergence is not None, (
-                "climatology anchor 'convergence' requires [data.convergence] section"
-            )
+            assert (
+                self.spinup is not None
+            ), "climatology anchor 'spinup' requires [data.spinup] section"
+        if (
+            self.climatology.start_at == "convergence"
+            or self.climatology.end_at == "convergence"
+        ):
+            assert (
+                self.convergence is not None
+            ), "climatology anchor 'convergence' requires [data.convergence] section"
 
 
 @dataclass
@@ -239,9 +247,9 @@ class TargetLossStopConfig:
     monitor: str = "val"
 
     def __post_init__(self):
-        assert self.monitor in VALID_MONITORS, (
-            f"unknown monitor: {self.monitor} (valid: {VALID_MONITORS})"
-        )
+        assert (
+            self.monitor in VALID_MONITORS
+        ), f"unknown monitor: {self.monitor} (valid: {VALID_MONITORS})"
 
 
 @dataclass
@@ -255,12 +263,12 @@ class PatienceStopConfig:
 
     def __post_init__(self):
         assert self.patience > 0, f"patience must be positive, got {self.patience}"
-        assert self.min_delta >= 0, (
-            f"min_delta must be non-negative, got {self.min_delta}"
-        )
-        assert self.monitor in VALID_MONITORS, (
-            f"unknown monitor: {self.monitor} (valid: {VALID_MONITORS})"
-        )
+        assert (
+            self.min_delta >= 0
+        ), f"min_delta must be non-negative, got {self.min_delta}"
+        assert (
+            self.monitor in VALID_MONITORS
+        ), f"unknown monitor: {self.monitor} (valid: {VALID_MONITORS})"
 
 
 @dataclass
@@ -279,13 +287,13 @@ class RegularizationConfig:
 
     def __post_init__(self):
         if self.weight_decay is not None:
-            assert self.weight_decay >= 0, (
-                f"weight_decay must be non-negative, got {self.weight_decay}"
-            )
+            assert (
+                self.weight_decay >= 0
+            ), f"weight_decay must be non-negative, got {self.weight_decay}"
         if self.dropout is not None:
-            assert 0.0 <= self.dropout < 1.0, (
-                f"dropout must be in [0, 1), got {self.dropout}"
-            )
+            assert (
+                0.0 <= self.dropout < 1.0
+            ), f"dropout must be in [0, 1), got {self.dropout}"
 
 
 @dataclass
@@ -325,9 +333,9 @@ class SchedulerConfig:
     plateau: PlateauSchedulerConfig = field(default_factory=PlateauSchedulerConfig)
 
     def __post_init__(self):
-        assert self.kind in VALID_SCHEDULERS, (
-            f"unknown scheduler kind: {self.kind} (valid: {VALID_SCHEDULERS})"
-        )
+        assert (
+            self.kind in VALID_SCHEDULERS
+        ), f"unknown scheduler kind: {self.kind} (valid: {VALID_SCHEDULERS})"
 
 
 @dataclass
@@ -352,12 +360,12 @@ class TrainingConfig:
     regularization: RegularizationConfig = field(default_factory=RegularizationConfig)
 
     def __post_init__(self):
-        assert self.loss in LossKind, (
-            f"unknown loss: {self.loss!r} (valid: {[e.value for e in LossKind]})"
-        )
-        assert self.optimizer in VALID_OPTIMIZERS, (
-            f"unknown optimizer: {self.optimizer} (valid: {VALID_OPTIMIZERS})"
-        )
+        assert (
+            self.loss in LossKind
+        ), f"unknown loss: {self.loss!r} (valid: {[e.value for e in LossKind]})"
+        assert (
+            self.optimizer in VALID_OPTIMIZERS
+        ), f"unknown optimizer: {self.optimizer} (valid: {VALID_OPTIMIZERS})"
         if self.scheduler.cosine.t_max is None:
             self.scheduler.cosine.t_max = self.epochs
 
@@ -396,8 +404,14 @@ class PathsConfig:
     training_info_file: Path | None = None
 
     def __post_init__(self):
-        for f in ("experiment_dir", "preprocessed_dir", "training_dir",
-                  "epoch_metrics_file", "metrics_file", "splits_dir"):
+        for f in (
+            "experiment_dir",
+            "preprocessed_dir",
+            "training_dir",
+            "epoch_metrics_file",
+            "metrics_file",
+            "splits_dir",
+        ):
             v = getattr(self, f)
             if v is not None:
                 setattr(self, f, Path(v))
@@ -460,7 +474,9 @@ def load(path: Path) -> Config:
         windows=WindowsConfig(**d["windows"]),
         climatology=ClimatologyConfig(**d["climatology"]),
         spinup=SpinupConfig(**d["spinup"]) if "spinup" in d else None,
-        convergence=ConvergenceConfig(**d["convergence"]) if "convergence" in d else None,
+        convergence=(
+            ConvergenceConfig(**d["convergence"]) if "convergence" in d else None
+        ),
     )
 
     model_raw = raw["model"]

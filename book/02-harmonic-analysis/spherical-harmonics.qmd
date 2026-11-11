@@ -62,7 +62,7 @@ where $P_l$ is the Legendre polynomial of degree $l$. This identity is used to e
 
 ## Convolution on $S^2$
 
-A rotationally symmetric kernel $K(\hat{\mathbf{r}} \cdot \hat{\mathbf{r}}')$ (depending only on the angle between two points) acts by convolution on the sphere. By the addition theorem, convolution with such a kernel is diagonal in the spherical harmonic basis: each coefficient $\hat{f}_l^m$ is multiplied by a degree-dependent factor $\hat{K}_l$. This diagonalization property underlies both spectral numerical methods and the GSNO architecture.
+A rotationally symmetric kernel $K(\hat{\mathbf{r}} \cdot \hat{\mathbf{r}}')$ (depending only on the angle between two points) acts by convolution on the sphere. By the addition theorem, convolution with such a kernel is diagonal in the spherical harmonic basis: each coefficient $\hat{f}_l^m$ is multiplied by a degree-dependent factor $\hat{K}_l$. This diagonalization applies to rotationally symmetric kernels. More general position-dependent kernels need not act diagonally in this basis.
 
 *Further reading: @Tang2025gsno (GSNO paper, Sec. 2-3, where this diagonalization is the direct basis for the architecture); @Bonev2023sfno (Sec. 2, spherical harmonic convolution in the SFNO).*
 

@@ -28,9 +28,9 @@ def is_climatology_var(name: str) -> bool:
 
 
 def nc_var_for(diagnostic: str) -> str:
-    assert diagnostic in _REGISTRY, (
-        f"unknown climatology diagnostic: {diagnostic!r} (known: {sorted(_REGISTRY)})"
-    )
+    assert (
+        diagnostic in _REGISTRY
+    ), f"unknown climatology diagnostic: {diagnostic!r} (known: {sorted(_REGISTRY)})"
     return _REGISTRY[diagnostic]
 
 
@@ -79,7 +79,5 @@ def compute_climatology(
 
     Returns shape (H,) -- time-mean zonal-mean of the field.
     """
-    assert diagnostic in _REGISTRY, (
-        f"unknown climatology diagnostic: {diagnostic!r}"
-    )
+    assert diagnostic in _REGISTRY, f"unknown climatology diagnostic: {diagnostic!r}"
     return compute_time_mean_zonal_mean(field, a, b)

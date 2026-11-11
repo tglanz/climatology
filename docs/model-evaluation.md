@@ -1,109 +1,67 @@
-# Model Evaluation Plan
+# Model evaluation
 
-The model maps K vorticity snapshots to the long-run climatological zonal-mean zonal wind.
-Each experiment defines its own forcing parameter space. Forcing configurations are
-identified by their code (a hash of the parameter dict). The evaluation is generic over
-whatever parameters the experiment uses; no parameter names are hardcoded.
+The current model maps windows of vorticity snapshots to climatological
+zonal-mean zonal wind profiles. Forcing configurations use hash codes from the
+sweep metadata. Run from the repository root:
 
-Examples in this document use the current experiment's parameter space
-(lat0, amplitude, widthy) for concreteness. These are illustrations only.
+```bash
+uv run --project ml --group train --group vis ml evaluate model --training-dir <training-dir>
+```
 
----
+The command loads the saved configuration, parameters, normalization, and split
+manifest. It then reads every simulation currently present under the training
+directory's parent experiment. It rebuilds inputs from raw NetCDF data, predicts
+each window, and averages predictions within each simulation.
+The [norms reference](norms.md) defines the reported metrics.
 
-## Norms
+## Report sections
 
-See [docs/norms.md](norms.md) for definitions of relL2, RMSE, and normalized parameter distance.
+| Section | Current calculation |
+|---|---|
+| Training | Training and validation losses from the saved CSV |
+| Baselines | Zero prediction, mean training truth, nearest training configuration, and model, scored on test simulations |
+| Replicate variability | Mean relative L2 deviation of replica targets from their configuration mean |
+| Generalization | Error against each varying forcing parameter, plus profiles for the six worst configuration codes |
+| Error structure | Test error profiles, relative L2 histogram, and jet latitude and amplitude comparisons |
+| Model versus variability | Configuration-level model error against replicate deviation |
 
----
+The nearest-configuration distance uses Euclidean distance after normalizing
+parameters by their ranges among the available training configurations. Constant
+parameter ranges are replaced by one. The predictor averages training target
+profiles for the selected configuration.
 
-## 1. Baselines
+Jet latitude uses the location of the largest absolute profile value; amplitude
+uses its absolute magnitude. Error profiles are computed per simulation after
+averaging its window predictions.
 
-**Goal**: establish what the model needs to beat, and whether it actually beats it.
+## Existing limitations
 
-Four predictors, evaluated on the held-out test split:
+Compaction preserves the calculations and legacy figure labels. The sections
+named "noise floor" measure replicate variability. This statistic alone does not
+establish an irreducible prediction-error bound.
 
-| predictor               | description                                                       |
-|-------------------------|-------------------------------------------------------------------|
-| zero                    | predict zero everywhere; relL2 = 1 by construction               |
-| global train mean       | predict the mean target profile across the entire train set       |
-| nearest training config | predict the mean climatology of the closest training config in    |
-|                         | parameter space, using no vorticity                               |
-| model                   | trained SFNO                                                      |
+Preparation rejects missing convergence; CLI evaluation substitutes the final
+snapshot index. CLI evaluation uses the first configured target, whereas
+preparation can build several. Notebook evaluation also retains distinct window
+selection and metric conventions.
 
-The global train mean tests whether the model beats complete ignorance. It is a weak baseline and deliberately so.
+Loaded-model prediction omits the epsilon used during training normalization.
+Metrics and plots retain the grid and weighting behavior described in
+[norms](norms.md). If no training simulations load, the global baseline can fall
+back to test targets. Reports can include figures left from an earlier evaluation.
+These issues remain assigned to [action item 02](../action-items/02-correctness.md).
 
-The nearest-training-config baseline is the critical one. It uses only the forcing parameters, which are known at evaluation time, and no vorticity. If the model does not beat it, it is not extracting genuine information from the vorticity windows; it is effectively doing parameter-space lookup implicitly.
+The prepared-sample and by-code notebooks expose their original analyses through
+library calls. They are not interchangeable with the CLI's selection policy.
+Workflow and saved-input redesign belong to
+[action item 03](../action-items/03-pipeline.md).
 
-Distance is Euclidean over the normalized parameter vector. Each parameter is normalized by its observed range across all configurations so that no single parameter dominates by scale.
+## Output
 
-Plots:
-- Bar chart: relL2 for each predictor
-- Profile overlays: mean truth and each predictor's mean prediction over the test split
+The command writes `<training-dir>/evaluation/report.md` and figures under
+`<training-dir>/evaluation/figures/`.
 
----
-
-## 2. Noise floor
-
-**Goal**: quantify the irreducible error from stochastic forcing variability, per configuration.
-
-For each forcing configuration, the across-replicate std of the climatology profile sets the minimum achievable error. A perfect model that has learned the operator exactly would still incur this error because the stochastic seed shifts the climatology slightly between replicates. Expressed in relL2 units so it is directly comparable to model error.
-
-Plots:
-- Bar chart: noise floor per config code (sorted ascending), with model relL2 overlaid
-- Scatter: model relL2 vs noise floor relL2, one point per config, colored by split. The diagonal is the theoretical limit; points above it have room to improve.
-
----
-
-## 3. Generalization across the forcing parameter space
-
-**Goal**: determine whether the model learned the operator or memorized training configurations.
-
-Evaluate on every available forcing configuration. The key question: does error increase with distance from training configurations in parameter space? A memorizing model fails on configurations far from training; a generalizing model does not.
-
-For each forcing parameter, produce a marginal scatter: relL2 vs that parameter value, colored by split. This reveals which parameters drive error without assuming a fixed parameter space.
-
-Example: for the current experiment this produces three marginal plots: relL2 vs stirring_lat0, relL2 vs stirring_amplitude, and relL2 vs stirring_widthy.
-
-Plots:
-- One marginal scatter per varying parameter: relL2 vs parameter value, colored by split
-- Profile overlays for the 6 worst-scoring config codes
-
----
-
-## 4. Error structure
-
-**Goal**: characterize how the model fails, not just how much.
-
-relL2 is a scalar and masks the failure mode. Decompose error into:
-
-- **Bias by latitude**: mean of (pred - truth) across test sims at each latitude. Systematic bias at a latitude band means the model consistently misplaces or misshapes the jet there.
-- **Jet position error**: latitude of the predicted wind maximum vs truth. Getting the position wrong is physically distinct from blurring the amplitude.
-- **Amplitude error**: peak magnitude of the predicted jet vs truth, independent of position.
-
-Plots:
-- Mean bias profile with per-sample error fan
-- Histogram of per-sample relL2
-- Scatter: predicted jet latitude vs true jet latitude
-- Scatter: predicted jet amplitude vs true jet amplitude
-
----
-
-## 5. Model error vs noise floor
-
-**Goal**: identify which regimes the model handles well and which approach the noise floor.
-
-A single summary scatter (one point per config code, colored by split) places model relL2 on the y-axis and noise floor relL2 on the x-axis. The diagonal is the theoretical limit. Points on or below the diagonal are near the best achievable by any model; points above still have room to improve. Split-level patterns are immediately visible (e.g., test configs clustering above the diagonal signals extrapolation difficulty).
-
-Plots:
-- Scatter: model relL2 vs noise floor relL2, colored by split
-
----
-
-## Summary
-
-Outputs are written to `<training-dir>/evaluation/`: a `report.md` embedding all figures and a `figures/` directory with one PNG per plot.
-
-To convert to PDF:
+To make a PDF from an existing report:
 
 ```bash
 pandoc <training-dir>/evaluation/report.md -o <training-dir>/evaluation/report.pdf

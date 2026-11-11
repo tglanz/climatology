@@ -82,9 +82,7 @@ class TrainingInfo:
     ) -> None:
         self.end_time = _now_iso()
         self.total_epochs = total_epochs
-        self.best_val_loss = (
-            best_val_loss if best_val_loss < float("inf") else None
-        )
+        self.best_val_loss = best_val_loss if best_val_loss < float("inf") else None
         self.best_val_epoch = best_val_epoch if best_val_epoch > 0 else None
         self.stopped_early = stopped_early
 
@@ -157,12 +155,12 @@ def _collect_artifacts(cfg: "Config") -> dict[str, Any]:
     p = cfg.paths
     base = p.training_dir
     candidates = {
-        "config":         base / "config.toml",
-        "parameters":     p.checkpoint_dir / "parameters.pt",
-        "normalization":  p.checkpoint_dir / "normalization.pt",
-        "epoch_metrics":  p.epoch_metrics_file,
-        "metrics":        p.metrics_file,
-        "training_info":  p.training_info_file,
+        "config": base / "config.toml",
+        "parameters": p.checkpoint_dir / "parameters.pt",
+        "normalization": p.checkpoint_dir / "normalization.pt",
+        "epoch_metrics": p.epoch_metrics_file,
+        "metrics": p.metrics_file,
+        "training_info": p.training_info_file,
         "splits_manifest": p.preprocessed_dir / "splits.json",
     }
     return {name: _rel_to(path, base) for name, path in candidates.items()}
@@ -178,18 +176,24 @@ def _collect_data(cfg: "Config") -> dict[str, Any]:
         "split": d.split,
         "windows": {
             "start_at": d.windows.start_at,
-            "end_at":   d.windows.end_at,
-            "length":   d.windows.length,
-            "stride":   d.windows.stride,
-            "limit":    d.windows.limit,
+            "end_at": d.windows.end_at,
+            "length": d.windows.length,
+            "stride": d.windows.stride,
+            "limit": d.windows.limit,
         },
         "spinup": (
-            {"z_threshold": d.spinup.z_threshold, "stable_time": d.spinup.stable_time, "window_size": d.spinup.window_size}
-            if d.spinup is not None else None
+            {
+                "z_threshold": d.spinup.z_threshold,
+                "stable_time": d.spinup.stable_time,
+                "window_size": d.spinup.window_size,
+            }
+            if d.spinup is not None
+            else None
         ),
         "convergence": (
             {"threshold": d.convergence.threshold, "hold": d.convergence.hold}
-            if d.convergence is not None else None
+            if d.convergence is not None
+            else None
         ),
         "splits": {},
     }
@@ -293,7 +297,11 @@ def _git_sha() -> str | None:
             timeout=2,
         )
         return result.stdout.strip()
-    except (subprocess.CalledProcessError, FileNotFoundError, subprocess.TimeoutExpired):
+    except (
+        subprocess.CalledProcessError,
+        FileNotFoundError,
+        subprocess.TimeoutExpired,
+    ):
         return None
 
 

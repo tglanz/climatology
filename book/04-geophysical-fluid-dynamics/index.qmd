@@ -1,3 +1,5 @@
 # Geophysical Fluid Dynamics
 
-Introduces the physical system the model will be applied to. Covers the rotating-Earth framework - the Coriolis parameter, the $f$- and $\beta$-plane approximations, and Rossby waves as the dominant large-scale atmospheric wave mode. Derives the Conservation of Potential Vorticity and the Barotropic Vorticity Equation (BVE), which is the PDE the GSNO will be trained to solve. Without this chapter the model is a black box; with it, the architecture choices and the choice of Green's function make physical sense.
+The rotating-frame equations introduce the Coriolis force and the variation of
+planetary vorticity. Vorticity and circulation connect these equations to shallow
+horizontal flow and the barotropic vorticity equation.

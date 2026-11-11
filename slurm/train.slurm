@@ -37,5 +37,5 @@ fi
 cd $SLURM_SUBMIT_DIR/..
 source ./ml/.venv/bin/activate
 
-uv run ml train -c "$CONFIG" --workers 8 --track-metrics
+uv run --project ml ml train -c "$CONFIG" --workers 8 --track-metrics
 curl -s -d "train $(basename "$CONFIG" .toml) done" ntfy.sh/tglanz-general-51189

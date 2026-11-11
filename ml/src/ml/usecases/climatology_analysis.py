@@ -32,10 +32,14 @@ def _collect_climatologies(
         )
     else:
         executor = ProcessPoolExecutor(max_workers=n_workers)
-        futures = {executor.submit(process_one_sim, d, config_path): d for d in sim_dirs}
+        futures = {
+            executor.submit(process_one_sim, d, config_path): d for d in sim_dirs
+        }
         results = (
             (futures[f], f.result())
-            for f in tqdm(as_completed(futures), total=len(sim_dirs), desc="processing sims")
+            for f in tqdm(
+                as_completed(futures), total=len(sim_dirs), desc="processing sims"
+            )
         )
 
     groups: dict[str, list[tuple[Path, np.ndarray]]] = defaultdict(list)
@@ -63,7 +67,11 @@ def _within_group_loss(
     losses = []
     for clim in clims:
         pred = clim.squeeze(0) if clim.ndim > 1 and clim.shape[0] == 1 else clim
-        truth = grand_mean.squeeze(0) if grand_mean.ndim > 1 and grand_mean.shape[0] == 1 else grand_mean
+        truth = (
+            grand_mean.squeeze(0)
+            if grand_mean.ndim > 1 and grand_mean.shape[0] == 1
+            else grand_mean
+        )
         losses.append(lat_weighted_relative_l2(pred, truth, latitudes))
 
     return float(np.mean(losses)), float(np.std(losses))
@@ -95,10 +103,14 @@ def run(config_path: Path, n_workers: int = 0) -> None:
             continue
         mean_loss, std_loss = _within_group_loss(clims, latitudes)
         all_losses.extend([mean_loss] * len(clims))
-        print(f"{label:<{col_w}} {len(clims):>6}  {mean_loss:>10.4f}  {std_loss:>10.4f}")
+        print(
+            f"{label:<{col_w}} {len(clims):>6}  {mean_loss:>10.4f}  {std_loss:>10.4f}"
+        )
 
     if all_losses:
         print("-" * (col_w + 32))
-        print(f"{'overall':<{col_w}} {len(sim_dirs):>6}  {np.mean(all_losses):>10.4f}  {np.std(all_losses):>10.4f}")
+        print(
+            f"{'overall':<{col_w}} {len(sim_dirs):>6}  {np.mean(all_losses):>10.4f}  {np.std(all_losses):>10.4f}"
+        )
         print(f"\nNoise floor (mean within-config loss): {np.mean(all_losses):.4f}")
         print("A model cannot do better than this on per-replicate targets.")

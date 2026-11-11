@@ -65,3 +65,7 @@ disable = [
     "missing-module-docstring",
     "too-many-locals",
 ]
+
+# HDF5 lookups return groups or datasets; pylint infers only the group case.
+[tool.pylint.typecheck]
+ignored-classes = ["h5py._hl.group.Group"]

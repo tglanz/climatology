@@ -8,7 +8,7 @@ At a high level, preprocessing extracts pairs from one simulation by:
 
 1. Detecting the spinup time $t_s$.
 2. Detecting the convergence time $t_c$.
-3. Slicing the snapshots between $t_s$ and $t_c$ into $K$-length windows.
+3. Selecting $K$-length windows using the configured start, end, stride, and limit.
 4. For each window $W = (S_{j_1}, \dots, S_{j_K})$:
    - Compute the input diagnostics $X_W$.
    - Compute the target diagnostic $Y_W$.
@@ -29,7 +29,7 @@ Each training pair labels its diagnostics by role:
 - An **input diagnostic** is one that contributes to $X$.
 - A **target diagnostic** is one that contributes to $Y$.
 
-A pair can carry several input diagnostics (typically a sequence of step diagnostics across the window) and a single target diagnostic (which may itself be a step or a climatology diagnostic).
+A pair carries configured input variables in time order, then variable order within each snapshot. Its target channels are the configured climatology diagnostics. Each target is repeated for every retained window from the same simulation.
 
 ## Spinup
 
@@ -77,13 +77,13 @@ Set the reference start to $t_{\text{ref}} = t_s$ when spinup has been detected,
    with weights $w_j = \cos(\mathrm{lat}_j)$ normalised so their mean is one.
 2. Return $t_c = t_{\text{ref}} + i^*$, where $i^*$ is the smallest $i$ such that $\varepsilon_{i + k} < \tau_c$ for every $k = 0, 1, \dots, h_c - 1$.
 
-The threshold $\tau_c$ and the consecutive-count $h_c$ are exposed in the configuration. If no $i$ satisfies the condition, the simulation has not converged under this criterion; downstream, the windowing step then drops it when configured to cap at $t_c$.
+The threshold $\tau_c$ and the consecutive-count $h_c$ are exposed in the configuration. If no $i$ satisfies the condition, the simulation has not converged under this criterion; preprocessing rejects that simulation when convergence detection is configured.
 
 Convergence detection is optional. When it is omitted, no $t_c$ is computed and windowing ends at the last admissible window-start index.
 
 ## Windowing
 
-Given a trajectory of $M$ snapshots and the (possibly missing) $t_s$ and $t_c$, the windowing step emits a sorted list of window-start indices $t_0$. A window of length $K$ occupies snapshots $t_0, t_0 + 1, \dots, t_0 + K - 1$. The next-step target sits at $t_0 + K$, so admissibility requires $0 \leq t_0 \leq M - K - 1$.
+Given a trajectory of $M$ snapshots and the (possibly missing) $t_s$ and $t_c$, the windowing step emits a sorted list of window-start indices $t_0$. A window of length $K$ occupies snapshots $t_0, t_0 + 1, \dots, t_0 + K - 1$. The current selector retains the older next-step upper bound $0 \leq t_0 \leq M - K - 1$, even though the retained target is a climatology profile. This excludes the last complete input window; correcting that bound belongs to [action item 02](../action-items/02-correctness.md).
 
 The window-start range is
 

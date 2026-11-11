@@ -3,6 +3,10 @@
 Barotropic vorticity equation simulations using Isca.
 
 Run all commands from the repository root.
+Set up the [Isca conda environment](../docs/conda-isca-env.md) first.
+See the [model explanation](../docs/isca-barotropic-stirring.md),
+[namelist reference](../docs/barotropic-namelist.md), and
+[diagnostic fields](../docs/barotropic-diagnostics.md) for methods and source details.
 
 ## Mac: prevent sleep during long runs
 

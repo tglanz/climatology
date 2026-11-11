@@ -47,11 +47,11 @@ echo "Splits dir: $SPLITS_DIR"
 
 
 echo "Generating splits..."
-uv run ml preprocess generate-splits -c "$CONFIG" --name "$SPLIT_NAME"
+uv run --project ml ml preprocess generate-splits -c "$CONFIG" --name "$SPLIT_NAME"
 curl -s -d "generate splits $SPLIT_NAME done" ntfy.sh/tglanz-general-51189
 
 echo "Preprocessing..."
-uv run ml preprocess training-data -c "$CONFIG" \
+uv run --project ml ml preprocess training-data -c "$CONFIG" \
     --split "$SPLITS_DIR/$SPLIT_NAME.json" \
     --workers 8
 

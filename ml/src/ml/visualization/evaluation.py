@@ -4,6 +4,7 @@ Plot functions for model evaluation.
 All functions return a matplotlib Figure. No plt.show() or file saving
 is done here -- that is the orchestrator's responsibility.
 """
+
 from __future__ import annotations
 
 from pathlib import Path
@@ -11,6 +12,7 @@ from typing import Sequence
 
 import numpy as np
 import matplotlib
+
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import matplotlib.cm as cm
@@ -56,6 +58,7 @@ def plot_baselines_profiles(
 
 def plot_training_curve(csv_path: Path) -> plt.Figure:
     import csv
+
     epochs, train_loss, val_loss = [], [], []
     with open(csv_path) as f:
         for row in csv.DictReader(f):
@@ -88,7 +91,14 @@ def plot_noise_floor_summary(
 
     x = np.arange(len(sorted_codes))
     fig, ax = plt.subplots(figsize=(max(8, len(codes) * 0.35), 4))
-    ax.bar(x, sorted_noise, color="tab:gray", alpha=0.6, label="noise floor", edgecolor="none")
+    ax.bar(
+        x,
+        sorted_noise,
+        color="tab:gray",
+        alpha=0.6,
+        label="noise floor",
+        edgecolor="none",
+    )
     ax.scatter(x, sorted_model, color="tab:blue", s=18, zorder=3, label="model relL2")
     ax.set_xticks(x)
     ax.set_xticklabels(sorted_codes, rotation=90, fontsize=6)
@@ -96,35 +106,6 @@ def plot_noise_floor_summary(
     ax.set_title("Noise floor vs model relL2 (per config code)")
     ax.legend(fontsize=8)
     ax.grid(axis="y", alpha=0.3)
-    fig.tight_layout()
-    return fig
-
-
-def plot_noise_floor_code(
-    code: str,
-    lat: np.ndarray,
-    profiles: list[np.ndarray],
-    ensemble_mean: np.ndarray,
-    ensemble_std: np.ndarray,
-) -> plt.Figure:
-    """Per-code profile overlays with std band."""
-    fig, ax = plt.subplots(figsize=(5, 5))
-    for p in profiles:
-        ax.plot(p, lat, color="tab:gray", linewidth=0.6, alpha=0.5)
-    ax.plot(ensemble_mean, lat, color="tab:blue", linewidth=1.5, label="ensemble mean")
-    ax.fill_betweenx(
-        lat,
-        ensemble_mean - ensemble_std,
-        ensemble_mean + ensemble_std,
-        alpha=0.25,
-        color="tab:blue",
-        label="mean +/- std",
-    )
-    ax.set_xlabel("u [m/s]")
-    ax.set_ylabel("lat [deg]")
-    ax.set_title(f"Replicate profiles: {code}")
-    ax.legend(fontsize=8)
-    ax.grid(alpha=0.3)
     fig.tight_layout()
     return fig
 
@@ -137,7 +118,12 @@ def plot_generalization_param(
 ) -> plt.Figure:
     """Scatter of relL2 vs parameter value, colored by split."""
     split_order = ["train", "val", "test", "unknown"]
-    palette = {"train": "tab:blue", "val": "tab:orange", "test": "tab:red", "unknown": "tab:gray"}
+    palette = {
+        "train": "tab:blue",
+        "val": "tab:orange",
+        "test": "tab:red",
+        "unknown": "tab:gray",
+    }
     fig, ax = plt.subplots(figsize=(6, 4))
     added = set()
     for pv, rel, spl in zip(param_values, model_rels, split_labels):
@@ -164,12 +150,16 @@ def plot_generalization_worst(
     n = len(worst_cases)
     ncols = 3
     nrows = (n + ncols - 1) // ncols
-    fig, axes = plt.subplots(nrows, ncols, figsize=(ncols * 3.5, nrows * 3.5), constrained_layout=True)
+    fig, axes = plt.subplots(
+        nrows, ncols, figsize=(ncols * 3.5, nrows * 3.5), constrained_layout=True
+    )
     axes_flat = list(np.array(axes).flat) if n > 1 else [axes]
     for k, (code, truth_p, pred_p, rel) in enumerate(worst_cases):
         ax = axes_flat[k]
         ax.plot(truth_p, lat, color="tab:orange", linewidth=1.4, label="truth")
-        ax.plot(pred_p, lat, color="tab:blue", linewidth=1.4, linestyle="--", label="pred")
+        ax.plot(
+            pred_p, lat, color="tab:blue", linewidth=1.4, linestyle="--", label="pred"
+        )
         ax.set_title(f"{code}  relL2={rel:.3f}", fontsize=8)
         ax.set_xlabel("u [m/s]", fontsize=7)
         if k % ncols == 0:
@@ -210,7 +200,13 @@ def plot_error_histogram(
     fig, ax = plt.subplots(figsize=(5, 4))
     ax.hist(rel_l2_vals, bins=40, edgecolor="black", linewidth=0.4)
     median = float(np.median(rel_l2_vals))
-    ax.axvline(median, color="tab:red", linewidth=1.4, linestyle="--", label=f"median={median:.4f}")
+    ax.axvline(
+        median,
+        color="tab:red",
+        linewidth=1.4,
+        linestyle="--",
+        label=f"median={median:.4f}",
+    )
     ax.set_xlabel("relL2")
     ax.set_ylabel("count")
     ax.set_title("Per-sample relL2 distribution (test split)")
@@ -253,7 +249,12 @@ def plot_model_vs_noise_floor(
     Points above the diagonal have model error exceeding the noise floor.
     Points on or below the diagonal are near the achievable limit.
     """
-    palette = {"train": "tab:blue", "val": "tab:orange", "test": "tab:red", "unknown": "tab:gray"}
+    palette = {
+        "train": "tab:blue",
+        "val": "tab:orange",
+        "test": "tab:red",
+        "unknown": "tab:gray",
+    }
     fig, ax = plt.subplots(figsize=(6, 6))
     added: set[str] = set()
     for code, nf, mr, spl in zip(codes, noise_rels, model_rels, split_labels):
@@ -272,44 +273,4 @@ def plot_model_vs_noise_floor(
     ax.legend(fontsize=8)
     ax.grid(alpha=0.3)
     fig.tight_layout()
-    return fig
-
-
-def plot_per_config(
-    code: str,
-    lat: np.ndarray,
-    truth_profiles: list[np.ndarray],
-    pred_profiles: list[np.ndarray],
-    pred_window_variance: np.ndarray,
-) -> plt.Figure:
-    """3-panel per-config figure: truth vs pred profiles, error profile, window variance."""
-    fig, axes = plt.subplots(1, 3, figsize=(12, 4), constrained_layout=True)
-
-    ax0 = axes[0]
-    for tp in truth_profiles:
-        ax0.plot(tp, lat, color="tab:orange", linewidth=0.8, alpha=0.6)
-    for pp in pred_profiles:
-        ax0.plot(pp, lat, color="tab:blue", linewidth=0.8, alpha=0.6, linestyle="--")
-    ax0.set_title("truth (orange) vs pred (blue)")
-    ax0.set_xlabel("u [m/s]")
-    ax0.set_ylabel("lat [deg]")
-    ax0.grid(alpha=0.3)
-
-    ax1 = axes[1]
-    truth_mean = np.mean(truth_profiles, axis=0)
-    pred_mean = np.mean(pred_profiles, axis=0)
-    error = pred_mean - truth_mean
-    ax1.plot(error, lat, color="tab:red", linewidth=1.4)
-    ax1.axvline(0.0, color="black", linewidth=0.6, linestyle="--")
-    ax1.set_title("mean error (pred - truth)")
-    ax1.set_xlabel("error [m/s]")
-    ax1.grid(alpha=0.3)
-
-    ax2 = axes[2]
-    ax2.plot(pred_window_variance, lat, color="tab:green", linewidth=1.4)
-    ax2.set_title("prediction std across windows")
-    ax2.set_xlabel("std [m/s]")
-    ax2.grid(alpha=0.3)
-
-    fig.suptitle(f"Config: {code}")
     return fig

@@ -21,21 +21,29 @@ class Splits:
         self.validation = validation
         self.train = train
 
-    def save(self, splits_dir: Path, name: str, description: str, split_config: SplitConfig) -> Path:
+    def save(
+        self, splits_dir: Path, name: str, description: str, split_config: SplitConfig
+    ) -> Path:
         splits_dir.mkdir(parents=True, exist_ok=True)
         path = splits_dir / f"{name}.json"
         base = path.parent
         with open(path, "w") as f:
-            json.dump({
-                "meta": {
-                    "description": description,
-                    "timestamp": datetime.now(timezone.utc).isoformat(),
-                    "config": asdict(split_config),
+            json.dump(
+                {
+                    "meta": {
+                        "description": description,
+                        "timestamp": datetime.now(timezone.utc).isoformat(),
+                        "config": asdict(split_config),
+                    },
+                    "test": [os.path.relpath(p, start=base) for p in self.test],
+                    "validation": [
+                        os.path.relpath(p, start=base) for p in self.validation
+                    ],
+                    "train": [os.path.relpath(p, start=base) for p in self.train],
                 },
-                "test": [os.path.relpath(p, start=base) for p in self.test],
-                "validation": [os.path.relpath(p, start=base) for p in self.validation],
-                "train": [os.path.relpath(p, start=base) for p in self.train],
-            }, f, indent=2)
+                f,
+                indent=2,
+            )
         log.info("saved split %r to %s", name, path)
         return path
 
@@ -62,7 +70,9 @@ def generate(
 ) -> Splits:
     if config.test_ratio is not None:
         return _ratio_split(sim_dirs, config.test_ratio, config.validation_ratio)
-    return _hold_out_matrix_split(sim_dirs, config.test_hold_out, config.validation_ratio, sweep)
+    return _hold_out_matrix_split(
+        sim_dirs, config.test_hold_out, config.validation_ratio, sweep
+    )
 
 
 def _config_key(sim_dir: Path) -> str:
@@ -85,8 +95,8 @@ def _ratio_split(sim_dirs: list[Path], test_ratio: float, val_ratio: float) -> S
     n_val = max(1, round(n * val_ratio))
 
     test_codes = codes[:n_test]
-    val_codes = codes[n_test:n_test + n_val]
-    train_codes = codes[n_test + n_val:]
+    val_codes = codes[n_test : n_test + n_val]
+    train_codes = codes[n_test + n_val :]
 
     return Splits(
         test=[d for c in test_codes for d in groups[c]],

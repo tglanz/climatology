@@ -15,4 +15,5 @@ import torch
 def apply() -> None:
     if torch.backends.mps.is_available():
         from ml.patches.neuralop import patch_sht_dtype_device_order
+
         patch_sht_dtype_device_order()

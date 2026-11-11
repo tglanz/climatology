@@ -5,8 +5,9 @@ import xarray as xr
 
 type SegmentsCache = dict[Path, xr.Dataset]
 
-# I don't know :(
-# Without this the ds is unreadable
+
+# Isca's no-calendar metadata is not CF-decodable. Use a valid epoch and
+# a 360-day calendar so xarray can decode it for visualization.
 def fix_time_units(ds: xr.Dataset) -> xr.Dataset:
     for v in ds.variables:
         if "units" in ds[v].attrs and "0000-00-00" in ds[v].attrs["units"]:
@@ -17,6 +18,7 @@ def fix_time_units(ds: xr.Dataset) -> xr.Dataset:
             ds[v].attrs["calendar"] = "360_day"
     return ds
 
+
 def read_segment(nc_path: Path, cache: SegmentsCache | None = None) -> xr.Dataset:
     if cache and nc_path in cache:
         return cache[nc_path]
@@ -26,9 +28,13 @@ def read_segment(nc_path: Path, cache: SegmentsCache | None = None) -> xr.Datase
         cache[nc_path] = ds
     return ds
 
-def aggregated_read_field(nc_paths: list[Path], field_name: str, cache: SegmentsCache | None = None):
+
+def aggregated_read_field(
+    nc_paths: list[Path], field_name: str, cache: SegmentsCache | None = None
+):
     arrays = [read_segment(nc_path, cache)[field_name] for nc_path in nc_paths]
     return np.concatenate(arrays, axis=0)
+
 
 def validate_segment_dataset(ds: xr.Dataset, x_vars: list[str], y_vars: list[str]):
     all_vars = list(dict.fromkeys(x_vars + y_vars))
@@ -50,14 +56,20 @@ def validate_segment_dataset(ds: xr.Dataset, x_vars: list[str], y_vars: list[str
     ds.close()
     return num_samples, spatial_shape
 
+
 def validate_segment(
-    nc_path: Path, x_vars: list[str], y_vars: list[str], cache: SegmentsCache | None = None
+    nc_path: Path,
+    x_vars: list[str],
+    y_vars: list[str],
+    cache: SegmentsCache | None = None,
 ) -> tuple[int, tuple]:
     ds = read_segment(nc_path, cache)
     return validate_segment_dataset(ds, x_vars, y_vars)
 
 
-def read_segments(paths: str | Path | list[str | Path], decode_time: bool = False) -> xr.Dataset:
+def read_segments(
+    paths: str | Path | list[str | Path], decode_time: bool = False
+) -> xr.Dataset:
     ds = xr.open_mfdataset(
         paths,
         combine="by_coords",
@@ -73,8 +85,9 @@ def read_segments(paths: str | Path | list[str | Path], decode_time: bool = Fals
 
     return ds
 
+
 def _decode_time(ds: xr.Dataset) -> xr.Dataset:
-    """ Used for visualization """
+    """Used for visualization"""
     ds = xr.decode_cf(
         ds,
         decode_times=xr.coders.CFDatetimeCoder(use_cftime=True),

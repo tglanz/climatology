@@ -5,6 +5,7 @@ import click
 from ml.config import load as load_config
 from ml.common.logging import setup_logging
 
+
 class _OrderedGroup(click.Group):
     def list_commands(self, ctx):
         return list(self.commands)
@@ -53,9 +54,17 @@ def preprocess():
     show_default=True,
     help="Number of parallel worker processes. 0 = run on main thread",
 )
-def validate_simulations(config_path: Path, invalid_only: bool, validate_spinup: bool, validate_convergence: bool, validate_climatology: bool, workers: int):
+def validate_simulations(
+    config_path: Path,
+    invalid_only: bool,
+    validate_spinup: bool,
+    validate_convergence: bool,
+    validate_climatology: bool,
+    workers: int,
+):
     """Check simulations are complete and valid."""
     from ml.usecases.validate_simulations import run
+
     setup_logging(load_config(config_path).logging)
 
     n_invalid = run(
@@ -72,9 +81,15 @@ def validate_simulations(config_path: Path, invalid_only: bool, validate_spinup:
 
 
 @preprocess.command("create-sweep-file")
-@click.option("--experiment-dir", "experiment_dir", required=True, type=click.Path(file_okay=False, path_type=Path))
 @click.option(
-    "--key", "keys",
+    "--experiment-dir",
+    "experiment_dir",
+    required=True,
+    type=click.Path(file_okay=False, path_type=Path),
+)
+@click.option(
+    "--key",
+    "keys",
     multiple=True,
     required=True,
     help="alias=nml.path, e.g. stirring_lat0=stirring_nml.lat0. Repeat for multiple keys.",
@@ -94,24 +109,51 @@ def create_sweep_file(experiment_dir: Path, keys: tuple[str, ...]):
 
 
 @preprocess.command("generate-splits")
-@click.option("-c", "--config", "config_path", required=True, type=click.Path(exists=True, path_type=Path))
+@click.option(
+    "-c",
+    "--config",
+    "config_path",
+    required=True,
+    type=click.Path(exists=True, path_type=Path),
+)
 @click.option("--name", required=True, help="Split name; written to splits/<name>.json")
-@click.option("--description", default="", help="Human-readable description stored in meta")
+@click.option(
+    "--description", default="", help="Human-readable description stored in meta"
+)
 def generate_splits(config_path: Path, name: str, description: str):
     """Assign simulations to train/val/test splits."""
     from ml.usecases.generate_splits import run
+
     cfg = load_config(config_path)
     setup_logging(cfg.logging)
     run(config_path, name, description)
 
 
 @preprocess.command("training-data")
-@click.option("-c", "--config", "config_path", required=True, type=click.Path(exists=True, path_type=Path))
-@click.option("--split", "split_path", required=True, type=click.Path(exists=True, path_type=Path), help="Path to split JSON file")
-@click.option("--workers", default=0, show_default=True, help="Parallel worker processes. 0 = serial.")
+@click.option(
+    "-c",
+    "--config",
+    "config_path",
+    required=True,
+    type=click.Path(exists=True, path_type=Path),
+)
+@click.option(
+    "--split",
+    "split_path",
+    required=True,
+    type=click.Path(exists=True, path_type=Path),
+    help="Path to split JSON file",
+)
+@click.option(
+    "--workers",
+    default=0,
+    show_default=True,
+    help="Parallel worker processes. 0 = serial.",
+)
 def preprocess_training_data(config_path: Path, split_path: Path, workers: int):
     """Extract and preprocess windows into HDF5."""
     from ml.usecases.preprocess import run
+
     cfg = load_config(config_path)
     setup_logging(cfg.logging)
     run(config_path, Path(split_path), n_workers=workers)

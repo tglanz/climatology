@@ -12,7 +12,6 @@
 
 - `sim/`: Isca simulations. Use its conda environment.
 - `ml/`: data preparation, diagnostics, training, evaluation, and plots.
-- `heat-simulation/`: a separate heat equation demonstration.
 - `book/`: general theory. Keep project details in project documents.
 - `docs/`: project methods and operating instructions.
 - `presentations/`: talks and study material.
@@ -25,7 +24,6 @@
 - Prefer correctness, then clarity, then speed.
 - Give each responsibility one owner. Reuse it across callers.
 - Keep notebooks to configuration, library calls, and explanation.
-- Keep heat demonstration logic in its own package.
 - Validate shapes, units, coordinates, grids, and boundary cases.
 - State numerical and physical assumptions. Cite primary sources.
 - Separate observations, hypotheses, and proposed experiments.

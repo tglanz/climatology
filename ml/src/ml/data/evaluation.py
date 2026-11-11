@@ -1,12 +1,5 @@
-"""
-Metrics and data loading utilities for model evaluation.
+"""Simulation loading for evaluation, preserving its existing target and fallback policies."""
 
-Provides:
-  - profile_rel_l2: lat-weighted relL2 for 1D profiles
-  - profile_rmse: lat-weighted RMSE for 1D profiles
-  - load_sim_climatology: compute truth climatology profile from NC files
-  - load_all_sims: parallel loader returning per-sim results
-"""
 from __future__ import annotations
 
 import logging
@@ -20,40 +13,20 @@ from ml.config import IscaDataConfig
 from ml.data.climatology import compute_climatology, nc_var_for, resolve_window
 from ml.data.isca_segment import aggregated_read_field, read_segment
 from ml.data.isca_preprocessing import list_segment_files
-from ml.diagnostics.convergence import find_zonal_mean_convergence_time
+from ml.diagnostics.convergence import (
+    find_zonal_mean_convergence_time,
+    compute_time_mean_zonal_mean,
+)
 from ml.diagnostics.enstrophy import mean_enstrophy
-from ml.diagnostics.spatial import cosine_latitude_weights
 from ml.diagnostics.spinup import find_spinup_time
 
+from ml.data.simulation_data import (
+    CONVERGENCE_DIAGNOSTIC_VAR,
+    build_timeline,
+    stack_input_windows,
+)
+
 log = logging.getLogger(__name__)
-
-CONVERGENCE_DIAGNOSTIC_VAR = "ucomp"
-
-
-def profile_rel_l2(
-    pred: np.ndarray,
-    truth: np.ndarray,
-    lat: np.ndarray,
-    eps: float = 1e-12,
-) -> float:
-    """Lat-weighted relL2 for 1D profiles of shape (H,).
-
-    Uses cosine-latitude weights normalized to mean 1.
-    """
-    w = cosine_latitude_weights(lat)
-    num = float(np.sqrt(np.sum(w * (pred - truth) ** 2)))
-    den = float(np.sqrt(np.sum(w * truth ** 2)))
-    return num / (den + eps)
-
-
-def profile_rmse(
-    pred: np.ndarray,
-    truth: np.ndarray,
-    lat: np.ndarray,
-) -> float:
-    """Lat-weighted RMSE for 1D profiles of shape (H,)."""
-    w = cosine_latitude_weights(lat)
-    return float(np.sqrt(np.sum(w * (pred - truth) ** 2) / np.sum(w)))
 
 
 @dataclass
@@ -86,10 +59,11 @@ def _load_one_sim(sim_dir: Path, data_cfg: IscaDataConfig) -> SimResult | None:
         t_s: int | None = None
         t_c: int | None = None
 
-        timeline_len = 0
+        lengths = []
         for path in nc_files:
             ds_tmp = read_segment(path, ds_cache)
-            timeline_len += ds_tmp.sizes["time"]
+            lengths.append(ds_tmp.sizes["time"])
+        timeline_len = sum(lengths)
 
         if data_cfg.spinup is not None:
             vor_full = aggregated_read_field(nc_files, "vor", ds_cache)
@@ -114,57 +88,52 @@ def _load_one_sim(sim_dir: Path, data_cfg: IscaDataConfig) -> SimResult | None:
             clim_field = aggregated_read_field(nc_files, nc_var, ds_cache)
             u_full = clim_field
         else:
-            u_full = aggregated_read_field(nc_files, CONVERGENCE_DIAGNOSTIC_VAR, ds_cache)
+            u_full = aggregated_read_field(
+                nc_files, CONVERGENCE_DIAGNOSTIC_VAR, ds_cache
+            )
             clim_field = aggregated_read_field(nc_files, nc_var, ds_cache)
 
         if data_cfg.convergence is not None:
             t_c = find_zonal_mean_convergence_time(
-                u_full, lat,
+                u_full,
+                lat,
                 t_s if t_s is not None else 0,
                 threshold=data_cfg.convergence.threshold,
                 hold=data_cfg.convergence.hold,
             )
             if t_c is None:
-                log.warning("convergence not reached in %s; using end of trajectory", sim_dir)
+                log.warning(
+                    "convergence not reached in %s; using end of trajectory", sim_dir
+                )
                 t_c = timeline_len - 1
 
         a, b = resolve_window(data_cfg.climatology, t_s, t_c, timeline_len)
-        truth_profile = compute_climatology(diag_name, clim_field, a, b).astype(np.float32)
+        truth_profile = compute_climatology(diag_name, clim_field, a, b).astype(
+            np.float32
+        )
 
         from ml.data.window_selector import build_selector
+
         selector = build_selector(data_cfg.windows)
         K = data_cfg.windows.length
 
-        timeline: list[tuple[Path, int]] = []
-        for path in nc_files:
-            ds_tmp = read_segment(path, ds_cache)
-            T = ds_tmp.sizes["time"]
-            timeline.extend((path, t) for t in range(T))
+        timeline = build_timeline(nc_files, lengths)
 
         selected_t0 = selector.select(len(timeline), t_s=t_s, t_c=t_c)
         if not selected_t0:
             log.warning("no valid windows in %s", sim_dir)
             return None
 
-        xs = []
-        ys = []
-        for t_0 in selected_t0:
-            x_channels = []
-            for k in range(K):
-                path_k, t_k = timeline[t_0 + k]
-                ds_k = read_segment(path_k, ds_cache)
-                for v in data_cfg.x_vars:
-                    x_channels.append(ds_k[v].isel(time=t_k).values)
-            xs.append(np.stack(x_channels, axis=0))
-            ys.append(truth_profile[None])
+        xs = stack_input_windows(timeline, selected_t0, K, data_cfg.x_vars, ds_cache)
+        ys = np.stack([truth_profile[None] for _ in selected_t0], axis=0)
 
         return SimResult(
             sim_dir=sim_dir,
             code=_config_code(sim_dir),
             lat=lat,
             truth_profile=truth_profile,
-            x_windows=np.stack(xs, axis=0).astype(np.float32),
-            y_windows=np.stack(ys, axis=0).astype(np.float32),
+            x_windows=xs.astype(np.float32),
+            y_windows=ys.astype(np.float32),
         )
     except Exception as exc:
         log.error("failed loading %s: %s", sim_dir, exc)
@@ -201,3 +170,24 @@ def load_all_sims(
     if failed:
         log.warning("%d sims failed to load", failed)
     return results
+
+
+from ml.data.isca_segment import read_segments
+
+
+def load_profile(
+    sim_dir: Path, spinup_cfg, convergence_cfg
+) -> tuple[np.ndarray, np.ndarray, int | None]:
+    ds = read_segments(str(sim_dir / "run*/atmos_daily.nc"))
+    vor = ds.vor.values
+    u = ds.ucomp.values
+    lat = ds.lat.values
+    M = vor.shape[0]
+    t_s = find_spinup_time(mean_enstrophy(vor, lat), **spinup_cfg.to_kwargs())
+    t_c = find_zonal_mean_convergence_time(
+        u, lat, t_s or 0, **convergence_cfg.to_kwargs()
+    )
+    start = t_c if t_c is not None else (t_s or 0)
+    profile = compute_time_mean_zonal_mean(u, start, M)
+    ds.close()
+    return lat, profile, t_c

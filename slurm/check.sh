@@ -1,16 +1,14 @@
 #!/bin/bash
-# Run from the slurm/ directory: bash preprocess.sh
+# Run from the repository root: bash slurm/check.sh
 
 set -e
 
 CONFIGS=(
     "./ml/configs/lat0-inter-hold-out.toml"
-    # TODO: add configs
 )
 
 SPLIT_NAMES=(
     "lat0-inter"
-    # TODO: add split names
 )
 
 # cd into the project's root
@@ -20,9 +18,8 @@ source ./ml/.venv/bin/activate
 
 EXPERIMENT_DIR=./output/barotropic_stirring-T85
 
-# TODO: for each config in configs, verify that its experiment_dir is $EXPERIMENT_DIR, if not, error
 
-uv run ml preprocess create-sweep-file \
+uv run --project ml ml preprocess create-sweep-file \
     --experiment-dir "$EXPERIMENT_DIR" \
     --key stirring_lat0=stirring_nml.lat0 \
     --key stirring_amplitude=stirring_nml.amplitude \

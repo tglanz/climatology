@@ -33,3 +33,5 @@ book:
 format:
   html:
     theme: cosmo
+
+bibliography: references.bib

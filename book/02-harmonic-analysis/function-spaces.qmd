@@ -15,7 +15,7 @@ The central examples here are spaces of functions:
 - $\mathcal{P}_n$: polynomials of degree at most $n$.
 - $L^2([a,b])$: square-integrable functions (defined below).
 
-Unlike $\mathbb{R}^n$, these spaces are infinite-dimensional: no finite set of functions spans all of them.
+The spaces $C([a,b])$, $C^k([a,b])$, and $L^2([a,b])$ are infinite-dimensional. In contrast, $\mathcal{P}_n$ has dimension $n+1$, with basis $1,x,\ldots,x^n$.
 
 ---
 
@@ -152,6 +152,6 @@ $$-\frac{d}{dx}\!\left(p(x)\frac{df}{dx}\right) + q(x)f = \lambda\, w(x)\, f, \q
 | Legendre's equation on $[-1,1]$ | specific $p,q,w$ | Legendre polynomials $P_l$ |
 | $-\Delta_{S^2} f = \lambda f$ on $S^2$ | $-\Delta_{S^2}$ | Spherical harmonics $Y_l^m$ |
 
-All three families are instances of the same theorem. The Fourier series and spherical harmonic expansion are both eigenfunction expansions of self-adjoint operators in Hilbert spaces.
+Fourier series and spherical harmonic expansions are eigenfunction expansions of self-adjoint operators. Separating the spherical problem gives associated Legendre equations, which are singular Sturm-Liouville problems with endpoint regularity conditions; the sphere is not itself a one-dimensional interval problem.
 
 *Further reading: @Kreyszig2011aem, Sec. 11.5 (Sturm-Liouville problems and orthogonal functions) and Sec. 12.10 (spherical harmonics as the Sturm-Liouville problem on $S^2$).*

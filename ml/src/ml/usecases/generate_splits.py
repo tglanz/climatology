@@ -24,7 +24,10 @@ def run(config_path: Path, name: str, description: str) -> Path:
 
     log.info(
         "generated split %r: train=%d, val=%d, test=%d",
-        name, len(splits.train), len(splits.validation), len(splits.test),
+        name,
+        len(splits.train),
+        len(splits.validation),
+        len(splits.test),
     )
 
     return splits.save(cfg.paths.splits_dir, name, description, split_config)

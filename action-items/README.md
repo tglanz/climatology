@@ -9,7 +9,8 @@ Three work items, implemented in order:
 | [03. Pipeline](03-pipeline.md) | Reconsider stages, data, configuration, saved results, and small experiments together. | Make experiments straightforward to run, repeat, and extend. |
 
 The [workplan](../docs/workplan.md) gives the phase gates.
-These are planning documents; no implementation has started.
+Compaction is complete, with recorded verification limits; see its [implementation results](01-compaction-results.md).
+Correctness and pipeline redesign remain planned.
 
 Each item includes what to change, why, and verification steps.
 Small setup and implementation details belong inside this work, not in separate projects.
