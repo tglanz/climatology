@@ -441,7 +441,7 @@
     "href": "02-harmonic-analysis/spherical-harmonics.html",
     "title": "9  Spherical Harmonics",
     "section": "",
-    "text": "9.1 Definition\nThe spherical harmonics are the eigenfunctions of the Laplace-Beltrami operator \\(\\Delta_{S^2}\\) on \\(S^2\\), playing the role of \\(e^{inx}\\) on the sphere. They are the instance of the Sturm-Liouville framework (see the function spaces section) for the operator \\(-\\Delta_{S^2}\\) with the standard \\(L^2(S^2)\\) inner product.\nIn spherical coordinates \\((\\theta, \\phi)\\) with \\(\\theta \\in [0,\\pi]\\) (colatitude) and \\(\\phi \\in [0, 2\\pi)\\) (longitude), the spherical harmonics are\n\\[Y_l^m(\\theta, \\phi) = \\sqrt{\\frac{(2l+1)}{4\\pi}\\frac{(l-m)!}{(l+m)!}}\\, P_l^m(\\cos\\theta)\\, e^{im\\phi},\\]\nwhere \\(l = 0, 1, 2, \\ldots\\) is the degree, \\(m = -l, \\ldots, l\\) is the order, and \\(P_l^m\\) are the associated Legendre polynomials. There are \\(2l+1\\) harmonics of each degree, and infinitely many degrees.\nEigenvalue equation. The spherical harmonics satisfy\n\\[\\Delta_{S^2} Y_l^m = -l(l+1)\\, Y_l^m.\\]\nThe eigenvalue \\(-l(l+1)\\) depends only on degree \\(l\\), not order \\(m\\): each eigenspace has dimension \\(2l+1\\).\nFurther reading: Kreyszig (2011), Secs. 12.10-12.11 (Laplace’s equation in spherical coordinates, Legendre polynomials, and associated Legendre functions).",
+    "text": "9.1 Definition\nThe spherical harmonics are the eigenfunctions of the Laplace-Beltrami operator \\(\\Delta_{S^2}\\) on \\(S^2\\), playing the role of \\(e^{inx}\\) on the sphere. They are the instance of the Sturm-Liouville framework (see the function spaces section) for the operator \\(-\\Delta_{S^2}\\) with the standard \\(L^2(S^2)\\) inner product.\nIn spherical coordinates \\((\\theta, \\phi)\\) with \\(\\theta \\in [0,\\pi]\\) (colatitude) and \\(\\phi \\in [0, 2\\pi)\\) (longitude), the spherical harmonics are\n\\[Y_l^m(\\theta, \\phi) = \\sqrt{\\frac{(2l+1)}{4\\pi}\\frac{(l-m)!}{(l+m)!}}\\, P_l^m(\\cos\\theta)\\, e^{im\\phi},\\]\nwhere \\(l = 0, 1, 2, \\ldots\\) is the degree, \\(m = -l, \\ldots, l\\) is the order, and \\(P_l^m\\) are the associated Legendre functions with the Condon–Shortley phase. For \\(m\\ge0\\), \\(P_l^m(t)=(-1)^m(1-t^2)^{m/2}d^mP_l(t)/dt^m\\). Negative orders obey \\(Y_l^{-m}=(-1)^m\\overline{Y_l^m}\\). There are \\(2l+1\\) harmonics of each degree, and infinitely many degrees.\nEigenvalue equation. The spherical harmonics satisfy\n\\[\\Delta_{S^2} Y_l^m = -l(l+1)\\, Y_l^m.\\]\nThe eigenvalue \\(-l(l+1)\\) depends only on degree \\(l\\), not order \\(m\\): each eigenspace has dimension \\(2l+1\\).\nFurther reading: Kreyszig (2011), Secs. 12.10-12.11 (Laplace’s equation in spherical coordinates, Legendre polynomials, and associated Legendre functions).",
     "crumbs": [
       "Harmonic Analysis",
       "<span class='chapter-number'>9</span>  <span class='chapter-title'>Spherical Harmonics</span>"
@@ -452,7 +452,7 @@
     "href": "02-harmonic-analysis/spherical-harmonics.html#orthogonality-and-completeness",
     "title": "9  Spherical Harmonics",
     "section": "9.2 Orthogonality and Completeness",
-    "text": "9.2 Orthogonality and Completeness\nThe \\(\\{Y_l^m\\}\\) form an ONB for \\(L^2(S^2)\\) in the sense of the function spaces section. The specific orthonormality relation is\n\\[\\int_{S^2} Y_l^m(\\theta,\\phi)\\, \\overline{Y_{l'}^{m'}(\\theta,\\phi)}\\, d\\Omega = \\delta_{ll'}\\delta_{mm'},\\]\nwhere \\(d\\Omega = \\sin\\theta\\, d\\theta\\, d\\phi\\). The expansion and Parseval identity follow from the general ONB theory:\n\\[f(\\theta,\\phi) = \\sum_{l=0}^{\\infty}\\sum_{m=-l}^{l} \\hat{f}_l^m\\, Y_l^m(\\theta,\\phi), \\qquad \\hat{f}_l^m = \\int_{S^2} f\\, \\overline{Y_l^m}\\, d\\Omega, \\qquad \\int_{S^2} |f|^2\\, d\\Omega = \\sum_{l,m} |\\hat{f}_l^m|^2.\\]\nThis is the spherical harmonic transform, the analogue of the Fourier series on \\(S^2\\).\nFurther reading: Kreyszig (2011), Sec. 12.11 (orthogonality of Legendre polynomials, basis for the expansion).",
+    "text": "9.2 Orthogonality and Completeness\nThe \\(\\{Y_l^m\\}\\) form an ONB for \\(L^2(S^2)\\) in the sense of the function spaces section. The specific orthonormality relation is\n\\[\\int_{S^2} Y_l^m(\\theta,\\phi)\\, \\overline{Y_{l'}^{m'}(\\theta,\\phi)}\\, d\\Omega = \\delta_{ll'}\\delta_{mm'},\\]\nwhere \\(d\\Omega = \\sin\\theta\\, d\\theta\\, d\\phi\\). The expansion and Parseval identity follow from the general ONB theory:\n\\[f(\\theta,\\phi) = \\sum_{l=0}^{\\infty}\\sum_{m=-l}^{l} \\hat{f}_l^m\\, Y_l^m(\\theta,\\phi), \\qquad \\hat{f}_l^m = \\int_{S^2} f\\, \\overline{Y_l^m}\\, d\\Omega, \\qquad \\int_{S^2} |f|^2\\, d\\Omega = \\sum_{l,m} |\\hat{f}_l^m|^2.\\]\nThis is the spherical harmonic transform, the analogue of the Fourier series on \\(S^2\\). Its numerical evaluation, Gaussian grids, and sampling conditions are developed in spectral numerical methods.\nFurther reading: Kreyszig (2011), Sec. 12.11 (orthogonality of Legendre polynomials, basis for the expansion).",
     "crumbs": [
       "Harmonic Analysis",
       "<span class='chapter-number'>9</span>  <span class='chapter-title'>Spherical Harmonics</span>"
@@ -463,7 +463,7 @@
     "href": "02-harmonic-analysis/spherical-harmonics.html#low-degree-examples",
     "title": "9  Spherical Harmonics",
     "section": "9.3 Low-degree Examples",
-    "text": "9.3 Low-degree Examples\n\n\\(Y_0^0 = \\frac{1}{\\sqrt{4\\pi}}\\): constant function, \\(l=0\\).\n\\(Y_1^0 = \\sqrt{\\frac{3}{4\\pi}}\\cos\\theta\\): proportional to \\(z/r\\), the north-south dipole.\n\\(Y_1^{\\pm 1} = \\mp\\sqrt{\\frac{3}{8\\pi}}\\sin\\theta\\, e^{\\pm i\\phi}\\): equatorial dipoles.\n\nDegree \\(l\\) harmonics oscillate \\(l\\) times across the sphere. High \\(l\\) corresponds to small-scale features; low \\(l\\) to large-scale structure.",
+    "text": "9.3 Low-degree Examples\n\n\\(Y_0^0 = \\frac{1}{\\sqrt{4\\pi}}\\): constant function, \\(l=0\\).\n\\(Y_1^0 = \\sqrt{\\frac{3}{4\\pi}}\\cos\\theta\\): proportional to \\(z/r\\), the north-south dipole.\n\\(Y_1^{\\pm 1} = \\mp\\sqrt{\\frac{3}{8\\pi}}\\sin\\theta\\, e^{\\pm i\\phi}\\): equatorial dipoles.\n\nDegree \\(l\\) sets the Laplacian eigenvalue and an angular scale of order \\(1/l\\) for large \\(l\\). The order \\(m\\) sets the longitude dependence. A single oscillation count does not describe every harmonic at fixed degree.",
     "crumbs": [
       "Harmonic Analysis",
       "<span class='chapter-number'>9</span>  <span class='chapter-title'>Spherical Harmonics</span>"
@@ -518,9 +518,97 @@
     "href": "03-pdes/index.html",
     "title": "Partial Differential Equations",
     "section": "",
-    "text": "Differential operators, boundary conditions, and forcing determine a PDE problem. Laplace and Poisson equations provide examples of Green’s functions and spectral solution methods. On the sphere, spherical harmonics connect these ideas to the Laplace-Beltrami operator.",
+    "text": "Differential operators, boundary conditions, and forcing determine a PDE problem. Laplace and Poisson equations provide examples of Green’s functions and spectral solution methods. On the sphere, spherical harmonics connect these ideas to the Laplace-Beltrami operator.\nThe spectral methods chapter develops projection, Gaussian quadrature, spherical harmonic transforms, elliptic inversion, and nonlinear dealiasing.",
     "crumbs": [
       "Partial Differential Equations"
+    ]
+  },
+  {
+    "objectID": "03-pdes/spectral-methods.html",
+    "href": "03-pdes/spectral-methods.html",
+    "title": "10  Spectral numerical methods",
+    "section": "",
+    "text": "10.1 From a PDE to coefficient equations\nA spectral method approximates a field by a finite sum of global basis functions. It solves for their coefficients rather than for independent values in each cell. The basis should respect the domain: Fourier modes suit periodic intervals, orthogonal polynomials suit bounded intervals, and spherical harmonics suit the sphere. The function-space chapter explains projection; here we turn projection into a numerical method.\nLet \\(u(x,t)\\) be a scalar field on a domain \\(D\\), and let \\(\\{\\varphi_j\\}\\) be an orthonormal basis for a specified inner product \\(\\langle\\cdot,\\cdot\\rangle\\). For \\(J\\) retained functions, write\n\\[\nu_J(x,t)=\\sum_{j=0}^{J-1}a_j(t)\\varphi_j(x).\n\\]\nFor a PDE \\(\\partial_t u=\\mathcal{L}u+\\mathcal{N}(u)+g\\), a Galerkin method requires the residual to be orthogonal to every retained basis function:\n\\[\n\\frac{da_i}{dt}\n=\\sum_{j=0}^{J-1}\\langle\\mathcal{L}\\varphi_j,\\varphi_i\\rangle a_j\n+\\langle\\mathcal{N}(u_J),\\varphi_i\\rangle\n+\\langle g,\\varphi_i\\rangle.\n\\]\nHere \\(\\mathcal{L}\\) is linear, \\(\\mathcal{N}\\) contains nonlinear terms, and \\(g\\) is forcing. A nonorthonormal basis introduces a mass matrix \\(M_{ij}=\\langle\\varphi_j,\\varphi_i\\rangle\\) on the left. Boundary conditions must be built into the basis or imposed separately. A collocation method instead sets the residual to zero at selected nodes. A pseudospectral method evaluates terms through transformations between coefficients and node values. With adequate quadrature and dealiasing, its computed nonlinear projection can agree with Galerkin projection. These distinctions concern spatial discretization; time integration is a separate numerical choice. See Boyd (2001) for the general framework.\nFor a periodic interval \\([0,2\\pi)\\), \\(\\partial_x e^{ikx}=ik e^{ikx}\\) and \\(\\partial_x^2e^{ikx}=-k^2e^{ikx}\\). Differentiation becomes coefficient multiplication. With physical coordinate \\(s=Rx\\), the derivative is instead \\(\\partial_s=R^{-1}\\partial_x\\), so its units are inverse length.",
+    "crumbs": [
+      "Partial Differential Equations",
+      "<span class='chapter-number'>10</span>  <span class='chapter-title'>Spectral numerical methods</span>"
+    ]
+  },
+  {
+    "objectID": "03-pdes/spectral-methods.html#why-global-expansions-can-be-accurate",
+    "href": "03-pdes/spectral-methods.html#why-global-expansions-can-be-accurate",
+    "title": "10  Spectral numerical methods",
+    "section": "10.2 Why global expansions can be accurate",
+    "text": "10.2 Why global expansions can be accurate\nFor an orthonormal basis, the squared \\(L^2\\) truncation error is the energy in omitted coefficients. Rapid coefficient decay therefore gives rapid convergence. For periodic analytic functions that extend analytically into a complex strip, Fourier coefficients decay exponentially with mode number. Finite regularity usually gives algebraic decay. Discontinuities cause oscillations near jumps and slow convergence; increasing the truncation alone does not remove the Gibbs phenomenon. Spectral accuracy depends on regularity and compatible boundary conditions, not merely on choosing a transform.\nA global method is useful when smooth solutions need high accuracy, derivatives or elliptic inversions have simple coefficient formulas, or scale-dependent analysis is central. Local methods may be preferable for shocks, complex boundaries, local refinement, or localized communication.",
+    "crumbs": [
+      "Partial Differential Equations",
+      "<span class='chapter-number'>10</span>  <span class='chapter-title'>Spectral numerical methods</span>"
+    ]
+  },
+  {
+    "objectID": "03-pdes/spectral-methods.html#spherical-harmonic-representation",
+    "href": "03-pdes/spectral-methods.html#spherical-harmonic-representation",
+    "title": "10  Spectral numerical methods",
+    "section": "10.3 Spherical harmonic representation",
+    "text": "10.3 Spherical harmonic representation\nUse colatitude \\(\\theta\\in[0,\\pi]\\), longitude \\(\\phi\\in[0,2\\pi)\\), latitude \\(\\alpha=\\pi/2-\\theta\\), and radius \\(R&gt;0\\) in metres. Define \\(\\mu=\\cos\\theta=\\sin\\alpha\\). Solid angle is dimensionless:\n\\[\nd\\Omega=\\sin\\theta\\,d\\theta\\,d\\phi=d\\mu\\,d\\phi\n\\]\nwhen the \\(\\mu\\) integral runs from \\(-1\\) to \\(1\\). Physical area is \\(R^2d\\Omega\\). Use the orthonormal complex harmonics from the spherical harmonics chapter. For \\(m\\ge0\\), their associated Legendre functions include the Condon–Shortley phase:\n\\[\nP_\\ell^m(\\mu)=(-1)^m(1-\\mu^2)^{m/2}\n\\frac{d^mP_\\ell}{d\\mu^m},\n\\qquad\nY_\\ell^m=N_{\\ell m}P_\\ell^m(\\mu)e^{im\\phi},\n\\quad\nN_{\\ell m}=\\sqrt{\\frac{2\\ell+1}{4\\pi}\\frac{(\\ell-m)!}{(\\ell+m)!}}.\n\\]\nNegative orders satisfy \\(Y_\\ell^{-m}=(-1)^m\\overline{Y_\\ell^m}\\). Triangular truncation at degree \\(L\\) retains\n\\[\nf_L=\\sum_{\\ell=0}^{L}\\sum_{m=-\\ell}^{\\ell}\n\\widehat f_\\ell^mY_\\ell^m,\n\\qquad\n\\widehat f_\\ell^m=\\int_{S^2}f\\overline{Y_\\ell^m}\\,d\\Omega.\n\\]\nThere are \\((L+1)^2\\) complex basis functions. A real field obeys \\(\\widehat f_\\ell^{-m}=(-1)^m\\overline{\\widehat f_\\ell^m}\\), reducing independent storage. If \\(f\\) has units \\(U\\), so do its coefficients under this dimensionless normalization. Truncation degree and the number of stored modes differ by one when degree zero is included.",
+    "crumbs": [
+      "Partial Differential Equations",
+      "<span class='chapter-number'>10</span>  <span class='chapter-title'>Spectral numerical methods</span>"
+    ]
+  },
+  {
+    "objectID": "03-pdes/spectral-methods.html#sec-gaussian-quadrature",
+    "href": "03-pdes/spectral-methods.html#sec-gaussian-quadrature",
+    "title": "10  Spectral numerical methods",
+    "section": "10.4 Gaussian grid and quadrature",
+    "text": "10.4 Gaussian grid and quadrature\nA quadrature rule approximates an integral by weighted function values. The \\(n\\)-point Gauss–Legendre rule on \\([-1,1]\\) uses the roots \\(\\mu_i\\) of the Legendre polynomial \\(P_n\\) and positive weights\n\\[\n\\int_{-1}^{1}q(\\mu)\\,d\\mu\n\\approx\\sum_{i=1}^{n}w_iq(\\mu_i),\n\\qquad\nw_i=\\frac{2}{(1-\\mu_i^2)[P_n'(\\mu_i)]^2}.\n\\]\nIt is exact for polynomials of degree at most \\(2n-1\\), and \\(\\sum_iw_i=2\\). Golub and Welsch (1969) gives algorithms for computing Gaussian rules from orthogonal-polynomial recurrences. The following argument explains why the Legendre nodes give this exactness.\nFor a polynomial \\(q\\) of degree at most \\(2n-1\\), polynomial division gives \\(q=P_ns+r\\), where \\(s\\) and \\(r\\) have degree at most \\(n-1\\). Legendre orthogonality makes \\(\\int P_ns=0\\). At every node \\(P_n(\\mu_i)=0\\), so \\(q(\\mu_i)=r(\\mu_i)\\). Choose weights that integrate the Lagrange interpolant of \\(r\\) exactly. The same weighted sum then integrates \\(q\\) exactly. The extra exact degrees come from orthogonality, not from uniformly spacing the nodes.\nA full Gaussian grid combines these nodes with \\(M\\) equally spaced longitudes:\n\\[\n\\alpha_i=\\arcsin\\mu_i,\\qquad\n\\phi_j=\\frac{2\\pi j}{M},\\quad j=0,\\ldots,M-1.\n\\]\nLatitudes are not equally spaced, and no node is at a pole. An equatorial node exists when \\(n\\) is odd. Every latitude ring has the same \\(M\\) longitudes; a reduced Gaussian grid instead varies their count and needs a corresponding transform algorithm. The full-grid formulas below do not apply unchanged to a reduced grid.\nThe area integral and global mean are approximated by\n\\[\n\\int_{S_R^2}f\\,dA\n\\approx R^2\\frac{2\\pi}{M}\\sum_{i,j}w_if_{ij},\n\\qquad\n\\langle f\\rangle_A\\approx\\frac{1}{2M}\\sum_{i,j}w_if_{ij}.\n\\]\nThus a constant integrates to \\(4\\pi R^2\\). For a zonal profile, normalized latitude weights are \\(w_i/2\\). Do not multiply Gaussian weights by \\(\\cos\\alpha_i\\) again: the substitution \\(d\\mu=\\cos\\alpha\\,d\\alpha\\) already accounts for the area Jacobian. Uniform weights per latitude ring would also be incorrect.\n\n10.4.1 Worked quadrature example\nFor \\(n=2\\), the nodes are \\(\\mu=\\pm1/\\sqrt3\\) and both weights are one. For \\(f=\\mu^2\\) the approximate global mean is\n\\[\n\\frac12\\left[\\left(-\\frac1{\\sqrt3}\\right)^2+\n\\left(\\frac1{\\sqrt3}\\right)^2\\right]=\\frac13,\n\\]\nwhich equals \\(\\frac12\\int_{-1}^{1}\\mu^2\\,d\\mu\\). The same rule gives \\(1/9\\) for the mean of \\(\\mu^4\\), whereas its exact mean is \\(1/5\\). Degree four exceeds this rule’s degree-three guarantee.",
+    "crumbs": [
+      "Partial Differential Equations",
+      "<span class='chapter-number'>10</span>  <span class='chapter-title'>Spectral numerical methods</span>"
+    ]
+  },
+  {
+    "objectID": "03-pdes/spectral-methods.html#why-this-grid-helps-the-sht",
+    "href": "03-pdes/spectral-methods.html#why-this-grid-helps-the-sht",
+    "title": "10  Spectral numerical methods",
+    "section": "10.5 Why this grid helps the SHT",
+    "text": "10.5 Why this grid helps the SHT\nThe spherical harmonic transform (SHT) separates into longitude Fourier analysis and latitude Legendre analysis. For \\(m\\ge0\\), define\n\\[\nF_m(\\mu_i)=\\frac1M\\sum_{j=0}^{M-1}f(\\mu_i,\\phi_j)e^{-im\\phi_j}.\n\\]\nThen compute\n\\[\n\\widehat f_\\ell^m\\approx\n2\\pi N_{\\ell m}\\sum_{i=1}^{n}w_iF_m(\\mu_i)P_\\ell^m(\\mu_i).\n\\]\nAn FFT computes all longitude coefficients on each ring. Associated Legendre sums complete the forward transform; synthesis evaluates the harmonic sum at nodes. See Schaeffer (2013) for a practical transform algorithm.\nFor a field bandlimited to degree \\(L\\), sufficient sampling conditions for exact coefficient recovery in exact arithmetic are\n\\[\nn\\ge L+1,\\qquad M\\ge 2L+1.\n\\]\nTo see why, expand the input in retained harmonics. The longitude sum contains \\(e^{i(m'-m)\\phi_j}\\) and is zero unless \\(m'=m\\) under this sampling condition. For the surviving terms,\n\\[\nP_\\ell^m(\\mu)P_{\\ell'}^m(\\mu)\n=(1-\\mu^2)^m\\frac{d^mP_\\ell}{d\\mu^m}\n\\frac{d^mP_{\\ell'}}{d\\mu^m},\n\\]\nwhich is a polynomial of degree at most \\(\\ell+\\ell'\\le2L\\). Since \\(2n-1\\ge2L\\), Gaussian quadrature integrates these products exactly. The discrete inner product therefore reproduces orthogonality on the retained harmonic space. This is why the nodes and weights are part of the transform definition.\nThe statement does not claim that each \\(P_\\ell^m\\) is itself a polynomial: odd \\(m\\) introduces a square root. The same-order product is polynomial. Nor does it promise exact coefficients for arbitrary sampled fields with energy above \\(L\\). Such unresolved structure can alias into retained modes.\nFor the bandlimited field, discrete Parseval also follows:\n\\[\n\\frac{2\\pi}{M}\\sum_{i,j}w_i|f_L(\\mu_i,\\phi_j)|^2\n=\\sum_{\\ell=0}^{L}\\sum_{m=-\\ell}^{\\ell}|\\widehat f_\\ell^m|^2.\n\\]\nRound trips and this identity test normalization, weights, and coordinate order. Reversing latitude requires reversing the data and weights together. A shifted longitude origin requires consistent Fourier phases. Shape agreement alone does not establish transform compatibility.\nA direct separated implementation uses approximately \\(O(nM\\log M)\\) work for longitude FFTs and \\(O(nL^2)\\) for the Legendre stage. For \\(n,M=O(L)\\) the latter is cubic. An SHT is not simply a two-dimensional FFT. Recurrences, symmetry, precomputation, and specialized algorithms change practical costs and memory needs.",
+    "crumbs": [
+      "Partial Differential Equations",
+      "<span class='chapter-number'>10</span>  <span class='chapter-title'>Spectral numerical methods</span>"
+    ]
+  },
+  {
+    "objectID": "03-pdes/spectral-methods.html#solving-equations-in-spectral-space",
+    "href": "03-pdes/spectral-methods.html#solving-equations-in-spectral-space",
+    "title": "10  Spectral numerical methods",
+    "section": "10.6 Solving equations in spectral space",
+    "text": "10.6 Solving equations in spectral space\nOn a radius-\\(R\\) sphere, the physical Laplace–Beltrami operator satisfies\n\\[\n\\Delta_{S_R^2}Y_\\ell^m=-\\frac{\\ell(\\ell+1)}{R^2}Y_\\ell^m.\n\\]\nFor Poisson’s equation \\(\\Delta_{S_R^2}u=f\\), the sphere has no boundary and a constant is in the nullspace. A solution exists only when \\(\\int f\\,d\\Omega=0\\). Fix the undetermined mean by setting \\(\\widehat u_0^0=0\\). For every \\(\\ell\\ge1\\),\n\\[\n\\widehat u_\\ell^m=-\\frac{R^2}{\\ell(\\ell+1)}\\widehat f_\\ell^m.\n\\]\nFor example, if \\(f=A Y_2^0\\), then \\(u=-AR^2Y_2^0/6\\). Applying the Laplacian recovers \\(f\\), checking the sign and radius factor. If \\(f\\) has units \\(U\\,\\mathrm{m}^{-2}\\), \\(u\\) has units \\(U\\).\nFor diffusion \\(\\partial_t u=\\kappa\\Delta_{S_R^2}u\\), with diffusivity \\(\\kappa\\) in \\(\\mathrm{m}^2\\mathrm{s}^{-1}\\),\n\\[\n\\widehat u_\\ell^m(t)=\\widehat u_\\ell^m(0)\n\\exp\\left[-\\frac{\\kappa\\ell(\\ell+1)}{R^2}t\\right].\n\\]\nThe mean remains constant and smaller scales decay faster. If forward Euler is used instead of this exact update, stability for all retained diffusion modes requires \\(\\Delta t\\le2R^2/[\\kappa L(L+1)]\\) for \\(L\\ge1\\). Accurate spatial differentiation does not remove time-step restrictions.",
+    "crumbs": [
+      "Partial Differential Equations",
+      "<span class='chapter-number'>10</span>  <span class='chapter-title'>Spectral numerical methods</span>"
+    ]
+  },
+  {
+    "objectID": "03-pdes/spectral-methods.html#nonlinear-terms-and-aliasing",
+    "href": "03-pdes/spectral-methods.html#nonlinear-terms-and-aliasing",
+    "title": "10  Spectral numerical methods",
+    "section": "10.7 Nonlinear terms and aliasing",
+    "text": "10.7 Nonlinear terms and aliasing\nA product of fields bandlimited to \\(L\\) can contain degrees up to \\(2L\\). Computing it on the minimally sampled grid and transforming back can fold unresolved modes into lower degrees. In a periodic example, grid samples cannot distinguish Fourier modes \\(k\\) and \\(k+M\\) because \\(e^{i(k+M)2\\pi j/M}=e^{ik2\\pi j/M}\\).\nFor exact projection of a product of two scalar degree-\\(L\\) fields onto degrees through \\(L\\), a sufficient full Gaussian grid satisfies\n\\[\nM&gt;3L,\\qquad 2n-1\\ge3L.\n\\]\nThe longitude integrand contains three mode factors. Its maximum frequency is \\(3L\\). Surviving latitude products also have degree at most \\(3L\\): the longitude selection rule makes the sum of their absolute orders even, so the factors of \\((1-\\mu^2)^{1/2}\\) combine into an integer power. Gaussian exactness then applies. This is the spherical counterpart of padding each dimension by roughly \\(3/2\\) for a quadratic product. Strict inequalities and integer rounding matter. Derivatives of vector components and higher-order nonlinearities require their own analysis; these bounds apply to scalar products as stated.\nA pseudospectral step therefore synthesizes on an adequate grid, evaluates the nonlinear expression there, analyzes it, and retains only the intended modes. Filtering damps selected coefficients but does not retroactively make an aliased projection exact. Dealiasing, physical diffusion, and numerical filtering serve different purposes.",
+    "crumbs": [
+      "Partial Differential Equations",
+      "<span class='chapter-number'>10</span>  <span class='chapter-title'>Spectral numerical methods</span>"
+    ]
+  },
+  {
+    "objectID": "03-pdes/spectral-methods.html#uses-and-numerical-checks",
+    "href": "03-pdes/spectral-methods.html#uses-and-numerical-checks",
+    "title": "10  Spectral numerical methods",
+    "section": "10.8 Uses and numerical checks",
+    "text": "10.8 Uses and numerical checks\nSpectral coefficients support elliptic inversion, diffusion, scale-dependent filtering, energy spectra, and comparison across resolutions. A scalar isotropic linear filter multiplies all orders at degree \\(\\ell\\) by the same factor; this preserves rotational symmetry. General position-dependent coefficients couple modes and need not yield diagonal operators.\nBefore using a transform in a solver, verify a constant, an individual harmonic, a forward/inverse round trip, and discrete Parseval. Check an analytic PDE solution such as the diffusion mode above. Increase truncation and quadrature resolution separately: convergence in one does not demonstrate convergence in the other. Record basis normalization, phase convention, radius, retained degrees, node coordinates, and weights so that stored coefficients remain interpretable.\n\n\n\n\nBoyd, John P. 2001. Chebyshev and Fourier Spectral Methods. 2, revised. Dover Publications. https://public.websites.umich.edu/~jpboyd/AOSS555.html.\n\n\nGolub, Gene H., and John H. Welsch. 1969. “Calculation of Gauss Quadrature Rules.” Mathematics of Computation 23 (106): 221–30. https://doi.org/10.1090/S0025-5718-69-99647-1.\n\n\nSchaeffer, Nathanaël. 2013. “Efficient Spherical Harmonic Transforms Aimed at Pseudospectral Numerical Simulations.” Geochemistry, Geophysics, Geosystems 14 (3): 751–58. https://doi.org/10.1002/ggge.20071.",
+    "crumbs": [
+      "Partial Differential Equations",
+      "<span class='chapter-number'>10</span>  <span class='chapter-title'>Spectral numerical methods</span>"
     ]
   },
   {
@@ -536,144 +624,144 @@
   {
     "objectID": "04-geophysical-fluid-dynamics/motion.html",
     "href": "04-geophysical-fluid-dynamics/motion.html",
-    "title": "10  Basic",
+    "title": "11  Basic",
     "section": "",
-    "text": "10.1 Material Derivative\nLet \\(\\vec{x} \\in \\mathbb{R}^3\\) denote position, \\(t\\) time, \\(\\vec{v}(\\vec{x}, t)\\) the velocity field, \\(\\rho(\\vec{x}, t)\\) the mass density, \\(p(\\vec{x}, t)\\) the pressure, \\(\\nu\\) the kinematic viscosity, and \\(\\vec{F}_b(\\vec{x}, t)\\) the body force per unit mass.\nThe rate of change following a fluid parcel. For scalar \\(\\phi(\\vec{x}, t)\\) and vector \\(\\vec{b}(\\vec{x}, t)\\):\n\\[\n\\frac{D\\phi}{Dt} = \\frac{\\partial \\phi}{\\partial t} + \\vec{v} \\cdot \\nabla \\phi\n~~~,~~~\n\\frac{D\\vec{b}}{Dt} = \\frac{\\partial \\vec{b}}{\\partial t} + (\\vec{v} \\cdot \\nabla) \\vec{b}\n\\]\nThe first term is local change at a fixed point; the second is advection.",
+    "text": "11.1 Material Derivative\nLet \\(\\vec{x} \\in \\mathbb{R}^3\\) denote position, \\(t\\) time, \\(\\vec{v}(\\vec{x}, t)\\) the velocity field, \\(\\rho(\\vec{x}, t)\\) the mass density, \\(p(\\vec{x}, t)\\) the pressure, \\(\\nu\\) the kinematic viscosity, and \\(\\vec{F}_b(\\vec{x}, t)\\) the body force per unit mass.\nThe rate of change following a fluid parcel. For scalar \\(\\phi(\\vec{x}, t)\\) and vector \\(\\vec{b}(\\vec{x}, t)\\):\n\\[\n\\frac{D\\phi}{Dt} = \\frac{\\partial \\phi}{\\partial t} + \\vec{v} \\cdot \\nabla \\phi\n~~~,~~~\n\\frac{D\\vec{b}}{Dt} = \\frac{\\partial \\vec{b}}{\\partial t} + (\\vec{v} \\cdot \\nabla) \\vec{b}\n\\]\nThe first term is local change at a fixed point; the second is advection.",
     "crumbs": [
       "Geophysical Fluid Dynamics",
-      "<span class='chapter-number'>10</span>  <span class='chapter-title'>Basic</span>"
+      "<span class='chapter-number'>11</span>  <span class='chapter-title'>Basic</span>"
     ]
   },
   {
     "objectID": "04-geophysical-fluid-dynamics/motion.html#mass-continuity",
     "href": "04-geophysical-fluid-dynamics/motion.html#mass-continuity",
-    "title": "10  Basic",
-    "section": "10.2 Mass Continuity",
-    "text": "10.2 Mass Continuity\n\\[\n\\frac{\\partial \\rho}{\\partial t} + \\nabla \\cdot (\\rho \\vec{v}) = 0\n\\]\nConservation of mass. Expanding the divergence: \\(\\frac{D\\rho}{Dt} + \\rho \\nabla \\cdot \\vec{v} = 0\\).\nFor incompressible flow, \\(\\rho\\) is constant along parcel trajectories (\\(D\\rho/Dt = 0\\)), giving the incompressibility constraint:\n\\[\n\\nabla \\cdot \\vec{v} = 0\n\\]\nThe velocity field is divergence-free: fluid parcels may deform but not change volume. This eliminates density as a prognostic variable and couples velocity to pressure through the momentum equation, where \\(p\\) acts as a Lagrange multiplier enforcing this constraint.",
+    "title": "11  Basic",
+    "section": "11.2 Mass Continuity",
+    "text": "11.2 Mass Continuity\n\\[\n\\frac{\\partial \\rho}{\\partial t} + \\nabla \\cdot (\\rho \\vec{v}) = 0\n\\]\nConservation of mass. Expanding the divergence: \\(\\frac{D\\rho}{Dt} + \\rho \\nabla \\cdot \\vec{v} = 0\\).\nFor incompressible flow, \\(\\rho\\) is constant along parcel trajectories (\\(D\\rho/Dt = 0\\)), giving the incompressibility constraint:\n\\[\n\\nabla \\cdot \\vec{v} = 0\n\\]\nThe velocity field is divergence-free: fluid parcels may deform but not change volume. This eliminates density as a prognostic variable and couples velocity to pressure through the momentum equation, where \\(p\\) acts as a Lagrange multiplier enforcing this constraint.",
     "crumbs": [
       "Geophysical Fluid Dynamics",
-      "<span class='chapter-number'>10</span>  <span class='chapter-title'>Basic</span>"
+      "<span class='chapter-number'>11</span>  <span class='chapter-title'>Basic</span>"
     ]
   },
   {
     "objectID": "04-geophysical-fluid-dynamics/motion.html#momentum-equation",
     "href": "04-geophysical-fluid-dynamics/motion.html#momentum-equation",
-    "title": "10  Basic",
-    "section": "10.3 Momentum Equation",
-    "text": "10.3 Momentum Equation\n\\[\n\\rho \\frac{D\\vec{v}}{Dt} = -\\nabla p + \\mu \\nabla^2 \\vec{v} + \\rho \\vec{F}_b\n\\]\nStart from Newton’s second law for a small parcel of fluid with volume \\(\\delta V\\):\n\\[\n\\vec{F} = m \\vec{a}\n\\]\nThe parcel has mass \\(m = \\rho \\, \\delta V\\) and acceleration \\(\\vec{a} = D\\vec{v}/Dt\\), so:\n\\[\n\\vec{F} = \\rho \\, \\delta V \\frac{D\\vec{v}}{Dt}\n\\]\nDivide both sides by \\(\\delta V\\) to express everything per unit volume:\n\\[\n\\frac{\\vec{F}}{\\delta V} = \\rho \\frac{D\\vec{v}}{Dt}\n\\]\nThe left-hand side is the sum of force densities (force per unit volume) acting on the parcel: pressure gradient \\((-\\nabla p)\\), viscous stress \\((\\mu \\nabla^2 \\vec{v}\\), where \\(\\mu = \\rho \\nu\\) is the dynamic viscosity), and body forces \\((\\rho \\vec{F}_b)\\).",
+    "title": "11  Basic",
+    "section": "11.3 Momentum Equation",
+    "text": "11.3 Momentum Equation\n\\[\n\\rho \\frac{D\\vec{v}}{Dt} = -\\nabla p + \\mu \\nabla^2 \\vec{v} + \\rho \\vec{F}_b\n\\]\nStart from Newton’s second law for a small parcel of fluid with volume \\(\\delta V\\):\n\\[\n\\vec{F} = m \\vec{a}\n\\]\nThe parcel has mass \\(m = \\rho \\, \\delta V\\) and acceleration \\(\\vec{a} = D\\vec{v}/Dt\\), so:\n\\[\n\\vec{F} = \\rho \\, \\delta V \\frac{D\\vec{v}}{Dt}\n\\]\nDivide both sides by \\(\\delta V\\) to express everything per unit volume:\n\\[\n\\frac{\\vec{F}}{\\delta V} = \\rho \\frac{D\\vec{v}}{Dt}\n\\]\nThe left-hand side is the sum of force densities (force per unit volume) acting on the parcel: pressure gradient \\((-\\nabla p)\\), viscous stress \\((\\mu \\nabla^2 \\vec{v}\\), where \\(\\mu = \\rho \\nu\\) is the dynamic viscosity), and body forces \\((\\rho \\vec{F}_b)\\).",
     "crumbs": [
       "Geophysical Fluid Dynamics",
-      "<span class='chapter-number'>10</span>  <span class='chapter-title'>Basic</span>"
+      "<span class='chapter-number'>11</span>  <span class='chapter-title'>Basic</span>"
     ]
   },
   {
     "objectID": "04-geophysical-fluid-dynamics/rotating.html",
     "href": "04-geophysical-fluid-dynamics/rotating.html",
-    "title": "11  Rotating Frame",
+    "title": "12  Rotating Frame",
     "section": "",
-    "text": "11.1 Inertial to Rotating Frame\nThe Earth rotates with angular velocity \\(\\vec{\\Omega}\\), where \\(|\\vec{\\Omega}| = \\Omega \\approx 7.292 \\times 10^{-5} \\, \\text{rad/s}\\). The equations of motion derived in the inertial (non-rotating) frame must be transformed to account for this rotation.\nLet subscripts \\(I\\) and \\(R\\) denote quantities in the inertial and rotating frames. For any vector \\(\\vec{A}\\):\n\\[\n\\left(\\frac{d\\vec{A}}{dt}\\right)_I = \\left(\\frac{d\\vec{A}}{dt}\\right)_R + \\vec{\\Omega} \\times \\vec{A}\n\\]\nApplying this to the position vector \\(\\vec{r}\\) gives the velocity transformation:\n\\[\n\\vec{v}_I = \\vec{v}_R + \\vec{\\Omega} \\times \\vec{r}\n\\]\nApplying it again to \\(\\vec{v}_I\\) gives the acceleration:\n\\[\n\\left(\\frac{D\\vec{v}}{Dt}\\right)_I = \\left(\\frac{D\\vec{v}}{Dt}\\right)_R + 2\\vec{\\Omega} \\times \\vec{v}_R + \\vec{\\Omega} \\times (\\vec{\\Omega} \\times \\vec{r})\n\\]",
+    "text": "12.1 Inertial to Rotating Frame\nThe Earth rotates with angular velocity \\(\\vec{\\Omega}\\), where \\(|\\vec{\\Omega}| = \\Omega \\approx 7.292 \\times 10^{-5} \\, \\text{rad/s}\\). The equations of motion derived in the inertial (non-rotating) frame must be transformed to account for this rotation.\nLet subscripts \\(I\\) and \\(R\\) denote quantities in the inertial and rotating frames. For any vector \\(\\vec{A}\\):\n\\[\n\\left(\\frac{d\\vec{A}}{dt}\\right)_I = \\left(\\frac{d\\vec{A}}{dt}\\right)_R + \\vec{\\Omega} \\times \\vec{A}\n\\]\nApplying this to the position vector \\(\\vec{r}\\) gives the velocity transformation:\n\\[\n\\vec{v}_I = \\vec{v}_R + \\vec{\\Omega} \\times \\vec{r}\n\\]\nApplying it again to \\(\\vec{v}_I\\) gives the acceleration:\n\\[\n\\left(\\frac{D\\vec{v}}{Dt}\\right)_I = \\left(\\frac{D\\vec{v}}{Dt}\\right)_R + 2\\vec{\\Omega} \\times \\vec{v}_R + \\vec{\\Omega} \\times (\\vec{\\Omega} \\times \\vec{r})\n\\]",
     "crumbs": [
       "Geophysical Fluid Dynamics",
-      "<span class='chapter-number'>11</span>  <span class='chapter-title'>Rotating Frame</span>"
+      "<span class='chapter-number'>12</span>  <span class='chapter-title'>Rotating Frame</span>"
     ]
   },
   {
     "objectID": "04-geophysical-fluid-dynamics/rotating.html#momentum-equation-in-the-rotating-frame",
     "href": "04-geophysical-fluid-dynamics/rotating.html#momentum-equation-in-the-rotating-frame",
-    "title": "11  Rotating Frame",
-    "section": "11.2 Momentum Equation in the Rotating Frame",
-    "text": "11.2 Momentum Equation in the Rotating Frame\nSubstituting into the momentum equation from the previous section, and dropping the \\(R\\) subscript (all quantities are now in the rotating frame):\n\\[\n\\rho \\frac{D\\vec{v}}{Dt} = -\\nabla p + \\mu \\nabla^2 \\vec{v} - 2\\rho \\vec{\\Omega} \\times \\vec{v} - \\rho \\vec{\\Omega} \\times (\\vec{\\Omega} \\times \\vec{r}) + \\rho \\vec{g}\n\\]\nTwo new terms appear:\n\n\\(-2\\rho \\vec{\\Omega} \\times \\vec{v}\\) is the Coriolis force. It acts perpendicular to the velocity, deflecting moving parcels to the right in the Northern Hemisphere and to the left in the Southern. It does no work (it changes direction, not speed).\n\\(-\\rho \\vec{\\Omega} \\times (\\vec{\\Omega} \\times \\vec{r})\\) is the centrifugal force. It points outward from the rotation axis. In practice it is absorbed into an effective gravity \\(\\vec{g}^* = \\vec{g} - \\vec{\\Omega} \\times (\\vec{\\Omega} \\times \\vec{r})\\), and the geopotential surfaces (including “sea level”) already account for it.\n\nWith this absorption, the equation becomes:\n\\[\n\\rho \\frac{D\\vec{v}}{Dt} = -\\nabla p + \\mu \\nabla^2 \\vec{v} - 2\\rho \\vec{\\Omega} \\times \\vec{v} + \\rho \\vec{g}^*\n\\]",
+    "title": "12  Rotating Frame",
+    "section": "12.2 Momentum Equation in the Rotating Frame",
+    "text": "12.2 Momentum Equation in the Rotating Frame\nSubstituting into the momentum equation from the previous section, and dropping the \\(R\\) subscript (all quantities are now in the rotating frame):\n\\[\n\\rho \\frac{D\\vec{v}}{Dt} = -\\nabla p + \\mu \\nabla^2 \\vec{v} - 2\\rho \\vec{\\Omega} \\times \\vec{v} - \\rho \\vec{\\Omega} \\times (\\vec{\\Omega} \\times \\vec{r}) + \\rho \\vec{g}\n\\]\nTwo new terms appear:\n\n\\(-2\\rho \\vec{\\Omega} \\times \\vec{v}\\) is the Coriolis force. It acts perpendicular to the velocity, deflecting moving parcels to the right in the Northern Hemisphere and to the left in the Southern. It does no work (it changes direction, not speed).\n\\(-\\rho \\vec{\\Omega} \\times (\\vec{\\Omega} \\times \\vec{r})\\) is the centrifugal force. It points outward from the rotation axis. In practice it is absorbed into an effective gravity \\(\\vec{g}^* = \\vec{g} - \\vec{\\Omega} \\times (\\vec{\\Omega} \\times \\vec{r})\\), and the geopotential surfaces (including “sea level”) already account for it.\n\nWith this absorption, the equation becomes:\n\\[\n\\rho \\frac{D\\vec{v}}{Dt} = -\\nabla p + \\mu \\nabla^2 \\vec{v} - 2\\rho \\vec{\\Omega} \\times \\vec{v} + \\rho \\vec{g}^*\n\\]",
     "crumbs": [
       "Geophysical Fluid Dynamics",
-      "<span class='chapter-number'>11</span>  <span class='chapter-title'>Rotating Frame</span>"
+      "<span class='chapter-number'>12</span>  <span class='chapter-title'>Rotating Frame</span>"
     ]
   },
   {
     "objectID": "04-geophysical-fluid-dynamics/rotating.html#the-coriolis-parameter",
     "href": "04-geophysical-fluid-dynamics/rotating.html#the-coriolis-parameter",
-    "title": "11  Rotating Frame",
-    "section": "11.3 The Coriolis Parameter",
-    "text": "11.3 The Coriolis Parameter\nFor large-scale atmospheric and oceanic flows, the vertical component of the Coriolis force dominates. Let \\(\\varphi\\) denote latitude. The Coriolis parameter is:\n\\[\nf = 2\\Omega \\sin\\varphi\n\\]\nAt the equator \\(f = 0\\); at the poles \\(f = \\pm 2\\Omega\\). The horizontal component of the Coriolis acceleration reduces to \\(f \\hat{k} \\times \\vec{v}_h\\), where \\(\\vec{v}_h\\) is the horizontal velocity and \\(\\hat{k}\\) is the local vertical unit vector.",
+    "title": "12  Rotating Frame",
+    "section": "12.3 The Coriolis Parameter",
+    "text": "12.3 The Coriolis Parameter\nFor large-scale atmospheric and oceanic flows, the vertical component of the Coriolis force dominates. Let \\(\\varphi\\) denote latitude. The Coriolis parameter is:\n\\[\nf = 2\\Omega \\sin\\varphi\n\\]\nAt the equator \\(f = 0\\); at the poles \\(f = \\pm 2\\Omega\\). The horizontal component of the Coriolis acceleration reduces to \\(f \\hat{k} \\times \\vec{v}_h\\), where \\(\\vec{v}_h\\) is the horizontal velocity and \\(\\hat{k}\\) is the local vertical unit vector.",
     "crumbs": [
       "Geophysical Fluid Dynamics",
-      "<span class='chapter-number'>11</span>  <span class='chapter-title'>Rotating Frame</span>"
+      "<span class='chapter-number'>12</span>  <span class='chapter-title'>Rotating Frame</span>"
     ]
   },
   {
     "objectID": "04-geophysical-fluid-dynamics/rotating.html#f-plane-and-beta-plane",
     "href": "04-geophysical-fluid-dynamics/rotating.html#f-plane-and-beta-plane",
-    "title": "11  Rotating Frame",
-    "section": "11.4 \\(f\\)-plane and \\(\\beta\\)-plane",
-    "text": "11.4 \\(f\\)-plane and \\(\\beta\\)-plane\nFor motions whose horizontal scale \\(L\\) is small compared to the Earth’s radius \\(a\\), a local Cartesian approximation is used.\n\\(f\\)-plane: \\(f\\) is treated as constant, equal to its value at a reference latitude \\(\\varphi_0\\):\n\\[\nf = f_0 = 2\\Omega \\sin\\varphi_0\n\\]\nValid when the flow does not span a large range of latitudes. Captures inertial oscillations and geostrophic balance but not Rossby wave dynamics.\n\\(\\beta\\)-plane: \\(f\\) varies linearly with the northward coordinate \\(y\\):\n\\[\nf = f_0 + \\beta y ~~~,~~~ \\beta = \\frac{df}{dy} = \\frac{2\\Omega \\cos\\varphi_0}{a}\n\\]\nThe \\(\\beta\\)-effect is the minimal ingredient needed to support Rossby waves and westward phase propagation of large-scale disturbances.",
+    "title": "12  Rotating Frame",
+    "section": "12.4 \\(f\\)-plane and \\(\\beta\\)-plane",
+    "text": "12.4 \\(f\\)-plane and \\(\\beta\\)-plane\nFor motions whose horizontal scale \\(L\\) is small compared to the Earth’s radius \\(a\\), a local Cartesian approximation is used.\n\\(f\\)-plane: \\(f\\) is treated as constant, equal to its value at a reference latitude \\(\\varphi_0\\):\n\\[\nf = f_0 = 2\\Omega \\sin\\varphi_0\n\\]\nValid when the flow does not span a large range of latitudes. Captures inertial oscillations and geostrophic balance but not Rossby wave dynamics.\n\\(\\beta\\)-plane: \\(f\\) varies linearly with the northward coordinate \\(y\\):\n\\[\nf = f_0 + \\beta y ~~~,~~~ \\beta = \\frac{df}{dy} = \\frac{2\\Omega \\cos\\varphi_0}{a}\n\\]\nThe \\(\\beta\\)-effect is the minimal ingredient needed to support Rossby waves and westward phase propagation of large-scale disturbances.",
     "crumbs": [
       "Geophysical Fluid Dynamics",
-      "<span class='chapter-number'>11</span>  <span class='chapter-title'>Rotating Frame</span>"
+      "<span class='chapter-number'>12</span>  <span class='chapter-title'>Rotating Frame</span>"
     ]
   },
   {
     "objectID": "04-geophysical-fluid-dynamics/vorticity.html",
     "href": "04-geophysical-fluid-dynamics/vorticity.html",
-    "title": "12  Vorticity",
+    "title": "13  Vorticity",
     "section": "",
-    "text": "12.1 Definitions\nLet \\(\\vec{v}(\\vec{x}, t)\\) be the velocity field. The vorticity is:\n\\[\n\\vec{\\omega} = \\nabla \\times \\vec{v}\n\\]\nVorticity measures local rotation of fluid elements. A flow with \\(\\vec{\\omega} = 0\\) everywhere is irrotational.\nThe circulation around a closed curve \\(C\\) is:\n\\[\n\\Gamma = \\oint_C \\vec{v} \\cdot d\\vec{l} = \\int_S \\vec{\\omega} \\cdot d\\vec{S}\n\\]\nwhere \\(S\\) is any surface bounded by \\(C\\) (by Stokes’ theorem). Circulation is the integrated vorticity through the surface, or equivalently the net tangential velocity around the loop.",
+    "text": "13.1 Definitions\nLet \\(\\vec{v}(\\vec{x}, t)\\) be the velocity field. The vorticity is:\n\\[\n\\vec{\\omega} = \\nabla \\times \\vec{v}\n\\]\nVorticity measures local rotation of fluid elements. A flow with \\(\\vec{\\omega} = 0\\) everywhere is irrotational.\nThe circulation around a closed curve \\(C\\) is:\n\\[\n\\Gamma = \\oint_C \\vec{v} \\cdot d\\vec{l} = \\int_S \\vec{\\omega} \\cdot d\\vec{S}\n\\]\nwhere \\(S\\) is any surface bounded by \\(C\\) (by Stokes’ theorem). Circulation is the integrated vorticity through the surface, or equivalently the net tangential velocity around the loop.",
     "crumbs": [
       "Geophysical Fluid Dynamics",
-      "<span class='chapter-number'>12</span>  <span class='chapter-title'>Vorticity</span>"
+      "<span class='chapter-number'>13</span>  <span class='chapter-title'>Vorticity</span>"
     ]
   },
   {
     "objectID": "04-geophysical-fluid-dynamics/vorticity.html#vorticity-equation",
     "href": "04-geophysical-fluid-dynamics/vorticity.html#vorticity-equation",
-    "title": "12  Vorticity",
-    "section": "12.2 Vorticity Equation",
-    "text": "12.2 Vorticity Equation\nTake the curl of the momentum equation for an inviscid barotropic fluid (\\(p = p(\\rho)\\)):\n\\[\n\\frac{\\partial \\vec{\\omega}}{\\partial t} + (\\vec{v} \\cdot \\nabla)\\vec{\\omega} = (\\vec{\\omega} \\cdot \\nabla)\\vec{v} - \\vec{\\omega}(\\nabla \\cdot \\vec{v})\n\\]\nThe left-hand side is advection of vorticity. On the right:\n\n\\((\\vec{\\omega} \\cdot \\nabla)\\vec{v}\\) is vortex stretching and tilting. Velocity gradients along the vorticity direction amplify or reorient vortex tubes.\n\\(-\\vec{\\omega}(\\nabla \\cdot \\vec{v})\\) accounts for divergence: expanding fluid dilutes vorticity.\n\nFor incompressible flow (\\(\\nabla \\cdot \\vec{v} = 0\\)), the second term vanishes.\nA baroclinic term \\(\\frac{1}{\\rho^2} \\nabla \\rho \\times \\nabla p\\) appears when density is not a function of pressure alone. It generates vorticity wherever isosurfaces of \\(\\rho\\) and \\(p\\) are misaligned.",
+    "title": "13  Vorticity",
+    "section": "13.2 Vorticity Equation",
+    "text": "13.2 Vorticity Equation\nTake the curl of the momentum equation for an inviscid barotropic fluid (\\(p = p(\\rho)\\)):\n\\[\n\\frac{\\partial \\vec{\\omega}}{\\partial t} + (\\vec{v} \\cdot \\nabla)\\vec{\\omega} = (\\vec{\\omega} \\cdot \\nabla)\\vec{v} - \\vec{\\omega}(\\nabla \\cdot \\vec{v})\n\\]\nThe left-hand side is advection of vorticity. On the right:\n\n\\((\\vec{\\omega} \\cdot \\nabla)\\vec{v}\\) is vortex stretching and tilting. Velocity gradients along the vorticity direction amplify or reorient vortex tubes.\n\\(-\\vec{\\omega}(\\nabla \\cdot \\vec{v})\\) accounts for divergence: expanding fluid dilutes vorticity.\n\nFor incompressible flow (\\(\\nabla \\cdot \\vec{v} = 0\\)), the second term vanishes.\nA baroclinic term \\(\\frac{1}{\\rho^2} \\nabla \\rho \\times \\nabla p\\) appears when density is not a function of pressure alone. It generates vorticity wherever isosurfaces of \\(\\rho\\) and \\(p\\) are misaligned.",
     "crumbs": [
       "Geophysical Fluid Dynamics",
-      "<span class='chapter-number'>12</span>  <span class='chapter-title'>Vorticity</span>"
+      "<span class='chapter-number'>13</span>  <span class='chapter-title'>Vorticity</span>"
     ]
   },
   {
     "objectID": "04-geophysical-fluid-dynamics/vorticity.html#kelvins-circulation-theorem",
     "href": "04-geophysical-fluid-dynamics/vorticity.html#kelvins-circulation-theorem",
-    "title": "12  Vorticity",
-    "section": "12.3 Kelvin’s Circulation Theorem",
-    "text": "12.3 Kelvin’s Circulation Theorem\nFor an inviscid, barotropic fluid with only conservative body forces, the circulation around a material curve \\(C(t)\\) (a curve moving with the fluid) is conserved:\n\\[\n\\frac{D\\Gamma}{Dt} = 0\n\\]\nVortex lines are frozen into the fluid: they stretch and deform with it but cannot be created or destroyed. This breaks down when viscosity, baroclinicity, or non-conservative forces are present.",
+    "title": "13  Vorticity",
+    "section": "13.3 Kelvin’s Circulation Theorem",
+    "text": "13.3 Kelvin’s Circulation Theorem\nFor an inviscid, barotropic fluid with only conservative body forces, the circulation around a material curve \\(C(t)\\) (a curve moving with the fluid) is conserved:\n\\[\n\\frac{D\\Gamma}{Dt} = 0\n\\]\nVortex lines are frozen into the fluid: they stretch and deform with it but cannot be created or destroyed. This breaks down when viscosity, baroclinicity, or non-conservative forces are present.",
     "crumbs": [
       "Geophysical Fluid Dynamics",
-      "<span class='chapter-number'>12</span>  <span class='chapter-title'>Vorticity</span>"
+      "<span class='chapter-number'>13</span>  <span class='chapter-title'>Vorticity</span>"
     ]
   },
   {
     "objectID": "04-geophysical-fluid-dynamics/vorticity.html#vorticity-equation-in-a-rotating-frame",
     "href": "04-geophysical-fluid-dynamics/vorticity.html#vorticity-equation-in-a-rotating-frame",
-    "title": "12  Vorticity",
-    "section": "12.4 Vorticity Equation in a Rotating Frame",
-    "text": "12.4 Vorticity Equation in a Rotating Frame\nIn a frame rotating with angular velocity \\(\\vec{\\Omega}\\), define the absolute vorticity \\(\\vec{\\omega}_a = \\vec{\\omega} + 2\\vec{\\Omega}\\). The vorticity equation becomes:\n\\[\n\\frac{D\\vec{\\omega}_a}{Dt} = (\\vec{\\omega}_a \\cdot \\nabla)\\vec{v} - \\vec{\\omega}_a(\\nabla \\cdot \\vec{v})\n\\]\nThe planetary vorticity \\(2\\vec{\\Omega}\\) enters on equal footing with the relative vorticity \\(\\vec{\\omega}\\). For large-scale geophysical flows, \\(|2\\vec{\\Omega}| \\gg |\\vec{\\omega}|\\), so planetary rotation dominates the vorticity budget.\nRestricting to the vertical component for shallow horizontal flow, with \\(f = 2\\Omega \\sin\\varphi\\):\n\\[\n\\frac{D}{Dt}(\\zeta + f) = -(\\zeta + f)\\nabla_h \\cdot \\vec{v}_h\n\\]\nwhere \\(\\zeta = \\hat{k} \\cdot (\\nabla \\times \\vec{v})\\) is the vertical component of relative vorticity and \\(\\nabla_h \\cdot \\vec{v}_h\\) is the horizontal divergence.",
+    "title": "13  Vorticity",
+    "section": "13.4 Vorticity Equation in a Rotating Frame",
+    "text": "13.4 Vorticity Equation in a Rotating Frame\nIn a frame rotating with angular velocity \\(\\vec{\\Omega}\\), define the absolute vorticity \\(\\vec{\\omega}_a = \\vec{\\omega} + 2\\vec{\\Omega}\\). The vorticity equation becomes:\n\\[\n\\frac{D\\vec{\\omega}_a}{Dt} = (\\vec{\\omega}_a \\cdot \\nabla)\\vec{v} - \\vec{\\omega}_a(\\nabla \\cdot \\vec{v})\n\\]\nThe planetary vorticity \\(2\\vec{\\Omega}\\) enters on equal footing with the relative vorticity \\(\\vec{\\omega}\\). For large-scale geophysical flows, \\(|2\\vec{\\Omega}| \\gg |\\vec{\\omega}|\\), so planetary rotation dominates the vorticity budget.\nRestricting to the vertical component for shallow horizontal flow, with \\(f = 2\\Omega \\sin\\varphi\\):\n\\[\n\\frac{D}{Dt}(\\zeta + f) = -(\\zeta + f)\\nabla_h \\cdot \\vec{v}_h\n\\]\nwhere \\(\\zeta = \\hat{k} \\cdot (\\nabla \\times \\vec{v})\\) is the vertical component of relative vorticity and \\(\\nabla_h \\cdot \\vec{v}_h\\) is the horizontal divergence.",
     "crumbs": [
       "Geophysical Fluid Dynamics",
-      "<span class='chapter-number'>12</span>  <span class='chapter-title'>Vorticity</span>"
+      "<span class='chapter-number'>13</span>  <span class='chapter-title'>Vorticity</span>"
     ]
   },
   {
     "objectID": "04-geophysical-fluid-dynamics/vorticity.html#circulation-theorem-and-the-beta-effect",
     "href": "04-geophysical-fluid-dynamics/vorticity.html#circulation-theorem-and-the-beta-effect",
-    "title": "12  Vorticity",
-    "section": "12.5 Circulation Theorem and the \\(\\beta\\)-effect",
-    "text": "12.5 Circulation Theorem and the \\(\\beta\\)-effect\nKelvin’s theorem applied to the rotating Earth conserves absolute circulation. A fluid column moving poleward encounters increasing \\(f\\), so \\(\\zeta\\) must decrease to compensate. This coupling between meridional motion and relative vorticity is the \\(\\beta\\)-effect and is the restoring mechanism for Rossby waves.",
+    "title": "13  Vorticity",
+    "section": "13.5 Circulation Theorem and the \\(\\beta\\)-effect",
+    "text": "13.5 Circulation Theorem and the \\(\\beta\\)-effect\nKelvin’s theorem applied to the rotating Earth conserves absolute circulation. A fluid column moving poleward encounters increasing \\(f\\), so \\(\\zeta\\) must decrease to compensate. This coupling between meridional motion and relative vorticity is the \\(\\beta\\)-effect and is the restoring mechanism for Rossby waves.",
     "crumbs": [
       "Geophysical Fluid Dynamics",
-      "<span class='chapter-number'>12</span>  <span class='chapter-title'>Vorticity</span>"
+      "<span class='chapter-number'>13</span>  <span class='chapter-title'>Vorticity</span>"
     ]
   },
   {
     "objectID": "04-geophysical-fluid-dynamics/vorticity.html#barotropic-vorticity-equation",
     "href": "04-geophysical-fluid-dynamics/vorticity.html#barotropic-vorticity-equation",
-    "title": "12  Vorticity",
-    "section": "12.6 Barotropic Vorticity Equation",
-    "text": "12.6 Barotropic Vorticity Equation\nFor a two-dimensional, incompressible, inviscid flow on a \\(\\beta\\)-plane, horizontal divergence vanishes (\\(\\nabla_h \\cdot \\vec{v}_h = 0\\)). The vorticity equation reduces to:\n\\[\n\\frac{\\partial \\zeta}{\\partial t} + J(\\psi, \\zeta) + \\beta \\frac{\\partial \\psi}{\\partial x} = 0\n\\]\nwhere \\(\\psi\\) is the streamfunction defined by \\(u = -\\partial \\psi / \\partial y\\), \\(v = \\partial \\psi / \\partial x\\), and \\(J(\\psi, \\zeta) = \\frac{\\partial \\psi}{\\partial x}\\frac{\\partial \\zeta}{\\partial y} - \\frac{\\partial \\psi}{\\partial y}\\frac{\\partial \\zeta}{\\partial x}\\) is the Jacobian. Since \\(\\zeta = \\nabla^2 \\psi\\), this is a single prognostic equation for \\(\\psi\\).\nThis is the barotropic vorticity equation (BVE) under the stated beta-plane, non-divergent, inviscid assumptions. Forcing and dissipation add terms to its right-hand side.",
+    "title": "13  Vorticity",
+    "section": "13.6 Barotropic Vorticity Equation",
+    "text": "13.6 Barotropic Vorticity Equation\nFor a two-dimensional, incompressible, inviscid flow on a \\(\\beta\\)-plane, horizontal divergence vanishes (\\(\\nabla_h \\cdot \\vec{v}_h = 0\\)). The vorticity equation reduces to:\n\\[\n\\frac{\\partial \\zeta}{\\partial t} + J(\\psi, \\zeta) + \\beta \\frac{\\partial \\psi}{\\partial x} = 0\n\\]\nwhere \\(\\psi\\) is the streamfunction defined by \\(u = -\\partial \\psi / \\partial y\\), \\(v = \\partial \\psi / \\partial x\\), and \\(J(\\psi, \\zeta) = \\frac{\\partial \\psi}{\\partial x}\\frac{\\partial \\zeta}{\\partial y} - \\frac{\\partial \\psi}{\\partial y}\\frac{\\partial \\zeta}{\\partial x}\\) is the Jacobian. Since \\(\\zeta = \\nabla^2 \\psi\\), this is a single prognostic equation for \\(\\psi\\).\nThis is the barotropic vorticity equation (BVE) under the stated beta-plane, non-divergent, inviscid assumptions. Forcing and dissipation add terms to its right-hand side.",
     "crumbs": [
       "Geophysical Fluid Dynamics",
-      "<span class='chapter-number'>12</span>  <span class='chapter-title'>Vorticity</span>"
+      "<span class='chapter-number'>13</span>  <span class='chapter-title'>Vorticity</span>"
     ]
   },
   {

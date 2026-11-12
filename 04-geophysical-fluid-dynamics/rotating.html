@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>11&nbsp; Rotating Frame – Global Physical Climatology</title>
+<title>12&nbsp; Rotating Frame – Global Physical Climatology</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -118,7 +118,7 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="Breadcrumbs"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../04-geophysical-fluid-dynamics/index.html">Geophysical Fluid Dynamics</a></li><li class="breadcrumb-item"><a href="../04-geophysical-fluid-dynamics/rotating.html"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Rotating Frame</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="Breadcrumbs"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../04-geophysical-fluid-dynamics/index.html">Geophysical Fluid Dynamics</a></li><li class="breadcrumb-item"><a href="../04-geophysical-fluid-dynamics/rotating.html"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Rotating Frame</span></a></li></ol></nav>
         <a class="flex-grow-1" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -226,8 +226,21 @@ window.Quarto = {
       </ul>
   </li>
         <li class="sidebar-item sidebar-item-section">
-      <span class="sidebar-item-text sidebar-link text-start">
- <span class="menu-text">Partial Differential Equations</span></span>
+      <div class="sidebar-item-container"> 
+            <a href="../03-pdes/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text" id="quarto-sidebar-section-3-label">Partial Differential Equations</span></a>
+            <button type="button" class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-controls="quarto-sidebar-section-3" aria-expanded="true" aria-label="Toggle section: Partial Differential Equations">
+              <i class="bi bi-chevron-right ms-2" aria-hidden="true"></i>
+            </button> 
+      </div>
+      <ul id="quarto-sidebar-section-3" aria-labelledby="quarto-sidebar-section-3-label" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../03-pdes/spectral-methods.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Spectral numerical methods</span></span></a>
+  </div>
+</li>
+      </ul>
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
@@ -241,19 +254,19 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../04-geophysical-fluid-dynamics/motion.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Basic</span></span></a>
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Basic</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../04-geophysical-fluid-dynamics/rotating.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Rotating Frame</span></span></a>
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Rotating Frame</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../04-geophysical-fluid-dynamics/vorticity.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Vorticity</span></span></a>
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Vorticity</span></span></a>
   </div>
 </li>
       </ul>
@@ -272,19 +285,19 @@ window.Quarto = {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#inertial-to-rotating-frame" id="toc-inertial-to-rotating-frame" class="nav-link active" data-scroll-target="#inertial-to-rotating-frame"><span class="header-section-number">11.1</span> Inertial to Rotating Frame</a></li>
-  <li><a href="#momentum-equation-in-the-rotating-frame" id="toc-momentum-equation-in-the-rotating-frame" class="nav-link" data-scroll-target="#momentum-equation-in-the-rotating-frame"><span class="header-section-number">11.2</span> Momentum Equation in the Rotating Frame</a></li>
-  <li><a href="#the-coriolis-parameter" id="toc-the-coriolis-parameter" class="nav-link" data-scroll-target="#the-coriolis-parameter"><span class="header-section-number">11.3</span> The Coriolis Parameter</a></li>
-  <li><a href="#f-plane-and-beta-plane" id="toc-f-plane-and-beta-plane" class="nav-link" data-scroll-target="#f-plane-and-beta-plane"><span class="header-section-number">11.4</span> <span class="math inline">\(f\)</span>-plane and <span class="math inline">\(\beta\)</span>-plane</a></li>
+  <li><a href="#inertial-to-rotating-frame" id="toc-inertial-to-rotating-frame" class="nav-link active" data-scroll-target="#inertial-to-rotating-frame"><span class="header-section-number">12.1</span> Inertial to Rotating Frame</a></li>
+  <li><a href="#momentum-equation-in-the-rotating-frame" id="toc-momentum-equation-in-the-rotating-frame" class="nav-link" data-scroll-target="#momentum-equation-in-the-rotating-frame"><span class="header-section-number">12.2</span> Momentum Equation in the Rotating Frame</a></li>
+  <li><a href="#the-coriolis-parameter" id="toc-the-coriolis-parameter" class="nav-link" data-scroll-target="#the-coriolis-parameter"><span class="header-section-number">12.3</span> The Coriolis Parameter</a></li>
+  <li><a href="#f-plane-and-beta-plane" id="toc-f-plane-and-beta-plane" class="nav-link" data-scroll-target="#f-plane-and-beta-plane"><span class="header-section-number">12.4</span> <span class="math inline">\(f\)</span>-plane and <span class="math inline">\(\beta\)</span>-plane</a></li>
   </ul>
 </nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content" tabindex="-1">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="Breadcrumbs"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../04-geophysical-fluid-dynamics/index.html">Geophysical Fluid Dynamics</a></li><li class="breadcrumb-item"><a href="../04-geophysical-fluid-dynamics/rotating.html"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Rotating Frame</span></a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="Breadcrumbs"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../04-geophysical-fluid-dynamics/index.html">Geophysical Fluid Dynamics</a></li><li class="breadcrumb-item"><a href="../04-geophysical-fluid-dynamics/rotating.html"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Rotating Frame</span></a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Rotating Frame</span></h1>
+<h1 class="title"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Rotating Frame</span></h1>
 </div>
 
 
@@ -302,8 +315,8 @@ window.Quarto = {
 
 
 <p>The Earth rotates with angular velocity <span class="math inline">\(\vec{\Omega}\)</span>, where <span class="math inline">\(|\vec{\Omega}| = \Omega \approx 7.292 \times 10^{-5} \, \text{rad/s}\)</span>. The equations of motion derived in the inertial (non-rotating) frame must be transformed to account for this rotation.</p>
-<section id="inertial-to-rotating-frame" class="level2" data-number="11.1">
-<h2 data-number="11.1" class="anchored" data-anchor-id="inertial-to-rotating-frame"><span class="header-section-number">11.1</span> Inertial to Rotating Frame</h2>
+<section id="inertial-to-rotating-frame" class="level2" data-number="12.1">
+<h2 data-number="12.1" class="anchored" data-anchor-id="inertial-to-rotating-frame"><span class="header-section-number">12.1</span> Inertial to Rotating Frame</h2>
 <p>Let subscripts <span class="math inline">\(I\)</span> and <span class="math inline">\(R\)</span> denote quantities in the inertial and rotating frames. For any vector <span class="math inline">\(\vec{A}\)</span>:</p>
 <p><span class="math display">\[
 \left(\frac{d\vec{A}}{dt}\right)_I = \left(\frac{d\vec{A}}{dt}\right)_R + \vec{\Omega} \times \vec{A}
@@ -317,8 +330,8 @@ window.Quarto = {
 \left(\frac{D\vec{v}}{Dt}\right)_I = \left(\frac{D\vec{v}}{Dt}\right)_R + 2\vec{\Omega} \times \vec{v}_R + \vec{\Omega} \times (\vec{\Omega} \times \vec{r})
 \]</span></p>
 </section>
-<section id="momentum-equation-in-the-rotating-frame" class="level2" data-number="11.2">
-<h2 data-number="11.2" class="anchored" data-anchor-id="momentum-equation-in-the-rotating-frame"><span class="header-section-number">11.2</span> Momentum Equation in the Rotating Frame</h2>
+<section id="momentum-equation-in-the-rotating-frame" class="level2" data-number="12.2">
+<h2 data-number="12.2" class="anchored" data-anchor-id="momentum-equation-in-the-rotating-frame"><span class="header-section-number">12.2</span> Momentum Equation in the Rotating Frame</h2>
 <p>Substituting into the momentum equation from the previous section, and dropping the <span class="math inline">\(R\)</span> subscript (all quantities are now in the rotating frame):</p>
 <p><span class="math display">\[
 \rho \frac{D\vec{v}}{Dt} = -\nabla p + \mu \nabla^2 \vec{v} - 2\rho \vec{\Omega} \times \vec{v} - \rho \vec{\Omega} \times (\vec{\Omega} \times \vec{r}) + \rho \vec{g}
@@ -333,16 +346,16 @@ window.Quarto = {
 \rho \frac{D\vec{v}}{Dt} = -\nabla p + \mu \nabla^2 \vec{v} - 2\rho \vec{\Omega} \times \vec{v} + \rho \vec{g}^*
 \]</span></p>
 </section>
-<section id="the-coriolis-parameter" class="level2" data-number="11.3">
-<h2 data-number="11.3" class="anchored" data-anchor-id="the-coriolis-parameter"><span class="header-section-number">11.3</span> The Coriolis Parameter</h2>
+<section id="the-coriolis-parameter" class="level2" data-number="12.3">
+<h2 data-number="12.3" class="anchored" data-anchor-id="the-coriolis-parameter"><span class="header-section-number">12.3</span> The Coriolis Parameter</h2>
 <p>For large-scale atmospheric and oceanic flows, the vertical component of the Coriolis force dominates. Let <span class="math inline">\(\varphi\)</span> denote latitude. The <strong>Coriolis parameter</strong> is:</p>
 <p><span class="math display">\[
 f = 2\Omega \sin\varphi
 \]</span></p>
 <p>At the equator <span class="math inline">\(f = 0\)</span>; at the poles <span class="math inline">\(f = \pm 2\Omega\)</span>. The horizontal component of the Coriolis acceleration reduces to <span class="math inline">\(f \hat{k} \times \vec{v}_h\)</span>, where <span class="math inline">\(\vec{v}_h\)</span> is the horizontal velocity and <span class="math inline">\(\hat{k}\)</span> is the local vertical unit vector.</p>
 </section>
-<section id="f-plane-and-beta-plane" class="level2" data-number="11.4">
-<h2 data-number="11.4" class="anchored" data-anchor-id="f-plane-and-beta-plane"><span class="header-section-number">11.4</span> <span class="math inline">\(f\)</span>-plane and <span class="math inline">\(\beta\)</span>-plane</h2>
+<section id="f-plane-and-beta-plane" class="level2" data-number="12.4">
+<h2 data-number="12.4" class="anchored" data-anchor-id="f-plane-and-beta-plane"><span class="header-section-number">12.4</span> <span class="math inline">\(f\)</span>-plane and <span class="math inline">\(\beta\)</span>-plane</h2>
 <p>For motions whose horizontal scale <span class="math inline">\(L\)</span> is small compared to the Earth’s radius <span class="math inline">\(a\)</span>, a local Cartesian approximation is used.</p>
 <p><strong><span class="math inline">\(f\)</span>-plane</strong>: <span class="math inline">\(f\)</span> is treated as constant, equal to its value at a reference latitude <span class="math inline">\(\varphi_0\)</span>:</p>
 <p><span class="math display">\[
@@ -838,12 +851,12 @@ f = f_0 + \beta y ~~~,~~~ \beta = \frac{df}{dy} = \frac{2\Omega \cos\varphi_0}{a
 <nav class="page-navigation" aria-label="Page">
   <div class="nav-page nav-page-previous">
       <a href="../04-geophysical-fluid-dynamics/motion.html" class="pagination-link" aria-label="Basic">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Basic</span></span>
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Basic</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
       <a href="../04-geophysical-fluid-dynamics/vorticity.html" class="pagination-link" aria-label="Vorticity">
-        <span class="nav-page-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Vorticity</span></span> <i class="bi bi-arrow-right-short"></i>
+        <span class="nav-page-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Vorticity</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

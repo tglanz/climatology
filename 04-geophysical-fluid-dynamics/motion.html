@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>10&nbsp; Basic – Global Physical Climatology</title>
+<title>11&nbsp; Basic – Global Physical Climatology</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -118,7 +118,7 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="Breadcrumbs"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../04-geophysical-fluid-dynamics/index.html">Geophysical Fluid Dynamics</a></li><li class="breadcrumb-item"><a href="../04-geophysical-fluid-dynamics/motion.html"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Basic</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="Breadcrumbs"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../04-geophysical-fluid-dynamics/index.html">Geophysical Fluid Dynamics</a></li><li class="breadcrumb-item"><a href="../04-geophysical-fluid-dynamics/motion.html"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Basic</span></a></li></ol></nav>
         <a class="flex-grow-1" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -226,8 +226,21 @@ window.Quarto = {
       </ul>
   </li>
         <li class="sidebar-item sidebar-item-section">
-      <span class="sidebar-item-text sidebar-link text-start">
- <span class="menu-text">Partial Differential Equations</span></span>
+      <div class="sidebar-item-container"> 
+            <a href="../03-pdes/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text" id="quarto-sidebar-section-3-label">Partial Differential Equations</span></a>
+            <button type="button" class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-controls="quarto-sidebar-section-3" aria-expanded="true" aria-label="Toggle section: Partial Differential Equations">
+              <i class="bi bi-chevron-right ms-2" aria-hidden="true"></i>
+            </button> 
+      </div>
+      <ul id="quarto-sidebar-section-3" aria-labelledby="quarto-sidebar-section-3-label" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../03-pdes/spectral-methods.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Spectral numerical methods</span></span></a>
+  </div>
+</li>
+      </ul>
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
@@ -241,19 +254,19 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../04-geophysical-fluid-dynamics/motion.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Basic</span></span></a>
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Basic</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../04-geophysical-fluid-dynamics/rotating.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Rotating Frame</span></span></a>
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Rotating Frame</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../04-geophysical-fluid-dynamics/vorticity.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Vorticity</span></span></a>
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Vorticity</span></span></a>
   </div>
 </li>
       </ul>
@@ -272,18 +285,18 @@ window.Quarto = {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#material-derivative" id="toc-material-derivative" class="nav-link active" data-scroll-target="#material-derivative"><span class="header-section-number">10.1</span> Material Derivative</a></li>
-  <li><a href="#mass-continuity" id="toc-mass-continuity" class="nav-link" data-scroll-target="#mass-continuity"><span class="header-section-number">10.2</span> Mass Continuity</a></li>
-  <li><a href="#momentum-equation" id="toc-momentum-equation" class="nav-link" data-scroll-target="#momentum-equation"><span class="header-section-number">10.3</span> Momentum Equation</a></li>
+  <li><a href="#material-derivative" id="toc-material-derivative" class="nav-link active" data-scroll-target="#material-derivative"><span class="header-section-number">11.1</span> Material Derivative</a></li>
+  <li><a href="#mass-continuity" id="toc-mass-continuity" class="nav-link" data-scroll-target="#mass-continuity"><span class="header-section-number">11.2</span> Mass Continuity</a></li>
+  <li><a href="#momentum-equation" id="toc-momentum-equation" class="nav-link" data-scroll-target="#momentum-equation"><span class="header-section-number">11.3</span> Momentum Equation</a></li>
   </ul>
 </nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content" tabindex="-1">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="Breadcrumbs"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../04-geophysical-fluid-dynamics/index.html">Geophysical Fluid Dynamics</a></li><li class="breadcrumb-item"><a href="../04-geophysical-fluid-dynamics/motion.html"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Basic</span></a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="Breadcrumbs"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../04-geophysical-fluid-dynamics/index.html">Geophysical Fluid Dynamics</a></li><li class="breadcrumb-item"><a href="../04-geophysical-fluid-dynamics/motion.html"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Basic</span></a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Basic</span></h1>
+<h1 class="title"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Basic</span></h1>
 </div>
 
 
@@ -301,8 +314,8 @@ window.Quarto = {
 
 
 <p>Let <span class="math inline">\(\vec{x} \in \mathbb{R}^3\)</span> denote position, <span class="math inline">\(t\)</span> time, <span class="math inline">\(\vec{v}(\vec{x}, t)\)</span> the velocity field, <span class="math inline">\(\rho(\vec{x}, t)\)</span> the mass density, <span class="math inline">\(p(\vec{x}, t)\)</span> the pressure, <span class="math inline">\(\nu\)</span> the kinematic viscosity, and <span class="math inline">\(\vec{F}_b(\vec{x}, t)\)</span> the body force per unit mass.</p>
-<section id="material-derivative" class="level2" data-number="10.1">
-<h2 data-number="10.1" class="anchored" data-anchor-id="material-derivative"><span class="header-section-number">10.1</span> Material Derivative</h2>
+<section id="material-derivative" class="level2" data-number="11.1">
+<h2 data-number="11.1" class="anchored" data-anchor-id="material-derivative"><span class="header-section-number">11.1</span> Material Derivative</h2>
 <p>The rate of change following a fluid parcel. For scalar <span class="math inline">\(\phi(\vec{x}, t)\)</span> and vector <span class="math inline">\(\vec{b}(\vec{x}, t)\)</span>:</p>
 <p><span class="math display">\[
 \frac{D\phi}{Dt} = \frac{\partial \phi}{\partial t} + \vec{v} \cdot \nabla \phi
@@ -311,8 +324,8 @@ window.Quarto = {
 \]</span></p>
 <p>The first term is local change at a fixed point; the second is advection.</p>
 </section>
-<section id="mass-continuity" class="level2" data-number="10.2">
-<h2 data-number="10.2" class="anchored" data-anchor-id="mass-continuity"><span class="header-section-number">10.2</span> Mass Continuity</h2>
+<section id="mass-continuity" class="level2" data-number="11.2">
+<h2 data-number="11.2" class="anchored" data-anchor-id="mass-continuity"><span class="header-section-number">11.2</span> Mass Continuity</h2>
 <p><span class="math display">\[
 \frac{\partial \rho}{\partial t} + \nabla \cdot (\rho \vec{v}) = 0
 \]</span></p>
@@ -323,8 +336,8 @@ window.Quarto = {
 \]</span></p>
 <p>The velocity field is divergence-free: fluid parcels may deform but not change volume. This eliminates density as a prognostic variable and couples velocity to pressure through the momentum equation, where <span class="math inline">\(p\)</span> acts as a Lagrange multiplier enforcing this constraint.</p>
 </section>
-<section id="momentum-equation" class="level2" data-number="10.3">
-<h2 data-number="10.3" class="anchored" data-anchor-id="momentum-equation"><span class="header-section-number">10.3</span> Momentum Equation</h2>
+<section id="momentum-equation" class="level2" data-number="11.3">
+<h2 data-number="11.3" class="anchored" data-anchor-id="momentum-equation"><span class="header-section-number">11.3</span> Momentum Equation</h2>
 <p><span class="math display">\[
 \rho \frac{D\vec{v}}{Dt} = -\nabla p + \mu \nabla^2 \vec{v} + \rho \vec{F}_b
 \]</span></p>
@@ -830,7 +843,7 @@ window.Quarto = {
   </div>
   <div class="nav-page nav-page-next">
       <a href="../04-geophysical-fluid-dynamics/rotating.html" class="pagination-link" aria-label="Rotating Frame">
-        <span class="nav-page-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Rotating Frame</span></span> <i class="bi bi-arrow-right-short"></i>
+        <span class="nav-page-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Rotating Frame</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

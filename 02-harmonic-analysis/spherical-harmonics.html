@@ -245,8 +245,21 @@ window.Quarto = {
       </ul>
   </li>
         <li class="sidebar-item sidebar-item-section">
-      <span class="sidebar-item-text sidebar-link text-start">
- <span class="menu-text">Partial Differential Equations</span></span>
+      <div class="sidebar-item-container"> 
+            <a href="../03-pdes/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text" id="quarto-sidebar-section-3-label">Partial Differential Equations</span></a>
+            <button type="button" class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-controls="quarto-sidebar-section-3" aria-expanded="true" aria-label="Toggle section: Partial Differential Equations">
+              <i class="bi bi-chevron-right ms-2" aria-hidden="true"></i>
+            </button> 
+      </div>
+      <ul id="quarto-sidebar-section-3" aria-labelledby="quarto-sidebar-section-3-label" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../03-pdes/spectral-methods.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Spectral numerical methods</span></span></a>
+  </div>
+</li>
+      </ul>
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
@@ -260,19 +273,19 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../04-geophysical-fluid-dynamics/motion.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Basic</span></span></a>
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Basic</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../04-geophysical-fluid-dynamics/rotating.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Rotating Frame</span></span></a>
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Rotating Frame</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../04-geophysical-fluid-dynamics/vorticity.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Vorticity</span></span></a>
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Vorticity</span></span></a>
   </div>
 </li>
       </ul>
@@ -329,7 +342,7 @@ window.Quarto = {
 <h2 data-number="9.1" class="anchored" data-anchor-id="definition"><span class="header-section-number">9.1</span> Definition</h2>
 <p>In spherical coordinates <span class="math inline">\((\theta, \phi)\)</span> with <span class="math inline">\(\theta \in [0,\pi]\)</span> (colatitude) and <span class="math inline">\(\phi \in [0, 2\pi)\)</span> (longitude), the spherical harmonics are</p>
 <p><span class="math display">\[Y_l^m(\theta, \phi) = \sqrt{\frac{(2l+1)}{4\pi}\frac{(l-m)!}{(l+m)!}}\, P_l^m(\cos\theta)\, e^{im\phi},\]</span></p>
-<p>where <span class="math inline">\(l = 0, 1, 2, \ldots\)</span> is the degree, <span class="math inline">\(m = -l, \ldots, l\)</span> is the order, and <span class="math inline">\(P_l^m\)</span> are the associated Legendre polynomials. There are <span class="math inline">\(2l+1\)</span> harmonics of each degree, and infinitely many degrees.</p>
+<p>where <span class="math inline">\(l = 0, 1, 2, \ldots\)</span> is the degree, <span class="math inline">\(m = -l, \ldots, l\)</span> is the order, and <span class="math inline">\(P_l^m\)</span> are the associated Legendre functions with the Condon–Shortley phase. For <span class="math inline">\(m\ge0\)</span>, <span class="math inline">\(P_l^m(t)=(-1)^m(1-t^2)^{m/2}d^mP_l(t)/dt^m\)</span>. Negative orders obey <span class="math inline">\(Y_l^{-m}=(-1)^m\overline{Y_l^m}\)</span>. There are <span class="math inline">\(2l+1\)</span> harmonics of each degree, and infinitely many degrees.</p>
 <p><strong>Eigenvalue equation.</strong> The spherical harmonics satisfy</p>
 <p><span class="math display">\[\Delta_{S^2} Y_l^m = -l(l+1)\, Y_l^m.\]</span></p>
 <p>The eigenvalue <span class="math inline">\(-l(l+1)\)</span> depends only on degree <span class="math inline">\(l\)</span>, not order <span class="math inline">\(m\)</span>: each eigenspace has dimension <span class="math inline">\(2l+1\)</span>.</p>
@@ -342,7 +355,7 @@ window.Quarto = {
 <p><span class="math display">\[\int_{S^2} Y_l^m(\theta,\phi)\, \overline{Y_{l'}^{m'}(\theta,\phi)}\, d\Omega = \delta_{ll'}\delta_{mm'},\]</span></p>
 <p>where <span class="math inline">\(d\Omega = \sin\theta\, d\theta\, d\phi\)</span>. The expansion and Parseval identity follow from the general ONB theory:</p>
 <p><span class="math display">\[f(\theta,\phi) = \sum_{l=0}^{\infty}\sum_{m=-l}^{l} \hat{f}_l^m\, Y_l^m(\theta,\phi), \qquad \hat{f}_l^m = \int_{S^2} f\, \overline{Y_l^m}\, d\Omega, \qquad \int_{S^2} |f|^2\, d\Omega = \sum_{l,m} |\hat{f}_l^m|^2.\]</span></p>
-<p>This is the spherical harmonic transform, the analogue of the Fourier series on <span class="math inline">\(S^2\)</span>.</p>
+<p>This is the spherical harmonic transform, the analogue of the Fourier series on <span class="math inline">\(S^2\)</span>. Its numerical evaluation, Gaussian grids, and sampling conditions are developed in <a href="../03-pdes/spectral-methods.html#sec-gaussian-quadrature">spectral numerical methods</a>.</p>
 <p><em>Further reading: <span class="citation" data-cites="Kreyszig2011aem">Kreyszig (<a href="#ref-Kreyszig2011aem" role="doc-biblioref">2011</a>)</span>, Sec. 12.11 (orthogonality of Legendre polynomials, basis for the expansion).</em></p>
 <hr>
 </section>
@@ -353,7 +366,7 @@ window.Quarto = {
 <li><span class="math inline">\(Y_1^0 = \sqrt{\frac{3}{4\pi}}\cos\theta\)</span>: proportional to <span class="math inline">\(z/r\)</span>, the north-south dipole.</li>
 <li><span class="math inline">\(Y_1^{\pm 1} = \mp\sqrt{\frac{3}{8\pi}}\sin\theta\, e^{\pm i\phi}\)</span>: equatorial dipoles.</li>
 </ul>
-<p>Degree <span class="math inline">\(l\)</span> harmonics oscillate <span class="math inline">\(l\)</span> times across the sphere. High <span class="math inline">\(l\)</span> corresponds to small-scale features; low <span class="math inline">\(l\)</span> to large-scale structure.</p>
+<p>Degree <span class="math inline">\(l\)</span> sets the Laplacian eigenvalue and an angular scale of order <span class="math inline">\(1/l\)</span> for large <span class="math inline">\(l\)</span>. The order <span class="math inline">\(m\)</span> sets the longitude dependence. A single oscillation count does not describe every harmonic at fixed degree.</p>
 <hr>
 </section>
 <section id="addition-theorem" class="level2" data-number="9.4">
