@@ -4,3 +4,7 @@ Differential operators, boundary conditions, and forcing determine a PDE problem
 Laplace and Poisson equations provide examples of Green's functions and spectral
 solution methods. On the sphere, spherical harmonics connect these ideas to the
 Laplace-Beltrami operator.
+
+The [spectral methods chapter](spectral-methods.qmd) develops projection,
+Gaussian quadrature, spherical harmonic transforms, elliptic inversion, and
+nonlinear dealiasing.

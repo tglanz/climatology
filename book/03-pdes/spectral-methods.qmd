@@ -1,0 +1,310 @@
+# Spectral numerical methods {#sec-spectral-methods}
+
+A spectral method approximates a field by a finite sum of global basis functions.
+It solves for their coefficients rather than for independent values in each cell.
+The basis should respect the domain: Fourier modes suit periodic intervals,
+orthogonal polynomials suit bounded intervals, and spherical harmonics suit the
+sphere. The [function-space chapter](../02-harmonic-analysis/function-spaces.qmd)
+explains projection; here we turn projection into a numerical method.
+
+## From a PDE to coefficient equations
+
+Let $u(x,t)$ be a scalar field on a domain $D$, and let $\{\varphi_j\}$ be an
+orthonormal basis for a specified inner product $\langle\cdot,\cdot\rangle$.
+For $J$ retained functions, write
+
+$$
+u_J(x,t)=\sum_{j=0}^{J-1}a_j(t)\varphi_j(x).
+$$
+
+For a PDE $\partial_t u=\mathcal{L}u+\mathcal{N}(u)+g$, a Galerkin method
+requires the residual to be orthogonal to every retained basis function:
+
+$$
+\frac{da_i}{dt}
+=\sum_{j=0}^{J-1}\langle\mathcal{L}\varphi_j,\varphi_i\rangle a_j
+ +\langle\mathcal{N}(u_J),\varphi_i\rangle
+ +\langle g,\varphi_i\rangle.
+$$
+
+Here $\mathcal{L}$ is linear, $\mathcal{N}$ contains nonlinear terms, and $g$ is
+forcing. A nonorthonormal basis introduces a mass matrix
+$M_{ij}=\langle\varphi_j,\varphi_i\rangle$ on the left.
+Boundary conditions must be built into the basis or imposed separately.
+A **collocation method** instead sets the residual to zero at selected nodes.
+A **pseudospectral method** evaluates terms through transformations between
+coefficients and node values. With adequate quadrature and dealiasing, its
+computed nonlinear projection can agree with Galerkin projection.
+These distinctions concern spatial discretization; time integration is a
+separate numerical choice. See @Boyd2001spectral for the general framework.
+
+For a periodic interval $[0,2\pi)$, $\partial_x e^{ikx}=ik e^{ikx}$ and
+$\partial_x^2e^{ikx}=-k^2e^{ikx}$. Differentiation becomes coefficient
+multiplication. With physical coordinate $s=Rx$, the derivative is instead
+$\partial_s=R^{-1}\partial_x$, so its units are inverse length.
+
+## Why global expansions can be accurate
+
+For an orthonormal basis, the squared $L^2$ truncation error is the energy in
+omitted coefficients. Rapid coefficient decay therefore gives rapid convergence.
+For periodic analytic functions that extend analytically into a complex strip,
+Fourier coefficients decay exponentially with mode number. Finite regularity
+usually gives algebraic decay. Discontinuities cause oscillations near jumps
+and slow convergence; increasing the truncation alone does not remove the
+Gibbs phenomenon. Spectral accuracy depends on regularity and compatible
+boundary conditions, not merely on choosing a transform.
+
+A global method is useful when smooth solutions need high accuracy, derivatives
+or elliptic inversions have simple coefficient formulas, or scale-dependent
+analysis is central. Local methods may be preferable for shocks, complex
+boundaries, local refinement, or localized communication.
+
+## Spherical harmonic representation
+
+Use colatitude $\theta\in[0,\pi]$, longitude $\phi\in[0,2\pi)$, latitude
+$\alpha=\pi/2-\theta$, and radius $R>0$ in metres. Define
+$\mu=\cos\theta=\sin\alpha$. Solid angle is dimensionless:
+
+$$
+d\Omega=\sin\theta\,d\theta\,d\phi=d\mu\,d\phi
+$$
+
+when the $\mu$ integral runs from $-1$ to $1$. Physical area is $R^2d\Omega$.
+Use the orthonormal complex harmonics from the
+[spherical harmonics chapter](../02-harmonic-analysis/spherical-harmonics.qmd).
+For $m\ge0$, their associated Legendre functions include the Condon--Shortley
+phase:
+
+$$
+P_\ell^m(\mu)=(-1)^m(1-\mu^2)^{m/2}
+\frac{d^mP_\ell}{d\mu^m},
+\qquad
+Y_\ell^m=N_{\ell m}P_\ell^m(\mu)e^{im\phi},
+\quad
+N_{\ell m}=\sqrt{\frac{2\ell+1}{4\pi}\frac{(\ell-m)!}{(\ell+m)!}}.
+$$
+
+Negative orders satisfy $Y_\ell^{-m}=(-1)^m\overline{Y_\ell^m}$.
+Triangular truncation at degree $L$ retains
+
+$$
+f_L=\sum_{\ell=0}^{L}\sum_{m=-\ell}^{\ell}
+\widehat f_\ell^mY_\ell^m,
+\qquad
+\widehat f_\ell^m=\int_{S^2}f\overline{Y_\ell^m}\,d\Omega.
+$$
+
+There are $(L+1)^2$ complex basis functions. A real field obeys
+$\widehat f_\ell^{-m}=(-1)^m\overline{\widehat f_\ell^m}$, reducing independent
+storage. If $f$ has units $U$, so do its coefficients under this dimensionless
+normalization. Truncation degree and the number of stored modes differ by one
+when degree zero is included.
+
+## Gaussian grid and quadrature {#sec-gaussian-quadrature}
+
+A quadrature rule approximates an integral by weighted function values.
+The $n$-point Gauss--Legendre rule on $[-1,1]$ uses the roots $\mu_i$ of the
+Legendre polynomial $P_n$ and positive weights
+
+$$
+\int_{-1}^{1}q(\mu)\,d\mu
+\approx\sum_{i=1}^{n}w_iq(\mu_i),
+\qquad
+w_i=\frac{2}{(1-\mu_i^2)[P_n'(\mu_i)]^2}.
+$$
+
+It is exact for polynomials of degree at most $2n-1$, and
+$\sum_iw_i=2$. @GolubWelsch1969 gives algorithms for computing Gaussian rules
+from orthogonal-polynomial recurrences. The following argument explains why the
+Legendre nodes give this exactness.
+
+For a polynomial $q$ of degree at most $2n-1$, polynomial division gives
+$q=P_ns+r$, where $s$ and $r$ have degree at most $n-1$. Legendre orthogonality
+makes $\int P_ns=0$. At every node $P_n(\mu_i)=0$, so $q(\mu_i)=r(\mu_i)$.
+Choose weights that integrate the Lagrange interpolant of $r$ exactly. The same
+weighted sum then integrates $q$ exactly. The extra exact degrees come from
+orthogonality, not from uniformly spacing the nodes.
+
+A **full Gaussian grid** combines these nodes with $M$ equally spaced longitudes:
+
+$$
+\alpha_i=\arcsin\mu_i,\qquad
+\phi_j=\frac{2\pi j}{M},\quad j=0,\ldots,M-1.
+$$
+
+Latitudes are not equally spaced, and no node is at a pole. An equatorial node
+exists when $n$ is odd. Every latitude ring has the same $M$ longitudes; a reduced
+Gaussian grid instead varies their count and needs a corresponding transform
+algorithm. The full-grid formulas below do not apply unchanged to a reduced grid.
+
+The area integral and global mean are approximated by
+
+$$
+\int_{S_R^2}f\,dA
+\approx R^2\frac{2\pi}{M}\sum_{i,j}w_if_{ij},
+\qquad
+\langle f\rangle_A\approx\frac{1}{2M}\sum_{i,j}w_if_{ij}.
+$$
+
+Thus a constant integrates to $4\pi R^2$. For a zonal profile, normalized latitude
+weights are $w_i/2$. Do not multiply Gaussian weights by $\cos\alpha_i$ again:
+the substitution $d\mu=\cos\alpha\,d\alpha$ already accounts for the area
+Jacobian. Uniform weights per latitude ring would also be incorrect.
+
+### Worked quadrature example
+
+For $n=2$, the nodes are $\mu=\pm1/\sqrt3$ and both weights are one.
+For $f=\mu^2$ the approximate global mean is
+
+$$
+\frac12\left[\left(-\frac1{\sqrt3}\right)^2+
+\left(\frac1{\sqrt3}\right)^2\right]=\frac13,
+$$
+
+which equals $\frac12\int_{-1}^{1}\mu^2\,d\mu$.
+The same rule gives $1/9$ for the mean of $\mu^4$, whereas its exact mean is
+$1/5$. Degree four exceeds this rule's degree-three guarantee.
+
+## Why this grid helps the SHT
+
+The spherical harmonic transform (SHT) separates into longitude Fourier analysis
+and latitude Legendre analysis. For $m\ge0$, define
+
+$$
+F_m(\mu_i)=\frac1M\sum_{j=0}^{M-1}f(\mu_i,\phi_j)e^{-im\phi_j}.
+$$
+
+Then compute
+
+$$
+\widehat f_\ell^m\approx
+2\pi N_{\ell m}\sum_{i=1}^{n}w_iF_m(\mu_i)P_\ell^m(\mu_i).
+$$
+
+An FFT computes all longitude coefficients on each ring. Associated Legendre
+sums complete the forward transform; synthesis evaluates the harmonic sum at
+nodes. See @Schaeffer2013sht for a practical transform algorithm.
+
+For a field bandlimited to degree $L$, sufficient sampling conditions for exact
+coefficient recovery in exact arithmetic are
+
+$$
+n\ge L+1,\qquad M\ge 2L+1.
+$$
+
+To see why, expand the input in retained harmonics. The longitude sum contains
+$e^{i(m'-m)\phi_j}$ and is zero unless $m'=m$ under this sampling condition.
+For the surviving terms,
+
+$$
+P_\ell^m(\mu)P_{\ell'}^m(\mu)
+=(1-\mu^2)^m\frac{d^mP_\ell}{d\mu^m}
+\frac{d^mP_{\ell'}}{d\mu^m},
+$$
+
+which is a polynomial of degree at most $\ell+\ell'\le2L$. Since
+$2n-1\ge2L$, Gaussian quadrature integrates these products exactly. The discrete
+inner product therefore reproduces orthogonality on the retained harmonic space.
+This is why the nodes and weights are part of the transform definition.
+
+The statement does not claim that each $P_\ell^m$ is itself a polynomial:
+odd $m$ introduces a square root. The same-order product is polynomial.
+Nor does it promise exact coefficients for arbitrary sampled fields with energy
+above $L$. Such unresolved structure can alias into retained modes.
+
+For the bandlimited field, discrete Parseval also follows:
+
+$$
+\frac{2\pi}{M}\sum_{i,j}w_i|f_L(\mu_i,\phi_j)|^2
+=\sum_{\ell=0}^{L}\sum_{m=-\ell}^{\ell}|\widehat f_\ell^m|^2.
+$$
+
+Round trips and this identity test normalization, weights, and coordinate order.
+Reversing latitude requires reversing the data and weights together. A shifted
+longitude origin requires consistent Fourier phases. Shape agreement alone does
+not establish transform compatibility.
+
+A direct separated implementation uses approximately
+$O(nM\log M)$ work for longitude FFTs and $O(nL^2)$ for the Legendre stage.
+For $n,M=O(L)$ the latter is cubic. An SHT is not simply a two-dimensional FFT.
+Recurrences, symmetry, precomputation, and specialized algorithms change practical
+costs and memory needs.
+
+## Solving equations in spectral space
+
+On a radius-$R$ sphere, the physical Laplace--Beltrami operator satisfies
+
+$$
+\Delta_{S_R^2}Y_\ell^m=-\frac{\ell(\ell+1)}{R^2}Y_\ell^m.
+$$
+
+For Poisson's equation $\Delta_{S_R^2}u=f$, the sphere has no boundary and a
+constant is in the nullspace. A solution exists only when
+$\int f\,d\Omega=0$. Fix the undetermined mean by setting
+$\widehat u_0^0=0$. For every $\ell\ge1$,
+
+$$
+\widehat u_\ell^m=-\frac{R^2}{\ell(\ell+1)}\widehat f_\ell^m.
+$$
+
+For example, if $f=A Y_2^0$, then $u=-AR^2Y_2^0/6$.
+Applying the Laplacian recovers $f$, checking the sign and radius factor.
+If $f$ has units $U\,\mathrm{m}^{-2}$, $u$ has units $U$.
+
+For diffusion $\partial_t u=\kappa\Delta_{S_R^2}u$, with diffusivity
+$\kappa$ in $\mathrm{m}^2\mathrm{s}^{-1}$,
+
+$$
+\widehat u_\ell^m(t)=\widehat u_\ell^m(0)
+\exp\left[-\frac{\kappa\ell(\ell+1)}{R^2}t\right].
+$$
+
+The mean remains constant and smaller scales decay faster. If forward Euler is
+used instead of this exact update, stability for all retained diffusion modes
+requires $\Delta t\le2R^2/[\kappa L(L+1)]$ for $L\ge1$.
+Accurate spatial differentiation does not remove time-step restrictions.
+
+## Nonlinear terms and aliasing
+
+A product of fields bandlimited to $L$ can contain degrees up to $2L$.
+Computing it on the minimally sampled grid and transforming back can fold
+unresolved modes into lower degrees. In a periodic example, grid samples cannot
+distinguish Fourier modes $k$ and $k+M$ because
+$e^{i(k+M)2\pi j/M}=e^{ik2\pi j/M}$.
+
+For exact projection of a product of two scalar degree-$L$ fields onto degrees
+through $L$, a sufficient full Gaussian grid satisfies
+
+$$
+M>3L,\qquad 2n-1\ge3L.
+$$
+
+The longitude integrand contains three mode factors. Its maximum frequency is
+$3L$. Surviving latitude products also have degree at most $3L$: the longitude
+selection rule makes the sum of their absolute orders even, so the factors of
+$(1-\mu^2)^{1/2}$ combine into an integer power. Gaussian exactness then applies.
+This is the spherical counterpart of padding each dimension by roughly $3/2$
+for a quadratic product. Strict inequalities and integer rounding matter.
+Derivatives of vector components and higher-order nonlinearities require their
+own analysis; these bounds apply to scalar products as stated.
+
+A pseudospectral step therefore synthesizes on an adequate grid, evaluates the
+nonlinear expression there, analyzes it, and retains only the intended modes.
+Filtering damps selected coefficients but does not retroactively make an aliased
+projection exact. Dealiasing, physical diffusion, and numerical filtering serve
+different purposes.
+
+## Uses and numerical checks
+
+Spectral coefficients support elliptic inversion, diffusion, scale-dependent
+filtering, energy spectra, and comparison across resolutions. A scalar isotropic
+linear filter multiplies all orders at degree $\ell$ by the same factor; this
+preserves rotational symmetry. General position-dependent coefficients couple
+modes and need not yield diagonal operators.
+
+Before using a transform in a solver, verify a constant, an individual harmonic,
+a forward/inverse round trip, and discrete Parseval. Check an analytic PDE
+solution such as the diffusion mode above. Increase truncation and quadrature
+resolution separately: convergence in one does not demonstrate convergence in
+the other. Record basis normalization, phase convention, radius, retained degrees,
+node coordinates, and weights so that stored coefficients remain interpretable.

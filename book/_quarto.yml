@@ -21,7 +21,8 @@ book:
         - 02-harmonic-analysis/fourier-transform.qmd
         - 02-harmonic-analysis/spherical-harmonics.qmd
     - part: 03-pdes/index.qmd
-      chapters: []
+      chapters:
+        - 03-pdes/spectral-methods.qmd
     - part: 04-geophysical-fluid-dynamics/index.qmd
       chapters:
         - 04-geophysical-fluid-dynamics/motion.qmd
