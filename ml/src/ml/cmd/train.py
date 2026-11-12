@@ -1,17 +1,15 @@
-import logging
-import shutil
 from pathlib import Path
 
 import click
 import torch
 
-from ml.config import load as load_config
+from ml.config import load as load_config, save as save_config
+from ml.data.prepared import verify, bind
 from ml.common.logging import setup_logging
 from ml.training.model import build_model
 
 from ml.data.isca_dataset import make_loaders
 from ml.training.trainer import Trainer
-from ml.training.info import rotate_training_dir
 from ml.inference import select_device
 from ml.data.splits import Splits
 
@@ -39,7 +37,9 @@ from ml.data.splits import Splits
 def train(config_path: Path, track_metrics: bool, workers: int, device: str):
     cfg = load_config(config_path)
     setup_logging(cfg.logging)
-    log = logging.getLogger(__name__)
+    verify(cfg.paths.preprocessed_dir)
+    if cfg.paths.training_dir.exists():
+        raise FileExistsError("training directory exists; choose a fresh training_dir")
 
     selected_device = select_device(device)
     torch.manual_seed(cfg.training.seed)
@@ -52,12 +52,9 @@ def train(config_path: Path, track_metrics: bool, workers: int, device: str):
 
     splits = Splits.load(cfg.paths.preprocessed_dir / "splits.json")
     splits.validate()
-    rotated = rotate_training_dir(cfg.paths.training_dir)
-    if rotated is not None:
-        log.info("rotated previous training to %s", rotated)
-
-    cfg.paths.training_dir.mkdir(parents=True, exist_ok=True)
-    shutil.copy2(config_path, cfg.paths.training_dir / "config.toml")
+    cfg.paths.training_dir.mkdir(parents=True, exist_ok=False)
+    save_config(cfg, cfg.paths.training_dir / "config.toml")
+    bind(cfg.paths.preprocessed_dir, cfg.paths.training_dir)
     splits.save(
         cfg.paths.training_dir,
         "splits",

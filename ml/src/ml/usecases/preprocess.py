@@ -4,13 +4,16 @@ from concurrent.futures import ProcessPoolExecutor
 from itertools import repeat
 import json
 import logging
+import shutil
+import tempfile
 from pathlib import Path
 
 import h5py
 import numpy as np
 from tqdm import tqdm
 
-from ml.config import load as load_config
+from ml.config import load_data as load_config, save as save_config
+from ml.data.prepared import write_manifest
 from ml.data.climatology import diagnostic_for
 from ml.data.metadata import DataMetadata
 from ml.data.simulation_data import try_read_simulation
@@ -38,6 +41,7 @@ def _extract_pairs(
     )
     written, exclusions = 0, []
     simulation_paths, simulation_targets = [], []
+    offsets, starts, provenance = [0], [], []
     output_path.parent.mkdir(parents=True, exist_ok=True)
     try:
         with h5py.File(output_path, "x") as handle:
@@ -77,6 +81,16 @@ def _extract_pairs(
                     samples.y_windows,
                 )
                 written += n
+                offsets.append(written)
+                starts.extend(samples.starts)
+                provenance.append(
+                    {
+                        "spinup": samples.t_s,
+                        "convergence": samples.t_c,
+                        "target_interval": samples.target_interval,
+                        "timeline_length": samples.timeline_length,
+                    }
+                )
                 simulation_paths.append(str(samples.sim_dir))
                 simulation_targets.append(samples.truth_profile)
             if metadata is not None:
@@ -98,6 +112,9 @@ def _extract_pairs(
                     else np.empty((0, len(metadata.y_vars), height), dtype=np.float32)
                 )
                 handle.create_dataset("simulation_targets", data=targets)
+                handle.create_dataset("simulation_offsets", data=offsets, dtype="int64")
+                handle.create_dataset("window_starts", data=starts, dtype="int64")
+                handle.attrs["simulation_provenance"] = json.dumps(provenance)
                 handle.create_dataset(
                     "simulation_paths",
                     data=simulation_paths,
@@ -125,20 +142,33 @@ def run(config_path: Path, split_path: Path, n_workers: int = 0) -> None:
     splits = Splits.load(split_path)
     splits.validate()
     out_dir = cfg.paths.preprocessed_dir
-    if any(
-        (out_dir / name).exists()
-        for name in ("train.h5", "val.h5", "test.h5", "splits.json")
-    ):
+    if out_dir.exists():
         raise FileExistsError("prepared output exists; choose a fresh preprocessed_dir")
-    metadata, count = _extract_pairs(
-        splits.train, config_path, out_dir / "train.h5", n_workers
-    )
-    if count == 0:
-        raise ValueError(
-            "no usable training samples; inspect train.h5 exclusion reasons"
+    out_dir.parent.mkdir(parents=True, exist_ok=True)
+    staging = Path(tempfile.mkdtemp(prefix=f".{out_dir.name}-", dir=out_dir.parent))
+    try:
+        metadata, count = _extract_pairs(
+            splits.train, config_path, staging / "train.h5", n_workers
         )
-    _extract_pairs(
-        splits.validation, config_path, out_dir / "val.h5", n_workers, metadata
-    )
-    _extract_pairs(splits.test, config_path, out_dir / "test.h5", n_workers, metadata)
-    splits.save(out_dir, "splits", "Prepared simulation assignments", cfg.data.split)
+        if count == 0:
+            raise ValueError(
+                "no usable training samples; inspect simulation exclusions"
+            )
+        _extract_pairs(
+            splits.validation, config_path, staging / "val.h5", n_workers, metadata
+        )
+        _extract_pairs(
+            splits.test, config_path, staging / "test.h5", n_workers, metadata
+        )
+        splits.save(
+            staging, "splits", "Prepared simulation assignments", cfg.data.split
+        )
+        save_config(cfg, staging / "preparation.toml")
+        sweep = cfg.paths.experiment_dir / "sweep.json"
+        if sweep.exists():
+            shutil.copy2(sweep, staging / "sweep.json")
+        write_manifest(staging)
+        staging.rename(out_dir)
+    finally:
+        if staging.exists():
+            shutil.rmtree(staging)

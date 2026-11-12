@@ -9,6 +9,7 @@ import numpy as np
 from ml.config import load
 from ml.data.climatology import diagnostic_for
 from ml.data.metadata import DataMetadata
+from ml.data.prepared import for_run
 from ml.diagnostics.errors import ScoreSummary, profile_relative_l2_values
 from ml.inference import load_checkpoint, select_device, prepare_device, predict_windows
 
@@ -37,7 +38,7 @@ def run(
     training_dir = training_dir.resolve()
     cfg = load(training_dir / "config.toml")
     checkpoint = load_checkpoint(cfg, training_dir)
-    with h5py.File(cfg.paths.preprocessed_dir / "test.h5", "r") as handle:
+    with h5py.File(for_run(training_dir) / "test.h5", "r") as handle:
         metadata = DataMetadata.read_hdf5(handle)
         if not checkpoint.normalization.metadata.matches(metadata):
             raise ValueError("prepared test data differ from the saved checkpoint")

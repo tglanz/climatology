@@ -10,7 +10,7 @@ In spherical coordinates $(\theta, \phi)$ with $\theta \in [0,\pi]$ (colatitude)
 
 $$Y_l^m(\theta, \phi) = \sqrt{\frac{(2l+1)}{4\pi}\frac{(l-m)!}{(l+m)!}}\, P_l^m(\cos\theta)\, e^{im\phi},$$
 
-where $l = 0, 1, 2, \ldots$ is the degree, $m = -l, \ldots, l$ is the order, and $P_l^m$ are the associated Legendre polynomials. There are $2l+1$ harmonics of each degree, and infinitely many degrees.
+where $l = 0, 1, 2, \ldots$ is the degree, $m = -l, \ldots, l$ is the order, and $P_l^m$ are the associated Legendre functions with the Condon--Shortley phase. For $m\ge0$, $P_l^m(t)=(-1)^m(1-t^2)^{m/2}d^mP_l(t)/dt^m$. Negative orders obey $Y_l^{-m}=(-1)^m\overline{Y_l^m}$. There are $2l+1$ harmonics of each degree, and infinitely many degrees.
 
 **Eigenvalue equation.** The spherical harmonics satisfy
 
@@ -33,6 +33,8 @@ where $d\Omega = \sin\theta\, d\theta\, d\phi$. The expansion and Parseval ident
 $$f(\theta,\phi) = \sum_{l=0}^{\infty}\sum_{m=-l}^{l} \hat{f}_l^m\, Y_l^m(\theta,\phi), \qquad \hat{f}_l^m = \int_{S^2} f\, \overline{Y_l^m}\, d\Omega, \qquad \int_{S^2} |f|^2\, d\Omega = \sum_{l,m} |\hat{f}_l^m|^2.$$
 
 This is the spherical harmonic transform, the analogue of the Fourier series on $S^2$.
+Its numerical evaluation, Gaussian grids, and sampling conditions are developed
+in [spectral numerical methods](../03-pdes/spectral-methods.qmd#sec-gaussian-quadrature).
 
 *Further reading: @Kreyszig2011aem, Sec. 12.11 (orthogonality of Legendre polynomials, basis for the expansion).*
 
@@ -44,7 +46,7 @@ This is the spherical harmonic transform, the analogue of the Fourier series on 
 - $Y_1^0 = \sqrt{\frac{3}{4\pi}}\cos\theta$: proportional to $z/r$, the north-south dipole.
 - $Y_1^{\pm 1} = \mp\sqrt{\frac{3}{8\pi}}\sin\theta\, e^{\pm i\phi}$: equatorial dipoles.
 
-Degree $l$ harmonics oscillate $l$ times across the sphere. High $l$ corresponds to small-scale features; low $l$ to large-scale structure.
+Degree $l$ sets the Laplacian eigenvalue and an angular scale of order $1/l$ for large $l$. The order $m$ sets the longitude dependence. A single oscillation count does not describe every harmonic at fixed degree.
 
 ---
 

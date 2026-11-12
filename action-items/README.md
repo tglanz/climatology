@@ -11,7 +11,8 @@ Three work items, implemented in order:
 The [workplan](../docs/workplan.md) gives the phase gates.
 Compaction is complete, with recorded verification limits; see its [implementation results](01-compaction-results.md).
 Correctness is complete with recorded verification limits; see its [results](02-correctness-results.md).
-Pipeline redesign remains planned.
+Pipeline redesign is complete with recorded verification limits; see its
+[results](03-pipeline-results.md) and the [pipeline overview](../docs/pipeline.md).
 
 Each item includes what to change, why, and verification steps.
 Small setup and implementation details belong inside this work, not in separate projects.

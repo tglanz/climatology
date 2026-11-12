@@ -1,7 +1,7 @@
 import logging
 from pathlib import Path
 
-from ml.config import load as load_config
+from ml.config import load_data as load_config
 from ml.data.isca_preprocessing import list_simulation_dirs
 from ml.data.splits import generate
 from ml.data.sweep_file import SweepFile

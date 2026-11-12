@@ -25,3 +25,7 @@ Prepare data once and reuse it for model iterations. Keep the same target and sp
 4. Load the saved model and reproduce its evaluation from the saved inputs and settings.
 5. Check local and Slurm command construction and failure handling.
 6. Measure the small experiment's runtime and memory. Confirm it is useful for routine iteration.
+
+Implementation is complete with recorded verification limits. See the
+[architecture and command reference](../docs/pipeline.md) and
+[implementation results](03-pipeline-results.md).

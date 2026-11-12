@@ -7,6 +7,7 @@ import numpy as np
 
 from ml.data.climatology import TargetDiagnostic, diagnostic_for
 from ml.data.simulation_data import SimulationSamples
+from ml.data.evaluation import SimulationPrediction
 from ml.data.splits import Splits
 from ml.data.sweep_file import SweepFile
 from ml.diagnostics.errors import ScoreSummary, profile_relative_l2_values, profile_rmse
@@ -199,7 +200,7 @@ def _replicate_variability(
 
 
 def build_target_evaluation(
-    results: list[SimulationSamples],
+    results: list[SimulationSamples | SimulationPrediction],
     splits: Splits,
     index: int,
     sweep: SweepFile | None,

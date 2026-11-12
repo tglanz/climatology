@@ -15,6 +15,8 @@ dependencies = [
     "tqdm>=4.67.3",
     "torch_harmonics==0.7.4",
     "dask>=2026.3.0",
+    "tomli-w>=1.2.0",
+    "h5py>=3.16.0",
 ]
 
 [project.scripts]
@@ -32,7 +34,6 @@ train = [
     "torch>=2.11.0",
     "torchvision>=0.26.0",
     "neuraloperator",
-    "h5py",
     "rich>=13",
     "plotext>=5",
 ]

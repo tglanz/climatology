@@ -7,7 +7,7 @@ Research on global physical climatology, idealized simulations, and neural opera
 | [sim](sim/README.md) | Isca barotropic simulations and parameter sweeps |
 | [ml](ml/README.md) | Preparation, diagnostics, training, evaluation, and plots |
 | [book](book/README.md) | General mathematics, fluid dynamics, and operator learning |
-| [docs](docs/workplan.md) | Project methods, operation, and maintenance phases |
+| [docs](docs/pipeline.md) | Pipeline architecture, artifact schemas, methods, and operation |
 | [presentations](presentations/) | Talks and study material |
 | [action-items](action-items/README.md) | Maintenance scope, plans, and verification records |
 
