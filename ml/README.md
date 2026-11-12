@@ -14,8 +14,8 @@ uv run --project ml --group train --group vis ml --help
 ```
 
 The training group uses the pinned, editable neuraloperator submodule.
-The `inference` group supports model loading; HDF5 evaluation and the full CLI
-also need the training group.
+The `inference` group supports model loading; the full CLI also needs the
+training group. HDF5 is a base dependency used during preparation.
 
 ## Current commands
 
@@ -28,13 +28,26 @@ uv run --project ml --group train --group vis ml data --help
 uv run --project ml --group train --group vis ml util --help
 ```
 
-Preparation validates simulations, creates sweep metadata, generates splits, and
-writes training data. See [preprocessing](../docs/pre-processing.md).
-Training reads the configured prepared splits and writes parameters, normalization
-statistics, metrics, a configuration copy, split metadata, and run information.
-Evaluation takes a training directory and reads raw simulations again. See
-[evaluation](../docs/model-evaluation.md) and the
-[default configuration](configs/default.toml).
+The [pipeline overview](../docs/pipeline.md) describes stages, intermediate artifact
+formats and schemas, the flow diagram, commands, and local/Slurm execution.
+Use `ml pipeline example`, `ml pipeline prepare`, and `ml pipeline run` for the
+normal iteration workflow. Prepare once; reuse the completed artifact for each
+model iteration in a fresh run directory. Evaluation reads the saved prepared
+windows and simulation identities rather than reopening raw trajectories.
+
+```bash
+bash scripts/pipeline.sh example --directory output/pipeline-smoke
+bash scripts/pipeline.sh prepare -c output/pipeline-smoke/prepare.toml \
+    --split output/pipeline-smoke/splits/fixed.json
+bash scripts/pipeline.sh run -c output/pipeline-smoke/run.toml --device cpu
+bash scripts/pipeline.sh run -c output/pipeline-smoke/run-wide.toml --device cpu
+```
+
+Preparation accepts a data-only TOML recipe. A model recipe can reference it with
+`data_config="prepare.toml"`, then declare model/training settings and its own
+`paths.training_dir`. Training saves a standalone effective configuration,
+checkpoint, normalization, split snapshot, prepared-file hashes, and run metadata.
+Existing prepared and run directories are rejected. Choose fresh paths to rerun.
 
 Prepared data and checkpoints carry versioned coordinates, channel identities,
 input units, and normalization conventions. The corrected loader rejects
@@ -101,6 +114,7 @@ uv run --project ml --group dev --group train --group vis pytest ml/tests
 implementation and its [progress](../action-items/02-correctness-plan-progress.md).
 The [sample contract](../docs/pre-processing.md), [grids](../docs/grids.md), and
 [norms](../docs/norms.md) define the scientific conventions.
-[Action item 03](../action-items/03-pipeline.md) owns broader workflow redesign.
+[Action item 03](../action-items/03-pipeline.md) records the pipeline redesign
+and its [verification results](../action-items/03-pipeline-results.md).
 The [compaction results](../action-items/01-compaction-results.md) remain the
 historical verification record for phase 01.

@@ -4,7 +4,7 @@ from pathlib import Path
 
 from tqdm import tqdm
 
-from ml.config import load as load_config
+from ml.config import load_data as load_config
 from ml.data.simulation_data import open_simulation, select_samples
 from ml.data.isca_preprocessing import list_simulation_dirs, list_segment_files
 

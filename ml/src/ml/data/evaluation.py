@@ -5,6 +5,8 @@ from dataclasses import dataclass
 from itertools import repeat
 import logging
 from pathlib import Path
+import numpy as np
+from ml.data.metadata import DataMetadata
 
 from ml.config import IscaDataConfig
 from ml.data.simulation_data import (
@@ -17,9 +19,27 @@ log = logging.getLogger(__name__)
 SimResult = SimulationSamples
 
 
+@dataclass(frozen=True)
+class SimulationPrediction:
+    """Profiles retained after prediction; no trajectory arrays are needed for reports."""
+
+    sim_dir: Path
+    metadata: DataMetadata
+    truth_profile: np.ndarray
+    pred_profile: np.ndarray
+
+    @property
+    def code(self) -> str:
+        return self.sim_dir.name.rsplit("-", 1)[0]
+
+    @property
+    def lat(self) -> np.ndarray:
+        return self.metadata.grid.latitudes
+
+
 @dataclass
 class SimulationLoadReport:
-    results: list[SimulationSamples]
+    results: list[SimulationSamples | SimulationPrediction]
     excluded: list[SimulationOutcome]
 
 

@@ -4,7 +4,7 @@ import logging
 from pathlib import Path
 import numpy as np
 
-from ml.config import IscaDataConfig, load as load_config
+from ml.config import IscaDataConfig, load_data as load_config
 from ml.data.simulation_data import list_segment_files, try_read_simulation
 
 log = logging.getLogger(__name__)

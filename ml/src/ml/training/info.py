@@ -240,6 +240,7 @@ def _collect_training(cfg: "Config") -> dict[str, Any]:
     t = cfg.training
     return {
         "epochs": t.epochs,
+        "seed": t.seed,
         "batch_size": t.batch_size,
         "learning_rate": t.learning_rate,
         "loss": t.loss,
@@ -284,7 +285,26 @@ def _collect_environment(device: "torch.device") -> dict[str, Any]:
         "python_version": platform.python_version(),
         "platform": platform.platform(),
         "git_sha": _git_sha(),
+        "git_dirty": _git_dirty(),
     }
+
+
+def _git_dirty() -> bool | None:
+    try:
+        result = subprocess.run(
+            ["git", "status", "--porcelain", "--untracked-files=no"],
+            capture_output=True,
+            text=True,
+            check=True,
+            timeout=2,
+        )
+        return bool(result.stdout.strip())
+    except (
+        subprocess.CalledProcessError,
+        FileNotFoundError,
+        subprocess.TimeoutExpired,
+    ):
+        return None
 
 
 def _git_sha() -> str | None:

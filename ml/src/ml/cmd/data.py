@@ -2,7 +2,7 @@ from pathlib import Path
 
 import click
 
-from ml.config import load as load_config
+from ml.config import load_data as load_config
 from ml.common.logging import setup_logging
 
 

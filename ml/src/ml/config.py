@@ -5,6 +5,7 @@ from enum import StrEnum
 from pathlib import Path
 import math
 import tomllib
+import tomli_w
 
 from ml.data.climatology import diagnostic_for
 
@@ -438,6 +439,12 @@ class Config:
                 ),
                 "training directory must not contain the prepared data directory",
             )
+            _require(
+                not self.paths.training_dir.resolve().is_relative_to(
+                    self.paths.preprocessed_dir.resolve()
+                ),
+                "prepared data directory must not contain the training directory",
+            )
 
 
 def _parse_split_config(s: dict) -> SplitConfig:
@@ -448,9 +455,52 @@ def _parse_split_config(s: dict) -> SplitConfig:
     )
 
 
-def load(path: Path) -> Config:
-    with open(path, "rb") as f:
-        raw = tomllib.load(f)
+@dataclass
+class PreparationConfig:
+    data: IscaDataConfig
+    logging: LoggingConfig
+    paths: PathsConfig
+
+
+def read_raw(path: Path) -> dict:
+    path = Path(path)
+    with path.open("rb") as handle:
+        raw = tomllib.load(handle)
+    if "data_config" in raw:
+        if "data" in raw:
+            raise ValueError("use either data_config or [data], not both")
+        with (path.parent / raw.pop("data_config")).open("rb") as handle:
+            source = tomllib.load(handle)
+        if "data_config" in source:
+            raise ValueError(
+                "data_config must reference a standalone preparation recipe"
+            )
+        raw["data"] = source["data"]
+        raw["paths"] = source.get("paths", {}) | raw.get("paths", {})
+    return raw
+
+
+def save(cfg, path: Path) -> None:
+    """Write a standalone snapshot with absolute artifact paths."""
+
+    def clean(value):
+        if isinstance(value, dict):
+            return {k: clean(v) for k, v in value.items() if v is not None}
+        if isinstance(value, (tuple, list)):
+            return [clean(v) for v in value]
+        if isinstance(value, Path):
+            return str(value.resolve())
+        return value
+
+    path.write_text(tomli_w.dumps(clean(asdict(cfg))))
+
+
+def load_data(path: Path) -> PreparationConfig:
+    return load(path, data_only=True)
+
+
+def load(path: Path, *, data_only: bool = False) -> Config | PreparationConfig:
+    raw = read_raw(path)
 
     d = raw["data"]
     if "windows" not in d:
@@ -471,6 +521,41 @@ def load(path: Path) -> Config:
             ConvergenceConfig(**d["convergence"]) if "convergence" in d else None
         ),
     )
+
+    lg = raw.get("logging", {})
+    logging_cfg = LoggingConfig(
+        level=lg.get("level", "INFO"),
+        output_file=lg.get("output_file", None),
+        stdout=lg.get("stdout", True),
+    )
+
+    p = raw.get("paths", {})
+    if "experiment_dir" not in p:
+        raise ValueError("[paths.experiment_dir] is required")
+    paths = PathsConfig(
+        experiment_dir=p["experiment_dir"],
+        preprocessed_dir=p.get("preprocessed_dir"),
+        training_dir=p.get("training_dir"),
+        epoch_metrics_file=p.get("epoch_metrics_file"),
+        metrics_file=p.get("metrics_file"),
+        splits_dir=p.get("splits_dir"),
+    )
+
+    if paths.preprocessed_dir is None:
+        paths.preprocessed_dir = paths.experiment_dir / "data"
+    if paths.training_dir is None:
+        paths.training_dir = paths.experiment_dir / "training"
+    paths.checkpoint_dir = paths.training_dir
+    if paths.epoch_metrics_file is None:
+        paths.epoch_metrics_file = paths.training_dir / "epoch-metrics.csv"
+    if paths.metrics_file is None:
+        paths.metrics_file = paths.training_dir / "metrics.h5"
+    paths.training_info_file = paths.training_dir / "training.json"
+    if paths.splits_dir is None:
+        paths.splits_dir = paths.experiment_dir / "splits"
+
+    if data_only:
+        return PreparationConfig(data, logging_cfg, paths)
 
     model_raw = raw["model"]
     architecture = model_raw["architecture"]
@@ -559,38 +644,6 @@ def load(path: Path) -> Config:
         early_stopping=early_stopping,
         regularization=regularization,
     )
-
-    lg = raw.get("logging", {})
-    logging_cfg = LoggingConfig(
-        level=lg.get("level", "INFO"),
-        output_file=lg.get("output_file", None),
-        stdout=lg.get("stdout", True),
-    )
-
-    p = raw.get("paths", {})
-    if "experiment_dir" not in p:
-        raise ValueError("[paths.experiment_dir] is required")
-    paths = PathsConfig(
-        experiment_dir=p["experiment_dir"],
-        preprocessed_dir=p.get("preprocessed_dir"),
-        training_dir=p.get("training_dir"),
-        epoch_metrics_file=p.get("epoch_metrics_file"),
-        metrics_file=p.get("metrics_file"),
-        splits_dir=p.get("splits_dir"),
-    )
-
-    if paths.preprocessed_dir is None:
-        paths.preprocessed_dir = paths.experiment_dir / "data"
-    if paths.training_dir is None:
-        paths.training_dir = paths.experiment_dir / "training"
-    paths.checkpoint_dir = paths.training_dir
-    if paths.epoch_metrics_file is None:
-        paths.epoch_metrics_file = paths.training_dir / "epoch-metrics.csv"
-    if paths.metrics_file is None:
-        paths.metrics_file = paths.training_dir / "metrics.h5"
-    paths.training_info_file = paths.training_dir / "training.json"
-    if paths.splits_dir is None:
-        paths.splits_dir = paths.experiment_dir / "splits"
 
     return Config(
         data=data, model=model, training=training, logging=logging_cfg, paths=paths

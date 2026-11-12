@@ -7,9 +7,9 @@ Input channels follow time order, then configured variable order. Targets follow
 `data.y_vars` order and repeat for each window from the same simulation.
 
 [Simulation loading](../ml/src/ml/data/simulation_data.py) owns validation,
-detectors, intervals, windows, and targets. Preparation, raw CLI evaluation, and
-by-code evaluation use this owner. Prepared-window evaluation uses saved arrays
-and validates their metadata.
+detectors, intervals, windows, and targets. Preparation and exploratory by-code evaluation use this owner. Normal model
+evaluation uses saved prepared arrays and validates their metadata and hashes.
+The [pipeline overview](pipeline.md) specifies artifact schemas, stages, and commands.
 
 ## Coordinates and acceptance
 

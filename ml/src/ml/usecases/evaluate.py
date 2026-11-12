@@ -8,11 +8,11 @@ from pathlib import Path
 import numpy as np
 
 from ml.config import load as load_config
-from ml.data.evaluation import load_all_sims
+from ml.data.prepared import for_run, predict_prepared, digest
 from ml.data.splits import Splits
 from ml.data.sweep_file import SweepFile
 from ml.diagnostics.errors import ScoreSummary, profile_relative_l2_values
-from ml.inference import load_checkpoint, select_device, prepare_device, predict_windows
+from ml.inference import load_checkpoint, select_device
 from ml.usecases.evaluation_report import FigureArtifact, write_report
 from ml.usecases.evaluation_results import build_target_evaluation, TargetEvaluation
 from ml.visualization.evaluation import (
@@ -184,7 +184,11 @@ def _render_target(target: TargetEvaluation, sweep, save):
 
 
 def run(
-    training_dir: Path, n_workers: int = 8, batch_size: int = 64, device: str = "auto"
+    training_dir: Path,
+    n_workers: int = 8,
+    batch_size: int = 64,
+    device: str = "auto",
+    prepared_dir: Path | None = None,
 ):
     if batch_size < 1 or n_workers < 0:
         raise ValueError("invalid evaluation batch size or worker count")
@@ -193,25 +197,12 @@ def run(
     checkpoint = load_checkpoint(cfg, training_dir)
     splits = Splits.load(training_dir / "splits.json")
     splits.validate()
-    paths = sorted(set(splits.train + splits.validation + splits.test))
-    loaded = load_all_sims(paths, cfg.data, max_workers=n_workers)
-    if not loaded.results:
-        raise ValueError("no simulations loaded; inspect exclusion reasons")
+    directory = for_run(training_dir, prepared_dir)
     norm = checkpoint.normalization
-    for result in loaded.results:
-        if not norm.metadata.matches(result.metadata):
-            raise ValueError(
-                "raw simulation grid or settings differ from the saved training contract"
-            )
-    selected_device = select_device(device)
-    model = prepare_device(
-        checkpoint.model, loaded.results[0].x_windows.shape[1:], selected_device
+    loaded = predict_prepared(
+        directory, splits, checkpoint, select_device(device), batch_size
     )
-    for result in loaded.results:
-        result.predictions = predict_windows(
-            model, norm, result.x_windows, selected_device, batch_size
-        )
-    sweep_path = cfg.paths.experiment_dir / "sweep.json"
+    sweep_path = directory / "sweep.json"
     sweep = SweepFile(sweep_path) if sweep_path.exists() else None
     targets = [
         build_target_evaluation(loaded.results, splits, index, sweep)
@@ -231,7 +222,12 @@ def run(
             plt.close(figure)
         artifacts.append(FigureArtifact(path, caption, target))
 
-    csv_path = cfg.paths.epoch_metrics_file
+    try:
+        csv_path = training_dir / cfg.paths.epoch_metrics_file.relative_to(
+            cfg.paths.training_dir
+        )
+    except ValueError:
+        csv_path = cfg.paths.epoch_metrics_file
     if csv_path.exists():
         info_path = training_dir / "training.json"
         run_id = (
@@ -250,5 +246,27 @@ def run(
     for target in targets:
         _render_target(target, sweep, save)
     write_report(output, artifacts, targets, loaded, splits)
+    np.savez_compressed(
+        output / "profiles.npz",
+        simulation_paths=np.array([str(r.sim_dir) for r in loaded.results]),
+        target_names=np.array(norm.metadata.y_vars),
+        latitudes=norm.metadata.grid.latitudes,
+        truth=np.stack([r.truth_profile for r in loaded.results]),
+        predictions=np.stack([r.pred_profile for r in loaded.results]),
+    )
+    (output / "inputs.json").write_text(
+        json.dumps(
+            {
+                "prepared": json.loads((training_dir / "prepared.json").read_text()),
+                "parameters_sha256": digest(training_dir / "parameters.pt"),
+                "normalization_sha256": digest(training_dir / "normalization.pt"),
+                "config_sha256": digest(training_dir / "config.toml"),
+                "device": str(select_device(device)),
+                "batch_size": batch_size,
+            },
+            indent=2,
+        )
+        + "\n"
+    )
     log.info("evaluation complete: %s", output)
     return targets

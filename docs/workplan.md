@@ -32,4 +32,6 @@ Reconsider stages, data passed between them, configuration, saved results, and e
 
 Phase 1 is complete with recorded verification limits. Its [implementation record](../action-items/01-compaction-results.md)
 tracks checks and remaining limits. Phase 2 is complete with recorded verification
-limits; see its [results](../action-items/02-correctness-results.md). Phase 3 remains planned.
+limits; see its [results](../action-items/02-correctness-results.md). Phase 3 is complete with recorded verification limits; see its
+[results](../action-items/03-pipeline-results.md) and
+[pipeline architecture](pipeline.md).

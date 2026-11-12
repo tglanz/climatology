@@ -19,6 +19,13 @@ def evaluate():
 @click.option(
     "--device", default="auto", type=click.Choice(["auto", "cpu", "cuda", "mps"])
 )
-def evaluate_model(training_dir: Path, n_workers: int, batch_size: int, device: str):
-    """Evaluate a trained SFNO model using the saved sample and split contract."""
-    run(training_dir, n_workers, batch_size, device)
+@click.option("--prepared-dir", type=click.Path(exists=True, path_type=Path))
+def evaluate_model(
+    training_dir: Path,
+    n_workers: int,
+    batch_size: int,
+    device: str,
+    prepared_dir: Path | None,
+):
+    """Evaluate saved prepared simulations with equal weight per simulation."""
+    run(training_dir, n_workers, batch_size, device, prepared_dir)

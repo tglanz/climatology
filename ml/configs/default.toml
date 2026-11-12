@@ -1,9 +1,3 @@
-# TODO: theres some inconsistency / inaccurate terminology wrt "data".
-# first of all, is "data" what lives in the experiment/data dir?
-# if so, simulations are not "data".
-# second of all, the experiment_dir should not be under "data".
-# need to think - but i think we could have "[data] + [simulation]" sections and also extract the "experiment_dir" into [path].
-# not sure if we need a "[experiment]". however, now that i think of it, maybe the best thing to do is to replace [path] with [experiment].
 [data]
 simulation_pattern = "simulations/*"
 segment_pattern = "run*/atmos_daily.nc"
@@ -21,7 +15,7 @@ start_at = "spinup"
 end_at = "end"
 # K consecutive snapshots per input.
 length = 10
-# gap between consecutive window starts. 6 = K + 1 (tumbling-equivalent).
+# Gap between consecutive window starts: K + 1 leaves one snapshot unused.
 stride = 11
 # optional cap on windows per simulation; omit for no cap.
 limit = 15
@@ -59,7 +53,7 @@ n_modes = [32, 64]
 hidden_channels = 64
 n_layers = 4
 # in_channels MUST equal data.windows.length * len(data.x_vars). Validated at config load.
-in_channels = 5
+in_channels = 10
 out_channels = 1
 
 [model.sfno]
@@ -99,7 +93,6 @@ min_delta = 1e-4
 # val | train
 monitor = "val"
 
-# TODO: this can just be training.scheduler
 [training.scheduler]
 # step | cosine | plateau | none
 kind = "cosine"
