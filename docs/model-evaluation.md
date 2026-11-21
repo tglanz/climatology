@@ -43,7 +43,7 @@ Each target has its own numerical tables and physical-unit plot labels:
 
 | Result | Meaning |
 |---|---|
-| Baselines | Zero, training simulation mean, nearest training configuration, and model on test simulations |
+| Baselines | Zero, training mean, nearest configuration, parameter ridge, short-window wind mean, and model |
 | Replicate variability | Mean relative deviation from the finite replica mean, with replica counts |
 | Generalization | Mean simulation errors by configuration and forcing parameter, colored by split |
 | Error structure | Simulation errors, bias profiles, and relative-error distributions |
@@ -71,7 +71,6 @@ eastward jet.
 Notebook source calls these shared APIs. Historical saved notebook outputs are
 retained and do not establish that the corrected calculations have regenerated
 those earlier experiments.
-
 
 ## Evidence for learning and generalization
 
@@ -124,3 +123,52 @@ correct input/target pairing. Beating short-window averaging supports value beyo
 an instantaneous estimate. Several training seeds and finite-run replica targets
 are needed before ranking heads confidently. Success does not by itself establish
 that the network learned the dynamical equations.
+
+## Measured comparison: 2026-11-21
+
+A capped experiment added 39 T85 trajectories (37.9 GB) to 63 existing trajectories.
+All 102 passed full spinup, convergence, and climatology checks; each contains
+150 segments and 1050 daily snapshots. Whole configurations were split into 75
+training trajectories, nine validation cases at forcing latitude 40, and two
+nine-configuration tests: latitude 30 interpolation and latitude 70 extrapolation.
+The new sample is concentrated at latitude 10. All three heads used identical
+prepared data and normalization, one small SFNO trunk, and seeds 17, 29, 43.
+
+The target is the final 500-day mean wind. Evaluation averages five 10-day window
+predictions; inputs and targets share no snapshots. The checks are retrospective,
+and eight target intervals start before the convergence detector endpoint.
+Interpret scores as finite-run profile estimation, not proof of equilibrium or
+prospective forecast skill.
+
+| Head | Parameters | Interpolation RMSE (m/s) | Extrapolation RMSE (m/s) |
+|---|---:|---:|---:|
+| Field | 3889 | 1.223 | 0.984 |
+| Profile | 3889 | 1.103 | 0.937 |
+| Legendre, 16 modes | 5792 | 1.775 | 1.018 |
+| Direct wind-window mean | - | 1.406 | 1.329 |
+
+Model entries average the physical RMSE of three individual seeded runs. These
+are not ensemble errors. The profile head beat the field head for every paired
+seed and both regimes. Configuration-bootstrap intervals favor it over the field
+head for these fixed seeds. The 16-mode target projection error is only about
+0.05 m/s, so the Legendre fit's larger error is not explained by truncation alone.
+
+Predictions vary with held-out configurations and outperform the global mean and
+simple parameter references. The profile head's single-window RMSE is 1.384/1.111 m/s
+(interpolation/extrapolation), versus 2.609/2.243 for direct wind averaging. This
+supports learned statistical denoising beyond final-window averaging. With five
+windows, average MSE gains over wind averaging are 37.7%/49.8%, but paired
+configuration-bootstrap intervals include zero. The wind reference observes wind;
+the network receives vorticity. Do not infer learned dynamics or a universal head
+ranking from these results.
+
+Qualitative profiles reveal large near-pole errors that Gaussian area weighting
+can hide. One profile-head case predicts 7.93 m/s near 89 deg against 0.71 m/s truth,
+despite locating the main jet correctly. Test configurations have one realization
+each; three seeds and nine configurations per regime leave substantial uncertainty.
+Numerical failures were removed and refilled, conditioning the sample on survival.
+
+The detailed report, figures, comparison scripts, configurations, validation
+records, hashes, and per-window predictions are retained locally under
+`output/heads-20261121/` (ignored experiment artifacts). Start with `report.md`.
+The shared workflow remains `preprocess`, `train`, then `evaluate`.
