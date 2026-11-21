@@ -26,7 +26,26 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-</style>
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
 <script src="../site_libs/quarto-nav/quarto-nav.js"></script>
@@ -36,7 +55,7 @@ ul.task-list li input[type="checkbox"] {
 <script src="../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../">
-<link href="../04-geophysical-fluid-dynamics/motion.html" rel="next">
+<link href="../04-geophysical-fluid-dynamics/kinematics.html" rel="next">
 <link href="../03-pdes/spectral-methods.html" rel="prev">
 <script src="../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
@@ -48,7 +67,7 @@ ul.task-list li input[type="checkbox"] {
 <link href="../site_libs/quarto-html/quarto-syntax-highlighting-63b5708e65d6cd79cd7618c58d0c21e7.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-4f67ab1e4efc86feb5e21e0983fc9301.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-fd437c11ef914449285a5c26e0daa494.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -77,6 +96,35 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-chtml.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 </head>
 
@@ -224,20 +272,56 @@ ul.task-list li input[type="checkbox"] {
       <ul id="quarto-sidebar-section-4" aria-labelledby="quarto-sidebar-section-4-label" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="../04-geophysical-fluid-dynamics/kinematics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Kinematics and mathematical language</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="../04-geophysical-fluid-dynamics/motion.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Basic</span></span></a>
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Mass, forces, and the momentum equation</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../04-geophysical-fluid-dynamics/rotating.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Rotating Frame</span></span></a>
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Rotation and large-scale balances</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../04-geophysical-fluid-dynamics/vorticity.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Vorticity</span></span></a>
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Vorticity and circulation</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../04-geophysical-fluid-dynamics/layer-pv.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">A shallow layer and the barotropic reduction</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../04-geophysical-fluid-dynamics/barotropic.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">The BVE on a rotating sphere</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../04-geophysical-fluid-dynamics/turbulence.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Invariants, turbulence, and eddy-driven flow</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../04-geophysical-fluid-dynamics/inversion.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Spherical harmonics, inversion, and dissipation</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../04-geophysical-fluid-dynamics/stochastic.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Stochastic stirring and the closed forced model</span></span></a>
   </div>
 </li>
       </ul>
@@ -276,9 +360,26 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<p>The rotating-frame equations introduce the Coriolis force and the variation of planetary vorticity. Vorticity and circulation connect these equations to shallow horizontal flow and the barotropic vorticity equation.</p>
+<p>The sequence derives the stochastically stirred barotropic vorticity equation from continuum mass and momentum conservation. It introduces rotating frames, absolute circulation, layer potential vorticity, constant-depth reduction, spherical inversion, energy and enstrophy, damping, and finite-memory forcing. The assumptions of each reduction are stated separately.</p>
+<p>The mathematical prerequisites are <a href="../01-vector-calculus/index.html">vector calculus</a>, <a href="../02-harmonic-analysis/index.html">orthogonal expansions</a>, and <a href="../03-pdes/spectral-methods.html">spectral numerical methods</a>. The fluid chapters also define the operators and probability needed for their derivations.</p>
+<p>These chapters share a source with the <a href="https://github.com/tglanz/climatology/blob/main/presentations/physical-prerequisites/physical-prerequisites.md">physical-prerequisites document</a>. The book includes the parcel-kinematics and transport derivations, while cross-referencing its vector-calculus chapters for the shared operator theory. It retains the general fluid theory and excludes the companion’s implementation appendix. Equation labels prefixed P refer to the companion document’s stable chapter-equation numbers, independently of the book’s chapter ordering.</p>
+<p>Primary sources are <span class="citation" data-cites="Vallis2006">Vallis (<a href="#ref-Vallis2006" role="doc-biblioref">2006</a>)</span>, <span class="citation" data-cites="BarotropicNotes"><em>The Barotropic Vorticity Equation</em> (<a href="#ref-BarotropicNotes" role="doc-biblioref">n.d.</a>)</span>, and <span class="citation" data-cites="ArfkenWeber2005">Arfken and Weber (<a href="#ref-ArfkenWeber2005" role="doc-biblioref">2005</a>)</span>. The specific finite-memory stirring process comes from <span class="citation" data-cites="VallisEtAl2004">Vallis et al. (<a href="#ref-VallisEtAl2004" role="doc-biblioref">2004</a>)</span>. The angular convention here is longitude <span class="math inline">\(\lambda\)</span>, latitude <span class="math inline">\(\phi\)</span>; other book chapters use colatitude <span class="math inline">\(\theta=\pi/2-\phi\)</span> and longitude <span class="math inline">\(\varphi\)</span>. This is a change of coordinates, not a change in the harmonic normalization: <span class="math inline">\(\int |Y_\ell^m|^2d\omega=1\)</span> in both.</p>
 
 
+<div id="refs" class="references csl-bib-body hanging-indent" role="list">
+<div id="ref-ArfkenWeber2005" class="csl-entry" role="listitem">
+Arfken, George B., and Hans J. Weber. 2005. <em>Mathematical Methods for Physicists</em>. 6th ed. Elsevier Academic Press.
+</div>
+<div id="ref-BarotropicNotes" class="csl-entry" role="listitem">
+<em>The Barotropic Vorticity Equation</em>. n.d.
+</div>
+<div id="ref-Vallis2006" class="csl-entry" role="listitem">
+Vallis, Geoffrey K. 2006. <em>Atmospheric and Oceanic Fluid Dynamics: Fundamentals and Large-Scale Circulation</em>. Cambridge University Press.
+</div>
+<div id="ref-VallisEtAl2004" class="csl-entry" role="listitem">
+Vallis, Geoffrey K., Edwin P. Gerber, Paul J. Kushner, and Benjamin A. Cash. 2004. <span>“A Mechanism and Simple Dynamical Model of the North Atlantic Oscillation and Annular Modes.”</span> <em>Journal of the Atmospheric Sciences</em> 61 (3): 264–80. <a href="https://doi.org/10.1175/1520-0469(2004)061<0264:AMASDM>2.0.CO;2">https://doi.org/10.1175/1520-0469(2004)061&lt;0264:AMASDM&gt;2.0.CO;2</a>.
+</div>
+</div>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
@@ -764,8 +865,8 @@ ul.task-list li input[type="checkbox"] {
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../04-geophysical-fluid-dynamics/motion.html" class="pagination-link" aria-label="Basic">
-        <span class="nav-page-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Basic</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="../04-geophysical-fluid-dynamics/kinematics.html" class="pagination-link" aria-label="Kinematics and mathematical language">
+        <span class="nav-page-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Kinematics and mathematical language</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

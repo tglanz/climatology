@@ -1,0 +1,980 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.11.9">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>18&nbsp; Spherical harmonics, inversion, and dissipation – Global Physical Climatology</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../04-geophysical-fluid-dynamics/stochastic.html" rel="next">
+<link href="../04-geophysical-fluid-dynamics/turbulence.html" rel="prev">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/scrollable-regions/scrollable-regions.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-63b5708e65d6cd79cd7618c58d0c21e7.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-fd437c11ef914449285a5c26e0daa494.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-chtml.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="nav-sidebar floating quarto-light"><a id="quarto-skip-link" class="visually-hidden-focusable" href="#quarto-document-content">Skip to main content</a>
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav" aria-label="Toolbar">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="Breadcrumbs"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../04-geophysical-fluid-dynamics/index.html">Geophysical Fluid Dynamics</a></li><li class="breadcrumb-item"><a href="../04-geophysical-fluid-dynamics/inversion.html"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Spherical harmonics, inversion, and dissipation</span></a></li></ol></nav>
+        <a class="flex-grow-1" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto" aria-label="Site">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="../">Global Physical Climatology</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Preface</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../01-vector-calculus/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text" id="quarto-sidebar-section-1-label">Vector Calculus</span></a>
+            <button type="button" class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-controls="quarto-sidebar-section-1" aria-expanded="true" aria-label="Toggle section: Vector Calculus">
+              <i class="bi bi-chevron-right ms-2" aria-hidden="true"></i>
+            </button> 
+      </div>
+      <ul id="quarto-sidebar-section-1" aria-labelledby="quarto-sidebar-section-1-label" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../01-vector-calculus/operators.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Differential Operators</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../01-vector-calculus/integrals.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Integrals</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../01-vector-calculus/change-of-variables.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Change of Variables</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../01-vector-calculus/theorems.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Integral Theorems</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../01-vector-calculus/spherical.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Spherical Coordinates</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../02-harmonic-analysis/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text" id="quarto-sidebar-section-2-label">Harmonic Analysis</span></a>
+            <button type="button" class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-controls="quarto-sidebar-section-2" aria-expanded="true" aria-label="Toggle section: Harmonic Analysis">
+              <i class="bi bi-chevron-right ms-2" aria-hidden="true"></i>
+            </button> 
+      </div>
+      <ul id="quarto-sidebar-section-2" aria-labelledby="quarto-sidebar-section-2-label" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../02-harmonic-analysis/function-spaces.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Function Spaces</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../02-harmonic-analysis/fourier-series.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Fourier Series</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../02-harmonic-analysis/fourier-transform.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Fourier Transform</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../02-harmonic-analysis/spherical-harmonics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Spherical Harmonics</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../03-pdes/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text" id="quarto-sidebar-section-3-label">Partial Differential Equations</span></a>
+            <button type="button" class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-controls="quarto-sidebar-section-3" aria-expanded="true" aria-label="Toggle section: Partial Differential Equations">
+              <i class="bi bi-chevron-right ms-2" aria-hidden="true"></i>
+            </button> 
+      </div>
+      <ul id="quarto-sidebar-section-3" aria-labelledby="quarto-sidebar-section-3-label" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../03-pdes/spectral-methods.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Spectral numerical methods</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../04-geophysical-fluid-dynamics/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text" id="quarto-sidebar-section-4-label">Geophysical Fluid Dynamics</span></a>
+            <button type="button" class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-controls="quarto-sidebar-section-4" aria-expanded="true" aria-label="Toggle section: Geophysical Fluid Dynamics">
+              <i class="bi bi-chevron-right ms-2" aria-hidden="true"></i>
+            </button> 
+      </div>
+      <ul id="quarto-sidebar-section-4" aria-labelledby="quarto-sidebar-section-4-label" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../04-geophysical-fluid-dynamics/kinematics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Kinematics and mathematical language</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../04-geophysical-fluid-dynamics/motion.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Mass, forces, and the momentum equation</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../04-geophysical-fluid-dynamics/rotating.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Rotation and large-scale balances</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../04-geophysical-fluid-dynamics/vorticity.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Vorticity and circulation</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../04-geophysical-fluid-dynamics/layer-pv.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">A shallow layer and the barotropic reduction</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../04-geophysical-fluid-dynamics/barotropic.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">The BVE on a rotating sphere</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../04-geophysical-fluid-dynamics/turbulence.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Invariants, turbulence, and eddy-driven flow</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../04-geophysical-fluid-dynamics/inversion.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Spherical harmonics, inversion, and dissipation</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../04-geophysical-fluid-dynamics/stochastic.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Stochastic stirring and the closed forced model</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <span class="sidebar-item-text sidebar-link text-start">
+ <span class="menu-text">Neural Operators</span></span>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" aria-labelledby="toc-title" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#harmonics-as-laplacian-eigenfunctions" id="toc-harmonics-as-laplacian-eigenfunctions" class="nav-link active" data-scroll-target="#harmonics-as-laplacian-eigenfunctions"><span class="header-section-number">18.1</span> Harmonics as Laplacian eigenfunctions</a></li>
+  <li><a href="#inversion-and-the-spectral-energy-weights" id="toc-inversion-and-the-spectral-energy-weights" class="nav-link" data-scroll-target="#inversion-and-the-spectral-energy-weights"><span class="header-section-number">18.2</span> Inversion and the spectral energy weights</a></li>
+  <li><a href="#truncation-and-evaluation-of-nonlinear-transport" id="toc-truncation-and-evaluation-of-nonlinear-transport" class="nav-link" data-scroll-target="#truncation-and-evaluation-of-nonlinear-transport"><span class="header-section-number">18.3</span> Truncation and evaluation of nonlinear transport</a></li>
+  <li><a href="#drag-hyperdiffusion-and-their-signs" id="toc-drag-hyperdiffusion-and-their-signs" class="nav-link" data-scroll-target="#drag-hyperdiffusion-and-their-signs"><span class="header-section-number">18.4</span> Drag, hyperdiffusion, and their signs</a></li>
+  <li><a href="#chapter-summary" id="toc-chapter-summary" class="nav-link" data-scroll-target="#chapter-summary"><span class="header-section-number">18.5</span> Chapter summary</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content" tabindex="-1">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="Breadcrumbs"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../04-geophysical-fluid-dynamics/index.html">Geophysical Fluid Dynamics</a></li><li class="breadcrumb-item"><a href="../04-geophysical-fluid-dynamics/inversion.html"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Spherical harmonics, inversion, and dissipation</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Spherical harmonics, inversion, and dissipation</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<!-- Generated by presentations/physical-prerequisites/build.py. Edit its Markdown manuscript and run build.py --sync-book. -->
+<p>Equations prefixed <strong>P</strong> retain the numbering of the companion physical-prerequisites document. Mathematical operators are introduced in <a href="../01-vector-calculus/operators.html">vector calculus</a> and <a href="../01-vector-calculus/theorems.html">integral theorems</a>. Parcel derivatives and transport are developed in <a href="../04-geophysical-fluid-dynamics/kinematics.html">fluid kinematics</a>.</p>
+<section id="harmonics-as-laplacian-eigenfunctions" class="level2" data-number="18.1">
+<h2 data-number="18.1" class="anchored" data-anchor-id="harmonics-as-laplacian-eigenfunctions"><span class="header-section-number">18.1</span> Harmonics as Laplacian eigenfunctions</h2>
+<p><strong>Result and motivation.</strong> Spherical harmonics diagonalize the surface Laplacian. They make streamfunction inversion and scale-selective damping algebraic operations. <span class="citation" data-cites="ArfkenWeber2005 BarotropicNotes">(<a href="#ref-ArfkenWeber2005" role="doc-biblioref">Arfken and Weber 2005, secs. 9.3, 12.3–12.6</a>; <a href="#ref-BarotropicNotes" role="doc-biblioref"><em>The Barotropic Vorticity Equation</em>, n.d., sec. 3</a>)</span></p>
+<p>Define solid angle <span class="math inline">\(d\omega=dA/a^2=\cos\phi\,d\phi\,d\lambda\)</span>; the lower-case <span class="math inline">\(\omega\)</span> in this measure is not the vorticity vector. A <strong>spherical harmonic</strong> <span class="math inline">\(Y_\ell^m\)</span> is a smooth angular function satisfying</p>
+<p><span id="law-harmonic-eigenvalue"></span> <span class="math display">\[
+\nabla_h^2Y_\ell^m=-\kappa_\ell^2Y_\ell^m,
+\qquad \kappa_\ell^2=\frac{\ell(\ell+1)}{a^2},
+\quad \ell=0,1,\ldots,\quad -\ell\leq m\leq\ell.
+\tag{P8.1}
+\]</span></p>
+<p>The nonnegative integer <span class="math inline">\(\ell\)</span> is <strong>degree</strong> or total wavenumber; the integer <span class="math inline">\(m\)</span> is <strong>order</strong> or zonal wavenumber. To obtain this structure, separate an angular eigenfunction as <span class="math inline">\(Y=\Theta(\phi)e^{im\lambda}\)</span>. Periodicity in longitude forces integer <span class="math inline">\(m\)</span>. Substitution into (P6.2), followed by <span class="math inline">\(\mu=\sin\phi\)</span>, gives</p>
+<p><span class="math display">\[
+\frac{d}{d\mu}\left[(1-\mu^2)\frac{d\Theta}{d\mu}\right]
++\left[a^2\kappa^2-\frac{m^2}{1-\mu^2}\right]\Theta=0.
+\]</span></p>
+<p>Regularity at both poles selects <span class="math inline">\(a^2\kappa^2=\ell(\ell+1)\)</span> and associated Legendre functions <span class="math inline">\(P_\ell^m(\mu)\)</span>. This is an eigenvalue problem: allowed smooth functions occur only for particular eigenvalues. For <span class="math inline">\(m\geq0\)</span>, an explicit convention is</p>
+<p><span class="math display">\[
+\begin{aligned}
+P_\ell(\mu)&amp;=\frac{1}{2^\ell\ell!}\frac{d^\ell}{d\mu^\ell}(\mu^2-1)^\ell,\\
+P_\ell^m(\mu)&amp;=(-1)^m(1-\mu^2)^{m/2}\frac{d^mP_\ell}{d\mu^m},\\
+Y_\ell^m&amp;=\left[\frac{2\ell+1}{4\pi}\frac{(\ell-m)!}{(\ell+m)!}\right]^{1/2}
+P_\ell^m(\sin\phi)e^{im\lambda}.
+\end{aligned}
+\]</span></p>
+<p>Here <span class="math inline">\(n!\)</span> denotes the product of integers from 1 to <span class="math inline">\(n\)</span>, with <span class="math inline">\(0!=1\)</span>. Negative orders are defined by <span class="math inline">\(Y_\ell^{-m}=(-1)^m\overline{Y_\ell^m}\)</span>; an overbar on a complex quantity means complex conjugation, whereas an overbar on a flow field in <a href="../04-geophysical-fluid-dynamics/turbulence.html">the companion chapter 7</a> meant zonal averaging. This is the standard orthonormal, Condon-Shortley phase convention:</p>
+<p><span id="law-harmonic-expansion"></span> <span class="math display">\[
+\begin{aligned}
+\int Y_\ell^m\overline{Y_{\ell'}^{m'}}\,d\omega&amp;=\delta_{\ell\ell'}\delta_{mm'},\\
+\zeta&amp;=\sum_{\ell=0}^{\infty}\sum_{m=-\ell}^{\ell}\widehat\zeta_\ell^mY_\ell^m,
+\qquad \widehat\zeta_\ell^m=\int\zeta\overline{Y_\ell^m}\,d\omega.
+\end{aligned}\tag{P8.2}
+\]</span></p>
+<p>The Kronecker deltas are 1 when their indices agree and 0 otherwise. A real field requires <span class="math inline">\(\widehat\zeta_\ell^{-m}=(-1)^m\overline{\widehat\zeta_\ell^m}\)</span>. The supplied barotropic notes use a different normalization and phase pairing (their eqs. 15-17). Their coefficient values and conjugacy rule must be interpreted in their own convention; the physical field and eigenvalues are unchanged. In particular, the notes’ constant harmonic is <span class="math inline">\(1/\sqrt2\)</span>, whereas (P8.2) uses <span class="math inline">\(1/\sqrt{4\pi}\)</span>.</p>
+</section>
+<section id="inversion-and-the-spectral-energy-weights" class="level2" data-number="18.2">
+<h2 data-number="18.2" class="anchored" data-anchor-id="inversion-and-the-spectral-energy-weights"><span class="header-section-number">18.2</span> Inversion and the spectral energy weights</h2>
+<p><strong>Result and motivation.</strong> Nonconstant vorticity modes determine streamfunction modes uniquely. The constant mode cannot be inverted and must be absent from relative vorticity. <span class="citation" data-cites="BarotropicNotes ArfkenWeber2005">(<a href="#ref-BarotropicNotes" role="doc-biblioref"><em>The Barotropic Vorticity Equation</em>, n.d., 1, 7–8</a>; <a href="#ref-ArfkenWeber2005" role="doc-biblioref">Arfken and Weber 2005, secs. 10.4–10.5</a>)</span></p>
+<p>Insert the expansion (P8.2) into <span class="math inline">\(\nabla_h^2\psi=\zeta\)</span> and match orthogonal coefficients:</p>
+<p><span id="law-spectral-inversion"></span> <span class="math display">\[
+\widehat\psi_\ell^m=-\frac{a^2}{\ell(\ell+1)}\widehat\zeta_\ell^m
+\quad(\ell\geq1),\qquad
+\widehat\zeta_0^0=0,\qquad\widehat\psi_0^0=0.
+\tag{P8.3}
+\]</span></p>
+<p>The last equality fixes the gauge, while the preceding zero is a compatibility condition. They are logically different. A constant added to <span class="math inline">\(\psi\)</span> changes no velocity. A constant added to relative vorticity cannot be the curl of a smooth globally defined tangent flow on the sphere.</p>
+<p>Orthogonality gives <strong>Parseval’s identity</strong>, <span class="math inline">\(\int|\zeta|^2d\omega=\sum_{\ell,m}|\widehat\zeta_\ell^m|^2\)</span>. Since <span class="math inline">\(dA=a^2d\omega\)</span>, (P7.2) becomes</p>
+<p><span id="law-spectral-budgets"></span> <span class="math display">\[
+E=\frac{a^4}{2}\sum_{\ell\geq1,m}
+\frac{|\widehat\zeta_\ell^m|^2}{\ell(\ell+1)},
+\qquad
+Z=\frac{a^2}{2}\sum_{\ell\geq1,m}|\widehat\zeta_\ell^m|^2.
+\tag{P8.4}
+\]</span></p>
+<p>Define <span class="math inline">\(E_\ell,Z_\ell\)</span> by the corresponding sums over <span class="math inline">\(m\)</span> at fixed <span class="math inline">\(\ell\)</span>. Then <span class="math inline">\(Z_\ell=\kappa_\ell^2E_\ell\)</span>, as used in (P7.3). Larger <span class="math inline">\(\ell\)</span> means smaller horizontal structure; <span class="math inline">\(a/\sqrt{\ell(\ell+1)}\)</span> is an inverse-wavenumber length, not a unique wavelength or grid spacing.</p>
+</section>
+<section id="truncation-and-evaluation-of-nonlinear-transport" class="level2" data-number="18.3">
+<h2 data-number="18.3" class="anchored" data-anchor-id="truncation-and-evaluation-of-nonlinear-transport"><span class="header-section-number">18.3</span> Truncation and evaluation of nonlinear transport</h2>
+<p><strong>Result and motivation.</strong> A finite harmonic expansion defines the represented state, while a sufficiently fine transform grid evaluates the nonlinear term. These are different resolutions. <span class="citation" data-cites="BarotropicNotes">(<a href="#ref-BarotropicNotes" role="doc-biblioref"><em>The Barotropic Vorticity Equation</em>, n.d., 4–8</a>)</span></p>
+<p><strong>Triangular truncation</strong> at degree <span class="math inline">\(N\)</span> retains <span class="math inline">\(0\leq\ell\leq N\)</span> and all <span class="math inline">\(|m|\leq\ell\)</span>, often denoted T<span class="math inline">\(N\)</span>. There are <span class="math inline">\((N+1)^2\)</span> real degrees of freedom for a real scalar before imposing its mean constraint. Define <span class="math inline">\(\mathcal{P}_N\)</span> to be orthogonal projection onto these retained modes. The ideal projected equation is</p>
+<p><span class="math display">\[
+\partial_t\zeta_N=-\mathcal{P}_NJ(\psi_N,\zeta_N+f),
+\qquad \nabla_h^2\psi_N=\zeta_N.
+\]</span></p>
+<p>The subscript <span class="math inline">\(N\)</span> denotes a truncated field. The nonlinear product produces degrees outside the retained set. One must compute its projection, rather than assume that the product is itself truncated.</p>
+<p>A <strong>pseudospectral</strong> or spectral-transform method inverts vorticity in harmonic space, transforms to a longitude-latitude grid, forms velocity-vorticity products there, and transforms the resulting tendency back. Sampling too coarsely causes <strong>aliasing</strong>: unresolved product modes masquerade as retained modes. For the triangular spherical transform model in the notes, the quadratic de-aliasing requirements are</p>
+<p><span id="law-dealias"></span> <span class="math display">\[
+N_\lambda\geq3N+1,\qquad
+N_\phi\geq\left\lceil\frac{3N+1}{2}\right\rceil.
+\tag{P8.5}
+\]</span></p>
+<p>Here <span class="math inline">\(N_\lambda\)</span> is the number of equally spaced longitudes, <span class="math inline">\(N_\phi\)</span> the number of Gaussian latitudes, and <span class="math inline">\(\lceil x\rceil\)</span> the smallest integer at least <span class="math inline">\(x\)</span>. <strong>Gaussian latitudes</strong> are <span class="math inline">\(\phi_j=\arcsin\mu_j\)</span>, where <span class="math inline">\(\mu_j\)</span> are roots of the Legendre polynomial <span class="math inline">\(P_{N_\phi}\)</span>. Their weights <span class="math inline">\(w_j&gt;0\)</span> give <span class="math inline">\(\int_{-1}^{1}g(\mu)d\mu=\sum_jw_jg(\mu_j)\)</span> for polynomial <span class="math inline">\(g\)</span> of degree at most <span class="math inline">\(2N_\phi-1\)</span>. Since <span class="math inline">\(d\omega=d\lambda\,d\mu\)</span>, this quadrature is adapted to the spherical transform.</p>
+<p>In longitude, two factors with wavenumbers at most <span class="math inline">\(N\)</span> have product modes up to <span class="math inline">\(2N\)</span>. Projecting onto a mode up to <span class="math inline">\(N\)</span> involves integration of a trigonometric polynomial with wavenumbers up to <span class="math inline">\(3N\)</span>; more than <span class="math inline">\(3N\)</span> equally spaced points avoid spurious nonzero discrete averages. The latitude requirement in (P8.5) is the spherical-transform counterpart derived in the supplied notes. T85 therefore admits <span class="math inline">\(N_\lambda=256\)</span>, <span class="math inline">\(N_\phi=128\)</span>. These conditions concern quadratic products; they do not guarantee that arbitrary localized functions, higher nonlinearities, or time integration are exact.</p>
+</section>
+<section id="drag-hyperdiffusion-and-their-signs" class="level2" data-number="18.4">
+<h2 data-number="18.4" class="anchored" data-anchor-id="drag-hyperdiffusion-and-their-signs"><span class="header-section-number">18.4</span> Drag, hyperdiffusion, and their signs</h2>
+<p><strong>Result and motivation.</strong> Dissipation should damp every retained nonconstant mode. Writing it with the nonnegative operator <span class="math inline">\(-\nabla_h^2\)</span> makes this sign transparent. <span class="citation" data-cites="BarotropicNotes">(<a href="#ref-BarotropicNotes" role="doc-biblioref"><em>The Barotropic Vorticity Equation</em>, n.d.</a>, eq. 12 and pp.&nbsp;3-4, 11)</span></p>
+<p>Let <span class="math inline">\(r\geq0\)</span> be a linear drag rate, <span class="math inline">\(p\)</span> a positive integer diffusion order, and <span class="math inline">\(\nu_p\geq0\)</span> a hyperdiffusion coefficient (<span class="math inline">\(\mathrm{m^{2p}\,s^{-1}}\)</span>). Define the vorticity dissipation operator</p>
+<p><span id="law-dissipation"></span> <span class="math display">\[
+\mathcal{D}(\zeta)=-r\zeta-\nu_p(-\nabla_h^2)^p\zeta.
+\tag{P8.6}
+\]</span></p>
+<p>For <span class="math inline">\(p=1\)</span>, the second term is ordinary diffusion <span class="math inline">\(+\nu_1\nabla_h^2\zeta\)</span>. For <span class="math inline">\(p=2\)</span>, it is <span class="math inline">\(-\nu_2\nabla_h^4\zeta\)</span>, called biharmonic diffusion. Its origin here is a small-scale model closure; it is not an exact substitute for unresolved three-dimensional turbulence. On each mode,</p>
+<p><span id="law-modal-damping"></span> <span class="math display">\[
+\partial_t\widehat\zeta_\ell^m\big|_{\mathcal D}
+=-\gamma_\ell\widehat\zeta_\ell^m,
+\qquad \gamma_\ell=r+\nu_p\kappa_\ell^{2p}\geq0.
+\tag{P8.7}
+\]</span></p>
+<p>A pure damped mode decays as <span class="math inline">\(e^{-\gamma_\ell t}\)</span>, and its squared amplitude decays as <span class="math inline">\(e^{-2\gamma_\ell t}\)</span>. Both energy and relative enstrophy decrease under this operator. Increasing <span class="math inline">\(p\)</span> concentrates damping near the high-degree end. An alternative specifies a cutoff damping rate <span class="math inline">\(\gamma_*&gt;0\)</span> and sets <span class="math inline">\(\nu_p=\gamma_*/\kappa_N^{2p}\)</span>, so the hyperdiffusive damping rate is <span class="math inline">\(\gamma_*[\ell(\ell+1)/(N(N+1))]^p\)</span>. A cutoff damping rate has units <span class="math inline">\(\mathrm{s^{-1}}\)</span> and must not be confused with the dimensional <span class="math inline">\(\nu_p\)</span>.</p>
+</section>
+<section id="chapter-summary" class="level2" data-number="18.5">
+<h2 data-number="18.5" class="anchored" data-anchor-id="chapter-summary"><span class="header-section-number">18.5</span> Chapter summary</h2>
+<ul>
+<li>Harmonics <span class="math inline">\(Y_\ell^m\)</span> are smooth Laplacian eigenfunctions with eigenvalues <span class="math inline">\(-\ell(\ell+1)/a^2\)</span>. Normalization and phase conventions affect coefficients.</li>
+<li>Inversion is division by those eigenvalues for <span class="math inline">\(\ell\geq1\)</span>. The zero vorticity mode is excluded; the zero streamfunction mode is a gauge.</li>
+<li>Spectral energy gives more weight to large spatial scales than enstrophy. Their exact weights are (P8.4).</li>
+<li>T<span class="math inline">\(N\)</span> truncation and the transform grid are distinct. Adequate Gaussian and longitude sampling prevent quadratic aliasing under the stated transform assumptions.</li>
+<li>Linear drag and hyperdiffusion give nonnegative modal damping rates (P8.7). Their coefficients have different units and scale dependence.</li>
+</ul>
+
+
+<div id="refs" class="references csl-bib-body hanging-indent" role="list">
+<div id="ref-ArfkenWeber2005" class="csl-entry" role="listitem">
+Arfken, George B., and Hans J. Weber. 2005. <em>Mathematical Methods for Physicists</em>. 6th ed. Elsevier Academic Press.
+</div>
+<div id="ref-BarotropicNotes" class="csl-entry" role="listitem">
+<em>The Barotropic Vorticity Equation</em>. n.d.
+</div>
+</div>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+      window.quartoDecorateExternalLinks = function (root) {
+     var links = (root || window.document).querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+          if (!link.classList.contains('no-external-icon')) {
+          }
+        }
+      }
+      };
+      window.quartoDecorateExternalLinks(window.document);
+    // Esc closes the popup (WCAG 1.4.13) and focus leaving both trigger and
+    // popup closes it (WCAG 2.4.11); tippy handles neither for interactive popups.
+    const hideOnEscAndFocusOut = {
+      name: 'hideOnEscAndFocusOut',
+      defaultValue: true,
+      fn(instance) {
+        const dismiss = () => {
+          // A show scheduled by the trigger delay would otherwise reopen it
+          instance.clearDelayTimeouts();
+          instance.hide();
+        };
+        const onKeyDown = (event) => {
+          if (event.key !== 'Escape') {
+            return;
+          }
+          // Keep Esc from also reaching page handlers (e.g. reveal.js overview),
+          // except an open reveal.js slide menu, which Esc should close too.
+          // The menu handles keys only when its keyboard option is on.
+          const menuHandlesEsc = window.Reveal?.getPlugin?.('menu')?.isOpen() &&
+            window.Reveal.getConfig().menu?.keyboard !== false;
+          if (!menuHandlesEsc) {
+            event.stopPropagation();
+          }
+          if (instance.popper.contains(window.document.activeElement)) {
+            // Disabled while refocusing so the focus trigger does not reopen it
+            instance.disable();
+            instance.reference.focus();
+            instance.enable();
+          }
+          dismiss();
+        };
+        const onFocusOut = (event) => {
+          const target = event.relatedTarget;
+          if (target && !instance.reference.contains(target) &&
+              !instance.popper.contains(target)) {
+            dismiss();
+          }
+        };
+        // On the trigger too: a click trigger (code-annotations: select) has no
+        // blur handling. Attached for the instance's lifetime so leaving the
+        // trigger also cancels a show still pending on the trigger delay.
+        instance.reference.addEventListener('focusout', onFocusOut);
+        return {
+          onShow() {
+            window.document.addEventListener('keydown', onKeyDown, true);
+            instance.popper.addEventListener('focusout', onFocusOut);
+          },
+          onHide() {
+            window.document.removeEventListener('keydown', onKeyDown, true);
+            instance.popper.removeEventListener('focusout', onFocusOut);
+          },
+          onDestroy() {
+            instance.reference.removeEventListener('focusout', onFocusOut);
+          },
+        };
+      },
+    };
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+        plugins: [hideOnEscAndFocusOut],
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          // Each band is positioned against its own containing block, which is
+          // not the offsetParent of the lines, so place it from client rects.
+          const placeBand = (band, firstEl, lastEl, codeBlock) => {
+            const container = band.offsetParent;
+            if (container === null) {
+              return;
+            }
+            const containerRect = container.getBoundingClientRect();
+            // Reveal.js scales slides with a transform, so convert client
+            // pixels back to the CSS pixels of the container.
+            const scale = containerRect.height / container.offsetHeight || 1;
+            const firstRect = firstEl.getBoundingClientRect();
+            const lastRect = lastEl.getBoundingClientRect();
+            const top = (firstRect.top - containerRect.top) / scale - container.clientTop + container.scrollTop;
+            const height = (lastRect.bottom - firstRect.top) / scale;
+            band.style.top = top - 2 + "px";
+            band.style.height = height + 4 + "px";
+            if (codeBlock) {
+              // Without the copy button wrapper, the containing block is wider
+              // than the code block, so span the code block explicitly.
+              const blockRect = codeBlock.getBoundingClientRect();
+              band.style.left = (blockRect.left - containerRect.left) / scale - container.clientLeft + container.scrollLeft + "px";
+              band.style.width = blockRect.width / scale + "px";
+            }
+          };
+          if (lineIds.length > 0) {
+            const el = window.document.getElementById(lineIds[0]);
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const parent = el.parentElement.parentElement;
+            // cook up a div (if necessary) and position it
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            placeBand(div, el, lastEl, parent.closest("div.sourceCode") || parent);
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            placeBand(gutterDiv, el, lastEl);
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+  <script type="application/javascript">
+  window.quartoScrollableRegionsLabels = {"code":"Scrollable code","output":"Scrollable output"};
+  </script>
+<nav class="page-navigation" aria-label="Page">
+  <div class="nav-page nav-page-previous">
+      <a href="../04-geophysical-fluid-dynamics/turbulence.html" class="pagination-link" aria-label="Invariants, turbulence, and eddy-driven flow">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Invariants, turbulence, and eddy-driven flow</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../04-geophysical-fluid-dynamics/stochastic.html" class="pagination-link" aria-label="Stochastic stirring and the closed forced model">
+        <span class="nav-page-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Stochastic stirring and the closed forced model</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

@@ -1,0 +1,1008 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.11.9">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>19&nbsp; Stochastic stirring and the closed forced model – Global Physical Climatology</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../05-neural-operators/index.html" rel="next">
+<link href="../04-geophysical-fluid-dynamics/inversion.html" rel="prev">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/scrollable-regions/scrollable-regions.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-63b5708e65d6cd79cd7618c58d0c21e7.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-fd437c11ef914449285a5c26e0daa494.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-chtml.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="nav-sidebar floating quarto-light"><a id="quarto-skip-link" class="visually-hidden-focusable" href="#quarto-document-content">Skip to main content</a>
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav" aria-label="Toolbar">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="Breadcrumbs"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../04-geophysical-fluid-dynamics/index.html">Geophysical Fluid Dynamics</a></li><li class="breadcrumb-item"><a href="../04-geophysical-fluid-dynamics/stochastic.html"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Stochastic stirring and the closed forced model</span></a></li></ol></nav>
+        <a class="flex-grow-1" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto" aria-label="Site">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="../">Global Physical Climatology</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Preface</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../01-vector-calculus/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text" id="quarto-sidebar-section-1-label">Vector Calculus</span></a>
+            <button type="button" class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-controls="quarto-sidebar-section-1" aria-expanded="true" aria-label="Toggle section: Vector Calculus">
+              <i class="bi bi-chevron-right ms-2" aria-hidden="true"></i>
+            </button> 
+      </div>
+      <ul id="quarto-sidebar-section-1" aria-labelledby="quarto-sidebar-section-1-label" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../01-vector-calculus/operators.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Differential Operators</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../01-vector-calculus/integrals.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Integrals</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../01-vector-calculus/change-of-variables.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Change of Variables</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../01-vector-calculus/theorems.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Integral Theorems</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../01-vector-calculus/spherical.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Spherical Coordinates</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../02-harmonic-analysis/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text" id="quarto-sidebar-section-2-label">Harmonic Analysis</span></a>
+            <button type="button" class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-controls="quarto-sidebar-section-2" aria-expanded="true" aria-label="Toggle section: Harmonic Analysis">
+              <i class="bi bi-chevron-right ms-2" aria-hidden="true"></i>
+            </button> 
+      </div>
+      <ul id="quarto-sidebar-section-2" aria-labelledby="quarto-sidebar-section-2-label" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../02-harmonic-analysis/function-spaces.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Function Spaces</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../02-harmonic-analysis/fourier-series.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Fourier Series</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../02-harmonic-analysis/fourier-transform.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Fourier Transform</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../02-harmonic-analysis/spherical-harmonics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Spherical Harmonics</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../03-pdes/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text" id="quarto-sidebar-section-3-label">Partial Differential Equations</span></a>
+            <button type="button" class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-controls="quarto-sidebar-section-3" aria-expanded="true" aria-label="Toggle section: Partial Differential Equations">
+              <i class="bi bi-chevron-right ms-2" aria-hidden="true"></i>
+            </button> 
+      </div>
+      <ul id="quarto-sidebar-section-3" aria-labelledby="quarto-sidebar-section-3-label" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../03-pdes/spectral-methods.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Spectral numerical methods</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../04-geophysical-fluid-dynamics/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text" id="quarto-sidebar-section-4-label">Geophysical Fluid Dynamics</span></a>
+            <button type="button" class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-controls="quarto-sidebar-section-4" aria-expanded="true" aria-label="Toggle section: Geophysical Fluid Dynamics">
+              <i class="bi bi-chevron-right ms-2" aria-hidden="true"></i>
+            </button> 
+      </div>
+      <ul id="quarto-sidebar-section-4" aria-labelledby="quarto-sidebar-section-4-label" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../04-geophysical-fluid-dynamics/kinematics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Kinematics and mathematical language</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../04-geophysical-fluid-dynamics/motion.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Mass, forces, and the momentum equation</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../04-geophysical-fluid-dynamics/rotating.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Rotation and large-scale balances</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../04-geophysical-fluid-dynamics/vorticity.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Vorticity and circulation</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../04-geophysical-fluid-dynamics/layer-pv.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">A shallow layer and the barotropic reduction</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../04-geophysical-fluid-dynamics/barotropic.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">The BVE on a rotating sphere</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../04-geophysical-fluid-dynamics/turbulence.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Invariants, turbulence, and eddy-driven flow</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../04-geophysical-fluid-dynamics/inversion.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Spherical harmonics, inversion, and dissipation</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../04-geophysical-fluid-dynamics/stochastic.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Stochastic stirring and the closed forced model</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <span class="sidebar-item-text sidebar-link text-start">
+ <span class="menu-text">Neural Operators</span></span>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" aria-labelledby="toc-title" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#what-a-random-forcing-specifies" id="toc-what-a-random-forcing-specifies" class="nav-link active" data-scroll-target="#what-a-random-forcing-specifies"><span class="header-section-number">19.1</span> What a random forcing specifies</a></li>
+  <li><a href="#a-finite-memory-recurrence-and-its-variance" id="toc-a-finite-memory-recurrence-and-its-variance" class="nav-link" data-scroll-target="#a-finite-memory-recurrence-and-its-variance"><span class="header-section-number">19.2</span> A finite-memory recurrence and its variance</a></li>
+  <li><a href="#gaussian-ou-forcing-and-bounded-innovations" id="toc-gaussian-ou-forcing-and-bounded-innovations" class="nav-link" data-scroll-target="#gaussian-ou-forcing-and-bounded-innovations"><span class="header-section-number">19.3</span> Gaussian OU forcing and bounded innovations</a></li>
+  <li><a href="#spatial-masks-localization-and-covariance" id="toc-spatial-masks-localization-and-covariance" class="nav-link" data-scroll-target="#spatial-masks-localization-and-covariance"><span class="header-section-number">19.4</span> Spatial masks, localization, and covariance</a></li>
+  <li><a href="#forced-budgets-stationarity-and-state-information" id="toc-forced-budgets-stationarity-and-state-information" class="nav-link" data-scroll-target="#forced-budgets-stationarity-and-state-information"><span class="header-section-number">19.5</span> Forced budgets, stationarity, and state information</a></li>
+  <li><a href="#chapter-summary" id="toc-chapter-summary" class="nav-link" data-scroll-target="#chapter-summary"><span class="header-section-number">19.6</span> Chapter summary</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content" tabindex="-1">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="Breadcrumbs"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../04-geophysical-fluid-dynamics/index.html">Geophysical Fluid Dynamics</a></li><li class="breadcrumb-item"><a href="../04-geophysical-fluid-dynamics/stochastic.html"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Stochastic stirring and the closed forced model</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Stochastic stirring and the closed forced model</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<!-- Generated by presentations/physical-prerequisites/build.py. Edit its Markdown manuscript and run build.py --sync-book. -->
+<p>Equations prefixed <strong>P</strong> retain the numbering of the companion physical-prerequisites document. Mathematical operators are introduced in <a href="../01-vector-calculus/operators.html">vector calculus</a> and <a href="../01-vector-calculus/theorems.html">integral theorems</a>. Parcel derivatives and transport are developed in <a href="../04-geophysical-fluid-dynamics/kinematics.html">fluid kinematics</a>.</p>
+<section id="what-a-random-forcing-specifies" class="level2" data-number="19.1">
+<h2 data-number="19.1" class="anchored" data-anchor-id="what-a-random-forcing-specifies"><span class="header-section-number">19.1</span> What a random forcing specifies</h2>
+<p><strong>Result and motivation.</strong> Stochastic stirring is a statistical model for omitted eddy input, not a new conservation law. Its distribution, covariance, spatial structure, and memory must be specified separately. <span class="citation" data-cites="VallisEtAl2004 ArfkenWeber2005">(<a href="#ref-VallisEtAl2004" role="doc-biblioref">Vallis et al. 2004, sec. 3</a> and appendix; <a href="#ref-ArfkenWeber2005" role="doc-biblioref">Arfken and Weber 2005, secs. 19.1–19.2</a>)</span></p>
+<p>Let <span class="math inline">\(S(\lambda,\phi,t)\)</span> be an additive vorticity tendency, with units <span class="math inline">\(\mathrm{s^{-2}}\)</span>. The <strong>stochastically stirred, damped BVE</strong> is</p>
+<p><span id="law-forced-bve"></span> <span class="math display">\[
+\boxed{\begin{aligned}
+\partial_t\zeta+J(\psi,\zeta+2\Omega\sin\phi)
+&amp;=S-r\zeta-\nu_p(-\nabla_h^2)^p\zeta,\\
+\nabla_h^2\psi&amp;=\zeta,\qquad \int\zeta\,dA=\int\psi\,dA=0.
+\end{aligned}}\tag{P9.1}
+\]</span></p>
+<p>Initial vorticity, compatible forcing, the radius and rotation rate, drag and diffusion parameters, and a law for <span class="math inline">\(S\)</span> complete the model. Spatial smoothness and zero global-mean relative vorticity remain necessary. In particular, <span class="math inline">\(\int S\,dA=0\)</span> prevents the forcing from driving a noninvertible constant vorticity mode. A curl of a smooth globally defined horizontal force automatically has this property; a directly prescribed scalar forcing must enforce it.</p>
+<p>A <strong>random variable</strong> takes values according to a specified probability law. <span class="math inline">\(\mathbb{E}[X]\)</span> denotes its ensemble mean, averaging over possible realizations. For real <span class="math inline">\(X,Y\)</span>, define</p>
+<p><span class="math display">\[
+\operatorname{Var}(X)=\mathbb{E}[(X-\mathbb{E}X)^2],\qquad
+\operatorname{Cov}(X,Y)=\mathbb{E}[(X-\mathbb{E}X)(Y-\mathbb{E}Y)].
+\]</span></p>
+<p>The square root of variance is standard deviation. Independence implies zero covariance when moments exist, but zero covariance does not generally imply independence. A realization is one sampled forcing history. A <strong>stationary</strong> process has statistics unchanged by shifting all times together; second-order stationarity requires only constant mean and covariance that depends on time lag. The <strong>autocorrelation</strong> is covariance divided by variance for a nonzero-variance stationary scalar process. A finite correlation time describes memory in the imposed forcing, not necessarily the memory of the fluid response.</p>
+</section>
+<section id="a-finite-memory-recurrence-and-its-variance" class="level2" data-number="19.2">
+<h2 data-number="19.2" class="anchored" data-anchor-id="a-finite-memory-recurrence-and-its-variance"><span class="header-section-number">19.2</span> A finite-memory recurrence and its variance</h2>
+<p><strong>Result and motivation.</strong> An autoregressive recurrence produces exponentially decaying time correlations. The innovation amplitude must include <span class="math inline">\(\sqrt{1-\alpha^2}\)</span> to keep the stationary variance fixed as the time step changes. <span class="citation" data-cites="VallisEtAl2004">(<a href="#ref-VallisEtAl2004" role="doc-biblioref">Vallis et al. 2004</a>, appendix, eqs. A.6-A.8)</span></p>
+<p>Consider one real forcing component <span class="math inline">\(s^n\)</span> at times <span class="math inline">\(t_n=n\Delta t\)</span>, with time step <span class="math inline">\(\Delta t&gt;0\)</span>. Let <span class="math inline">\(\tau&gt;0\)</span> be the desired memory time, <span class="math inline">\(\sigma_s\)</span> a specified stationary standard deviation, and <span class="math inline">\(\xi^n\)</span> independent identically distributed random variables, independent of the past, with mean zero and variance one. Define</p>
+<p><span id="law-ar1"></span> <span class="math display">\[
+s^{n+1}=\alpha s^n+\sigma_s\sqrt{1-\alpha^2}\,\xi^n,
+\qquad \alpha=e^{-\Delta t/\tau}.
+\tag{P9.2}
+\]</span></p>
+<p>This is an <strong>autoregressive process of order one</strong>, abbreviated AR(1): the next value uses only the previous value and a fresh <strong>innovation</strong> <span class="math inline">\(\xi^n\)</span>. The coefficient <span class="math inline">\(\alpha\)</span> is dimensionless and between zero and one. Here <span class="math inline">\(s^n\)</span> and <span class="math inline">\(\sigma_s\)</span> have units <span class="math inline">\(\mathrm{s^{-2}}\)</span>, while <span class="math inline">\(\xi^n\)</span> is dimensionless.</p>
+<p>Taking expectations gives <span class="math inline">\(\mathbb{E}s^n=\alpha^n\mathbb{E}s^0\)</span>. Independence makes the cross term in the variance vanish, so if <span class="math inline">\(V_n=\operatorname{Var}(s^n)\)</span>,</p>
+<p><span class="math display">\[
+V_{n+1}=\alpha^2V_n+\sigma_s^2(1-\alpha^2),\qquad
+V_n=\alpha^{2n}V_0+\sigma_s^2(1-\alpha^{2n}).
+\]</span></p>
+<p>At stationarity <span class="math inline">\(V_n=\sigma_s^2\)</span>. Iterating (P9.2) over <span class="math inline">\(k\)</span> steps, future innovations have zero covariance with <span class="math inline">\(s^n\)</span>, giving</p>
+<p><span id="law-ar-covariance"></span> <span class="math display">\[
+\operatorname{Cov}(s^{n+k},s^n)
+=\sigma_s^2\alpha^{|k|}
+=\sigma_s^2e^{-|k|\Delta t/\tau}.
+\tag{P9.3}
+\]</span></p>
+<p>The nonnegative integer <span class="math inline">\(k\)</span> counts lag steps; the absolute value extends the covariance symmetrically to negative lag. At elapsed lag <span class="math inline">\(\tau\)</span> the correlation is <span class="math inline">\(e^{-1}\)</span>: <span class="math inline">\(\tau\)</span> is an <strong>e-folding time</strong>. Starting at <span class="math inline">\(s^0=0\)</span> produces a forcing spinup in its variance. For Gaussian innovations, drawing <span class="math inline">\(s^0\)</span> from the Gaussian law with mean zero and variance <span class="math inline">\(\sigma_s^2\)</span> gives stationary forcing immediately. A uniform-innovation recurrence has a different stationary distribution; matching initial variance alone does not make its full distribution stationary.</p>
+<p>As a concrete variance check, choose <span class="math inline">\(\alpha=1/2\)</span>. The innovation coefficient is <span class="math inline">\(\sqrt{3}/2\)</span> times <span class="math inline">\(\sigma_s\)</span>, so one step preserves variance because <span class="math inline">\(1/4+3/4=1\)</span>. Dropping the square root factor would instead give stationary variance <span class="math inline">\(\sigma_s^2/(1-\alpha^2)\)</span>, changing the forcing when <span class="math inline">\(\Delta t\)</span> changes.</p>
+</section>
+<section id="gaussian-ou-forcing-and-bounded-innovations" class="level2" data-number="19.3">
+<h2 data-number="19.3" class="anchored" data-anchor-id="gaussian-ou-forcing-and-bounded-innovations"><span class="header-section-number">19.3</span> Gaussian OU forcing and bounded innovations</h2>
+<p><strong>Result and motivation.</strong> Gaussian innovations make (P9.2) an exact sample of an Ornstein-Uhlenbeck process. Bounded uniform innovations can preserve the same mean and covariance while changing higher statistics. <span class="citation" data-cites="VallisEtAl2004 ArfkenWeber2005">(<a href="#ref-VallisEtAl2004" role="doc-biblioref">Vallis et al. 2004</a>, appendix; <a href="#ref-ArfkenWeber2005" role="doc-biblioref">Arfken and Weber 2005, secs. 19.2, 19.5</a>)</span></p>
+<p>A Gaussian or normal law with mean zero and variance one has density <span class="math inline">\((2\pi)^{-1/2}e^{-x^2/2}\)</span>. A <strong>Wiener process</strong> <span class="math inline">\(W_t\)</span> has independent Gaussian increments with mean zero and variance equal to elapsed time. It has units <span class="math inline">\(\mathrm{s^{1/2}}\)</span> when <span class="math inline">\(t\)</span> is dimensional. Define the <strong>Ornstein-Uhlenbeck (OU) process</strong> through</p>
+<p><span id="law-ou"></span> <span class="math display">\[
+ds=-\frac{s}{\tau}\,dt+\sigma_s\sqrt{\frac{2}{\tau}}\,dW_t.
+\tag{P9.4}
+\]</span></p>
+<p>This notation is interpreted through a stochastic integral, not an ordinary time derivative of <span class="math inline">\(W_t\)</span>. For the deterministic integrand used here, the integral is the mean-square limit of sums of the integrand times independent Wiener increments. Such an integral has zero mean and variance equal to the integral of the squared integrand, directly from independence and <span class="math inline">\(\operatorname{Var}(\Delta W)=\Delta t\)</span>.</p>
+<p>Multiply (P9.4) by <span class="math inline">\(e^{t/\tau}\)</span> and integrate from <span class="math inline">\(t\)</span> to <span class="math inline">\(t+\Delta t\)</span>:</p>
+<p><span class="math display">\[
+s(t+\Delta t)=e^{-\Delta t/\tau}s(t)
++\sigma_s\sqrt{\frac{2}{\tau}}
+\int_t^{t+\Delta t}e^{-(t+\Delta t-u)/\tau}\,dW_u.
+\]</span></p>
+<p>The last term is Gaussian, independent of the past, and has variance</p>
+<p><span class="math display">\[
+\frac{2\sigma_s^2}{\tau}\int_t^{t+\Delta t}
+e^{-2(t+\Delta t-u)/\tau}du
+=\sigma_s^2(1-e^{-2\Delta t/\tau}).
+\]</span></p>
+<p>This recovers (P9.2) with Gaussian <span class="math inline">\(\xi^n\)</span>. It derives the exact sampled OU law, rather than a forward-Euler approximation to it.</p>
+<p>For a uniformly distributed <span class="math inline">\(\eta\)</span> on <span class="math inline">\([-1,1]\)</span>, its density is <span class="math inline">\(1/2\)</span> there and zero elsewhere. Direct integration gives <span class="math inline">\(\mathbb{E}\eta=0\)</span>, <span class="math inline">\(\mathbb{E}\eta^2=\tfrac12\int_{-1}^{1}x^2dx=1/3\)</span>. Thus <span class="math inline">\(\xi=\sqrt3\eta\)</span> has unit variance. If the recurrence instead uses <span class="math inline">\(A\sqrt{1-\alpha^2}\eta^n\)</span>, its stationary variance is <span class="math inline">\(A^2/3\)</span>, not <span class="math inline">\(A^2\)</span>. For independent real and imaginary components of a complex innovation, each uniform on <span class="math inline">\([-1,1]\)</span>, the pre-localization stationary mean square complex amplitude is <span class="math inline">\(2A^2/3\)</span>. That statement concerns coefficient components, not the variance at a physical grid point after transforms and localization.</p>
+<p>Ideal temporal <strong>white noise</strong> is the formal derivative <span class="math inline">\(dW_t/dt\)</span>: it has no ordinary pointwise value and is defined by its time integrals, which are independent Wiener increments over disjoint intervals. Its intensity specifies increment variance per unit time. Small <span class="math inline">\(\tau/\Delta t\)</span> makes successive sampled forcing values nearly independent. That does <strong>not</strong> by itself define a finite-strength continuous white-noise forcing in the BVE. At fixed <span class="math inline">\(\sigma_s^2\)</span>, OU covariance is <span class="math inline">\(\sigma_s^2e^{-|t|/\tau}\)</span>, whose integral over all lags is <span class="math inline">\(2\sigma_s^2\tau\to0\)</span> as <span class="math inline">\(\tau\to0\)</span>. Holding white-noise intensity fixed would require scaling <span class="math inline">\(\sigma_s^2\tau\)</span> to a nonzero constant. The distinction matters when comparing forcing amplitudes across correlation times.</p>
+</section>
+<section id="spatial-masks-localization-and-covariance" class="level2" data-number="19.4">
+<h2 data-number="19.4" class="anchored" data-anchor-id="spatial-masks-localization-and-covariance"><span class="header-section-number">19.4</span> Spatial masks, localization, and covariance</h2>
+<p><strong>Result and motivation.</strong> Spectral selection sets initial forcing scales, while multiplication by a spatial envelope localizes forcing and mixes those scales. Removing the global mean preserves vorticity invertibility. <span class="citation" data-cites="VallisEtAl2004 BarotropicNotes">(<a href="#ref-VallisEtAl2004" role="doc-biblioref">Vallis et al. 2004, sec. 3</a>; <a href="#ref-BarotropicNotes" role="doc-biblioref"><em>The Barotropic Vorticity Equation</em>, n.d., sec. 3</a>)</span></p>
+<p>Let <span class="math inline">\(\mathbf{b}^n\)</span> be a real vector collecting independent random coefficient components at step <span class="math inline">\(n\)</span>, with zero mean and covariance matrix <span class="math inline">\(\mathbf{C}_b=\mathbb{E}[\mathbf{b}^n(\mathbf{b}^n)^T]\)</span>. The superscript <span class="math inline">\(T\)</span> denotes matrix transpose. Complex coefficients can always be represented by their real and imaginary components in this vector. Let <span class="math inline">\(\mathcal{M}\)</span> select a prescribed band of harmonic modes, <span class="math inline">\(\mathcal{T}\)</span> synthesize a grid field from coefficients, and <span class="math inline">\(L(\lambda,\phi)\)</span> be a fixed dimensionless envelope. Let <span class="math inline">\(\mathcal{P}_0\)</span> remove the spherical mean. Let <span class="math inline">\(\mathcal{A}\)</span> analyze a grid field back into a real vector of retained spectral coefficient components. The combined linear map <span class="math inline">\(\mathcal{L}\)</span> therefore produces a coefficient-vector innovation proportional to</p>
+<p><span class="math display">\[
+\mathcal{L}\mathbf{b}^n
+=\mathcal{A}\mathcal{P}_0\mathcal{P}_N\big[L\,\mathcal{T}\mathcal{M}\mathbf{b}^n\big].
+\]</span></p>
+<p>Grid quadrature and transform conventions are part of this map. With forcing amplitude <span class="math inline">\(A\)</span> (<span class="math inline">\(\mathrm{s^{-2}}\)</span>), the vector or field recurrence can be written</p>
+<p><span id="law-spatial-ar"></span> <span class="math display">\[
+\mathbf{s}^{n+1}=\alpha\mathbf{s}^n
++A\sqrt{1-\alpha^2}\,\mathcal{L}\mathbf{b}^n,
+\qquad
+\mathbf{C}_s=A^2\mathcal{L}\mathbf{C}_b\mathcal{L}^{T}
+\quad\text{at stationarity}.
+\tag{P9.5}
+\]</span></p>
+<p>Here <span class="math inline">\(\mathbf{s}^n\)</span> is the real vector of retained forcing coefficient components, <span class="math inline">\(\mathbf{C}_s\)</span> its covariance, and <span class="math inline">\(\mathcal{L}^T\)</span> the transpose in this real component representation. The result follows by the same variance recurrence as (P9.2), now applied to each pair of components. It shows why <span class="math inline">\(A\)</span> alone does not determine pointwise root-mean-square forcing. The number of forced modes, normalization, innovation variance, envelope, projection, and mean removal all enter.</p>
+<p>A Gaussian-shaped envelope in latitude and a localized enhancement in longitude can be written</p>
+<p><span class="math display">\[
+L(\lambda,\phi)=\exp\left[-\frac{(\phi-\phi_c)^2}{2w_\phi^2}\right]
+\left\{1+B\exp\left[-\frac{d_{2\pi}(\lambda-\lambda_c)^2}{2w_\lambda^2}\right]\right\}.
+\]</span></p>
+<p>The centers are <span class="math inline">\(\phi_c,\lambda_c\)</span>, the positive angular widths are <span class="math inline">\(w_\phi,w_\lambda\)</span>, <span class="math inline">\(B\)</span> controls the longitudinal enhancement, and <span class="math inline">\(d_{2\pi}\)</span> wraps an angular difference into <span class="math inline">\([-\pi,\pi]\)</span>. All angles in this expression must use the same units. <span class="math inline">\(B=0\)</span> is zonally uniform in its envelope; it is not globally uniform because latitude dependence remains.</p>
+<p>Multiplication by <span class="math inline">\(L\)</span> convolves harmonic coefficients, so the final forcing is not confined to the initially selected band. Nor does excluding initial <span class="math inline">\(m=0\)</span> coefficients guarantee a final zero zonal-mean component after a longitude-dependent envelope. Removing <span class="math inline">\(\ell=0\)</span> enforces zero <em>global</em> mean, a different condition. A sharply or imperfectly smooth envelope also adds high-degree content; finite spectral projection defines what the numerical model actually retains.</p>
+</section>
+<section id="forced-budgets-stationarity-and-state-information" class="level2" data-number="19.5">
+<h2 data-number="19.5" class="anchored" data-anchor-id="forced-budgets-stationarity-and-state-information"><span class="header-section-number">19.5</span> Forced budgets, stationarity, and state information</h2>
+<p><strong>Result and motivation.</strong> The stirring enters energy and enstrophy through correlations with the flow. Its amplitude is not an energy-input rate. Finite-memory forcing also carries information beyond the instantaneous vorticity field. <span class="citation" data-cites="VallisEtAl2004 Vallis2006">(<a href="#ref-VallisEtAl2004" role="doc-biblioref">Vallis et al. 2004, secs. 2–3</a> and appendix; <a href="#ref-Vallis2006" role="doc-biblioref">Vallis 2006, sec. 8.3</a>)</span></p>
+<p>For the colored-in-time forcing above, the forcing state is an ordinary time-dependent input to the vorticity equation; ordinary product-rule energy budgets apply. Set <span class="math inline">\(\mathcal{D}\)</span> as in (P8.6). The ideal transport terms cancel as in <a href="../04-geophysical-fluid-dynamics/turbulence.html">the companion chapter 7</a>, giving</p>
+<p><span id="law-forced-budgets"></span> <span class="math display">\[
+\begin{aligned}
+\dot E&amp;=-\int\psi S\,dA-2rE
+-\nu_pa^2\sum_{\ell\geq1,m}\kappa_\ell^{2p-2}|\widehat\zeta_\ell^m|^2,\\
+\dot Z&amp;=\int\zeta S\,dA-2rZ
+-\nu_pa^2\sum_{\ell\geq1,m}\kappa_\ell^{2p}|\widehat\zeta_\ell^m|^2.
+\end{aligned}\tag{P9.6}
+\]</span></p>
+<p>The energy forcing sign comes from <span class="math inline">\(\dot E=-\int\psi\partial_t\zeta\,dA\)</span>; the enstrophy sign comes from <span class="math inline">\(\dot Z=\int\zeta\partial_t\zeta\,dA\)</span>. The energy forcing integral has units <span class="math inline">\(\mathrm{m^4\,s^{-3}}\)</span>. The coefficient amplitude <span class="math inline">\(A\)</span> instead has units <span class="math inline">\(\mathrm{s^{-2}}\)</span>, so they cannot be identified. Zero ensemble-mean <span class="math inline">\(S\)</span> does not make the energy input zero: <span class="math inline">\(\psi\)</span> responds to <span class="math inline">\(S\)</span> and can correlate with it. An instantaneous realization need not inject positive energy at every time.</p>
+<p>A <strong>statistical steady state</strong> has time-independent statistics after transient adjustment, even while individual fields continue evolving. If such a state exists with finite moments, ensemble averaging (P9.6) balances mean forcing input against mean dissipation. These identities do not prove existence, uniqueness, or an adequate spinup duration. If the vorticity equation were instead driven directly by ideal temporal white noise, stochastic quadratic-variation terms would be needed in the mean budgets; (P9.6) is stated for finite-memory forcing.</p>
+<p>A process is <strong>Markov</strong> when its future probability law, conditional on its present state, does not need earlier states. The pair <span class="math inline">\((\zeta,\mathbf{s})\)</span>, together with fixed parameters, provides the physical state for a finite-memory stirring model; a time-discrete integrator may additionally need previous time levels. Vorticity alone generally does not: two equal vorticity fields accompanied by different stirring states have different immediate tendencies. Thus even perfect observations of <span class="math inline">\(\zeta(t)\)</span> alone need not specify a unique deterministic <span class="math inline">\(\zeta(t+\Delta t)\)</span>. This is a consequence of the forcing model, separate from numerical error or chaotic sensitivity.</p>
+</section>
+<section id="chapter-summary" class="level2" data-number="19.6">
+<h2 data-number="19.6" class="anchored" data-anchor-id="chapter-summary"><span class="header-section-number">19.6</span> Chapter summary</h2>
+<ul>
+<li>The closed forced BVE is (P9.1), with zero-mean vorticity, a streamfunction gauge, and a specified stirring law. The forcing units are vorticity per time.</li>
+<li>The AR(1) process (P9.2) has stationary covariance (P9.3). Its innovation normalization fixes variance as the time step changes.</li>
+<li>Gaussian innovations give exact OU samples. Uniform innovations have different higher moments and require explicit variance normalization.</li>
+<li>Spectral masks, localization, transform normalization, and global-mean removal determine the final forcing covariance (P9.5).</li>
+<li>Energy and enstrophy budgets (P9.6) involve flow-forcing correlations. Statistical balance is not a proof of stationarity. Finite-memory stirring is part of the dynamical state.</li>
+</ul>
+
+
+<div id="refs" class="references csl-bib-body hanging-indent" role="list">
+<div id="ref-ArfkenWeber2005" class="csl-entry" role="listitem">
+Arfken, George B., and Hans J. Weber. 2005. <em>Mathematical Methods for Physicists</em>. 6th ed. Elsevier Academic Press.
+</div>
+<div id="ref-BarotropicNotes" class="csl-entry" role="listitem">
+<em>The Barotropic Vorticity Equation</em>. n.d.
+</div>
+<div id="ref-Vallis2006" class="csl-entry" role="listitem">
+Vallis, Geoffrey K. 2006. <em>Atmospheric and Oceanic Fluid Dynamics: Fundamentals and Large-Scale Circulation</em>. Cambridge University Press.
+</div>
+<div id="ref-VallisEtAl2004" class="csl-entry" role="listitem">
+Vallis, Geoffrey K., Edwin P. Gerber, Paul J. Kushner, and Benjamin A. Cash. 2004. <span>“A Mechanism and Simple Dynamical Model of the North Atlantic Oscillation and Annular Modes.”</span> <em>Journal of the Atmospheric Sciences</em> 61 (3): 264–80. <a href="https://doi.org/10.1175/1520-0469(2004)061<0264:AMASDM>2.0.CO;2">https://doi.org/10.1175/1520-0469(2004)061&lt;0264:AMASDM&gt;2.0.CO;2</a>.
+</div>
+</div>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+      window.quartoDecorateExternalLinks = function (root) {
+     var links = (root || window.document).querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+          if (!link.classList.contains('no-external-icon')) {
+          }
+        }
+      }
+      };
+      window.quartoDecorateExternalLinks(window.document);
+    // Esc closes the popup (WCAG 1.4.13) and focus leaving both trigger and
+    // popup closes it (WCAG 2.4.11); tippy handles neither for interactive popups.
+    const hideOnEscAndFocusOut = {
+      name: 'hideOnEscAndFocusOut',
+      defaultValue: true,
+      fn(instance) {
+        const dismiss = () => {
+          // A show scheduled by the trigger delay would otherwise reopen it
+          instance.clearDelayTimeouts();
+          instance.hide();
+        };
+        const onKeyDown = (event) => {
+          if (event.key !== 'Escape') {
+            return;
+          }
+          // Keep Esc from also reaching page handlers (e.g. reveal.js overview),
+          // except an open reveal.js slide menu, which Esc should close too.
+          // The menu handles keys only when its keyboard option is on.
+          const menuHandlesEsc = window.Reveal?.getPlugin?.('menu')?.isOpen() &&
+            window.Reveal.getConfig().menu?.keyboard !== false;
+          if (!menuHandlesEsc) {
+            event.stopPropagation();
+          }
+          if (instance.popper.contains(window.document.activeElement)) {
+            // Disabled while refocusing so the focus trigger does not reopen it
+            instance.disable();
+            instance.reference.focus();
+            instance.enable();
+          }
+          dismiss();
+        };
+        const onFocusOut = (event) => {
+          const target = event.relatedTarget;
+          if (target && !instance.reference.contains(target) &&
+              !instance.popper.contains(target)) {
+            dismiss();
+          }
+        };
+        // On the trigger too: a click trigger (code-annotations: select) has no
+        // blur handling. Attached for the instance's lifetime so leaving the
+        // trigger also cancels a show still pending on the trigger delay.
+        instance.reference.addEventListener('focusout', onFocusOut);
+        return {
+          onShow() {
+            window.document.addEventListener('keydown', onKeyDown, true);
+            instance.popper.addEventListener('focusout', onFocusOut);
+          },
+          onHide() {
+            window.document.removeEventListener('keydown', onKeyDown, true);
+            instance.popper.removeEventListener('focusout', onFocusOut);
+          },
+          onDestroy() {
+            instance.reference.removeEventListener('focusout', onFocusOut);
+          },
+        };
+      },
+    };
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+        plugins: [hideOnEscAndFocusOut],
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          // Each band is positioned against its own containing block, which is
+          // not the offsetParent of the lines, so place it from client rects.
+          const placeBand = (band, firstEl, lastEl, codeBlock) => {
+            const container = band.offsetParent;
+            if (container === null) {
+              return;
+            }
+            const containerRect = container.getBoundingClientRect();
+            // Reveal.js scales slides with a transform, so convert client
+            // pixels back to the CSS pixels of the container.
+            const scale = containerRect.height / container.offsetHeight || 1;
+            const firstRect = firstEl.getBoundingClientRect();
+            const lastRect = lastEl.getBoundingClientRect();
+            const top = (firstRect.top - containerRect.top) / scale - container.clientTop + container.scrollTop;
+            const height = (lastRect.bottom - firstRect.top) / scale;
+            band.style.top = top - 2 + "px";
+            band.style.height = height + 4 + "px";
+            if (codeBlock) {
+              // Without the copy button wrapper, the containing block is wider
+              // than the code block, so span the code block explicitly.
+              const blockRect = codeBlock.getBoundingClientRect();
+              band.style.left = (blockRect.left - containerRect.left) / scale - container.clientLeft + container.scrollLeft + "px";
+              band.style.width = blockRect.width / scale + "px";
+            }
+          };
+          if (lineIds.length > 0) {
+            const el = window.document.getElementById(lineIds[0]);
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const parent = el.parentElement.parentElement;
+            // cook up a div (if necessary) and position it
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            placeBand(div, el, lastEl, parent.closest("div.sourceCode") || parent);
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            placeBand(gutterDiv, el, lastEl);
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+  <script type="application/javascript">
+  window.quartoScrollableRegionsLabels = {"code":"Scrollable code","output":"Scrollable output"};
+  </script>
+<nav class="page-navigation" aria-label="Page">
+  <div class="nav-page nav-page-previous">
+      <a href="../04-geophysical-fluid-dynamics/inversion.html" class="pagination-link" aria-label="Spherical harmonics, inversion, and dissipation">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Spherical harmonics, inversion, and dissipation</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../05-neural-operators/index.html" class="pagination-link" aria-label="Neural Operators">
+        <span class="nav-page-text">Neural Operators</span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

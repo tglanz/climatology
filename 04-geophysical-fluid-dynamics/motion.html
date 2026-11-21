@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>11&nbsp; Basic – Global Physical Climatology</title>
+<title>12&nbsp; Mass, forces, and the momentum equation – Global Physical Climatology</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -26,7 +26,26 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-</style>
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
 <script src="../site_libs/quarto-nav/quarto-nav.js"></script>
@@ -37,7 +56,7 @@ ul.task-list li input[type="checkbox"] {
 <script src="../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../">
 <link href="../04-geophysical-fluid-dynamics/rotating.html" rel="next">
-<link href="../04-geophysical-fluid-dynamics/index.html" rel="prev">
+<link href="../04-geophysical-fluid-dynamics/kinematics.html" rel="prev">
 <script src="../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="../site_libs/quarto-html/scrollable-regions/scrollable-regions.js" type="module"></script>
@@ -48,7 +67,7 @@ ul.task-list li input[type="checkbox"] {
 <link href="../site_libs/quarto-html/quarto-syntax-highlighting-63b5708e65d6cd79cd7618c58d0c21e7.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-4f67ab1e4efc86feb5e21e0983fc9301.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-fd437c11ef914449285a5c26e0daa494.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -118,7 +137,7 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="Breadcrumbs"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../04-geophysical-fluid-dynamics/index.html">Geophysical Fluid Dynamics</a></li><li class="breadcrumb-item"><a href="../04-geophysical-fluid-dynamics/motion.html"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Basic</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="Breadcrumbs"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../04-geophysical-fluid-dynamics/index.html">Geophysical Fluid Dynamics</a></li><li class="breadcrumb-item"><a href="../04-geophysical-fluid-dynamics/motion.html"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Mass, forces, and the momentum equation</span></a></li></ol></nav>
         <a class="flex-grow-1" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -253,20 +272,56 @@ window.Quarto = {
       <ul id="quarto-sidebar-section-4" aria-labelledby="quarto-sidebar-section-4-label" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="../04-geophysical-fluid-dynamics/kinematics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Kinematics and mathematical language</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="../04-geophysical-fluid-dynamics/motion.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Basic</span></span></a>
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Mass, forces, and the momentum equation</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../04-geophysical-fluid-dynamics/rotating.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Rotating Frame</span></span></a>
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Rotation and large-scale balances</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../04-geophysical-fluid-dynamics/vorticity.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Vorticity</span></span></a>
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Vorticity and circulation</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../04-geophysical-fluid-dynamics/layer-pv.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">A shallow layer and the barotropic reduction</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../04-geophysical-fluid-dynamics/barotropic.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">The BVE on a rotating sphere</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../04-geophysical-fluid-dynamics/turbulence.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Invariants, turbulence, and eddy-driven flow</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../04-geophysical-fluid-dynamics/inversion.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Spherical harmonics, inversion, and dissipation</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../04-geophysical-fluid-dynamics/stochastic.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Stochastic stirring and the closed forced model</span></span></a>
   </div>
 </li>
       </ul>
@@ -285,18 +340,19 @@ window.Quarto = {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#material-derivative" id="toc-material-derivative" class="nav-link active" data-scroll-target="#material-derivative"><span class="header-section-number">11.1</span> Material Derivative</a></li>
-  <li><a href="#mass-continuity" id="toc-mass-continuity" class="nav-link" data-scroll-target="#mass-continuity"><span class="header-section-number">11.2</span> Mass Continuity</a></li>
-  <li><a href="#momentum-equation" id="toc-momentum-equation" class="nav-link" data-scroll-target="#momentum-equation"><span class="header-section-number">11.3</span> Momentum Equation</a></li>
+  <li><a href="#mass-conservation-and-incompressibility" id="toc-mass-conservation-and-incompressibility" class="nav-link active" data-scroll-target="#mass-conservation-and-incompressibility"><span class="header-section-number">12.1</span> Mass conservation and incompressibility</a></li>
+  <li><a href="#pressure-stress-and-body-forces" id="toc-pressure-stress-and-body-forces" class="nav-link" data-scroll-target="#pressure-stress-and-body-forces"><span class="header-section-number">12.2</span> Pressure, stress, and body forces</a></li>
+  <li><a href="#pressure-closure-and-kinetic-energy" id="toc-pressure-closure-and-kinetic-energy" class="nav-link" data-scroll-target="#pressure-closure-and-kinetic-energy"><span class="header-section-number">12.3</span> Pressure closure and kinetic energy</a></li>
+  <li><a href="#chapter-summary" id="toc-chapter-summary" class="nav-link" data-scroll-target="#chapter-summary"><span class="header-section-number">12.4</span> Chapter summary</a></li>
   </ul>
 </nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content" tabindex="-1">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="Breadcrumbs"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../04-geophysical-fluid-dynamics/index.html">Geophysical Fluid Dynamics</a></li><li class="breadcrumb-item"><a href="../04-geophysical-fluid-dynamics/motion.html"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Basic</span></a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="Breadcrumbs"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../04-geophysical-fluid-dynamics/index.html">Geophysical Fluid Dynamics</a></li><li class="breadcrumb-item"><a href="../04-geophysical-fluid-dynamics/motion.html"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Mass, forces, and the momentum equation</span></a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Basic</span></h1>
+<h1 class="title"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Mass, forces, and the momentum equation</span></h1>
 </div>
 
 
@@ -313,49 +369,75 @@ window.Quarto = {
 </header>
 
 
-<p>Let <span class="math inline">\(\vec{x} \in \mathbb{R}^3\)</span> denote position, <span class="math inline">\(t\)</span> time, <span class="math inline">\(\vec{v}(\vec{x}, t)\)</span> the velocity field, <span class="math inline">\(\rho(\vec{x}, t)\)</span> the mass density, <span class="math inline">\(p(\vec{x}, t)\)</span> the pressure, <span class="math inline">\(\nu\)</span> the kinematic viscosity, and <span class="math inline">\(\vec{F}_b(\vec{x}, t)\)</span> the body force per unit mass.</p>
-<section id="material-derivative" class="level2" data-number="11.1">
-<h2 data-number="11.1" class="anchored" data-anchor-id="material-derivative"><span class="header-section-number">11.1</span> Material Derivative</h2>
-<p>The rate of change following a fluid parcel. For scalar <span class="math inline">\(\phi(\vec{x}, t)\)</span> and vector <span class="math inline">\(\vec{b}(\vec{x}, t)\)</span>:</p>
-<p><span class="math display">\[
-\frac{D\phi}{Dt} = \frac{\partial \phi}{\partial t} + \vec{v} \cdot \nabla \phi
-~~~,~~~
-\frac{D\vec{b}}{Dt} = \frac{\partial \vec{b}}{\partial t} + (\vec{v} \cdot \nabla) \vec{b}
+<!-- Generated by presentations/physical-prerequisites/build.py. Edit its Markdown manuscript and run build.py --sync-book. -->
+<p>Equations prefixed <strong>P</strong> retain the numbering of the companion physical-prerequisites document. Mathematical operators are introduced in <a href="../01-vector-calculus/operators.html">vector calculus</a> and <a href="../01-vector-calculus/theorems.html">integral theorems</a>. Parcel derivatives and transport are developed in <a href="../04-geophysical-fluid-dynamics/kinematics.html">fluid kinematics</a>.</p>
+<section id="mass-conservation-and-incompressibility" class="level2" data-number="12.1">
+<h2 data-number="12.1" class="anchored" data-anchor-id="mass-conservation-and-incompressibility"><span class="header-section-number">12.1</span> Mass conservation and incompressibility</h2>
+<p><strong>Result and motivation.</strong> Conservation of parcel mass gives the continuity equation. Incompressibility constrains volume change; it does not by itself make density spatially uniform. <span class="citation" data-cites="Vallis2006">(<a href="#ref-Vallis2006" role="doc-biblioref">Vallis 2006, secs. 1.2, 1.9</a>)</span></p>
+<p>Let <span class="math inline">\(\rho(\mathbf{x},t)&gt;0\)</span> be mass density (<span class="math inline">\(\mathrm{kg\,m^{-3}}\)</span>). A material volume contains constant mass, so set <span class="math inline">\(b=\rho\)</span> in (P1.4). Because this holds for every material volume,</p>
+<p><span id="law-continuity"></span> <span class="math display">\[
+\boxed{\partial_t\rho+\nabla\cdot(\rho\mathbf{v})=0,
+\qquad \frac{D\rho}{Dt}=-\rho\nabla\cdot\mathbf{v}.}
+\tag{P2.1}
 \]</span></p>
-<p>The first term is local change at a fixed point; the second is advection.</p>
+<p>An <strong>incompressible flow</strong> preserves parcel volume: <span class="math inline">\(\nabla\cdot\mathbf{v}=0\)</span>. Then <span class="math inline">\(D\rho/Dt=0\)</span>, although different parcels can retain different densities. A <strong>homogeneous fluid</strong> has spatially uniform density. The constant-density, incompressible model uses one fixed density <span class="math inline">\(\rho_0\)</span>. These distinctions prevent the incorrect inference that incompressibility alone removes buoyancy (acceleration due to density contrasts in gravity) or density gradients.</p>
+<p>Three-dimensional incompressibility gives <span class="math inline">\(\partial_xu+\partial_yv=-\partial_zw\)</span>, where <span class="math inline">\((u,v,w)\)</span> are velocity components. Thus horizontal divergence need not vanish in an incompressible three-dimensional fluid. The later BVE imposes the stronger, separate restriction <span class="math inline">\(\nabla_h\cdot\mathbf{u}=0\)</span> on the horizontal velocity <span class="math inline">\(\mathbf{u}=(u,v)\)</span>.</p>
 </section>
-<section id="mass-continuity" class="level2" data-number="11.2">
-<h2 data-number="11.2" class="anchored" data-anchor-id="mass-continuity"><span class="header-section-number">11.2</span> Mass Continuity</h2>
+<section id="pressure-stress-and-body-forces" class="level2" data-number="12.2">
+<h2 data-number="12.2" class="anchored" data-anchor-id="pressure-stress-and-body-forces"><span class="header-section-number">12.2</span> Pressure, stress, and body forces</h2>
+<p><strong>Result and motivation.</strong> Newton’s law balances parcel acceleration against pressure forces, viscous stress, and body forces. The constant-viscosity Laplacian is a special case of the stress divergence. <span class="citation" data-cites="Vallis2006">(<a href="#ref-Vallis2006" role="doc-biblioref">Vallis 2006, sec. 1.3</a>)</span></p>
+<p><strong>Pressure</strong> <span class="math inline">\(p\)</span> is the compressive normal force per unit area (<span class="math inline">\(\mathrm{Pa}=\mathrm{kg\,m^{-1}\,s^{-2}}\)</span>). A surface with outward normal <span class="math inline">\(\mathbf{n}\)</span> experiences traction <span class="math inline">\(\boldsymbol{\sigma}\mathbf{n}\)</span>, where the <strong>stress tensor</strong> <span class="math inline">\(\boldsymbol{\sigma}\)</span> maps a surface orientation to force per area. Write <span class="math inline">\(\boldsymbol{\sigma}=-p\mathbf{I}+\boldsymbol{\tau}\)</span>, where <span class="math inline">\(\mathbf{I}\)</span> is the identity tensor and <span class="math inline">\(\boldsymbol{\tau}\)</span> the viscous stress. Let <span class="math inline">\(\mathbf{b}\)</span> be body force per unit mass (<span class="math inline">\(\mathrm{m\,s^{-2}}\)</span>), such as gravity.</p>
+<p>Newton’s law on a material volume is</p>
 <p><span class="math display">\[
-\frac{\partial \rho}{\partial t} + \nabla \cdot (\rho \vec{v}) = 0
+\frac{d}{dt}\int_{V(t)}\rho\mathbf{v}\,dV
+=\int_{\partial V(t)}\boldsymbol{\sigma}\mathbf{n}\,dA
++\int_{V(t)}\rho\mathbf{b}\,dV.
 \]</span></p>
-<p>Conservation of mass. Expanding the divergence: <span class="math inline">\(\frac{D\rho}{Dt} + \rho \nabla \cdot \vec{v} = 0\)</span>.</p>
-<p>For incompressible flow, <span class="math inline">\(\rho\)</span> is constant along parcel trajectories (<span class="math inline">\(D\rho/Dt = 0\)</span>), giving the incompressibility constraint:</p>
-<p><span class="math display">\[
-\nabla \cdot \vec{v} = 0
+<p>Apply (P1.4), cancel terms using (P2.1), and apply the divergence theorem component by component to the stress. Localization gives</p>
+<p><span id="law-cauchy"></span> <span class="math display">\[
+\boxed{\rho\frac{D\mathbf{v}}{Dt}=-\nabla p+\nabla\cdot\boldsymbol{\tau}+\rho\mathbf{b}.}
+\tag{P2.2}
 \]</span></p>
-<p>The velocity field is divergence-free: fluid parcels may deform but not change volume. This eliminates density as a prognostic variable and couples velocity to pressure through the momentum equation, where <span class="math inline">\(p\)</span> acts as a Lagrange multiplier enforcing this constraint.</p>
+<p>In Cartesian components, <span class="math inline">\((\nabla\cdot\boldsymbol{\tau})_i=\sum_j\partial_j\tau_{ij}\)</span>. The indices <span class="math inline">\(i,j\)</span> run over three coordinate directions. Every term has units of force per volume. Pressure accelerates fluid toward lower pressure; a uniform pressure has no bulk acceleration because forces on opposite faces cancel.</p>
+<p>For a constant-density, incompressible <strong>Newtonian fluid</strong> with constant dynamic viscosity <span class="math inline">\(\mu\geq0\)</span> (<span class="math inline">\(\mathrm{Pa\,s}\)</span>), the viscous force density is <span class="math inline">\(\nabla\cdot\boldsymbol{\tau}=\mu\nabla^2\mathbf{v}\)</span>. Newtonian means local viscous shear stress is proportional to local shear rate. This is a constitutive assumption about the material, not a consequence of Newton’s second law. We use the constant-density viscosity model of Vallis, sec.&nbsp;1.3.3; a general compressible stress law requires additional terms. With <span class="math inline">\(\nu=\mu/\rho_0\)</span> the kinematic viscosity (<span class="math inline">\(\mathrm{m^2\,s^{-1}}\)</span>), (P2.2) becomes the incompressible <strong>Navier-Stokes equation</strong></p>
+<p><span id="law-ns"></span> <span class="math display">\[
+\frac{D\mathbf{v}}{Dt}=-\frac{1}{\rho_0}\nabla p+\nu\nabla^2\mathbf{v}+\mathbf{b},
+\qquad \nabla\cdot\mathbf{v}=0.
+\tag{P2.3}
+\]</span></p>
+<p>Dropping viscous stress gives the <strong>Euler equation</strong>. A force is <strong>conservative</strong> if it is minus a potential gradient: <span class="math inline">\(\mathbf{b}=-\nabla\Phi\)</span>, where <span class="math inline">\(\Phi\)</span> has units <span class="math inline">\(\mathrm{m^2\,s^{-2}}\)</span>. Its curl vanishes. This property, rather than the mere absence of friction, is needed for circulation conservation.</p>
 </section>
-<section id="momentum-equation" class="level2" data-number="11.3">
-<h2 data-number="11.3" class="anchored" data-anchor-id="momentum-equation"><span class="header-section-number">11.3</span> Momentum Equation</h2>
+<section id="pressure-closure-and-kinetic-energy" class="level2" data-number="12.3">
+<h2 data-number="12.3" class="anchored" data-anchor-id="pressure-closure-and-kinetic-energy"><span class="header-section-number">12.3</span> Pressure closure and kinetic energy</h2>
+<p><strong>Result and motivation.</strong> Incompressible pressure enforces the divergence constraint. Viscosity dissipates kinetic energy, whereas pressure redistributes it in a closed constant-density domain. <span class="citation" data-cites="Vallis2006">(<a href="#ref-Vallis2006" role="doc-biblioref">Vallis 2006, secs. 1.4, 1.10</a>)</span></p>
+<p>In the unrotating, constant-density system with conservative body force, define <span class="math inline">\(\Pi=p/\rho_0+\Phi\)</span>. Take the divergence of (P2.3). Since <span class="math inline">\(\nabla\cdot\mathbf{v}=0\)</span> at all times,</p>
 <p><span class="math display">\[
-\rho \frac{D\vec{v}}{Dt} = -\nabla p + \mu \nabla^2 \vec{v} + \rho \vec{F}_b
+\nabla^2\Pi=-\nabla\cdot[(\mathbf{v}\cdot\nabla)\mathbf{v}].
 \]</span></p>
-<p>Start from Newton’s second law for a small parcel of fluid with volume <span class="math inline">\(\delta V\)</span>:</p>
-<p><span class="math display">\[
-\vec{F} = m \vec{a}
+<p>Thus pressure is determined diagnostically by an elliptic equation: a spatial boundary-value problem, here a Poisson equation, solved across the domain at each time, rather than independently stepped in time. An additive spatial constant in pressure does not affect motion. This closure is specific to the incompressible reduction. A compressible atmosphere instead also needs an equation of state and a thermodynamic evolution law. For example <span class="math inline">\(p=\rho R T\)</span> relates ideal-gas pressure, absolute temperature <span class="math inline">\(T\)</span>, and specific gas constant <span class="math inline">\(R\)</span>; it is not by itself a complete evolution system. The constant-density BVE does not retain that thermodynamic system.</p>
+<p>Let <span class="math inline">\(K=|\mathbf{v}|^2/2\)</span> be kinetic energy per unit mass (<span class="math inline">\(\mathrm{m^2\,s^{-2}}\)</span>). Dot (P2.3) with <span class="math inline">\(\mathbf{v}\)</span>. Use <span class="math inline">\(\mathbf{v}\cdot\nabla\Pi=\nabla\cdot(\Pi\mathbf{v})\)</span> and <span class="math inline">\(\mathbf{v}\cdot\nabla^2\mathbf{v}=\nabla^2K-\sum_{i,j}(\partial_jv_i)^2\)</span>. On a periodic volume,</p>
+<p><span id="law-ke3d"></span> <span class="math display">\[
+\frac{d}{dt}\int_V K\,dV
+=-\nu\int_V\sum_{i,j}(\partial_jv_i)^2\,dV\leq0.
+\tag{P2.4}
 \]</span></p>
-<p>The parcel has mass <span class="math inline">\(m = \rho \, \delta V\)</span> and acceleration <span class="math inline">\(\vec{a} = D\vec{v}/Dt\)</span>, so:</p>
-<p><span class="math display">\[
-\vec{F} = \rho \, \delta V \frac{D\vec{v}}{Dt}
-\]</span></p>
-<p>Divide both sides by <span class="math inline">\(\delta V\)</span> to express everything per unit volume:</p>
-<p><span class="math display">\[
-\frac{\vec{F}}{\delta V} = \rho \frac{D\vec{v}}{Dt}
-\]</span></p>
-<p>The left-hand side is the sum of force densities (force per unit volume) acting on the parcel: pressure gradient <span class="math inline">\((-\nabla p)\)</span>, viscous stress <span class="math inline">\((\mu \nabla^2 \vec{v}\)</span>, where <span class="math inline">\(\mu = \rho \nu\)</span> is the dynamic viscosity), and body forces <span class="math inline">\((\rho \vec{F}_b)\)</span>.</p>
+<p>Flux terms integrate to zero by periodicity. The same conclusion holds with suitable stationary no-slip walls. Locally, pressure can do work; its net contribution vanishes under these boundary conditions. Molecular viscosity removes kinetic energy into internal energy; neglecting heat in the reduced equations does not change the sign of this kinetic-energy sink.</p>
+</section>
+<section id="chapter-summary" class="level2" data-number="12.4">
+<h2 data-number="12.4" class="anchored" data-anchor-id="chapter-summary"><span class="header-section-number">12.4</span> Chapter summary</h2>
+<ul>
+<li>Density <span class="math inline">\(\rho\)</span>, pressure <span class="math inline">\(p\)</span>, stress <span class="math inline">\(\boldsymbol{\sigma}\)</span>, and body acceleration <span class="math inline">\(\mathbf{b}\)</span> enter mass conservation (P2.1) and momentum conservation (P2.2).</li>
+<li>Incompressibility means volume preservation; homogeneity means spatially uniform density. Horizontal non-divergence is an additional restriction.</li>
+<li>The viscous term <span class="math inline">\(\nu\nabla^2\mathbf{v}\)</span> requires constant viscosity and incompressibility. The inviscid counterpart is Euler’s equation.</li>
+<li>Incompressible pressure enforces the velocity constraint. Conservative forces are potential gradients. Viscosity is a kinetic-energy sink under the stated boundary conditions.</li>
+</ul>
 
 
+<div id="refs" class="references csl-bib-body hanging-indent" role="list">
+<div id="ref-Vallis2006" class="csl-entry" role="listitem">
+Vallis, Geoffrey K. 2006. <em>Atmospheric and Oceanic Fluid Dynamics: Fundamentals and Large-Scale Circulation</em>. Cambridge University Press.
+</div>
+</div>
 </section>
 
 </main> <!-- /main -->
@@ -837,13 +919,13 @@ window.Quarto = {
   </script>
 <nav class="page-navigation" aria-label="Page">
   <div class="nav-page nav-page-previous">
-      <a href="../04-geophysical-fluid-dynamics/index.html" class="pagination-link" aria-label="Geophysical Fluid Dynamics">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Geophysical Fluid Dynamics</span>
+      <a href="../04-geophysical-fluid-dynamics/kinematics.html" class="pagination-link" aria-label="Kinematics and mathematical language">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Kinematics and mathematical language</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../04-geophysical-fluid-dynamics/rotating.html" class="pagination-link" aria-label="Rotating Frame">
-        <span class="nav-page-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Rotating Frame</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="../04-geophysical-fluid-dynamics/rotating.html" class="pagination-link" aria-label="Rotation and large-scale balances">
+        <span class="nav-page-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Rotation and large-scale balances</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

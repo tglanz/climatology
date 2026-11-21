@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>13&nbsp; Vorticity – Global Physical Climatology</title>
+<title>14&nbsp; Vorticity and circulation – Global Physical Climatology</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -26,7 +26,26 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-</style>
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
 <script src="../site_libs/quarto-nav/quarto-nav.js"></script>
@@ -36,7 +55,7 @@ ul.task-list li input[type="checkbox"] {
 <script src="../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../">
-<link href="../05-neural-operators/index.html" rel="next">
+<link href="../04-geophysical-fluid-dynamics/layer-pv.html" rel="next">
 <link href="../04-geophysical-fluid-dynamics/rotating.html" rel="prev">
 <script src="../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
@@ -48,7 +67,7 @@ ul.task-list li input[type="checkbox"] {
 <link href="../site_libs/quarto-html/quarto-syntax-highlighting-63b5708e65d6cd79cd7618c58d0c21e7.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-4f67ab1e4efc86feb5e21e0983fc9301.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-fd437c11ef914449285a5c26e0daa494.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -118,7 +137,7 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="Breadcrumbs"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../04-geophysical-fluid-dynamics/index.html">Geophysical Fluid Dynamics</a></li><li class="breadcrumb-item"><a href="../04-geophysical-fluid-dynamics/vorticity.html"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Vorticity</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="Breadcrumbs"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../04-geophysical-fluid-dynamics/index.html">Geophysical Fluid Dynamics</a></li><li class="breadcrumb-item"><a href="../04-geophysical-fluid-dynamics/vorticity.html"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Vorticity and circulation</span></a></li></ol></nav>
         <a class="flex-grow-1" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -253,20 +272,56 @@ window.Quarto = {
       <ul id="quarto-sidebar-section-4" aria-labelledby="quarto-sidebar-section-4-label" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="../04-geophysical-fluid-dynamics/kinematics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Kinematics and mathematical language</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="../04-geophysical-fluid-dynamics/motion.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Basic</span></span></a>
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Mass, forces, and the momentum equation</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../04-geophysical-fluid-dynamics/rotating.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Rotating Frame</span></span></a>
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Rotation and large-scale balances</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../04-geophysical-fluid-dynamics/vorticity.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Vorticity</span></span></a>
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Vorticity and circulation</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../04-geophysical-fluid-dynamics/layer-pv.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">A shallow layer and the barotropic reduction</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../04-geophysical-fluid-dynamics/barotropic.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">The BVE on a rotating sphere</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../04-geophysical-fluid-dynamics/turbulence.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Invariants, turbulence, and eddy-driven flow</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../04-geophysical-fluid-dynamics/inversion.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Spherical harmonics, inversion, and dissipation</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../04-geophysical-fluid-dynamics/stochastic.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Stochastic stirring and the closed forced model</span></span></a>
   </div>
 </li>
       </ul>
@@ -285,21 +340,19 @@ window.Quarto = {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#definitions" id="toc-definitions" class="nav-link active" data-scroll-target="#definitions"><span class="header-section-number">13.1</span> Definitions</a></li>
-  <li><a href="#vorticity-equation" id="toc-vorticity-equation" class="nav-link" data-scroll-target="#vorticity-equation"><span class="header-section-number">13.2</span> Vorticity Equation</a></li>
-  <li><a href="#kelvins-circulation-theorem" id="toc-kelvins-circulation-theorem" class="nav-link" data-scroll-target="#kelvins-circulation-theorem"><span class="header-section-number">13.3</span> Kelvin’s Circulation Theorem</a></li>
-  <li><a href="#vorticity-equation-in-a-rotating-frame" id="toc-vorticity-equation-in-a-rotating-frame" class="nav-link" data-scroll-target="#vorticity-equation-in-a-rotating-frame"><span class="header-section-number">13.4</span> Vorticity Equation in a Rotating Frame</a></li>
-  <li><a href="#circulation-theorem-and-the-beta-effect" id="toc-circulation-theorem-and-the-beta-effect" class="nav-link" data-scroll-target="#circulation-theorem-and-the-beta-effect"><span class="header-section-number">13.5</span> Circulation Theorem and the <span class="math inline">\(\beta\)</span>-effect</a></li>
-  <li><a href="#barotropic-vorticity-equation" id="toc-barotropic-vorticity-equation" class="nav-link" data-scroll-target="#barotropic-vorticity-equation"><span class="header-section-number">13.6</span> Barotropic Vorticity Equation</a></li>
+  <li><a href="#local-spin-and-integrated-circulation" id="toc-local-spin-and-integrated-circulation" class="nav-link active" data-scroll-target="#local-spin-and-integrated-circulation"><span class="header-section-number">14.1</span> Local spin and integrated circulation</a></li>
+  <li><a href="#taking-the-curl-of-momentum" id="toc-taking-the-curl-of-momentum" class="nav-link" data-scroll-target="#taking-the-curl-of-momentum"><span class="header-section-number">14.2</span> Taking the curl of momentum</a></li>
+  <li><a href="#kelvins-theorem-and-rotation" id="toc-kelvins-theorem-and-rotation" class="nav-link" data-scroll-target="#kelvins-theorem-and-rotation"><span class="header-section-number">14.3</span> Kelvin’s theorem and rotation</a></li>
+  <li><a href="#chapter-summary" id="toc-chapter-summary" class="nav-link" data-scroll-target="#chapter-summary"><span class="header-section-number">14.4</span> Chapter summary</a></li>
   </ul>
 </nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content" tabindex="-1">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="Breadcrumbs"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../04-geophysical-fluid-dynamics/index.html">Geophysical Fluid Dynamics</a></li><li class="breadcrumb-item"><a href="../04-geophysical-fluid-dynamics/vorticity.html"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Vorticity</span></a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="Breadcrumbs"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../04-geophysical-fluid-dynamics/index.html">Geophysical Fluid Dynamics</a></li><li class="breadcrumb-item"><a href="../04-geophysical-fluid-dynamics/vorticity.html"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Vorticity and circulation</span></a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Vorticity</span></h1>
+<h1 class="title"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Vorticity and circulation</span></h1>
 </div>
 
 
@@ -316,68 +369,100 @@ window.Quarto = {
 </header>
 
 
-<section id="definitions" class="level2" data-number="13.1">
-<h2 data-number="13.1" class="anchored" data-anchor-id="definitions"><span class="header-section-number">13.1</span> Definitions</h2>
-<p>Let <span class="math inline">\(\vec{v}(\vec{x}, t)\)</span> be the velocity field. The <strong>vorticity</strong> is:</p>
-<p><span class="math display">\[
-\vec{\omega} = \nabla \times \vec{v}
+<!-- Generated by presentations/physical-prerequisites/build.py. Edit its Markdown manuscript and run build.py --sync-book. -->
+<p>Equations prefixed <strong>P</strong> retain the numbering of the companion physical-prerequisites document. Mathematical operators are introduced in <a href="../01-vector-calculus/operators.html">vector calculus</a> and <a href="../01-vector-calculus/theorems.html">integral theorems</a>. Parcel derivatives and transport are developed in <a href="../04-geophysical-fluid-dynamics/kinematics.html">fluid kinematics</a>.</p>
+<section id="local-spin-and-integrated-circulation" class="level2" data-number="14.1">
+<h2 data-number="14.1" class="anchored" data-anchor-id="local-spin-and-integrated-circulation"><span class="header-section-number">14.1</span> Local spin and integrated circulation</h2>
+<p><strong>Result and motivation.</strong> Vorticity is local circulation per unit area. Its magnitude is twice the local rigid-rotation rate, not the angular momentum of a parcel about the planet’s axis. <span class="citation" data-cites="Vallis2006">(<a href="#ref-Vallis2006" role="doc-biblioref">Vallis 2006, sec. 4.1</a>)</span></p>
+<p>Define <strong>relative vorticity</strong> <span class="math inline">\(\boldsymbol{\omega}=\nabla\times\mathbf{v}\)</span>, with units <span class="math inline">\(\mathrm{s^{-1}}\)</span>. For a closed curve <span class="math inline">\(C\)</span> bounding <span class="math inline">\(\Sigma\)</span>, define <strong>circulation</strong> <span class="math inline">\(\Gamma\)</span> by</p>
+<p><span id="law-circulation"></span> <span class="math display">\[
+\Gamma=\oint_C\mathbf{v}\cdot d\boldsymbol{\ell}
+=\int_\Sigma\boldsymbol{\omega}\cdot\mathbf{n}\,dA.
+\tag{P4.1}
 \]</span></p>
-<p>Vorticity measures local rotation of fluid elements. A flow with <span class="math inline">\(\vec{\omega} = 0\)</span> everywhere is irrotational.</p>
-<p>The <strong>circulation</strong> around a closed curve <span class="math inline">\(C\)</span> is:</p>
-<p><span class="math display">\[
-\Gamma = \oint_C \vec{v} \cdot d\vec{l} = \int_S \vec{\omega} \cdot d\vec{S}
-\]</span></p>
-<p>where <span class="math inline">\(S\)</span> is any surface bounded by <span class="math inline">\(C\)</span> (by Stokes’ theorem). Circulation is the integrated vorticity through the surface, or equivalently the net tangential velocity around the loop.</p>
+<p>Circulation has units <span class="math inline">\(\mathrm{m^2\,s^{-1}}\)</span>. For a sufficiently small planar loop, its normal vorticity is <span class="math inline">\(\Gamma/\delta A\)</span>. The antisymmetric part of the local velocity gradient describes rigid rotation at angular velocity <span class="math inline">\(\boldsymbol{\omega}/2\)</span>; the symmetric part deforms the parcel.</p>
+<p>A direct check is solid rotation in a horizontal plane: <span class="math inline">\(u=-\Omega_s y\)</span>, <span class="math inline">\(v=\Omega_s x\)</span>, with rotation rate <span class="math inline">\(\Omega_s\)</span>. The vertical vorticity is <span class="math inline">\(\zeta=\partial_xv-\partial_yu=2\Omega_s\)</span>. In contrast, a shear flow <span class="math inline">\(u=U(y)\)</span>, <span class="math inline">\(v=0\)</span> has <span class="math inline">\(\zeta=-dU/dy\)</span> even though its streamlines (curves everywhere tangent to instantaneous velocity) are straight. Curved trajectories and local spin are different concepts.</p>
 </section>
-<section id="vorticity-equation" class="level2" data-number="13.2">
-<h2 data-number="13.2" class="anchored" data-anchor-id="vorticity-equation"><span class="header-section-number">13.2</span> Vorticity Equation</h2>
-<p>Take the curl of the momentum equation for an inviscid barotropic fluid (<span class="math inline">\(p = p(\rho)\)</span>):</p>
+<section id="taking-the-curl-of-momentum" class="level2" data-number="14.2">
+<h2 data-number="14.2" class="anchored" data-anchor-id="taking-the-curl-of-momentum"><span class="header-section-number">14.2</span> Taking the curl of momentum</h2>
+<p><strong>Result and motivation.</strong> Vorticity changes through stretching and tilting, divergence, baroclinicity, and the curl of non-conservative forces. A scalar conservation law emerges only after these terms are controlled. <span class="citation" data-cites="Vallis2006">(<a href="#ref-Vallis2006" role="doc-biblioref">Vallis 2006, secs. 4.2, 4.4</a>)</span></p>
+<p>Start with (P3.2), use (P1.3), and define <strong>absolute vorticity</strong> <span class="math inline">\(\boldsymbol{\omega}_a=\boldsymbol{\omega}+2\boldsymbol{\Omega}\)</span>. The resulting vector-invariant momentum equation is</p>
 <p><span class="math display">\[
-\frac{\partial \vec{\omega}}{\partial t} + (\vec{v} \cdot \nabla)\vec{\omega} = (\vec{\omega} \cdot \nabla)\vec{v} - \vec{\omega}(\nabla \cdot \vec{v})
+\partial_t\mathbf{v}+\boldsymbol{\omega}_a\times\mathbf{v}
+=-\nabla\left(\Phi+\tfrac12|\mathbf{v}|^2\right)
+-\rho^{-1}\nabla p+\mathbf{F}.
 \]</span></p>
-<p>The left-hand side is advection of vorticity. On the right:</p>
+<p>The curl of the gradient vanishes. The pressure term gives</p>
+<p><span class="math display">\[
+\nabla\times(-\rho^{-1}\nabla p)
+=-\nabla(\rho^{-1})\times\nabla p
+=\rho^{-2}\nabla\rho\times\nabla p.
+\]</span></p>
+<p>For vector fields <span class="math inline">\(\mathbf{a},\mathbf{b}\)</span>, the product identity</p>
+<p><span class="math display">\[
+\nabla\times(\mathbf{a}\times\mathbf{b})
+=\mathbf{a}\nabla\cdot\mathbf{b}-\mathbf{b}\nabla\cdot\mathbf{a}
++(\mathbf{b}\cdot\nabla)\mathbf{a}-(\mathbf{a}\cdot\nabla)\mathbf{b}
+\]</span></p>
+<p>follows componentwise. Apply it with <span class="math inline">\(\mathbf{a}=\boldsymbol{\omega}_a\)</span>, <span class="math inline">\(\mathbf{b}=\mathbf{v}\)</span>. Since <span class="math inline">\(\nabla\cdot\boldsymbol{\omega}_a=0\)</span> and <span class="math inline">\(\boldsymbol{\Omega}\)</span> is a constant vector in rotating Cartesian coordinates, obtain</p>
+<p><span id="law-vorticity3d"></span> <span class="math display">\[
+\boxed{
+\frac{D\boldsymbol{\omega}_a}{Dt}
+=(\boldsymbol{\omega}_a\cdot\nabla)\mathbf{v}
+-\boldsymbol{\omega}_a\nabla\cdot\mathbf{v}
++\frac{\nabla\rho\times\nabla p}{\rho^2}
++\nabla\times\mathbf{F}.}
+\tag{P4.2}
+\]</span></p>
+<p>The first term differentiates velocity along the vorticity direction. It stretches a vortex when neighboring points separate along it, and tilts it when that separation changes direction. The second accounts for volume expansion. The third is <strong>baroclinic production</strong>, present when density and pressure surfaces are misaligned. The last represents friction or applied torque. For constant viscosity and homogeneous incompressible flow, molecular viscosity contributes <span class="math inline">\(\nu\nabla^2\boldsymbol{\omega}\)</span>.</p>
+<p>Using continuity, the divergence term can instead be absorbed into vorticity per unit density:</p>
+<p><span class="math display">\[
+\frac{D}{Dt}\left(\frac{\boldsymbol{\omega}_a}{\rho}\right)
+=\left(\frac{\boldsymbol{\omega}_a}{\rho}\cdot\nabla\right)\mathbf{v}
++\frac{\nabla\rho\times\nabla p}{\rho^3}
++\frac{\nabla\times\mathbf{F}}{\rho}.
+\]</span></p>
+<p>This is still a vector stretching equation, not the shallow-water potential-vorticity conservation law derived next. In spherical coordinates the local basis varies with position; one must not discard that variation by treating (P4.2) as three unrelated scalar equations.</p>
+</section>
+<section id="kelvins-theorem-and-rotation" class="level2" data-number="14.3">
+<h2 data-number="14.3" class="anchored" data-anchor-id="kelvins-theorem-and-rotation"><span class="header-section-number">14.3</span> Kelvin’s theorem and rotation</h2>
+<p><strong>Result and motivation.</strong> Inviscid barotropic motion under conservative body forces conserves circulation around a moving material loop. In a rotating frame the conserved quantity is absolute circulation. <span class="citation" data-cites="Vallis2006">(<a href="#ref-Vallis2006" role="doc-biblioref">Vallis 2006, sec. 4.3</a>)</span></p>
+<p>First use an inertial frame, with material loop <span class="math inline">\(C(t)\)</span>. Parametrize it by <span class="math inline">\(s\)</span> and position <span class="math inline">\(\mathbf{X}(s,t)\)</span>. Differentiating its line element gives <span class="math inline">\(D(d\boldsymbol{\ell})/Dt=d\mathbf{v}\)</span>. Therefore</p>
+<p><span class="math display">\[
+\frac{d\Gamma}{dt}
+=\oint_{C(t)}\frac{D\mathbf{v}}{Dt}\cdot d\boldsymbol{\ell}
++\oint_{C(t)}\mathbf{v}\cdot d\mathbf{v}.
+\]</span></p>
+<p>The second integral is <span class="math inline">\(\oint d(|\mathbf{v}|^2/2)=0\)</span>. In a barotropic fluid define the pressure potential <span class="math inline">\(\mathcal{H}(p)=\int^p dp'/\rho(p')\)</span>. Here <span class="math inline">\(p'\)</span> is an integration variable, not a pressure perturbation. Then <span class="math inline">\(\rho^{-1}\nabla p=\nabla\mathcal{H}\)</span>. Euler’s equation with <span class="math inline">\(\mathbf{b}=-\nabla\Phi_g\)</span> gives</p>
+<p><span id="law-kelvin"></span> <span class="math display">\[
+\frac{d\Gamma}{dt}=-\oint_{C(t)}\nabla(\mathcal{H}+\Phi_g)\cdot d\boldsymbol{\ell}=0.
+\tag{P4.3}
+\]</span></p>
+<p>The same result follows for homogeneous density. It requires a material loop, conservative body forces, and no non-conservative stress contribution to the circulation budget.</p>
+<p>For rotating velocity <span class="math inline">\(\mathbf{v}\)</span>, inertial velocity is <span class="math inline">\(\mathbf{v}+\boldsymbol{\Omega}\times\mathbf{r}\)</span>. Stokes’ theorem gives</p>
+<p><span id="law-absolute-circulation"></span> <span class="math display">\[
+\Gamma_a
+=\oint_{C(t)}(\mathbf{v}+\boldsymbol{\Omega}\times\mathbf{r})\cdot d\boldsymbol{\ell}
+=\int_{\Sigma(t)}(\boldsymbol{\omega}+2\boldsymbol{\Omega})\cdot\mathbf{n}\,dA.
+\tag{P4.4}
+\]</span></p>
+<p><span class="math inline">\(\Gamma_a\)</span> denotes absolute circulation. The factor 2 comes from the curl of solid-body rotational velocity. For a small horizontal loop on the sphere, <span class="math inline">\(\Gamma_a\simeq(\zeta+f)\delta A\)</span>, where <span class="math inline">\(\zeta=\hat{\mathbf{k}}\cdot\boldsymbol{\omega}\)</span>. If the loop preserves area, Kelvin’s theorem implies <span class="math inline">\(D(\zeta+f)/Dt=0\)</span>. A poleward-moving loop in the Northern Hemisphere encounters larger <span class="math inline">\(f\)</span> and develops smaller relative vorticity. This is the <span class="math inline">\(\beta\)</span> effect, even though planetary rotation rate is constant.</p>
+</section>
+<section id="chapter-summary" class="level2" data-number="14.4">
+<h2 data-number="14.4" class="anchored" data-anchor-id="chapter-summary"><span class="header-section-number">14.4</span> Chapter summary</h2>
 <ul>
-<li><span class="math inline">\((\vec{\omega} \cdot \nabla)\vec{v}\)</span> is vortex stretching and tilting. Velocity gradients along the vorticity direction amplify or reorient vortex tubes.</li>
-<li><span class="math inline">\(-\vec{\omega}(\nabla \cdot \vec{v})\)</span> accounts for divergence: expanding fluid dilutes vorticity.</li>
+<li>Relative vorticity <span class="math inline">\(\boldsymbol{\omega}\)</span> is curl of relative velocity; circulation <span class="math inline">\(\Gamma\)</span> is its surface integral. Local rigid spin is <span class="math inline">\(\boldsymbol{\omega}/2\)</span>.</li>
+<li>Absolute vorticity <span class="math inline">\(\boldsymbol{\omega}_a=\boldsymbol{\omega}+2\boldsymbol{\Omega}\)</span> obeys (P4.2), with stretching, divergence, baroclinic, and non-conservative-force terms.</li>
+<li>Kelvin’s theorem conserves circulation only under its stated dynamical and material-loop assumptions. In a rotating frame, absolute circulation (P4.4) is the conserved quantity.</li>
+<li>Normal absolute vorticity is conserved on an area-preserving spherical material patch. Relative vorticity alone generally is not.</li>
 </ul>
-<p>For incompressible flow (<span class="math inline">\(\nabla \cdot \vec{v} = 0\)</span>), the second term vanishes.</p>
-<p>A baroclinic term <span class="math inline">\(\frac{1}{\rho^2} \nabla \rho \times \nabla p\)</span> appears when density is not a function of pressure alone. It generates vorticity wherever isosurfaces of <span class="math inline">\(\rho\)</span> and <span class="math inline">\(p\)</span> are misaligned.</p>
-</section>
-<section id="kelvins-circulation-theorem" class="level2" data-number="13.3">
-<h2 data-number="13.3" class="anchored" data-anchor-id="kelvins-circulation-theorem"><span class="header-section-number">13.3</span> Kelvin’s Circulation Theorem</h2>
-<p>For an inviscid, barotropic fluid with only conservative body forces, the circulation around a material curve <span class="math inline">\(C(t)\)</span> (a curve moving with the fluid) is conserved:</p>
-<p><span class="math display">\[
-\frac{D\Gamma}{Dt} = 0
-\]</span></p>
-<p>Vortex lines are frozen into the fluid: they stretch and deform with it but cannot be created or destroyed. This breaks down when viscosity, baroclinicity, or non-conservative forces are present.</p>
-</section>
-<section id="vorticity-equation-in-a-rotating-frame" class="level2" data-number="13.4">
-<h2 data-number="13.4" class="anchored" data-anchor-id="vorticity-equation-in-a-rotating-frame"><span class="header-section-number">13.4</span> Vorticity Equation in a Rotating Frame</h2>
-<p>In a frame rotating with angular velocity <span class="math inline">\(\vec{\Omega}\)</span>, define the <strong>absolute vorticity</strong> <span class="math inline">\(\vec{\omega}_a = \vec{\omega} + 2\vec{\Omega}\)</span>. The vorticity equation becomes:</p>
-<p><span class="math display">\[
-\frac{D\vec{\omega}_a}{Dt} = (\vec{\omega}_a \cdot \nabla)\vec{v} - \vec{\omega}_a(\nabla \cdot \vec{v})
-\]</span></p>
-<p>The planetary vorticity <span class="math inline">\(2\vec{\Omega}\)</span> enters on equal footing with the relative vorticity <span class="math inline">\(\vec{\omega}\)</span>. For large-scale geophysical flows, <span class="math inline">\(|2\vec{\Omega}| \gg |\vec{\omega}|\)</span>, so planetary rotation dominates the vorticity budget.</p>
-<p>Restricting to the vertical component for shallow horizontal flow, with <span class="math inline">\(f = 2\Omega \sin\varphi\)</span>:</p>
-<p><span class="math display">\[
-\frac{D}{Dt}(\zeta + f) = -(\zeta + f)\nabla_h \cdot \vec{v}_h
-\]</span></p>
-<p>where <span class="math inline">\(\zeta = \hat{k} \cdot (\nabla \times \vec{v})\)</span> is the vertical component of relative vorticity and <span class="math inline">\(\nabla_h \cdot \vec{v}_h\)</span> is the horizontal divergence.</p>
-</section>
-<section id="circulation-theorem-and-the-beta-effect" class="level2" data-number="13.5">
-<h2 data-number="13.5" class="anchored" data-anchor-id="circulation-theorem-and-the-beta-effect"><span class="header-section-number">13.5</span> Circulation Theorem and the <span class="math inline">\(\beta\)</span>-effect</h2>
-<p>Kelvin’s theorem applied to the rotating Earth conserves absolute circulation. A fluid column moving poleward encounters increasing <span class="math inline">\(f\)</span>, so <span class="math inline">\(\zeta\)</span> must decrease to compensate. This coupling between meridional motion and relative vorticity is the <span class="math inline">\(\beta\)</span>-effect and is the restoring mechanism for Rossby waves.</p>
-</section>
-<section id="barotropic-vorticity-equation" class="level2" data-number="13.6">
-<h2 data-number="13.6" class="anchored" data-anchor-id="barotropic-vorticity-equation"><span class="header-section-number">13.6</span> Barotropic Vorticity Equation</h2>
-<p>For a two-dimensional, incompressible, inviscid flow on a <span class="math inline">\(\beta\)</span>-plane, horizontal divergence vanishes (<span class="math inline">\(\nabla_h \cdot \vec{v}_h = 0\)</span>). The vorticity equation reduces to:</p>
-<p><span class="math display">\[
-\frac{\partial \zeta}{\partial t} + J(\psi, \zeta) + \beta \frac{\partial \psi}{\partial x} = 0
-\]</span></p>
-<p>where <span class="math inline">\(\psi\)</span> is the streamfunction defined by <span class="math inline">\(u = -\partial \psi / \partial y\)</span>, <span class="math inline">\(v = \partial \psi / \partial x\)</span>, and <span class="math inline">\(J(\psi, \zeta) = \frac{\partial \psi}{\partial x}\frac{\partial \zeta}{\partial y} - \frac{\partial \psi}{\partial y}\frac{\partial \zeta}{\partial x}\)</span> is the Jacobian. Since <span class="math inline">\(\zeta = \nabla^2 \psi\)</span>, this is a single prognostic equation for <span class="math inline">\(\psi\)</span>.</p>
-<p>This is the <strong>barotropic vorticity equation (BVE)</strong> under the stated beta-plane, non-divergent, inviscid assumptions. Forcing and dissipation add terms to its right-hand side.</p>
 
 
+<div id="refs" class="references csl-bib-body hanging-indent" role="list">
+<div id="ref-Vallis2006" class="csl-entry" role="listitem">
+Vallis, Geoffrey K. 2006. <em>Atmospheric and Oceanic Fluid Dynamics: Fundamentals and Large-Scale Circulation</em>. Cambridge University Press.
+</div>
+</div>
 </section>
 
 </main> <!-- /main -->
@@ -859,13 +944,13 @@ window.Quarto = {
   </script>
 <nav class="page-navigation" aria-label="Page">
   <div class="nav-page nav-page-previous">
-      <a href="../04-geophysical-fluid-dynamics/rotating.html" class="pagination-link" aria-label="Rotating Frame">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Rotating Frame</span></span>
+      <a href="../04-geophysical-fluid-dynamics/rotating.html" class="pagination-link" aria-label="Rotation and large-scale balances">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Rotation and large-scale balances</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../05-neural-operators/index.html" class="pagination-link" aria-label="Neural Operators">
-        <span class="nav-page-text">Neural Operators</span> <i class="bi bi-arrow-right-short"></i>
+      <a href="../04-geophysical-fluid-dynamics/layer-pv.html" class="pagination-link" aria-label="A shallow layer and the barotropic reduction">
+        <span class="nav-page-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">A shallow layer and the barotropic reduction</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

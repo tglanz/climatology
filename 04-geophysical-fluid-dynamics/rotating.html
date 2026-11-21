@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>12&nbsp; Rotating Frame – Global Physical Climatology</title>
+<title>13&nbsp; Rotation and large-scale balances – Global Physical Climatology</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -26,7 +26,26 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-</style>
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
 <script src="../site_libs/quarto-nav/quarto-nav.js"></script>
@@ -48,7 +67,7 @@ ul.task-list li input[type="checkbox"] {
 <link href="../site_libs/quarto-html/quarto-syntax-highlighting-63b5708e65d6cd79cd7618c58d0c21e7.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-4f67ab1e4efc86feb5e21e0983fc9301.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-fd437c11ef914449285a5c26e0daa494.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -118,7 +137,7 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="Breadcrumbs"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../04-geophysical-fluid-dynamics/index.html">Geophysical Fluid Dynamics</a></li><li class="breadcrumb-item"><a href="../04-geophysical-fluid-dynamics/rotating.html"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Rotating Frame</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="Breadcrumbs"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../04-geophysical-fluid-dynamics/index.html">Geophysical Fluid Dynamics</a></li><li class="breadcrumb-item"><a href="../04-geophysical-fluid-dynamics/rotating.html"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Rotation and large-scale balances</span></a></li></ol></nav>
         <a class="flex-grow-1" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -253,20 +272,56 @@ window.Quarto = {
       <ul id="quarto-sidebar-section-4" aria-labelledby="quarto-sidebar-section-4-label" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="../04-geophysical-fluid-dynamics/kinematics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Kinematics and mathematical language</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="../04-geophysical-fluid-dynamics/motion.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Basic</span></span></a>
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Mass, forces, and the momentum equation</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../04-geophysical-fluid-dynamics/rotating.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Rotating Frame</span></span></a>
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Rotation and large-scale balances</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../04-geophysical-fluid-dynamics/vorticity.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Vorticity</span></span></a>
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Vorticity and circulation</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../04-geophysical-fluid-dynamics/layer-pv.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">A shallow layer and the barotropic reduction</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../04-geophysical-fluid-dynamics/barotropic.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">The BVE on a rotating sphere</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../04-geophysical-fluid-dynamics/turbulence.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Invariants, turbulence, and eddy-driven flow</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../04-geophysical-fluid-dynamics/inversion.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Spherical harmonics, inversion, and dissipation</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../04-geophysical-fluid-dynamics/stochastic.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Stochastic stirring and the closed forced model</span></span></a>
   </div>
 </li>
       </ul>
@@ -285,19 +340,20 @@ window.Quarto = {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#inertial-to-rotating-frame" id="toc-inertial-to-rotating-frame" class="nav-link active" data-scroll-target="#inertial-to-rotating-frame"><span class="header-section-number">12.1</span> Inertial to Rotating Frame</a></li>
-  <li><a href="#momentum-equation-in-the-rotating-frame" id="toc-momentum-equation-in-the-rotating-frame" class="nav-link" data-scroll-target="#momentum-equation-in-the-rotating-frame"><span class="header-section-number">12.2</span> Momentum Equation in the Rotating Frame</a></li>
-  <li><a href="#the-coriolis-parameter" id="toc-the-coriolis-parameter" class="nav-link" data-scroll-target="#the-coriolis-parameter"><span class="header-section-number">12.3</span> The Coriolis Parameter</a></li>
-  <li><a href="#f-plane-and-beta-plane" id="toc-f-plane-and-beta-plane" class="nav-link" data-scroll-target="#f-plane-and-beta-plane"><span class="header-section-number">12.4</span> <span class="math inline">\(f\)</span>-plane and <span class="math inline">\(\beta\)</span>-plane</a></li>
+  <li><a href="#transforming-newtons-law-to-a-rotating-frame" id="toc-transforming-newtons-law-to-a-rotating-frame" class="nav-link active" data-scroll-target="#transforming-newtons-law-to-a-rotating-frame"><span class="header-section-number">13.1</span> Transforming Newton’s law to a rotating frame</a></li>
+  <li><a href="#the-coriolis-parameter-and-local-planes" id="toc-the-coriolis-parameter-and-local-planes" class="nav-link" data-scroll-target="#the-coriolis-parameter-and-local-planes"><span class="header-section-number">13.2</span> The Coriolis parameter and local planes</a></li>
+  <li><a href="#scaling-hydrostatic-balance-and-geostrophy" id="toc-scaling-hydrostatic-balance-and-geostrophy" class="nav-link" data-scroll-target="#scaling-hydrostatic-balance-and-geostrophy"><span class="header-section-number">13.3</span> Scaling, hydrostatic balance, and geostrophy</a></li>
+  <li><a href="#barotropic-density-and-the-role-of-stratification" id="toc-barotropic-density-and-the-role-of-stratification" class="nav-link" data-scroll-target="#barotropic-density-and-the-role-of-stratification"><span class="header-section-number">13.4</span> Barotropic density and the role of stratification</a></li>
+  <li><a href="#chapter-summary" id="toc-chapter-summary" class="nav-link" data-scroll-target="#chapter-summary"><span class="header-section-number">13.5</span> Chapter summary</a></li>
   </ul>
 </nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content" tabindex="-1">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="Breadcrumbs"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../04-geophysical-fluid-dynamics/index.html">Geophysical Fluid Dynamics</a></li><li class="breadcrumb-item"><a href="../04-geophysical-fluid-dynamics/rotating.html"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Rotating Frame</span></a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="Breadcrumbs"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../04-geophysical-fluid-dynamics/index.html">Geophysical Fluid Dynamics</a></li><li class="breadcrumb-item"><a href="../04-geophysical-fluid-dynamics/rotating.html"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Rotation and large-scale balances</span></a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Rotating Frame</span></h1>
+<h1 class="title"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Rotation and large-scale balances</span></h1>
 </div>
 
 
@@ -314,61 +370,110 @@ window.Quarto = {
 </header>
 
 
-<p>The Earth rotates with angular velocity <span class="math inline">\(\vec{\Omega}\)</span>, where <span class="math inline">\(|\vec{\Omega}| = \Omega \approx 7.292 \times 10^{-5} \, \text{rad/s}\)</span>. The equations of motion derived in the inertial (non-rotating) frame must be transformed to account for this rotation.</p>
-<section id="inertial-to-rotating-frame" class="level2" data-number="12.1">
-<h2 data-number="12.1" class="anchored" data-anchor-id="inertial-to-rotating-frame"><span class="header-section-number">12.1</span> Inertial to Rotating Frame</h2>
-<p>Let subscripts <span class="math inline">\(I\)</span> and <span class="math inline">\(R\)</span> denote quantities in the inertial and rotating frames. For any vector <span class="math inline">\(\vec{A}\)</span>:</p>
+<!-- Generated by presentations/physical-prerequisites/build.py. Edit its Markdown manuscript and run build.py --sync-book. -->
+<p>Equations prefixed <strong>P</strong> retain the numbering of the companion physical-prerequisites document. Mathematical operators are introduced in <a href="../01-vector-calculus/operators.html">vector calculus</a> and <a href="../01-vector-calculus/theorems.html">integral theorems</a>. Parcel derivatives and transport are developed in <a href="../04-geophysical-fluid-dynamics/kinematics.html">fluid kinematics</a>.</p>
+<section id="transforming-newtons-law-to-a-rotating-frame" class="level2" data-number="13.1">
+<h2 data-number="13.1" class="anchored" data-anchor-id="transforming-newtons-law-to-a-rotating-frame"><span class="header-section-number">13.1</span> Transforming Newton’s law to a rotating frame</h2>
+<p><strong>Result and motivation.</strong> Uniform rotation adds Coriolis and centrifugal accelerations. Coriolis changes velocity direction without doing work. <span class="citation" data-cites="Vallis2006">(<a href="#ref-Vallis2006" role="doc-biblioref">Vallis 2006, secs. 2.1–2.2</a>)</span></p>
+<p>Let <span class="math inline">\(\boldsymbol{\Omega}\)</span> be the constant angular velocity of the reference frame, <span class="math inline">\(\Omega=|\boldsymbol{\Omega}|\)</span>, and <span class="math inline">\(\mathbf{r}\)</span> position relative to its fixed origin. Let subscripts <span class="math inline">\(I\)</span> and <span class="math inline">\(R\)</span> denote inertial and rotating observers. Rotating basis vectors obey <span class="math inline">\(d\hat{\mathbf{e}}/dt=\boldsymbol{\Omega}\times\hat{\mathbf{e}}\)</span>. Differentiating vector components and basis vectors gives</p>
 <p><span class="math display">\[
-\left(\frac{d\vec{A}}{dt}\right)_I = \left(\frac{d\vec{A}}{dt}\right)_R + \vec{\Omega} \times \vec{A}
+\left(\frac{d\mathbf{a}}{dt}\right)_I
+=\left(\frac{d\mathbf{a}}{dt}\right)_R+\boldsymbol{\Omega}\times\mathbf{a}.
 \]</span></p>
-<p>Applying this to the position vector <span class="math inline">\(\vec{r}\)</span> gives the velocity transformation:</p>
-<p><span class="math display">\[
-\vec{v}_I = \vec{v}_R + \vec{\Omega} \times \vec{r}
+<p>Apply this to <span class="math inline">\(\mathbf{r}\)</span> and then its velocity:</p>
+<p><span id="law-rotation"></span> <span class="math display">\[
+\begin{aligned}
+\mathbf{v}_I&amp;=\mathbf{v}_R+\boldsymbol{\Omega}\times\mathbf{r},\\
+\mathbf{a}_I&amp;=\frac{D\mathbf{v}_R}{Dt}
++2\boldsymbol{\Omega}\times\mathbf{v}_R
++\boldsymbol{\Omega}\times(\boldsymbol{\Omega}\times\mathbf{r}).
+\end{aligned}\tag{P3.1}
 \]</span></p>
-<p>Applying it again to <span class="math inline">\(\vec{v}_I\)</span> gives the acceleration:</p>
-<p><span class="math display">\[
-\left(\frac{D\vec{v}}{Dt}\right)_I = \left(\frac{D\vec{v}}{Dt}\right)_R + 2\vec{\Omega} \times \vec{v}_R + \vec{\Omega} \times (\vec{\Omega} \times \vec{r})
+<p>There is no angular-acceleration term because <span class="math inline">\(\boldsymbol{\Omega}\)</span> is constant. From now on <span class="math inline">\(\mathbf{v}\)</span> means velocity relative to the rotating frame. With gravitational potential <span class="math inline">\(\Phi_g\)</span>, define the <strong>effective geopotential</strong> <span class="math inline">\(\Phi=\Phi_g-|\boldsymbol{\Omega}\times\mathbf{r}|^2/2\)</span>. Indeed <span class="math inline">\(\nabla(|\boldsymbol{\Omega}\times\mathbf{r}|^2/2)=-\boldsymbol{\Omega}\times(\boldsymbol{\Omega}\times\mathbf{r})\)</span>, so centrifugal acceleration is included in <span class="math inline">\(-\nabla\Phi\)</span>. The momentum equation is</p>
+<p><span id="law-rotating-momentum"></span> <span class="math display">\[
+\frac{D\mathbf{v}}{Dt}+2\boldsymbol{\Omega}\times\mathbf{v}
+=-\frac{1}{\rho}\nabla p-\nabla\Phi+\mathbf{F}.
+\tag{P3.2}
 \]</span></p>
+<p>Here <span class="math inline">\(\mathbf{F}\)</span> collects non-conservative accelerations, including viscosity if retained. Coriolis acceleration on the right-hand side is <span class="math inline">\(-2\boldsymbol{\Omega}\times\mathbf{v}\)</span>. Because <span class="math inline">\(\mathbf{v}\cdot(\boldsymbol{\Omega}\times\mathbf{v})=0\)</span>, it contributes no kinetic-energy work. Rotation nevertheless changes which velocity fields solve the equation.</p>
 </section>
-<section id="momentum-equation-in-the-rotating-frame" class="level2" data-number="12.2">
-<h2 data-number="12.2" class="anchored" data-anchor-id="momentum-equation-in-the-rotating-frame"><span class="header-section-number">12.2</span> Momentum Equation in the Rotating Frame</h2>
-<p>Substituting into the momentum equation from the previous section, and dropping the <span class="math inline">\(R\)</span> subscript (all quantities are now in the rotating frame):</p>
-<p><span class="math display">\[
-\rho \frac{D\vec{v}}{Dt} = -\nabla p + \mu \nabla^2 \vec{v} - 2\rho \vec{\Omega} \times \vec{v} - \rho \vec{\Omega} \times (\vec{\Omega} \times \vec{r}) + \rho \vec{g}
+<section id="the-coriolis-parameter-and-local-planes" class="level2" data-number="13.2">
+<h2 data-number="13.2" class="anchored" data-anchor-id="the-coriolis-parameter-and-local-planes"><span class="header-section-number">13.2</span> The Coriolis parameter and local planes</h2>
+<p><strong>Result and motivation.</strong> The radial projection of planetary vorticity varies with latitude. Its northward gradient provides the restoring mechanism of Rossby waves. <span class="citation" data-cites="Vallis2006">(<a href="#ref-Vallis2006" role="doc-biblioref">Vallis 2006, sec. 2.3</a>)</span></p>
+<p>Let <span class="math inline">\(a\)</span> be planetary radius, <span class="math inline">\(\phi\)</span> latitude, <span class="math inline">\(\lambda\)</span> longitude, and <span class="math inline">\(\hat{\mathbf{k}}\)</span> the local outward radial unit vector. Define <span class="math inline">\(\hat{\mathbf{e}}_\lambda\)</span> eastward and <span class="math inline">\(\hat{\mathbf{e}}_\phi\)</span> northward; <span class="math inline">\(\hat{\mathbf{e}}_\lambda\times\hat{\mathbf{e}}_\phi=\hat{\mathbf{k}}\)</span>. The <strong>Coriolis parameter</strong> is</p>
+<p><span id="law-coriolis"></span> <span class="math display">\[
+f=2\boldsymbol{\Omega}\cdot\hat{\mathbf{k}}=2\Omega\sin\phi.
+\tag{P3.3}
 \]</span></p>
-<p>Two new terms appear:</p>
+<p>It has units <span class="math inline">\(\mathrm{s^{-1}}\)</span>. Retaining only this component of rotation in horizontal momentum is the <strong>traditional approximation</strong>. For horizontal speed <span class="math inline">\(U\)</span> and vertical speed magnitude <span class="math inline">\(|w|\)</span>, the neglected horizontal coupling is small relative to <span class="math inline">\(|f|U\)</span> when <span class="math inline">\((|w|/U)|\cot\phi|\ll1\)</span>. Neglecting the corresponding vertical Coriolis contribution also requires a consistent vertical momentum scaling, such as the shallow, stratified large-scale regime discussed by Vallis. It is an approximation, not a statement that the full rotation vector is vertical. On a strictly two-dimensional constrained spherical shell, the tangent Coriolis acceleration from tangent velocity is exactly <span class="math inline">\(-f\hat{\mathbf{k}}\times\mathbf{u}\)</span>.</p>
+<p>In a small neighborhood of latitude <span class="math inline">\(\phi_0\)</span>, let <span class="math inline">\(x=a\cos\phi_0(\lambda-\lambda_0)\)</span> and <span class="math inline">\(y=a(\phi-\phi_0)\)</span> be local eastward and northward distances; <span class="math inline">\(\lambda_0\)</span> is a reference longitude. Taylor expansion gives</p>
+<p><span id="law-beta"></span> <span class="math display">\[
+f=f_0+\beta y+O\!\left(\Omega y^2/a^2\right),\quad
+f_0=2\Omega\sin\phi_0,\quad
+\beta=\frac{2\Omega\cos\phi_0}{a}.
+\tag{P3.4}
+\]</span></p>
+<p><span class="math inline">\(O(\cdot)\)</span> denotes the scale of omitted terms. An <strong><span class="math inline">\(f\)</span>-plane</strong> uses constant <span class="math inline">\(f_0\)</span>; a <strong><span class="math inline">\(\beta\)</span>-plane</strong> retains <span class="math inline">\(\beta y\)</span> but otherwise uses flat geometry. Here <span class="math inline">\(\beta\)</span> has units <span class="math inline">\(\mathrm{m^{-1}\,s^{-1}}\)</span>. This expansion needs distances small compared with <span class="math inline">\(a\)</span>. The sphere later retains the full sine and metric factors. A constant-<span class="math inline">\(f\)</span> homogeneous layer has no planetary-vorticity-gradient Rossby waves, although other potential-vorticity gradients can support analogous waves.</p>
+</section>
+<section id="scaling-hydrostatic-balance-and-geostrophy" class="level2" data-number="13.3">
+<h2 data-number="13.3" class="anchored" data-anchor-id="scaling-hydrostatic-balance-and-geostrophy"><span class="header-section-number">13.3</span> Scaling, hydrostatic balance, and geostrophy</h2>
+<p><strong>Result and motivation.</strong> Small aspect ratio and small Rossby number justify useful leading balances, but neither alone derives the non-divergent BVE. <span class="citation" data-cites="Vallis2006">(<a href="#ref-Vallis2006" role="doc-biblioref">Vallis 2006, secs. 1.11, 2.7–2.8</a>)</span></p>
+<p>Choose representative horizontal speed <span class="math inline">\(U\)</span>, horizontal length <span class="math inline">\(L\)</span>, depth <span class="math inline">\(H\)</span>, and advective time <span class="math inline">\(L/U\)</span>. The <strong>aspect ratio</strong> is <span class="math inline">\(H/L\)</span>. The <strong>Rossby number</strong> and <strong>Reynolds number</strong> are</p>
+<p><span id="law-scales"></span> <span class="math display">\[
+\mathrm{Ro}=\frac{U}{|f_0|L},\qquad
+\mathrm{Re}=\frac{UL}{\nu}.
+\tag{P3.5}
+\]</span></p>
+<p>They compare advective acceleration with Coriolis acceleration, and advection with molecular viscosity. Both are dimensionless. If the evolution time differs substantially from <span class="math inline">\(L/U\)</span>, also compare its inverse with <span class="math inline">\(|f_0|\)</span>. Large <span class="math inline">\(\mathrm{Re}\)</span> does not mean all dissipation can be omitted at unresolved small scales. Small <span class="math inline">\(\mathrm{Ro}\)</span> is not required by the full BVE; it is used for geostrophic interpretation. Formula (P3.5) does not define a useful geostrophic ordering at <span class="math inline">\(f_0=0\)</span>.</p>
+<p>For incompressible large-scale flow, continuity suggests vertical speed of order <span class="math inline">\(UH/L\)</span>. Vertical acceleration then scales as <span class="math inline">\(U^2H/L^2\)</span>. A <strong>hydrostatic approximation</strong> drops this acceleration relative to the vertical pressure and gravity balance:</p>
+<p><span id="law-hydrostatic"></span> <span class="math display">\[
+\partial_zp=-\rho g,
+\tag{P3.6}
+\]</span></p>
+<p>where <span class="math inline">\(z\)</span> increases upward and <span class="math inline">\(g&gt;0\)</span> is effective gravitational acceleration. A necessary smallness estimate is <span class="math inline">\(U^2H/(gL^2)\ll1\)</span>; accurate horizontal pressure gradients can require a stronger ordering based on pressure departures and stratification, as emphasized by Vallis, sec.&nbsp;2.7. Hydrostatic balance does not set vertical velocity to zero and does not remove horizontal density variation.</p>
+<p>For constant reference density <span class="math inline">\(\rho_0\)</span> and <span class="math inline">\(\mathrm{Ro}\ll1\)</span>, the leading horizontal balance on an <span class="math inline">\(f\)</span>-plane is <strong>geostrophy</strong>:</p>
+<p><span id="law-geostrophy"></span> <span class="math display">\[
+f_0\hat{\mathbf{k}}\times\mathbf{u}_g=-\frac{1}{\rho_0}\nabla_hp,
+\qquad
+u_g=-\frac{1}{\rho_0f_0}\partial_yp,\quad
+v_g=\frac{1}{\rho_0f_0}\partial_xp.
+\tag{P3.7}
+\]</span></p>
+<p>Here <span class="math inline">\(\mathbf{u}_g=(u_g,v_g)\)</span> is geostrophic velocity. Opposing pressure-gradient and Coriolis forces give flow along pressure contours, rather than direct flow toward low pressure. Defining <span class="math inline">\(\psi_g=p/(\rho_0f_0)\)</span> gives <span class="math inline">\(\mathbf{u}_g=\hat{\mathbf{k}}\times\nabla_h\psi_g\)</span>. Its divergence vanishes for constant <span class="math inline">\(f_0\)</span>. With latitude-dependent <span class="math inline">\(f\)</span>, this pressure-based velocity is not exactly non-divergent. The BVE streamfunction below is defined kinematically, without imposing geostrophy.</p>
+</section>
+<section id="barotropic-density-and-the-role-of-stratification" class="level2" data-number="13.4">
+<h2 data-number="13.4" class="anchored" data-anchor-id="barotropic-density-and-the-role-of-stratification"><span class="header-section-number">13.4</span> Barotropic density and the role of stratification</h2>
+<p><strong>Result and motivation.</strong> A barotropic equation of state eliminates baroclinic vorticity production; a one-layer, depth-independent velocity is a further modeling restriction. This distinction explains what stochastic stirring replaces. <span class="citation" data-cites="Vallis2006">(<a href="#ref-Vallis2006" role="doc-biblioref">Vallis 2006, secs. 2.4, 2.8–2.9, 4.2</a>)</span></p>
+<p>A <strong>barotropic fluid</strong> satisfies <span class="math inline">\(p=p(\rho)\)</span>, or locally <span class="math inline">\(\rho=\rho(p)\)</span> where invertible. Pressure and density gradients are parallel, so <span class="math inline">\(\nabla\rho\times\nabla p=0\)</span>. <strong>Baroclinicity</strong> means these gradients are not parallel. A constant-density fluid also makes this cross product zero. The thermodynamic definition alone does not force every possible velocity field to be independent of height.</p>
+<p>To see the connection under balanced conditions, use a local Boussinesq model: density departures <span class="math inline">\(\rho'\)</span> from constant <span class="math inline">\(\rho_0\)</span> are retained in the vertical buoyancy acceleration <span class="math inline">\(b=-g\rho'/\rho_0\)</span> but omitted from inertia. Buoyancy is the acceleration caused by a parcel’s density difference from its hydrostatic surroundings; a denser parcel has <span class="math inline">\(b&lt;0\)</span>. Let <span class="math inline">\(p'\)</span> be pressure relative to a hydrostatic reference state. Combine <span class="math inline">\(f_0\hat{\mathbf{k}}\times\mathbf{u}_g=-\nabla_hp'/\rho_0\)</span> with <span class="math inline">\(\partial_zp'=-g\rho'\)</span>. Differentiating the former with respect to <span class="math inline">\(z\)</span> gives <strong>thermal-wind balance</strong></p>
+<p><span id="law-thermalwind"></span> <span class="math display">\[
+f_0\hat{\mathbf{k}}\times\partial_z\mathbf{u}_g
+=\frac{g}{\rho_0}\nabla_h\rho'.
+\tag{P3.8}
+\]</span></p>
+<p>It relates vertical shear of geostrophic velocity to horizontal density gradients; it is not an extra wind component. In this approximation, no horizontal density gradient implies no vertical geostrophic shear. Arbitrary unbalanced motions need not obey this inference.</p>
+<p>For a resting Boussinesq reference density <span class="math inline">\(\bar\rho(z)\)</span>, a small upward parcel displacement <span class="math inline">\(\eta\)</span> leaves the parcel with density excess <span class="math inline">\(-\eta\,d\bar\rho/dz\)</span>. Its buoyancy acceleration is <span class="math inline">\(-N^2\eta\)</span>, where</p>
+<p><span class="math display">\[
+N^2=-\frac{g}{\rho_0}\frac{d\bar\rho}{dz}.
+\]</span></p>
+<p><span class="math inline">\(N\)</span> is the <strong>buoyancy frequency</strong> when <span class="math inline">\(N^2&gt;0\)</span>: the stratification is stable and resists displacement. Negative <span class="math inline">\(N^2\)</span> indicates instability in this simple parcel model. For dry ideal-gas air, define <strong>potential temperature</strong> <span class="math inline">\(\theta_T=T(p_{\mathrm{ref}}/p)^{R/c_p}\)</span>, where <span class="math inline">\(p_{\mathrm{ref}}&gt;0\)</span> is a fixed reference pressure and <span class="math inline">\(c_p\)</span> is constant specific heat at constant pressure (<span class="math inline">\(\mathrm{J\,kg^{-1}\,K^{-1}}\)</span>). It is the temperature a parcel would have after compression or expansion to <span class="math inline">\(p_{\mathrm{ref}}\)</span> without heat exchange; it is conserved in dry reversible adiabatic motion. In compressible air, the corresponding stability criterion uses potential temperature, not the raw vertical density gradient; we do not apply this Boussinesq formula to a compressible atmospheric profile. Stratification and thermal wind allow three-dimensional baroclinic dynamics that a homogeneous single-layer BVE omits. Random stirring can parameterize some eddy input from such omitted motions without reproducing their thermodynamics.</p>
+</section>
+<section id="chapter-summary" class="level2" data-number="13.5">
+<h2 data-number="13.5" class="anchored" data-anchor-id="chapter-summary"><span class="header-section-number">13.5</span> Chapter summary</h2>
 <ul>
-<li><span class="math inline">\(-2\rho \vec{\Omega} \times \vec{v}\)</span> is the <strong>Coriolis force</strong>. It acts perpendicular to the velocity, deflecting moving parcels to the right in the Northern Hemisphere and to the left in the Southern. It does no work (it changes direction, not speed).</li>
-<li><span class="math inline">\(-\rho \vec{\Omega} \times (\vec{\Omega} \times \vec{r})\)</span> is the <strong>centrifugal force</strong>. It points outward from the rotation axis. In practice it is absorbed into an effective gravity <span class="math inline">\(\vec{g}^* = \vec{g} - \vec{\Omega} \times (\vec{\Omega} \times \vec{r})\)</span>, and the geopotential surfaces (including “sea level”) already account for it.</li>
+<li>A rotating frame adds Coriolis acceleration and centrifugal acceleration. The latter enters effective geopotential; Coriolis does no work.</li>
+<li><span class="math inline">\(f=2\Omega\sin\phi\)</span> is planetary vorticity normal to the surface; <span class="math inline">\(\beta=2\Omega\cos\phi_0/a\)</span> is its local northward gradient.</li>
+<li>Rossby number, Reynolds number, and aspect ratio describe distinct approximations. Hydrostatic balance is vertical; geostrophic balance is horizontal.</li>
+<li>Barotropy removes the density-pressure cross product. Thermal wind links balanced vertical shear to horizontal density variation. Stable stratification resists vertical displacement.</li>
+<li>The two-dimensional constant-depth BVE requires explicit restrictions beyond hydrostasy, geostrophy, or thermodynamic barotropy.</li>
 </ul>
-<p>With this absorption, the equation becomes:</p>
-<p><span class="math display">\[
-\rho \frac{D\vec{v}}{Dt} = -\nabla p + \mu \nabla^2 \vec{v} - 2\rho \vec{\Omega} \times \vec{v} + \rho \vec{g}^*
-\]</span></p>
-</section>
-<section id="the-coriolis-parameter" class="level2" data-number="12.3">
-<h2 data-number="12.3" class="anchored" data-anchor-id="the-coriolis-parameter"><span class="header-section-number">12.3</span> The Coriolis Parameter</h2>
-<p>For large-scale atmospheric and oceanic flows, the vertical component of the Coriolis force dominates. Let <span class="math inline">\(\varphi\)</span> denote latitude. The <strong>Coriolis parameter</strong> is:</p>
-<p><span class="math display">\[
-f = 2\Omega \sin\varphi
-\]</span></p>
-<p>At the equator <span class="math inline">\(f = 0\)</span>; at the poles <span class="math inline">\(f = \pm 2\Omega\)</span>. The horizontal component of the Coriolis acceleration reduces to <span class="math inline">\(f \hat{k} \times \vec{v}_h\)</span>, where <span class="math inline">\(\vec{v}_h\)</span> is the horizontal velocity and <span class="math inline">\(\hat{k}\)</span> is the local vertical unit vector.</p>
-</section>
-<section id="f-plane-and-beta-plane" class="level2" data-number="12.4">
-<h2 data-number="12.4" class="anchored" data-anchor-id="f-plane-and-beta-plane"><span class="header-section-number">12.4</span> <span class="math inline">\(f\)</span>-plane and <span class="math inline">\(\beta\)</span>-plane</h2>
-<p>For motions whose horizontal scale <span class="math inline">\(L\)</span> is small compared to the Earth’s radius <span class="math inline">\(a\)</span>, a local Cartesian approximation is used.</p>
-<p><strong><span class="math inline">\(f\)</span>-plane</strong>: <span class="math inline">\(f\)</span> is treated as constant, equal to its value at a reference latitude <span class="math inline">\(\varphi_0\)</span>:</p>
-<p><span class="math display">\[
-f = f_0 = 2\Omega \sin\varphi_0
-\]</span></p>
-<p>Valid when the flow does not span a large range of latitudes. Captures inertial oscillations and geostrophic balance but not Rossby wave dynamics.</p>
-<p><strong><span class="math inline">\(\beta\)</span>-plane</strong>: <span class="math inline">\(f\)</span> varies linearly with the northward coordinate <span class="math inline">\(y\)</span>:</p>
-<p><span class="math display">\[
-f = f_0 + \beta y ~~~,~~~ \beta = \frac{df}{dy} = \frac{2\Omega \cos\varphi_0}{a}
-\]</span></p>
-<p>The <span class="math inline">\(\beta\)</span>-effect is the minimal ingredient needed to support Rossby waves and westward phase propagation of large-scale disturbances.</p>
 
 
+<div id="refs" class="references csl-bib-body hanging-indent" role="list">
+<div id="ref-Vallis2006" class="csl-entry" role="listitem">
+Vallis, Geoffrey K. 2006. <em>Atmospheric and Oceanic Fluid Dynamics: Fundamentals and Large-Scale Circulation</em>. Cambridge University Press.
+</div>
+</div>
 </section>
 
 </main> <!-- /main -->
@@ -850,13 +955,13 @@ f = f_0 + \beta y ~~~,~~~ \beta = \frac{df}{dy} = \frac{2\Omega \cos\varphi_0}{a
   </script>
 <nav class="page-navigation" aria-label="Page">
   <div class="nav-page nav-page-previous">
-      <a href="../04-geophysical-fluid-dynamics/motion.html" class="pagination-link" aria-label="Basic">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Basic</span></span>
+      <a href="../04-geophysical-fluid-dynamics/motion.html" class="pagination-link" aria-label="Mass, forces, and the momentum equation">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Mass, forces, and the momentum equation</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../04-geophysical-fluid-dynamics/vorticity.html" class="pagination-link" aria-label="Vorticity">
-        <span class="nav-page-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Vorticity</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="../04-geophysical-fluid-dynamics/vorticity.html" class="pagination-link" aria-label="Vorticity and circulation">
+        <span class="nav-page-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Vorticity and circulation</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
