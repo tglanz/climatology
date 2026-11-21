@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>19&nbsp; Stochastic stirring and the closed forced model – Global Physical Climatology</title>
+<title>18&nbsp; Stochastic stirring and the closed forced model – Global Physical Climatology</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -55,7 +55,7 @@ div.csl-indent {
 <script src="../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../">
-<link href="../05-neural-operators/index.html" rel="next">
+<link href="../06-statistics/index.html" rel="next">
 <link href="../04-geophysical-fluid-dynamics/inversion.html" rel="prev">
 <script src="../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
@@ -137,7 +137,7 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="Breadcrumbs"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../04-geophysical-fluid-dynamics/index.html">Geophysical Fluid Dynamics</a></li><li class="breadcrumb-item"><a href="../04-geophysical-fluid-dynamics/stochastic.html"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Stochastic stirring and the closed forced model</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="Breadcrumbs"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../04-geophysical-fluid-dynamics/index.html">Geophysical Fluid Dynamics</a></li><li class="breadcrumb-item"><a href="../04-geophysical-fluid-dynamics/stochastic.html"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Stochastic stirring and the closed forced model</span></a></li></ol></nav>
         <a class="flex-grow-1" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -170,41 +170,66 @@ window.Quarto = {
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a href="../01-vector-calculus/index.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text" id="quarto-sidebar-section-1-label">Vector Calculus</span></a>
-            <button type="button" class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-controls="quarto-sidebar-section-1" aria-expanded="true" aria-label="Toggle section: Vector Calculus">
+            <a href="../00-mathematical-foundations/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text" id="quarto-sidebar-section-1-label">Mathematical foundations</span></a>
+            <button type="button" class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-controls="quarto-sidebar-section-1" aria-expanded="true" aria-label="Toggle section: Mathematical foundations">
               <i class="bi bi-chevron-right ms-2" aria-hidden="true"></i>
             </button> 
       </div>
       <ul id="quarto-sidebar-section-1" aria-labelledby="quarto-sidebar-section-1-label" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="../00-mathematical-foundations/language.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Mathematical language and linear algebra</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../01-vector-calculus/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text" id="quarto-sidebar-section-2-label">Vector Calculus</span></a>
+            <button type="button" class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-controls="quarto-sidebar-section-2" aria-expanded="true" aria-label="Toggle section: Vector Calculus">
+              <i class="bi bi-chevron-right ms-2" aria-hidden="true"></i>
+            </button> 
+      </div>
+      <ul id="quarto-sidebar-section-2" aria-labelledby="quarto-sidebar-section-2-label" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="../01-vector-calculus/operators.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Differential Operators</span></span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../01-vector-calculus/integrals.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Integrals</span></span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../01-vector-calculus/change-of-variables.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Change of Variables</span></span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../01-vector-calculus/theorems.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Integral Theorems</span></span></a>
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Calculus, fluxes, and conservation</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../01-vector-calculus/spherical.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Spherical Coordinates</span></span></a>
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Geometry and calculus on the sphere</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <button type="button" class="sidebar-item-text sidebar-item-toggle sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-controls="quarto-sidebar-section-3" aria-expanded="true">
+ <span class="menu-text" id="quarto-sidebar-section-3-label">Function spaces and differential equations</span><i class="bi bi-chevron-right" aria-hidden="true"></i></button>
+      </div>
+      <ul id="quarto-sidebar-section-3" aria-labelledby="quarto-sidebar-section-3-label" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../02-harmonic-analysis/function-spaces.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Function spaces, limits, and weak derivatives</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../03-pdes/eigenfunctions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Differential equations and eigenfunction theory</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../03-pdes/foundations.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Partial differential equations and physical models</span></span></a>
   </div>
 </li>
       </ul>
@@ -212,51 +237,28 @@ window.Quarto = {
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a href="../02-harmonic-analysis/index.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text" id="quarto-sidebar-section-2-label">Harmonic Analysis</span></a>
-            <button type="button" class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-controls="quarto-sidebar-section-2" aria-expanded="true" aria-label="Toggle section: Harmonic Analysis">
+ <span class="menu-text" id="quarto-sidebar-section-4-label">Harmonic Analysis</span></a>
+            <button type="button" class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-controls="quarto-sidebar-section-4" aria-expanded="true" aria-label="Toggle section: Harmonic Analysis">
               <i class="bi bi-chevron-right ms-2" aria-hidden="true"></i>
             </button> 
       </div>
-      <ul id="quarto-sidebar-section-2" aria-labelledby="quarto-sidebar-section-2-label" class="collapse list-unstyled sidebar-section depth1 show">  
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../02-harmonic-analysis/function-spaces.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Function Spaces</span></span></a>
-  </div>
-</li>
+      <ul id="quarto-sidebar-section-4" aria-labelledby="quarto-sidebar-section-4-label" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../02-harmonic-analysis/fourier-series.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Fourier Series</span></span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../02-harmonic-analysis/fourier-transform.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Fourier Transform</span></span></a>
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Fourier analysis</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../02-harmonic-analysis/spherical-harmonics.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Spherical Harmonics</span></span></a>
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Legendre polynomials and spherical harmonics</span></span></a>
   </div>
 </li>
-      </ul>
-  </li>
-        <li class="sidebar-item sidebar-item-section">
-      <div class="sidebar-item-container"> 
-            <a href="../03-pdes/index.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text" id="quarto-sidebar-section-3-label">Partial Differential Equations</span></a>
-            <button type="button" class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-controls="quarto-sidebar-section-3" aria-expanded="true" aria-label="Toggle section: Partial Differential Equations">
-              <i class="bi bi-chevron-right ms-2" aria-hidden="true"></i>
-            </button> 
-      </div>
-      <ul id="quarto-sidebar-section-3" aria-labelledby="quarto-sidebar-section-3-label" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../03-pdes/spectral-methods.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Spectral numerical methods</span></span></a>
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Spectral discretization, quadrature, and stability</span></span></a>
   </div>
 </li>
       </ul>
@@ -264,71 +266,133 @@ window.Quarto = {
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a href="../04-geophysical-fluid-dynamics/index.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text" id="quarto-sidebar-section-4-label">Geophysical Fluid Dynamics</span></a>
-            <button type="button" class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-controls="quarto-sidebar-section-4" aria-expanded="true" aria-label="Toggle section: Geophysical Fluid Dynamics">
+ <span class="menu-text" id="quarto-sidebar-section-5-label">Geophysical Fluid Dynamics</span></a>
+            <button type="button" class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-controls="quarto-sidebar-section-5" aria-expanded="true" aria-label="Toggle section: Geophysical Fluid Dynamics">
               <i class="bi bi-chevron-right ms-2" aria-hidden="true"></i>
             </button> 
       </div>
-      <ul id="quarto-sidebar-section-4" aria-labelledby="quarto-sidebar-section-4-label" class="collapse list-unstyled sidebar-section depth1 show">  
+      <ul id="quarto-sidebar-section-5" aria-labelledby="quarto-sidebar-section-5-label" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../04-geophysical-fluid-dynamics/kinematics.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Kinematics and mathematical language</span></span></a>
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Kinematics and mathematical language</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../04-geophysical-fluid-dynamics/motion.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Mass, forces, and the momentum equation</span></span></a>
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Mass, forces, and the momentum equation</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../04-geophysical-fluid-dynamics/rotating.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Rotation and large-scale balances</span></span></a>
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Rotation and large-scale balances</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../04-geophysical-fluid-dynamics/vorticity.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Vorticity and circulation</span></span></a>
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Vorticity and circulation</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../04-geophysical-fluid-dynamics/layer-pv.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">A shallow layer and the barotropic reduction</span></span></a>
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">A shallow layer and the barotropic reduction</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../04-geophysical-fluid-dynamics/barotropic.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">The BVE on a rotating sphere</span></span></a>
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">The BVE on a rotating sphere</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../04-geophysical-fluid-dynamics/turbulence.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Invariants, turbulence, and eddy-driven flow</span></span></a>
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Invariants, turbulence, and eddy-driven flow</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../04-geophysical-fluid-dynamics/inversion.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Spherical harmonics, inversion, and dissipation</span></span></a>
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Spherical harmonics, inversion, and dissipation</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../04-geophysical-fluid-dynamics/stochastic.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Stochastic stirring and the closed forced model</span></span></a>
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Stochastic stirring and the closed forced model</span></span></a>
   </div>
 </li>
       </ul>
   </li>
         <li class="sidebar-item sidebar-item-section">
-      <span class="sidebar-item-text sidebar-link text-start">
- <span class="menu-text">Neural Operators</span></span>
+      <div class="sidebar-item-container"> 
+            <a href="../06-statistics/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text" id="quarto-sidebar-section-6-label">Probability and averages</span></a>
+            <button type="button" class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-controls="quarto-sidebar-section-6" aria-expanded="true" aria-label="Toggle section: Probability and averages">
+              <i class="bi bi-chevron-right ms-2" aria-hidden="true"></i>
+            </button> 
+      </div>
+      <ul id="quarto-sidebar-section-6" aria-labelledby="quarto-sidebar-section-6-label" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../06-statistics/averages.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Probability, averages, and climatological estimates</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../05-neural-operators/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text" id="quarto-sidebar-section-7-label">Neural Operators</span></a>
+            <button type="button" class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" aria-controls="quarto-sidebar-section-7" aria-expanded="true" aria-label="Toggle section: Neural Operators">
+              <i class="bi bi-chevron-right ms-2" aria-hidden="true"></i>
+            </button> 
+      </div>
+      <ul id="quarto-sidebar-section-7" aria-labelledby="quarto-sidebar-section-7-label" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../05-neural-operators/spectral-operators.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Integral operators, symmetries, and learned maps</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <button type="button" class="sidebar-item-text sidebar-item-toggle sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" aria-controls="quarto-sidebar-section-8" aria-expanded="true">
+ <span class="menu-text" id="quarto-sidebar-section-8-label">Appendices</span><i class="bi bi-chevron-right" aria-hidden="true"></i></button>
+      </div>
+      <ul id="quarto-sidebar-section-8" aria-labelledby="quarto-sidebar-section-8-label" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../01-vector-calculus/integrals.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">A</span>&nbsp; <span class="chapter-title">Vector integrals</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../01-vector-calculus/change-of-variables.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">B</span>&nbsp; <span class="chapter-title">Change of variables</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../01-vector-calculus/theorems.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">C</span>&nbsp; <span class="chapter-title">Integral theorems</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../02-harmonic-analysis/fourier-transform.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">D</span>&nbsp; <span class="chapter-title">Fourier transform</span></span></a>
+  </div>
+</li>
+      </ul>
   </li>
     </ul>
     </div>
@@ -340,21 +404,21 @@ window.Quarto = {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#what-a-random-forcing-specifies" id="toc-what-a-random-forcing-specifies" class="nav-link active" data-scroll-target="#what-a-random-forcing-specifies"><span class="header-section-number">19.1</span> What a random forcing specifies</a></li>
-  <li><a href="#a-finite-memory-recurrence-and-its-variance" id="toc-a-finite-memory-recurrence-and-its-variance" class="nav-link" data-scroll-target="#a-finite-memory-recurrence-and-its-variance"><span class="header-section-number">19.2</span> A finite-memory recurrence and its variance</a></li>
-  <li><a href="#gaussian-ou-forcing-and-bounded-innovations" id="toc-gaussian-ou-forcing-and-bounded-innovations" class="nav-link" data-scroll-target="#gaussian-ou-forcing-and-bounded-innovations"><span class="header-section-number">19.3</span> Gaussian OU forcing and bounded innovations</a></li>
-  <li><a href="#spatial-masks-localization-and-covariance" id="toc-spatial-masks-localization-and-covariance" class="nav-link" data-scroll-target="#spatial-masks-localization-and-covariance"><span class="header-section-number">19.4</span> Spatial masks, localization, and covariance</a></li>
-  <li><a href="#forced-budgets-stationarity-and-state-information" id="toc-forced-budgets-stationarity-and-state-information" class="nav-link" data-scroll-target="#forced-budgets-stationarity-and-state-information"><span class="header-section-number">19.5</span> Forced budgets, stationarity, and state information</a></li>
-  <li><a href="#chapter-summary" id="toc-chapter-summary" class="nav-link" data-scroll-target="#chapter-summary"><span class="header-section-number">19.6</span> Chapter summary</a></li>
+  <li><a href="#what-a-random-forcing-specifies" id="toc-what-a-random-forcing-specifies" class="nav-link active" data-scroll-target="#what-a-random-forcing-specifies"><span class="header-section-number">18.1</span> What a random forcing specifies</a></li>
+  <li><a href="#a-finite-memory-recurrence-and-its-variance" id="toc-a-finite-memory-recurrence-and-its-variance" class="nav-link" data-scroll-target="#a-finite-memory-recurrence-and-its-variance"><span class="header-section-number">18.2</span> A finite-memory recurrence and its variance</a></li>
+  <li><a href="#gaussian-ou-forcing-and-bounded-innovations" id="toc-gaussian-ou-forcing-and-bounded-innovations" class="nav-link" data-scroll-target="#gaussian-ou-forcing-and-bounded-innovations"><span class="header-section-number">18.3</span> Gaussian OU forcing and bounded innovations</a></li>
+  <li><a href="#spatial-masks-localization-and-covariance" id="toc-spatial-masks-localization-and-covariance" class="nav-link" data-scroll-target="#spatial-masks-localization-and-covariance"><span class="header-section-number">18.4</span> Spatial masks, localization, and covariance</a></li>
+  <li><a href="#forced-budgets-stationarity-and-state-information" id="toc-forced-budgets-stationarity-and-state-information" class="nav-link" data-scroll-target="#forced-budgets-stationarity-and-state-information"><span class="header-section-number">18.5</span> Forced budgets, stationarity, and state information</a></li>
+  <li><a href="#chapter-summary" id="toc-chapter-summary" class="nav-link" data-scroll-target="#chapter-summary"><span class="header-section-number">18.6</span> Chapter summary</a></li>
   </ul>
 </nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content" tabindex="-1">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="Breadcrumbs"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../04-geophysical-fluid-dynamics/index.html">Geophysical Fluid Dynamics</a></li><li class="breadcrumb-item"><a href="../04-geophysical-fluid-dynamics/stochastic.html"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Stochastic stirring and the closed forced model</span></a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="Breadcrumbs"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../04-geophysical-fluid-dynamics/index.html">Geophysical Fluid Dynamics</a></li><li class="breadcrumb-item"><a href="../04-geophysical-fluid-dynamics/stochastic.html"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Stochastic stirring and the closed forced model</span></a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Stochastic stirring and the closed forced model</span></h1>
+<h1 class="title"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Stochastic stirring and the closed forced model</span></h1>
 </div>
 
 
@@ -373,8 +437,8 @@ window.Quarto = {
 
 <!-- Generated by presentations/physical-prerequisites/build.py. Edit its Markdown manuscript and run build.py --sync-book. -->
 <p>Equations prefixed <strong>P</strong> retain the numbering of the companion physical-prerequisites document. Mathematical operators are introduced in <a href="../01-vector-calculus/operators.html">vector calculus</a> and <a href="../01-vector-calculus/theorems.html">integral theorems</a>. Parcel derivatives and transport are developed in <a href="../04-geophysical-fluid-dynamics/kinematics.html">fluid kinematics</a>.</p>
-<section id="what-a-random-forcing-specifies" class="level2" data-number="19.1">
-<h2 data-number="19.1" class="anchored" data-anchor-id="what-a-random-forcing-specifies"><span class="header-section-number">19.1</span> What a random forcing specifies</h2>
+<section id="what-a-random-forcing-specifies" class="level2" data-number="18.1">
+<h2 data-number="18.1" class="anchored" data-anchor-id="what-a-random-forcing-specifies"><span class="header-section-number">18.1</span> What a random forcing specifies</h2>
 <p><strong>Result and motivation.</strong> Stochastic stirring is a statistical model for omitted eddy input, not a new conservation law. Its distribution, covariance, spatial structure, and memory must be specified separately. <span class="citation" data-cites="VallisEtAl2004 ArfkenWeber2005">(<a href="#ref-VallisEtAl2004" role="doc-biblioref">Vallis et al. 2004, sec. 3</a> and appendix; <a href="#ref-ArfkenWeber2005" role="doc-biblioref">Arfken and Weber 2005, secs. 19.1–19.2</a>)</span></p>
 <p>Let <span class="math inline">\(S(\lambda,\phi,t)\)</span> be an additive vorticity tendency, with units <span class="math inline">\(\mathrm{s^{-2}}\)</span>. The <strong>stochastically stirred, damped BVE</strong> is</p>
 <p><span id="law-forced-bve"></span> <span class="math display">\[
@@ -392,8 +456,8 @@ window.Quarto = {
 \]</span></p>
 <p>The square root of variance is standard deviation. Independence implies zero covariance when moments exist, but zero covariance does not generally imply independence. A realization is one sampled forcing history. A <strong>stationary</strong> process has statistics unchanged by shifting all times together; second-order stationarity requires only constant mean and covariance that depends on time lag. The <strong>autocorrelation</strong> is covariance divided by variance for a nonzero-variance stationary scalar process. A finite correlation time describes memory in the imposed forcing, not necessarily the memory of the fluid response.</p>
 </section>
-<section id="a-finite-memory-recurrence-and-its-variance" class="level2" data-number="19.2">
-<h2 data-number="19.2" class="anchored" data-anchor-id="a-finite-memory-recurrence-and-its-variance"><span class="header-section-number">19.2</span> A finite-memory recurrence and its variance</h2>
+<section id="a-finite-memory-recurrence-and-its-variance" class="level2" data-number="18.2">
+<h2 data-number="18.2" class="anchored" data-anchor-id="a-finite-memory-recurrence-and-its-variance"><span class="header-section-number">18.2</span> A finite-memory recurrence and its variance</h2>
 <p><strong>Result and motivation.</strong> An autoregressive recurrence produces exponentially decaying time correlations. The innovation amplitude must include <span class="math inline">\(\sqrt{1-\alpha^2}\)</span> to keep the stationary variance fixed as the time step changes. <span class="citation" data-cites="VallisEtAl2004">(<a href="#ref-VallisEtAl2004" role="doc-biblioref">Vallis et al. 2004</a>, appendix, eqs. A.6-A.8)</span></p>
 <p>Consider one real forcing component <span class="math inline">\(s^n\)</span> at times <span class="math inline">\(t_n=n\Delta t\)</span>, with time step <span class="math inline">\(\Delta t&gt;0\)</span>. Let <span class="math inline">\(\tau&gt;0\)</span> be the desired memory time, <span class="math inline">\(\sigma_s\)</span> a specified stationary standard deviation, and <span class="math inline">\(\xi^n\)</span> independent identically distributed random variables, independent of the past, with mean zero and variance one. Define</p>
 <p><span id="law-ar1"></span> <span class="math display">\[
@@ -417,8 +481,8 @@ V_n=\alpha^{2n}V_0+\sigma_s^2(1-\alpha^{2n}).
 <p>The nonnegative integer <span class="math inline">\(k\)</span> counts lag steps; the absolute value extends the covariance symmetrically to negative lag. At elapsed lag <span class="math inline">\(\tau\)</span> the correlation is <span class="math inline">\(e^{-1}\)</span>: <span class="math inline">\(\tau\)</span> is an <strong>e-folding time</strong>. Starting at <span class="math inline">\(s^0=0\)</span> produces a forcing spinup in its variance. For Gaussian innovations, drawing <span class="math inline">\(s^0\)</span> from the Gaussian law with mean zero and variance <span class="math inline">\(\sigma_s^2\)</span> gives stationary forcing immediately. A uniform-innovation recurrence has a different stationary distribution; matching initial variance alone does not make its full distribution stationary.</p>
 <p>As a concrete variance check, choose <span class="math inline">\(\alpha=1/2\)</span>. The innovation coefficient is <span class="math inline">\(\sqrt{3}/2\)</span> times <span class="math inline">\(\sigma_s\)</span>, so one step preserves variance because <span class="math inline">\(1/4+3/4=1\)</span>. Dropping the square root factor would instead give stationary variance <span class="math inline">\(\sigma_s^2/(1-\alpha^2)\)</span>, changing the forcing when <span class="math inline">\(\Delta t\)</span> changes.</p>
 </section>
-<section id="gaussian-ou-forcing-and-bounded-innovations" class="level2" data-number="19.3">
-<h2 data-number="19.3" class="anchored" data-anchor-id="gaussian-ou-forcing-and-bounded-innovations"><span class="header-section-number">19.3</span> Gaussian OU forcing and bounded innovations</h2>
+<section id="gaussian-ou-forcing-and-bounded-innovations" class="level2" data-number="18.3">
+<h2 data-number="18.3" class="anchored" data-anchor-id="gaussian-ou-forcing-and-bounded-innovations"><span class="header-section-number">18.3</span> Gaussian OU forcing and bounded innovations</h2>
 <p><strong>Result and motivation.</strong> Gaussian innovations make (P9.2) an exact sample of an Ornstein-Uhlenbeck process. Bounded uniform innovations can preserve the same mean and covariance while changing higher statistics. <span class="citation" data-cites="VallisEtAl2004 ArfkenWeber2005">(<a href="#ref-VallisEtAl2004" role="doc-biblioref">Vallis et al. 2004</a>, appendix; <a href="#ref-ArfkenWeber2005" role="doc-biblioref">Arfken and Weber 2005, secs. 19.2, 19.5</a>)</span></p>
 <p>A Gaussian or normal law with mean zero and variance one has density <span class="math inline">\((2\pi)^{-1/2}e^{-x^2/2}\)</span>. A <strong>Wiener process</strong> <span class="math inline">\(W_t\)</span> has independent Gaussian increments with mean zero and variance equal to elapsed time. It has units <span class="math inline">\(\mathrm{s^{1/2}}\)</span> when <span class="math inline">\(t\)</span> is dimensional. Define the <strong>Ornstein-Uhlenbeck (OU) process</strong> through</p>
 <p><span id="law-ou"></span> <span class="math display">\[
@@ -442,8 +506,8 @@ e^{-2(t+\Delta t-u)/\tau}du
 <p>For a uniformly distributed <span class="math inline">\(\eta\)</span> on <span class="math inline">\([-1,1]\)</span>, its density is <span class="math inline">\(1/2\)</span> there and zero elsewhere. Direct integration gives <span class="math inline">\(\mathbb{E}\eta=0\)</span>, <span class="math inline">\(\mathbb{E}\eta^2=\tfrac12\int_{-1}^{1}x^2dx=1/3\)</span>. Thus <span class="math inline">\(\xi=\sqrt3\eta\)</span> has unit variance. If the recurrence instead uses <span class="math inline">\(A\sqrt{1-\alpha^2}\eta^n\)</span>, its stationary variance is <span class="math inline">\(A^2/3\)</span>, not <span class="math inline">\(A^2\)</span>. For independent real and imaginary components of a complex innovation, each uniform on <span class="math inline">\([-1,1]\)</span>, the pre-localization stationary mean square complex amplitude is <span class="math inline">\(2A^2/3\)</span>. That statement concerns coefficient components, not the variance at a physical grid point after transforms and localization.</p>
 <p>Ideal temporal <strong>white noise</strong> is the formal derivative <span class="math inline">\(dW_t/dt\)</span>: it has no ordinary pointwise value and is defined by its time integrals, which are independent Wiener increments over disjoint intervals. Its intensity specifies increment variance per unit time. Small <span class="math inline">\(\tau/\Delta t\)</span> makes successive sampled forcing values nearly independent. That does <strong>not</strong> by itself define a finite-strength continuous white-noise forcing in the BVE. At fixed <span class="math inline">\(\sigma_s^2\)</span>, OU covariance is <span class="math inline">\(\sigma_s^2e^{-|t|/\tau}\)</span>, whose integral over all lags is <span class="math inline">\(2\sigma_s^2\tau\to0\)</span> as <span class="math inline">\(\tau\to0\)</span>. Holding white-noise intensity fixed would require scaling <span class="math inline">\(\sigma_s^2\tau\)</span> to a nonzero constant. The distinction matters when comparing forcing amplitudes across correlation times.</p>
 </section>
-<section id="spatial-masks-localization-and-covariance" class="level2" data-number="19.4">
-<h2 data-number="19.4" class="anchored" data-anchor-id="spatial-masks-localization-and-covariance"><span class="header-section-number">19.4</span> Spatial masks, localization, and covariance</h2>
+<section id="spatial-masks-localization-and-covariance" class="level2" data-number="18.4">
+<h2 data-number="18.4" class="anchored" data-anchor-id="spatial-masks-localization-and-covariance"><span class="header-section-number">18.4</span> Spatial masks, localization, and covariance</h2>
 <p><strong>Result and motivation.</strong> Spectral selection sets initial forcing scales, while multiplication by a spatial envelope localizes forcing and mixes those scales. Removing the global mean preserves vorticity invertibility. <span class="citation" data-cites="VallisEtAl2004 BarotropicNotes">(<a href="#ref-VallisEtAl2004" role="doc-biblioref">Vallis et al. 2004, sec. 3</a>; <a href="#ref-BarotropicNotes" role="doc-biblioref"><em>The Barotropic Vorticity Equation</em>, n.d., sec. 3</a>)</span></p>
 <p>Let <span class="math inline">\(\mathbf{b}^n\)</span> be a real vector collecting independent random coefficient components at step <span class="math inline">\(n\)</span>, with zero mean and covariance matrix <span class="math inline">\(\mathbf{C}_b=\mathbb{E}[\mathbf{b}^n(\mathbf{b}^n)^T]\)</span>. The superscript <span class="math inline">\(T\)</span> denotes matrix transpose. Complex coefficients can always be represented by their real and imaginary components in this vector. Let <span class="math inline">\(\mathcal{M}\)</span> select a prescribed band of harmonic modes, <span class="math inline">\(\mathcal{T}\)</span> synthesize a grid field from coefficients, and <span class="math inline">\(L(\lambda,\phi)\)</span> be a fixed dimensionless envelope. Let <span class="math inline">\(\mathcal{P}_0\)</span> remove the spherical mean. Let <span class="math inline">\(\mathcal{A}\)</span> analyze a grid field back into a real vector of retained spectral coefficient components. The combined linear map <span class="math inline">\(\mathcal{L}\)</span> therefore produces a coefficient-vector innovation proportional to</p>
 <p><span class="math display">\[
@@ -468,8 +532,8 @@ L(\lambda,\phi)=\exp\left[-\frac{(\phi-\phi_c)^2}{2w_\phi^2}\right]
 <p>The centers are <span class="math inline">\(\phi_c,\lambda_c\)</span>, the positive angular widths are <span class="math inline">\(w_\phi,w_\lambda\)</span>, <span class="math inline">\(B\)</span> controls the longitudinal enhancement, and <span class="math inline">\(d_{2\pi}\)</span> wraps an angular difference into <span class="math inline">\([-\pi,\pi]\)</span>. All angles in this expression must use the same units. <span class="math inline">\(B=0\)</span> is zonally uniform in its envelope; it is not globally uniform because latitude dependence remains.</p>
 <p>Multiplication by <span class="math inline">\(L\)</span> convolves harmonic coefficients, so the final forcing is not confined to the initially selected band. Nor does excluding initial <span class="math inline">\(m=0\)</span> coefficients guarantee a final zero zonal-mean component after a longitude-dependent envelope. Removing <span class="math inline">\(\ell=0\)</span> enforces zero <em>global</em> mean, a different condition. A sharply or imperfectly smooth envelope also adds high-degree content; finite spectral projection defines what the numerical model actually retains.</p>
 </section>
-<section id="forced-budgets-stationarity-and-state-information" class="level2" data-number="19.5">
-<h2 data-number="19.5" class="anchored" data-anchor-id="forced-budgets-stationarity-and-state-information"><span class="header-section-number">19.5</span> Forced budgets, stationarity, and state information</h2>
+<section id="forced-budgets-stationarity-and-state-information" class="level2" data-number="18.5">
+<h2 data-number="18.5" class="anchored" data-anchor-id="forced-budgets-stationarity-and-state-information"><span class="header-section-number">18.5</span> Forced budgets, stationarity, and state information</h2>
 <p><strong>Result and motivation.</strong> The stirring enters energy and enstrophy through correlations with the flow. Its amplitude is not an energy-input rate. Finite-memory forcing also carries information beyond the instantaneous vorticity field. <span class="citation" data-cites="VallisEtAl2004 Vallis2006">(<a href="#ref-VallisEtAl2004" role="doc-biblioref">Vallis et al. 2004, secs. 2–3</a> and appendix; <a href="#ref-Vallis2006" role="doc-biblioref">Vallis 2006, sec. 8.3</a>)</span></p>
 <p>For the colored-in-time forcing above, the forcing state is an ordinary time-dependent input to the vorticity equation; ordinary product-rule energy budgets apply. Set <span class="math inline">\(\mathcal{D}\)</span> as in (P8.6). The ideal transport terms cancel as in <a href="../04-geophysical-fluid-dynamics/turbulence.html">the companion chapter 7</a>, giving</p>
 <p><span id="law-forced-budgets"></span> <span class="math display">\[
@@ -484,8 +548,8 @@ L(\lambda,\phi)=\exp\left[-\frac{(\phi-\phi_c)^2}{2w_\phi^2}\right]
 <p>A <strong>statistical steady state</strong> has time-independent statistics after transient adjustment, even while individual fields continue evolving. If such a state exists with finite moments, ensemble averaging (P9.6) balances mean forcing input against mean dissipation. These identities do not prove existence, uniqueness, or an adequate spinup duration. If the vorticity equation were instead driven directly by ideal temporal white noise, stochastic quadratic-variation terms would be needed in the mean budgets; (P9.6) is stated for finite-memory forcing.</p>
 <p>A process is <strong>Markov</strong> when its future probability law, conditional on its present state, does not need earlier states. The pair <span class="math inline">\((\zeta,\mathbf{s})\)</span>, together with fixed parameters, provides the physical state for a finite-memory stirring model; a time-discrete integrator may additionally need previous time levels. Vorticity alone generally does not: two equal vorticity fields accompanied by different stirring states have different immediate tendencies. Thus even perfect observations of <span class="math inline">\(\zeta(t)\)</span> alone need not specify a unique deterministic <span class="math inline">\(\zeta(t+\Delta t)\)</span>. This is a consequence of the forcing model, separate from numerical error or chaotic sensitivity.</p>
 </section>
-<section id="chapter-summary" class="level2" data-number="19.6">
-<h2 data-number="19.6" class="anchored" data-anchor-id="chapter-summary"><span class="header-section-number">19.6</span> Chapter summary</h2>
+<section id="chapter-summary" class="level2" data-number="18.6">
+<h2 data-number="18.6" class="anchored" data-anchor-id="chapter-summary"><span class="header-section-number">18.6</span> Chapter summary</h2>
 <ul>
 <li>The closed forced BVE is (P9.1), with zero-mean vorticity, a streamfunction gauge, and a specified stirring law. The forcing units are vorticity per time.</li>
 <li>The AR(1) process (P9.2) has stationary covariance (P9.3). Its innovation normalization fixes variance as the time step changes.</li>
@@ -991,12 +1055,12 @@ Vallis, Geoffrey K., Edwin P. Gerber, Paul J. Kushner, and Benjamin A. Cash. 200
 <nav class="page-navigation" aria-label="Page">
   <div class="nav-page nav-page-previous">
       <a href="../04-geophysical-fluid-dynamics/inversion.html" class="pagination-link" aria-label="Spherical harmonics, inversion, and dissipation">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Spherical harmonics, inversion, and dissipation</span></span>
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Spherical harmonics, inversion, and dissipation</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../05-neural-operators/index.html" class="pagination-link" aria-label="Neural Operators">
-        <span class="nav-page-text">Neural Operators</span> <i class="bi bi-arrow-right-short"></i>
+      <a href="../06-statistics/index.html" class="pagination-link" aria-label="Probability and averages">
+        <span class="nav-page-text">Probability and averages</span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

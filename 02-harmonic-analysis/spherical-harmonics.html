@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>9&nbsp; Spherical Harmonics – Global Physical Climatology</title>
+<title>8&nbsp; Legendre polynomials and spherical harmonics – Global Physical Climatology</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -55,8 +55,8 @@ div.csl-indent {
 <script src="../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../">
-<link href="../03-pdes/index.html" rel="next">
-<link href="../02-harmonic-analysis/fourier-transform.html" rel="prev">
+<link href="../03-pdes/spectral-methods.html" rel="next">
+<link href="../02-harmonic-analysis/fourier-series.html" rel="prev">
 <script src="../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="../site_libs/quarto-html/scrollable-regions/scrollable-regions.js" type="module"></script>
@@ -137,7 +137,7 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="Breadcrumbs"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../02-harmonic-analysis/index.html">Harmonic Analysis</a></li><li class="breadcrumb-item"><a href="../02-harmonic-analysis/spherical-harmonics.html"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Spherical Harmonics</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="Breadcrumbs"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../02-harmonic-analysis/index.html">Harmonic Analysis</a></li><li class="breadcrumb-item"><a href="../02-harmonic-analysis/spherical-harmonics.html"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Legendre polynomials and spherical harmonics</span></a></li></ol></nav>
         <a class="flex-grow-1" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -170,41 +170,66 @@ window.Quarto = {
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a href="../01-vector-calculus/index.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text" id="quarto-sidebar-section-1-label">Vector Calculus</span></a>
-            <button type="button" class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-controls="quarto-sidebar-section-1" aria-expanded="true" aria-label="Toggle section: Vector Calculus">
+            <a href="../00-mathematical-foundations/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text" id="quarto-sidebar-section-1-label">Mathematical foundations</span></a>
+            <button type="button" class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-controls="quarto-sidebar-section-1" aria-expanded="true" aria-label="Toggle section: Mathematical foundations">
               <i class="bi bi-chevron-right ms-2" aria-hidden="true"></i>
             </button> 
       </div>
       <ul id="quarto-sidebar-section-1" aria-labelledby="quarto-sidebar-section-1-label" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="../00-mathematical-foundations/language.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Mathematical language and linear algebra</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../01-vector-calculus/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text" id="quarto-sidebar-section-2-label">Vector Calculus</span></a>
+            <button type="button" class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-controls="quarto-sidebar-section-2" aria-expanded="true" aria-label="Toggle section: Vector Calculus">
+              <i class="bi bi-chevron-right ms-2" aria-hidden="true"></i>
+            </button> 
+      </div>
+      <ul id="quarto-sidebar-section-2" aria-labelledby="quarto-sidebar-section-2-label" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="../01-vector-calculus/operators.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Differential Operators</span></span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../01-vector-calculus/integrals.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Integrals</span></span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../01-vector-calculus/change-of-variables.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Change of Variables</span></span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../01-vector-calculus/theorems.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Integral Theorems</span></span></a>
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Calculus, fluxes, and conservation</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../01-vector-calculus/spherical.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Spherical Coordinates</span></span></a>
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Geometry and calculus on the sphere</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <button type="button" class="sidebar-item-text sidebar-item-toggle sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-controls="quarto-sidebar-section-3" aria-expanded="true">
+ <span class="menu-text" id="quarto-sidebar-section-3-label">Function spaces and differential equations</span><i class="bi bi-chevron-right" aria-hidden="true"></i></button>
+      </div>
+      <ul id="quarto-sidebar-section-3" aria-labelledby="quarto-sidebar-section-3-label" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../02-harmonic-analysis/function-spaces.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Function spaces, limits, and weak derivatives</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../03-pdes/eigenfunctions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Differential equations and eigenfunction theory</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../03-pdes/foundations.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Partial differential equations and physical models</span></span></a>
   </div>
 </li>
       </ul>
@@ -212,51 +237,28 @@ window.Quarto = {
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a href="../02-harmonic-analysis/index.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text" id="quarto-sidebar-section-2-label">Harmonic Analysis</span></a>
-            <button type="button" class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-controls="quarto-sidebar-section-2" aria-expanded="true" aria-label="Toggle section: Harmonic Analysis">
+ <span class="menu-text" id="quarto-sidebar-section-4-label">Harmonic Analysis</span></a>
+            <button type="button" class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-controls="quarto-sidebar-section-4" aria-expanded="true" aria-label="Toggle section: Harmonic Analysis">
               <i class="bi bi-chevron-right ms-2" aria-hidden="true"></i>
             </button> 
       </div>
-      <ul id="quarto-sidebar-section-2" aria-labelledby="quarto-sidebar-section-2-label" class="collapse list-unstyled sidebar-section depth1 show">  
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../02-harmonic-analysis/function-spaces.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Function Spaces</span></span></a>
-  </div>
-</li>
+      <ul id="quarto-sidebar-section-4" aria-labelledby="quarto-sidebar-section-4-label" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../02-harmonic-analysis/fourier-series.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Fourier Series</span></span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../02-harmonic-analysis/fourier-transform.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Fourier Transform</span></span></a>
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Fourier analysis</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../02-harmonic-analysis/spherical-harmonics.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Spherical Harmonics</span></span></a>
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Legendre polynomials and spherical harmonics</span></span></a>
   </div>
 </li>
-      </ul>
-  </li>
-        <li class="sidebar-item sidebar-item-section">
-      <div class="sidebar-item-container"> 
-            <a href="../03-pdes/index.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text" id="quarto-sidebar-section-3-label">Partial Differential Equations</span></a>
-            <button type="button" class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-controls="quarto-sidebar-section-3" aria-expanded="true" aria-label="Toggle section: Partial Differential Equations">
-              <i class="bi bi-chevron-right ms-2" aria-hidden="true"></i>
-            </button> 
-      </div>
-      <ul id="quarto-sidebar-section-3" aria-labelledby="quarto-sidebar-section-3-label" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../03-pdes/spectral-methods.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Spectral numerical methods</span></span></a>
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Spectral discretization, quadrature, and stability</span></span></a>
   </div>
 </li>
       </ul>
@@ -264,71 +266,133 @@ window.Quarto = {
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a href="../04-geophysical-fluid-dynamics/index.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text" id="quarto-sidebar-section-4-label">Geophysical Fluid Dynamics</span></a>
-            <button type="button" class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-controls="quarto-sidebar-section-4" aria-expanded="true" aria-label="Toggle section: Geophysical Fluid Dynamics">
+ <span class="menu-text" id="quarto-sidebar-section-5-label">Geophysical Fluid Dynamics</span></a>
+            <button type="button" class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-controls="quarto-sidebar-section-5" aria-expanded="true" aria-label="Toggle section: Geophysical Fluid Dynamics">
               <i class="bi bi-chevron-right ms-2" aria-hidden="true"></i>
             </button> 
       </div>
-      <ul id="quarto-sidebar-section-4" aria-labelledby="quarto-sidebar-section-4-label" class="collapse list-unstyled sidebar-section depth1 show">  
+      <ul id="quarto-sidebar-section-5" aria-labelledby="quarto-sidebar-section-5-label" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../04-geophysical-fluid-dynamics/kinematics.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Kinematics and mathematical language</span></span></a>
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Kinematics and mathematical language</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../04-geophysical-fluid-dynamics/motion.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Mass, forces, and the momentum equation</span></span></a>
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Mass, forces, and the momentum equation</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../04-geophysical-fluid-dynamics/rotating.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Rotation and large-scale balances</span></span></a>
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Rotation and large-scale balances</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../04-geophysical-fluid-dynamics/vorticity.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Vorticity and circulation</span></span></a>
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Vorticity and circulation</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../04-geophysical-fluid-dynamics/layer-pv.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">A shallow layer and the barotropic reduction</span></span></a>
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">A shallow layer and the barotropic reduction</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../04-geophysical-fluid-dynamics/barotropic.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">The BVE on a rotating sphere</span></span></a>
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">The BVE on a rotating sphere</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../04-geophysical-fluid-dynamics/turbulence.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Invariants, turbulence, and eddy-driven flow</span></span></a>
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Invariants, turbulence, and eddy-driven flow</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../04-geophysical-fluid-dynamics/inversion.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Spherical harmonics, inversion, and dissipation</span></span></a>
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Spherical harmonics, inversion, and dissipation</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../04-geophysical-fluid-dynamics/stochastic.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Stochastic stirring and the closed forced model</span></span></a>
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Stochastic stirring and the closed forced model</span></span></a>
   </div>
 </li>
       </ul>
   </li>
         <li class="sidebar-item sidebar-item-section">
-      <span class="sidebar-item-text sidebar-link text-start">
- <span class="menu-text">Neural Operators</span></span>
+      <div class="sidebar-item-container"> 
+            <a href="../06-statistics/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text" id="quarto-sidebar-section-6-label">Probability and averages</span></a>
+            <button type="button" class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-controls="quarto-sidebar-section-6" aria-expanded="true" aria-label="Toggle section: Probability and averages">
+              <i class="bi bi-chevron-right ms-2" aria-hidden="true"></i>
+            </button> 
+      </div>
+      <ul id="quarto-sidebar-section-6" aria-labelledby="quarto-sidebar-section-6-label" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../06-statistics/averages.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Probability, averages, and climatological estimates</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../05-neural-operators/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text" id="quarto-sidebar-section-7-label">Neural Operators</span></a>
+            <button type="button" class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" aria-controls="quarto-sidebar-section-7" aria-expanded="true" aria-label="Toggle section: Neural Operators">
+              <i class="bi bi-chevron-right ms-2" aria-hidden="true"></i>
+            </button> 
+      </div>
+      <ul id="quarto-sidebar-section-7" aria-labelledby="quarto-sidebar-section-7-label" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../05-neural-operators/spectral-operators.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Integral operators, symmetries, and learned maps</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <button type="button" class="sidebar-item-text sidebar-item-toggle sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" aria-controls="quarto-sidebar-section-8" aria-expanded="true">
+ <span class="menu-text" id="quarto-sidebar-section-8-label">Appendices</span><i class="bi bi-chevron-right" aria-hidden="true"></i></button>
+      </div>
+      <ul id="quarto-sidebar-section-8" aria-labelledby="quarto-sidebar-section-8-label" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../01-vector-calculus/integrals.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">A</span>&nbsp; <span class="chapter-title">Vector integrals</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../01-vector-calculus/change-of-variables.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">B</span>&nbsp; <span class="chapter-title">Change of variables</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../01-vector-calculus/theorems.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">C</span>&nbsp; <span class="chapter-title">Integral theorems</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../02-harmonic-analysis/fourier-transform.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">D</span>&nbsp; <span class="chapter-title">Fourier transform</span></span></a>
+  </div>
+</li>
+      </ul>
   </li>
     </ul>
     </div>
@@ -340,22 +404,20 @@ window.Quarto = {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#definition" id="toc-definition" class="nav-link active" data-scroll-target="#definition"><span class="header-section-number">9.1</span> Definition</a></li>
-  <li><a href="#orthogonality-and-completeness" id="toc-orthogonality-and-completeness" class="nav-link" data-scroll-target="#orthogonality-and-completeness"><span class="header-section-number">9.2</span> Orthogonality and Completeness</a></li>
-  <li><a href="#low-degree-examples" id="toc-low-degree-examples" class="nav-link" data-scroll-target="#low-degree-examples"><span class="header-section-number">9.3</span> Low-degree Examples</a></li>
-  <li><a href="#addition-theorem" id="toc-addition-theorem" class="nav-link" data-scroll-target="#addition-theorem"><span class="header-section-number">9.4</span> Addition Theorem</a></li>
-  <li><a href="#convolution-on-s2" id="toc-convolution-on-s2" class="nav-link" data-scroll-target="#convolution-on-s2"><span class="header-section-number">9.5</span> Convolution on <span class="math inline">\(S^2\)</span></a></li>
-  <li><a href="#worked-example-expanding-cos2theta" id="toc-worked-example-expanding-cos2theta" class="nav-link" data-scroll-target="#worked-example-expanding-cos2theta"><span class="header-section-number">9.6</span> Worked Example: Expanding <span class="math inline">\(\cos^2\theta\)</span></a></li>
-  <li><a href="#worked-example-verifying-the-eigenvalue-equation" id="toc-worked-example-verifying-the-eigenvalue-equation" class="nav-link" data-scroll-target="#worked-example-verifying-the-eigenvalue-equation"><span class="header-section-number">9.7</span> Worked Example: Verifying the Eigenvalue Equation</a></li>
+  <li><a href="#angular-separation-and-legendres-equation" id="toc-angular-separation-and-legendres-equation" class="nav-link active" data-scroll-target="#angular-separation-and-legendres-equation"><span class="header-section-number">8.1</span> Angular separation and Legendre’s equation</a></li>
+  <li><a href="#polynomial-normalization-and-associated-functions" id="toc-polynomial-normalization-and-associated-functions" class="nav-link" data-scroll-target="#polynomial-normalization-and-associated-functions"><span class="header-section-number">8.2</span> Polynomial normalization and associated functions</a></li>
+  <li><a href="#spherical-harmonic-expansion-and-parseval" id="toc-spherical-harmonic-expansion-and-parseval" class="nav-link" data-scroll-target="#spherical-harmonic-expansion-and-parseval"><span class="header-section-number">8.3</span> Spherical harmonic expansion and Parseval</a></li>
+  <li><a href="#zonal-means-tangent-vectors-and-isotropy" id="toc-zonal-means-tangent-vectors-and-isotropy" class="nav-link" data-scroll-target="#zonal-means-tangent-vectors-and-isotropy"><span class="header-section-number">8.4</span> Zonal means, tangent vectors, and isotropy</a></li>
+  <li><a href="#chapter-summary-and-self-test" id="toc-chapter-summary-and-self-test" class="nav-link" data-scroll-target="#chapter-summary-and-self-test"><span class="header-section-number">8.5</span> Chapter summary and self-test</a></li>
   </ul>
 </nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content" tabindex="-1">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="Breadcrumbs"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../02-harmonic-analysis/index.html">Harmonic Analysis</a></li><li class="breadcrumb-item"><a href="../02-harmonic-analysis/spherical-harmonics.html"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Spherical Harmonics</span></a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="Breadcrumbs"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../02-harmonic-analysis/index.html">Harmonic Analysis</a></li><li class="breadcrumb-item"><a href="../02-harmonic-analysis/spherical-harmonics.html"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Legendre polynomials and spherical harmonics</span></a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Spherical Harmonics</span></h1>
+<h1 class="title"><span id="ch-harmonics" class="quarto-section-identifier"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Legendre polynomials and spherical harmonics</span></span></h1>
 </div>
 
 
@@ -372,82 +434,110 @@ window.Quarto = {
 </header>
 
 
-<p>The spherical harmonics are the eigenfunctions of the Laplace-Beltrami operator <span class="math inline">\(\Delta_{S^2}\)</span> on <span class="math inline">\(S^2\)</span>, playing the role of <span class="math inline">\(e^{inx}\)</span> on the sphere. They are the instance of the Sturm-Liouville framework (see the function spaces section) for the operator <span class="math inline">\(-\Delta_{S^2}\)</span> with the standard <span class="math inline">\(L^2(S^2)\)</span> inner product.</p>
-<hr>
-<section id="definition" class="level2" data-number="9.1">
-<h2 data-number="9.1" class="anchored" data-anchor-id="definition"><span class="header-section-number">9.1</span> Definition</h2>
-<p>In spherical coordinates <span class="math inline">\((\theta, \phi)\)</span> with <span class="math inline">\(\theta \in [0,\pi]\)</span> (colatitude) and <span class="math inline">\(\phi \in [0, 2\pi)\)</span> (longitude), the spherical harmonics are</p>
-<p><span class="math display">\[Y_l^m(\theta, \phi) = \sqrt{\frac{(2l+1)}{4\pi}\frac{(l-m)!}{(l+m)!}}\, P_l^m(\cos\theta)\, e^{im\phi},\]</span></p>
-<p>where <span class="math inline">\(l = 0, 1, 2, \ldots\)</span> is the degree, <span class="math inline">\(m = -l, \ldots, l\)</span> is the order, and <span class="math inline">\(P_l^m\)</span> are the associated Legendre functions with the Condon–Shortley phase. For <span class="math inline">\(m\ge0\)</span>, <span class="math inline">\(P_l^m(t)=(-1)^m(1-t^2)^{m/2}d^mP_l(t)/dt^m\)</span>. Negative orders obey <span class="math inline">\(Y_l^{-m}=(-1)^m\overline{Y_l^m}\)</span>. There are <span class="math inline">\(2l+1\)</span> harmonics of each degree, and infinitely many degrees.</p>
-<p><strong>Eigenvalue equation.</strong> The spherical harmonics satisfy</p>
-<p><span class="math display">\[\Delta_{S^2} Y_l^m = -l(l+1)\, Y_l^m.\]</span></p>
-<p>The eigenvalue <span class="math inline">\(-l(l+1)\)</span> depends only on degree <span class="math inline">\(l\)</span>, not order <span class="math inline">\(m\)</span>: each eigenspace has dimension <span class="math inline">\(2l+1\)</span>.</p>
-<p><em>Further reading: <span class="citation" data-cites="Kreyszig2011aem">Kreyszig (<a href="#ref-Kreyszig2011aem" role="doc-biblioref">2011</a>)</span>, Secs. 12.10-12.11 (Laplace’s equation in spherical coordinates, Legendre polynomials, and associated Legendre functions).</em></p>
-<hr>
+<!-- Generated by presentations/mathematical-prerequisites/sync_book.py; edit chapters/*.md and run build.py --sync-book. -->
+<section id="angular-separation-and-legendres-equation" class="level2" data-number="8.1">
+<h2 data-number="8.1" class="anchored" data-anchor-id="angular-separation-and-legendres-equation"><span class="header-section-number">8.1</span> Angular separation and Legendre’s equation</h2>
+<p><strong>Result and motivation.</strong> Spherical harmonics are the globally regular eigenfunctions of the spherical Laplacian. Longitude periodicity and pole regularity quantize their two indices. Sources: <span class="citation" data-cites="ArfkenWeber2005">(<a href="#ref-ArfkenWeber2005" role="doc-biblioref">Arfken and Weber 2005, secs. 9.3-9.5, 12.1-12.6</a>)</span>.</p>
+<p>Seek <span class="math inline">\(\Delta_\Omega Y=-\Lambda Y\)</span> on the unit sphere, where <span class="math inline">\(\Lambda\)</span> is dimensionless and <span class="math inline">\(Y(\theta,\lambda)=\Theta(\theta)\Phi(\lambda)\)</span>. Substitution into (M3.5) separates the longitude equation <span class="math inline">\(\Phi''+m^2\Phi=0\)</span>. Single-valued <span class="math inline">\(2\pi\)</span>-periodicity requires an integer <span class="math inline">\(m\)</span>, and choose <span class="math inline">\(\Phi=e^{im\lambda}\)</span>. The remaining equation, written in <span class="math inline">\(\mu=\cos\theta\)</span>, is</p>
+<p><span class="math display">\[
+\frac{d}{d\mu}\left[(1-\mu^2)\frac{d\Theta}{d\mu}\right]
++\left[\Lambda-\frac{m^2}{1-\mu^2}\right]\Theta=0.
+\tag{M8.1}
+\]</span></p>
+<p>For <span class="math inline">\(m=0\)</span>, insert a power series <span class="math inline">\(\Theta=\sum_{j\ge0}a_j\mu^j\)</span>. Equal powers give</p>
+<p><span class="math display">\[
+a_{j+2}=\frac{j(j+1)-\Lambda}{(j+2)(j+1)}a_j.
+\tag{M8.2}
+\]</span></p>
+<p>If <span class="math inline">\(\Lambda=\ell(\ell+1)\)</span> for <span class="math inline">\(\ell\in\mathbb N_0\)</span>, one parity branch terminates at degree <span class="math inline">\(\ell\)</span>. Its normalization <span class="math inline">\(P_\ell(1)=1\)</span> defines the Legendre polynomial <span class="math inline">\(P_\ell\)</span>. The other independent solution is singular at an endpoint. The global regularity theorem for (M8.1) selects these discrete eigenvalues; the recurrence exhibits the regular polynomial solutions but is not by itself a proof that all other <span class="math inline">\(\Lambda\)</span> fail both endpoint conditions. For integer <span class="math inline">\(m\ne0\)</span>, admissible degrees satisfy <span class="math inline">\(\ell\ge|m|\)</span>.</p>
+<p>For <span class="math inline">\(m=0\)</span> the Legendre equation has singular Sturm-Liouville endpoints because <span class="math inline">\(p=1-\mu^2\)</span> vanishes at <span class="math inline">\(\pm1\)</span>. The boundary condition is regularity of the scalar on the sphere, rather than arbitrary Dirichlet data at coordinate poles.</p>
 </section>
-<section id="orthogonality-and-completeness" class="level2" data-number="9.2">
-<h2 data-number="9.2" class="anchored" data-anchor-id="orthogonality-and-completeness"><span class="header-section-number">9.2</span> Orthogonality and Completeness</h2>
-<p>The <span class="math inline">\(\{Y_l^m\}\)</span> form an ONB for <span class="math inline">\(L^2(S^2)\)</span> in the sense of the function spaces section. The specific orthonormality relation is</p>
-<p><span class="math display">\[\int_{S^2} Y_l^m(\theta,\phi)\, \overline{Y_{l'}^{m'}(\theta,\phi)}\, d\Omega = \delta_{ll'}\delta_{mm'},\]</span></p>
-<p>where <span class="math inline">\(d\Omega = \sin\theta\, d\theta\, d\phi\)</span>. The expansion and Parseval identity follow from the general ONB theory:</p>
-<p><span class="math display">\[f(\theta,\phi) = \sum_{l=0}^{\infty}\sum_{m=-l}^{l} \hat{f}_l^m\, Y_l^m(\theta,\phi), \qquad \hat{f}_l^m = \int_{S^2} f\, \overline{Y_l^m}\, d\Omega, \qquad \int_{S^2} |f|^2\, d\Omega = \sum_{l,m} |\hat{f}_l^m|^2.\]</span></p>
-<p>This is the spherical harmonic transform, the analogue of the Fourier series on <span class="math inline">\(S^2\)</span>. Its numerical evaluation, Gaussian grids, and sampling conditions are developed in <a href="../03-pdes/spectral-methods.html#sec-gaussian-quadrature">spectral numerical methods</a>.</p>
-<p><em>Further reading: <span class="citation" data-cites="Kreyszig2011aem">Kreyszig (<a href="#ref-Kreyszig2011aem" role="doc-biblioref">2011</a>)</span>, Sec. 12.11 (orthogonality of Legendre polynomials, basis for the expansion).</em></p>
-<hr>
+<section id="polynomial-normalization-and-associated-functions" class="level2" data-number="8.2">
+<h2 data-number="8.2" class="anchored" data-anchor-id="polynomial-normalization-and-associated-functions"><span class="header-section-number">8.2</span> Polynomial normalization and associated functions</h2>
+<p><strong>Result and motivation.</strong> Explicit normalization and phase conventions make coefficients comparable. Associated Legendre functions supply the latitude dependence for nonzero longitude order. Sources: <span class="citation" data-cites="ArfkenWeber2005">(<a href="#ref-ArfkenWeber2005" role="doc-biblioref">Arfken and Weber 2005, secs. 12.2–12.5</a>)</span>.</p>
+<p>Rodrigues’ formula, the first polynomials, and their orthogonality are</p>
+<p><span class="math display">\[
+\begin{aligned}
+P_\ell(\mu)&amp;=\frac1{2^\ell\ell!}\frac{d^\ell}{d\mu^\ell}(\mu^2-1)^\ell,\\
+P_0&amp;=1,\quad P_1=\mu,\quad P_2=\tfrac12(3\mu^2-1),\\
+\int_{-1}^1P_\ell(\mu)P_j(\mu)d\mu&amp;=\frac2{2\ell+1}\delta_{\ell j}.
+\end{aligned}
+\tag{M8.3}
+\]</span></p>
+<p>Orthogonality for different degrees follows by multiplying their differential equations, subtracting, and integrating; the boundary factor <span class="math inline">\(1-\mu^2\)</span> makes the regular polynomial boundary terms zero. The norm can also be derived from Rodrigues. The leading coefficient of <span class="math inline">\(P_\ell\)</span> is <span class="math inline">\(a_\ell=(2\ell)!/[2^\ell(\ell!)^2]\)</span>. Since <span class="math inline">\(P_\ell-a_\ell\mu^\ell\)</span> has lower degree, orthogonality gives <span class="math inline">\(\int P_\ell^2=a_\ell\int P_\ell\mu^\ell\)</span>. Define <span class="math inline">\(I_\ell=\int_{-1}^1(1-\mu^2)^\ell d\mu\)</span>. Integrating Rodrigues by parts <span class="math inline">\(\ell\)</span> times gives <span class="math inline">\(\int P_\ell\mu^\ell=2^{-\ell}I_\ell\)</span>: all endpoint terms vanish and <span class="math inline">\(d^\ell\mu^\ell/d\mu^\ell=\ell!\)</span>.</p>
+<p>For <span class="math inline">\(\ell\ge1\)</span>, integrate the derivative of <span class="math inline">\(\mu(1-\mu^2)^\ell\)</span> over <span class="math inline">\([-1,1]\)</span> to get <span class="math inline">\(0=I_\ell-2\ell(I_{\ell-1}-I_\ell)\)</span>. Thus <span class="math inline">\(I_\ell=2\ell I_{\ell-1}/(2\ell+1)\)</span> with <span class="math inline">\(I_0=2\)</span>. Iterating gives <span class="math inline">\(I_\ell=2^{2\ell+1}(\ell!)^2/(2\ell+1)!\)</span>, and the norm is <span class="math inline">\(a_\ell2^{-\ell}I_\ell=2/(2\ell+1)\)</span>.</p>
+<p>For integer <span class="math inline">\(0\le m\le\ell\)</span>, choose the Condon-Shortley phase by defining</p>
+<p><span class="math display">\[
+P_\ell^m(\mu)=(-1)^m(1-\mu^2)^{m/2}\frac{d^mP_\ell}{d\mu^m},
+\qquad
+\int_{-1}^1(P_\ell^m)^2d\mu
+=\frac2{2\ell+1}\frac{(\ell+m)!}{(\ell-m)!}.
+\tag{M8.4}
+\]</span></p>
+<p>Differentiating Legendre’s equation <span class="math inline">\(m\)</span> times and multiplying by <span class="math inline">\((1-\mu^2)^{m/2}\)</span> gives (M8.1). The associated-function norm in (M8.4) is quoted from AW, Section 12.5; its repeated-integration proof is not reproduced here. The factor <span class="math inline">\((1-\mu^2)^{m/2}=\sin^m\theta\)</span> enforces the required vanishing of a regular scalar’s nonzero longitude order at the poles. Odd-<span class="math inline">\(m\)</span> associated functions are not polynomials in <span class="math inline">\(\mu\)</span>.</p>
+<p>A stable degree recurrence follows from Rodrigues or the generating function: <span class="math inline">\((\ell+1)P_{\ell+1}=(2\ell+1)\mu P_\ell-\ell P_{\ell-1}\)</span>. It constructs all degrees from <span class="math inline">\(P_0,P_1\)</span>; high-degree numerical algorithms still need controlled normalization to avoid overflow.</p>
 </section>
-<section id="low-degree-examples" class="level2" data-number="9.3">
-<h2 data-number="9.3" class="anchored" data-anchor-id="low-degree-examples"><span class="header-section-number">9.3</span> Low-degree Examples</h2>
-<ul>
-<li><span class="math inline">\(Y_0^0 = \frac{1}{\sqrt{4\pi}}\)</span>: constant function, <span class="math inline">\(l=0\)</span>.</li>
-<li><span class="math inline">\(Y_1^0 = \sqrt{\frac{3}{4\pi}}\cos\theta\)</span>: proportional to <span class="math inline">\(z/r\)</span>, the north-south dipole.</li>
-<li><span class="math inline">\(Y_1^{\pm 1} = \mp\sqrt{\frac{3}{8\pi}}\sin\theta\, e^{\pm i\phi}\)</span>: equatorial dipoles.</li>
-</ul>
-<p>Degree <span class="math inline">\(l\)</span> sets the Laplacian eigenvalue and an angular scale of order <span class="math inline">\(1/l\)</span> for large <span class="math inline">\(l\)</span>. The order <span class="math inline">\(m\)</span> sets the longitude dependence. A single oscillation count does not describe every harmonic at fixed degree.</p>
-<hr>
+<section id="spherical-harmonic-expansion-and-parseval" class="level2" data-number="8.3">
+<h2 data-number="8.3" class="anchored" data-anchor-id="spherical-harmonic-expansion-and-parseval"><span class="header-section-number">8.3</span> Spherical harmonic expansion and Parseval</h2>
+<p><strong>Result and motivation.</strong> The spherical harmonic transform is longitude Fourier analysis coupled to weighted latitude analysis. Degree measures total angular scale; order measures longitude variation. Sources: <span class="citation" data-cites="ArfkenWeber2005">(<a href="#ref-ArfkenWeber2005" role="doc-biblioref">Arfken and Weber 2005, secs. 12.5–12.6</a>)</span>.</p>
+<p>For <span class="math inline">\(m\ge0\)</span>, define</p>
+<p><span class="math display">\[
+Y_\ell^m(\theta,\lambda)=N_{\ell m}P_\ell^m(\cos\theta)e^{im\lambda},
+\qquad N_{\ell m}=\left[\frac{2\ell+1}{4\pi}\frac{(\ell-m)!}{(\ell+m)!}\right]^{1/2},
+\qquad Y_\ell^{-m}=(-1)^m\overline{Y_\ell^m}.
+\tag{M8.5}
+\]</span></p>
+<p>Degree is <span class="math inline">\(\ell=0,1,\ldots\)</span> and order is <span class="math inline">\(-\ell\le m\le\ell\)</span>. Combining longitude orthogonality with (M8.4) gives</p>
+<p><span class="math display">\[
+\int_{S^2}Y_\ell^m\overline{Y_j^n}d\Omega=\delta_{\ell j}\delta_{mn},
+\qquad \Delta_sY_\ell^m=-\frac{\ell(\ell+1)}{R^2}Y_\ell^m.
+\tag{M8.6}
+\]</span></p>
+<p>The symbol <span class="math inline">\(S^2\)</span> denotes the unit sphere; these angular functions are also evaluated on <span class="math inline">\(S_R^2\)</span>. They are normalized under <span class="math inline">\(d\Omega\)</span>, not physical area <span class="math inline">\(dA\)</span>. In particular <span class="math inline">\(Y_0^0=1/\sqrt{4\pi}\)</span> and <span class="math inline">\(Y_1^0=\sqrt{3/(4\pi)}\cos\theta\)</span>.</p>
+<p>For <span class="math inline">\(f\in L^2(S^2,d\Omega)\)</span>, completeness gives</p>
+<p><span class="math display">\[
+\begin{aligned}
+f&amp;=\sum_{\ell=0}^{\infty}\sum_{m=-\ell}^{\ell}f_\ell^mY_\ell^m,
+&amp; f_\ell^m&amp;=\int_{S^2}f\overline{Y_\ell^m}d\Omega,\\
+\int_{S^2}|f|^2d\Omega&amp;=\sum_{\ell,m}|f_\ell^m|^2,
+&amp; \langle f\rangle_A&amp;=f_0^0/\sqrt{4\pi}.
+\end{aligned}
+\tag{M8.7}
+\]</span></p>
+<p>The expansion converges in <span class="math inline">\(L^2\)</span>; smooth fields admit stronger convergence. Real <span class="math inline">\(f\)</span> obeys <span class="math inline">\(f_\ell^{-m}=(-1)^m\overline{f_\ell^m}\)</span>. A cutoff <span class="math inline">\(0\le\ell\le L\)</span> retains <span class="math inline">\((L+1)^2\)</span> basis functions, or the same number of independent real coefficients for a real field. The physical inverse length is approximately <span class="math inline">\(\sqrt{\ell(\ell+1)}/R\)</span>; degree zero is the mean, not a finite wavelength.</p>
+<p>For <span class="math inline">\(f=\mu^2\)</span>, equation (M8.3) gives <span class="math inline">\(\mu^2=P_0/3+2P_2/3\)</span>. Hence <span class="math inline">\(f_0^0=\sqrt{4\pi}/3\)</span>, <span class="math inline">\(f_2^0=(2/3)\sqrt{4\pi/5}\)</span>, and all other coefficients vanish. The area mean is <span class="math inline">\(1/3\)</span>. Parseval gives <span class="math inline">\(\int\mu^4d\Omega=4\pi/5\)</span>, agreeing with direct integration.</p>
 </section>
-<section id="addition-theorem" class="level2" data-number="9.4">
-<h2 data-number="9.4" class="anchored" data-anchor-id="addition-theorem"><span class="header-section-number">9.4</span> Addition Theorem</h2>
-<p>For any two directions <span class="math inline">\(\hat{\mathbf{r}}, \hat{\mathbf{r}}' \in S^2\)</span> with angle <span class="math inline">\(\gamma\)</span> between them:</p>
-<p><span class="math display">\[P_l(\cos\gamma) = \frac{4\pi}{2l+1}\sum_{m=-l}^{l} Y_l^m(\hat{\mathbf{r}})\, \overline{Y_l^m(\hat{\mathbf{r}}')},\]</span></p>
-<p>where <span class="math inline">\(P_l\)</span> is the Legendre polynomial of degree <span class="math inline">\(l\)</span>. This identity is used to express rotationally symmetric kernels (such as Green’s functions on <span class="math inline">\(S^2\)</span>) in terms of spherical harmonics.</p>
-<p><em>Further reading: <span class="citation" data-cites="Kreyszig2011aem">Kreyszig (<a href="#ref-Kreyszig2011aem" role="doc-biblioref">2011</a>)</span>, Sec. 12.11 (Legendre polynomials and their properties).</em></p>
-<hr>
+<section id="zonal-means-tangent-vectors-and-isotropy" class="level2" data-number="8.4">
+<h2 data-number="8.4" class="anchored" data-anchor-id="zonal-means-tangent-vectors-and-isotropy"><span class="header-section-number">8.4</span> Zonal means, tangent vectors, and isotropy</h2>
+<p><strong>Result and motivation.</strong> Longitude averaging keeps only order zero. Tangent vectors need geometric basis functions, while rotationally invariant scalar filters must act identically on all orders of a degree. Sources: <span class="citation" data-cites="ArfkenWeber2005">(<a href="#ref-ArfkenWeber2005" role="doc-biblioref">Arfken and Weber 2005, secs. 12.6, 12.8, 12.11</a>)</span>.</p>
+<p>The zonal mean is <span class="math inline">\(\overline f(\mu)=(2\pi)^{-1}\int_0^{2\pi}f(\mu,\lambda)d\lambda\)</span>. Because the average of <span class="math inline">\(e^{im\lambda}\)</span> is zero for <span class="math inline">\(m\ne0\)</span>, only <span class="math inline">\(m=0\)</span> survives. For a profile use <span class="math inline">\(b_\ell(\mu)=\sqrt{2\ell+1}P_\ell(\mu)\)</span>, orthonormal under <span class="math inline">\(d\mu/2\)</span>. Then <span class="math inline">\(\overline f=\sum_\ell a_\ell b_\ell\)</span> with <span class="math inline">\(a_\ell=\frac12\int_{-1}^1\overline f b_\ell d\mu\)</span>. A scalar profile and an eastward velocity component have different pole regularity: an arbitrary scalar Legendre expansion of speed does not by itself define a smooth tangent vector field.</p>
+<p>For <span class="math inline">\(\ell\ge1\)</span>, dimensionless tangent vector harmonics are</p>
+<p><span class="math display">\[
+\mathbf E_\ell^m=\frac{R\nabla_sY_\ell^m}{\sqrt{\ell(\ell+1)}},
+\qquad
+\mathbf B_\ell^m=\mathbf e_r\times\mathbf E_\ell^m.
+\tag{M8.8}
+\]</span></p>
+<p>Integration by parts and (M8.6) show unit norms under <span class="math inline">\(d\Omega\)</span>. The gradient family is curl-free on the surface; the rotated-gradient family is divergence-free. AW’s vector harmonics also include radial components and use a coupled angular-momentum convention. Equation (M8.8) specifies the tangent gradient/rotated-gradient convention used here; its normalization follows from (M3.8) and (M8.6), rather than from equating names across conventions.</p>
+<p>For a smooth tangent field <span class="math inline">\(\mathbf v\)</span>, let <span class="math inline">\(\delta=\nabla_s\cdot\mathbf v\)</span> and <span class="math inline">\(\zeta=(\nabla\times\mathbf v)\cdot\mathbf e_r\)</span>. Both have zero area integral by the surface divergence and Stokes identities. Scalar harmonic inversion therefore supplies zero-mean potentials <span class="math inline">\(\chi,\psi\)</span> with <span class="math inline">\(\Delta_s\chi=\delta\)</span> and <span class="math inline">\(\Delta_s\psi=\zeta\)</span>, by dividing each degree-<span class="math inline">\(\ell\ge1\)</span> coefficient by <span class="math inline">\(-\ell(\ell+1)/R^2\)</span>. Then <span class="math inline">\(\mathbf w=\mathbf v-\nabla_s\chi-\mathbf e_r\times\nabla_s\psi\)</span> has zero divergence and radial curl. Such a field is called a harmonic tangent field.</p>
+<p>The sphere is simply connected: every closed loop can be continuously shrunk to a point. Stokes’ theorem therefore makes the integral of a curl-free smooth tangent field around every loop zero. Its line integral from a reference point is path-independent and defines a scalar <span class="math inline">\(h\)</span> with <span class="math inline">\(\mathbf w=\nabla_sh\)</span> (the potential-field argument of AW, Section 1.13). Since <span class="math inline">\(\Delta_sh=0\)</span>, (M3.8) gives <span class="math inline">\(\int|\nabla_sh|^2dA=0\)</span>, hence <span class="math inline">\(\mathbf w=0\)</span>. This proves the smooth decomposition <span class="math inline">\(\mathbf v=\nabla_s\chi+\mathbf e_r\times\nabla_s\psi\)</span>. In particular, a divergence-free smooth field has the streamfunction representation. Expanding these potentials gives the <span class="math inline">\(\mathbf E/\mathbf B\)</span> modes; the construction here only needs smooth fields. A velocity generated from a streamfunction uses the latter family; treating its coordinate components as unrelated scalars does not encode that constraint.</p>
+<p>For unit vectors <span class="math inline">\(\mathbf n,\mathbf n'\)</span> separated by angle <span class="math inline">\(\gamma\)</span>, with <span class="math inline">\(\cos\gamma=\mathbf n\cdot\mathbf n'\)</span>, the addition theorem is</p>
+<p><span class="math display">\[
+P_\ell(\mathbf n\cdot\mathbf n')
+=\frac{4\pi}{2\ell+1}\sum_{m=-\ell}^{\ell}Y_\ell^m(\mathbf n)\overline{Y_\ell^m(\mathbf n')}.
+\tag{M8.9}
+\]</span></p>
+<p>This theorem is quoted from AW, Section 12.8. It shows why an isotropic kernel, depending only on angular separation, multiplies every order at fixed degree by the same scalar. <a href="../05-neural-operators/spectral-operators.html">integral and learned operators</a> derives the multiplier. Keeping all orders through a degree gives a rotation-invariant subspace (triangular truncation). Selecting unrelated orders can break that property.</p>
 </section>
-<section id="convolution-on-s2" class="level2" data-number="9.5">
-<h2 data-number="9.5" class="anchored" data-anchor-id="convolution-on-s2"><span class="header-section-number">9.5</span> Convolution on <span class="math inline">\(S^2\)</span></h2>
-<p>A rotationally symmetric kernel <span class="math inline">\(K(\hat{\mathbf{r}} \cdot \hat{\mathbf{r}}')\)</span> (depending only on the angle between two points) acts by convolution on the sphere. By the addition theorem, convolution with such a kernel is diagonal in the spherical harmonic basis: each coefficient <span class="math inline">\(\hat{f}_l^m\)</span> is multiplied by a degree-dependent factor <span class="math inline">\(\hat{K}_l\)</span>. This diagonalization applies to rotationally symmetric kernels. More general position-dependent kernels need not act diagonally in this basis.</p>
-<p><em>Further reading: <span class="citation" data-cites="Tang2025gsno">Tang et al. (<a href="#ref-Tang2025gsno" role="doc-biblioref">2026</a>)</span> (GSNO paper, Sec. 2-3, where this diagonalization is the direct basis for the architecture); <span class="citation" data-cites="Bonev2023sfno">Bonev et al. (<a href="#ref-Bonev2023sfno" role="doc-biblioref">2023</a>)</span> (Sec. 2, spherical harmonic convolution in the SFNO).</em></p>
-<hr>
-</section>
-<section id="worked-example-expanding-cos2theta" class="level2" data-number="9.6">
-<h2 data-number="9.6" class="anchored" data-anchor-id="worked-example-expanding-cos2theta"><span class="header-section-number">9.6</span> Worked Example: Expanding <span class="math inline">\(\cos^2\theta\)</span></h2>
-<p>Expand <span class="math inline">\(f(\theta, \phi) = \cos^2\theta\)</span> in spherical harmonics.</p>
-<p>Since <span class="math inline">\(f\)</span> is independent of <span class="math inline">\(\phi\)</span>, only <span class="math inline">\(m = 0\)</span> terms appear. Write <span class="math inline">\(\cos^2\theta\)</span> in terms of Legendre polynomials using the identity <span class="math inline">\(P_2(t) = \frac{1}{2}(3t^2 - 1)\)</span>, so <span class="math inline">\(t^2 = \frac{1}{3}(2P_2(t) + 1)\)</span>:</p>
-<p><span class="math display">\[\cos^2\theta = \frac{1}{3}(2P_2(\cos\theta) + P_0(\cos\theta)).\]</span></p>
-<p>Converting to spherical harmonics with <span class="math inline">\(Y_l^0 = \sqrt{\frac{2l+1}{4\pi}} P_l(\cos\theta)\)</span>:</p>
-<p><span class="math display">\[P_0(\cos\theta) = \sqrt{4\pi}\, Y_0^0, \qquad P_2(\cos\theta) = \sqrt{\frac{4\pi}{5}}\, Y_2^0.\]</span></p>
-<p>Substituting:</p>
-<p><span class="math display">\[\cos^2\theta = \frac{\sqrt{4\pi}}{3}\, Y_0^0 + \frac{2}{3}\sqrt{\frac{4\pi}{5}}\, Y_2^0.\]</span></p>
-<p>Only <span class="math inline">\(l = 0\)</span> and <span class="math inline">\(l = 2\)</span> components are nonzero. This is expected: <span class="math inline">\(\cos^2\theta\)</span> is a degree-2 polynomial in <span class="math inline">\(\cos\theta\)</span>, and the <span class="math inline">\(l\)</span>-th spherical harmonic captures exactly degree-<span class="math inline">\(l\)</span> angular structure.</p>
-<hr>
-</section>
-<section id="worked-example-verifying-the-eigenvalue-equation" class="level2" data-number="9.7">
-<h2 data-number="9.7" class="anchored" data-anchor-id="worked-example-verifying-the-eigenvalue-equation"><span class="header-section-number">9.7</span> Worked Example: Verifying the Eigenvalue Equation</h2>
-<p>Verify <span class="math inline">\(\Delta_{S^2} Y_1^0 = -2\, Y_1^0\)</span> directly, where <span class="math inline">\(Y_1^0(\theta,\phi) = \sqrt{3/4\pi}\cos\theta\)</span>.</p>
-<p>Since <span class="math inline">\(Y_1^0\)</span> is independent of <span class="math inline">\(\phi\)</span>, the <span class="math inline">\(\partial_\phi^2\)</span> term vanishes:</p>
-<p><span class="math display">\[\Delta_{S^2} Y_1^0 = \frac{1}{\sin\theta}\frac{\partial}{\partial\theta}\!\left(\sin\theta\frac{\partial}{\partial\theta}\sqrt{\frac{3}{4\pi}}\cos\theta\right) = \sqrt{\frac{3}{4\pi}}\frac{1}{\sin\theta}\frac{\partial}{\partial\theta}(-\sin^2\theta) = \sqrt{\frac{3}{4\pi}}\frac{-2\sin\theta\cos\theta}{\sin\theta} = -2\,Y_1^0.\]</span></p>
-<p>This confirms <span class="math inline">\(\Delta_{S^2} Y_1^0 = -l(l+1)\, Y_1^0 = -1\cdot 2\, Y_1^0\)</span>.</p>
+<section id="chapter-summary-and-self-test" class="level2" data-number="8.5">
+<h2 data-number="8.5" class="anchored" data-anchor-id="chapter-summary-and-self-test"><span class="header-section-number">8.5</span> Chapter summary and self-test</h2>
+<p><strong>Main results and terms.</strong> Longitude periodicity selects integer order <span class="math inline">\(m\)</span>; global regularity selects integer degree <span class="math inline">\(\ell\ge|m|\)</span>. Rodrigues’ formula defines <span class="math inline">\(P_\ell\)</span>, and the Condon-Shortley choice fixes the phase of <span class="math inline">\(P_\ell^m\)</span>. Equations (M8.5)-(M8.7) define the normalized spherical harmonic transform, eigenvalues, and Parseval identity. Zonal means keep <span class="math inline">\(m=0\)</span>. Vector harmonics separate gradient and nondivergent tangent fields. The addition theorem underlies isotropic spherical kernels.</p>
+<p><strong>Self-test.</strong> Expand <span class="math inline">\(\mu^2-1/3\)</span> and solve <span class="math inline">\(\Delta_s\psi=A(\mu^2-1/3)\)</span> with zero mean. How many independent real degrees of freedom remain at cutoff <span class="math inline">\(L=2\)</span>? Why is a two-dimensional periodic FFT on latitude-longitude coordinates not spherical harmonic analysis?</p>
 
 
 <div id="refs" class="references csl-bib-body hanging-indent" role="list">
-<div id="ref-Bonev2023sfno" class="csl-entry" role="listitem">
-Bonev, Boris, Thorsten Kurth, Christian Hundt, et al. 2023. <span>“Spherical Fourier Neural Operators: Learning Stable Dynamics on the Sphere.”</span> <em>arXiv Preprint arXiv:2306.03838</em>. <a href="https://arxiv.org/abs/2306.03838">https://arxiv.org/abs/2306.03838</a>.
-</div>
-<div id="ref-Kreyszig2011aem" class="csl-entry" role="listitem">
-Kreyszig, Erwin. 2011. <em>Advanced Engineering Mathematics</em>. 10th ed. Wiley.
-</div>
-<div id="ref-Tang2025gsno" class="csl-entry" role="listitem">
-Tang, Hao, Hao Chen, and Chao Li. 2026. <span>“Generalized Spherical Neural Operators: Green’s Function Formulation.”</span> <em>International Conference on Learning Representations (ICLR)</em>. <a href="https://arxiv.org/abs/2512.10723">https://arxiv.org/abs/2512.10723</a>.
+<div id="ref-ArfkenWeber2005" class="csl-entry" role="listitem">
+Arfken, George B., and Hans J. Weber. 2005. <em>Mathematical Methods for Physicists</em>. 6th ed. Elsevier Academic Press.
 </div>
 </div>
 </section>
@@ -931,13 +1021,13 @@ Tang, Hao, Hao Chen, and Chao Li. 2026. <span>“Generalized Spherical Neural Op
   </script>
 <nav class="page-navigation" aria-label="Page">
   <div class="nav-page nav-page-previous">
-      <a href="../02-harmonic-analysis/fourier-transform.html" class="pagination-link" aria-label="Fourier Transform">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Fourier Transform</span></span>
+      <a href="../02-harmonic-analysis/fourier-series.html" class="pagination-link" aria-label="Fourier analysis">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Fourier analysis</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../03-pdes/index.html" class="pagination-link" aria-label="Partial Differential Equations">
-        <span class="nav-page-text">Partial Differential Equations</span> <i class="bi bi-arrow-right-short"></i>
+      <a href="../03-pdes/spectral-methods.html" class="pagination-link" aria-label="Spectral discretization, quadrature, and stability">
+        <span class="nav-page-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Spectral discretization, quadrature, and stability</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

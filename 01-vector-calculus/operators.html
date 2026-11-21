@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>1&nbsp; Differential Operators – Global Physical Climatology</title>
+<title>2&nbsp; Calculus, fluxes, and conservation – Global Physical Climatology</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -55,7 +55,7 @@ div.csl-indent {
 <script src="../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../">
-<link href="../01-vector-calculus/integrals.html" rel="next">
+<link href="../01-vector-calculus/spherical.html" rel="next">
 <link href="../01-vector-calculus/index.html" rel="prev">
 <script src="../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
@@ -137,7 +137,7 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="Breadcrumbs"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../01-vector-calculus/index.html">Vector Calculus</a></li><li class="breadcrumb-item"><a href="../01-vector-calculus/operators.html"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Differential Operators</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="Breadcrumbs"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../01-vector-calculus/index.html">Vector Calculus</a></li><li class="breadcrumb-item"><a href="../01-vector-calculus/operators.html"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Calculus, fluxes, and conservation</span></a></li></ol></nav>
         <a class="flex-grow-1" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -170,41 +170,66 @@ window.Quarto = {
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a href="../01-vector-calculus/index.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text" id="quarto-sidebar-section-1-label">Vector Calculus</span></a>
-            <button type="button" class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-controls="quarto-sidebar-section-1" aria-expanded="true" aria-label="Toggle section: Vector Calculus">
+            <a href="../00-mathematical-foundations/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text" id="quarto-sidebar-section-1-label">Mathematical foundations</span></a>
+            <button type="button" class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-controls="quarto-sidebar-section-1" aria-expanded="true" aria-label="Toggle section: Mathematical foundations">
               <i class="bi bi-chevron-right ms-2" aria-hidden="true"></i>
             </button> 
       </div>
       <ul id="quarto-sidebar-section-1" aria-labelledby="quarto-sidebar-section-1-label" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="../00-mathematical-foundations/language.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Mathematical language and linear algebra</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../01-vector-calculus/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text" id="quarto-sidebar-section-2-label">Vector Calculus</span></a>
+            <button type="button" class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-controls="quarto-sidebar-section-2" aria-expanded="true" aria-label="Toggle section: Vector Calculus">
+              <i class="bi bi-chevron-right ms-2" aria-hidden="true"></i>
+            </button> 
+      </div>
+      <ul id="quarto-sidebar-section-2" aria-labelledby="quarto-sidebar-section-2-label" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="../01-vector-calculus/operators.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Differential Operators</span></span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../01-vector-calculus/integrals.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Integrals</span></span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../01-vector-calculus/change-of-variables.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Change of Variables</span></span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../01-vector-calculus/theorems.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Integral Theorems</span></span></a>
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Calculus, fluxes, and conservation</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../01-vector-calculus/spherical.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Spherical Coordinates</span></span></a>
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Geometry and calculus on the sphere</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <button type="button" class="sidebar-item-text sidebar-item-toggle sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-controls="quarto-sidebar-section-3" aria-expanded="true">
+ <span class="menu-text" id="quarto-sidebar-section-3-label">Function spaces and differential equations</span><i class="bi bi-chevron-right" aria-hidden="true"></i></button>
+      </div>
+      <ul id="quarto-sidebar-section-3" aria-labelledby="quarto-sidebar-section-3-label" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../02-harmonic-analysis/function-spaces.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Function spaces, limits, and weak derivatives</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../03-pdes/eigenfunctions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Differential equations and eigenfunction theory</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../03-pdes/foundations.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Partial differential equations and physical models</span></span></a>
   </div>
 </li>
       </ul>
@@ -212,51 +237,28 @@ window.Quarto = {
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a href="../02-harmonic-analysis/index.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text" id="quarto-sidebar-section-2-label">Harmonic Analysis</span></a>
-            <button type="button" class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-controls="quarto-sidebar-section-2" aria-expanded="true" aria-label="Toggle section: Harmonic Analysis">
+ <span class="menu-text" id="quarto-sidebar-section-4-label">Harmonic Analysis</span></a>
+            <button type="button" class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-controls="quarto-sidebar-section-4" aria-expanded="true" aria-label="Toggle section: Harmonic Analysis">
               <i class="bi bi-chevron-right ms-2" aria-hidden="true"></i>
             </button> 
       </div>
-      <ul id="quarto-sidebar-section-2" aria-labelledby="quarto-sidebar-section-2-label" class="collapse list-unstyled sidebar-section depth1 show">  
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../02-harmonic-analysis/function-spaces.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Function Spaces</span></span></a>
-  </div>
-</li>
+      <ul id="quarto-sidebar-section-4" aria-labelledby="quarto-sidebar-section-4-label" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../02-harmonic-analysis/fourier-series.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Fourier Series</span></span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../02-harmonic-analysis/fourier-transform.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Fourier Transform</span></span></a>
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Fourier analysis</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../02-harmonic-analysis/spherical-harmonics.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Spherical Harmonics</span></span></a>
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Legendre polynomials and spherical harmonics</span></span></a>
   </div>
 </li>
-      </ul>
-  </li>
-        <li class="sidebar-item sidebar-item-section">
-      <div class="sidebar-item-container"> 
-            <a href="../03-pdes/index.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text" id="quarto-sidebar-section-3-label">Partial Differential Equations</span></a>
-            <button type="button" class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-controls="quarto-sidebar-section-3" aria-expanded="true" aria-label="Toggle section: Partial Differential Equations">
-              <i class="bi bi-chevron-right ms-2" aria-hidden="true"></i>
-            </button> 
-      </div>
-      <ul id="quarto-sidebar-section-3" aria-labelledby="quarto-sidebar-section-3-label" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../03-pdes/spectral-methods.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Spectral numerical methods</span></span></a>
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Spectral discretization, quadrature, and stability</span></span></a>
   </div>
 </li>
       </ul>
@@ -264,71 +266,133 @@ window.Quarto = {
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a href="../04-geophysical-fluid-dynamics/index.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text" id="quarto-sidebar-section-4-label">Geophysical Fluid Dynamics</span></a>
-            <button type="button" class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-controls="quarto-sidebar-section-4" aria-expanded="true" aria-label="Toggle section: Geophysical Fluid Dynamics">
+ <span class="menu-text" id="quarto-sidebar-section-5-label">Geophysical Fluid Dynamics</span></a>
+            <button type="button" class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-controls="quarto-sidebar-section-5" aria-expanded="true" aria-label="Toggle section: Geophysical Fluid Dynamics">
               <i class="bi bi-chevron-right ms-2" aria-hidden="true"></i>
             </button> 
       </div>
-      <ul id="quarto-sidebar-section-4" aria-labelledby="quarto-sidebar-section-4-label" class="collapse list-unstyled sidebar-section depth1 show">  
+      <ul id="quarto-sidebar-section-5" aria-labelledby="quarto-sidebar-section-5-label" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../04-geophysical-fluid-dynamics/kinematics.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Kinematics and mathematical language</span></span></a>
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Kinematics and mathematical language</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../04-geophysical-fluid-dynamics/motion.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Mass, forces, and the momentum equation</span></span></a>
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Mass, forces, and the momentum equation</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../04-geophysical-fluid-dynamics/rotating.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Rotation and large-scale balances</span></span></a>
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Rotation and large-scale balances</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../04-geophysical-fluid-dynamics/vorticity.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Vorticity and circulation</span></span></a>
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Vorticity and circulation</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../04-geophysical-fluid-dynamics/layer-pv.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">A shallow layer and the barotropic reduction</span></span></a>
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">A shallow layer and the barotropic reduction</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../04-geophysical-fluid-dynamics/barotropic.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">The BVE on a rotating sphere</span></span></a>
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">The BVE on a rotating sphere</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../04-geophysical-fluid-dynamics/turbulence.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Invariants, turbulence, and eddy-driven flow</span></span></a>
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Invariants, turbulence, and eddy-driven flow</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../04-geophysical-fluid-dynamics/inversion.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Spherical harmonics, inversion, and dissipation</span></span></a>
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Spherical harmonics, inversion, and dissipation</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../04-geophysical-fluid-dynamics/stochastic.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Stochastic stirring and the closed forced model</span></span></a>
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Stochastic stirring and the closed forced model</span></span></a>
   </div>
 </li>
       </ul>
   </li>
         <li class="sidebar-item sidebar-item-section">
-      <span class="sidebar-item-text sidebar-link text-start">
- <span class="menu-text">Neural Operators</span></span>
+      <div class="sidebar-item-container"> 
+            <a href="../06-statistics/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text" id="quarto-sidebar-section-6-label">Probability and averages</span></a>
+            <button type="button" class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-controls="quarto-sidebar-section-6" aria-expanded="true" aria-label="Toggle section: Probability and averages">
+              <i class="bi bi-chevron-right ms-2" aria-hidden="true"></i>
+            </button> 
+      </div>
+      <ul id="quarto-sidebar-section-6" aria-labelledby="quarto-sidebar-section-6-label" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../06-statistics/averages.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Probability, averages, and climatological estimates</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../05-neural-operators/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text" id="quarto-sidebar-section-7-label">Neural Operators</span></a>
+            <button type="button" class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" aria-controls="quarto-sidebar-section-7" aria-expanded="true" aria-label="Toggle section: Neural Operators">
+              <i class="bi bi-chevron-right ms-2" aria-hidden="true"></i>
+            </button> 
+      </div>
+      <ul id="quarto-sidebar-section-7" aria-labelledby="quarto-sidebar-section-7-label" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../05-neural-operators/spectral-operators.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Integral operators, symmetries, and learned maps</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <button type="button" class="sidebar-item-text sidebar-item-toggle sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" aria-controls="quarto-sidebar-section-8" aria-expanded="true">
+ <span class="menu-text" id="quarto-sidebar-section-8-label">Appendices</span><i class="bi bi-chevron-right" aria-hidden="true"></i></button>
+      </div>
+      <ul id="quarto-sidebar-section-8" aria-labelledby="quarto-sidebar-section-8-label" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../01-vector-calculus/integrals.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">A</span>&nbsp; <span class="chapter-title">Vector integrals</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../01-vector-calculus/change-of-variables.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">B</span>&nbsp; <span class="chapter-title">Change of variables</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../01-vector-calculus/theorems.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">C</span>&nbsp; <span class="chapter-title">Integral theorems</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../02-harmonic-analysis/fourier-transform.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">D</span>&nbsp; <span class="chapter-title">Fourier transform</span></span></a>
+  </div>
+</li>
+      </ul>
   </li>
     </ul>
     </div>
@@ -340,21 +404,20 @@ window.Quarto = {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#gradient" id="toc-gradient" class="nav-link active" data-scroll-target="#gradient"><span class="header-section-number">1.1</span> Gradient</a></li>
-  <li><a href="#jacobian" id="toc-jacobian" class="nav-link" data-scroll-target="#jacobian"><span class="header-section-number">1.2</span> Jacobian</a></li>
-  <li><a href="#directional-derivative" id="toc-directional-derivative" class="nav-link" data-scroll-target="#directional-derivative"><span class="header-section-number">1.3</span> Directional Derivative</a></li>
-  <li><a href="#divergence" id="toc-divergence" class="nav-link" data-scroll-target="#divergence"><span class="header-section-number">1.4</span> Divergence</a></li>
-  <li><a href="#curl" id="toc-curl" class="nav-link" data-scroll-target="#curl"><span class="header-section-number">1.5</span> Curl</a></li>
-  <li><a href="#laplacian" id="toc-laplacian" class="nav-link" data-scroll-target="#laplacian"><span class="header-section-number">1.6</span> Laplacian</a></li>
+  <li><a href="#derivatives-local-linearization-and-transport" id="toc-derivatives-local-linearization-and-transport" class="nav-link active" data-scroll-target="#derivatives-local-linearization-and-transport"><span class="header-section-number">2.1</span> Derivatives, local linearization, and transport</a></li>
+  <li><a href="#gradient-divergence-curl-and-laplacian" id="toc-gradient-divergence-curl-and-laplacian" class="nav-link" data-scroll-target="#gradient-divergence-curl-and-laplacian"><span class="header-section-number">2.2</span> Gradient, divergence, curl, and Laplacian</a></li>
+  <li><a href="#integration-jacobians-and-integral-theorems" id="toc-integration-jacobians-and-integral-theorems" class="nav-link" data-scroll-target="#integration-jacobians-and-integral-theorems"><span class="header-section-number">2.3</span> Integration, Jacobians, and integral theorems</a></li>
+  <li><a href="#from-a-balance-law-to-a-pde" id="toc-from-a-balance-law-to-a-pde" class="nav-link" data-scroll-target="#from-a-balance-law-to-a-pde"><span class="header-section-number">2.4</span> From a balance law to a PDE</a></li>
+  <li><a href="#chapter-summary-and-self-test" id="toc-chapter-summary-and-self-test" class="nav-link" data-scroll-target="#chapter-summary-and-self-test"><span class="header-section-number">2.5</span> Chapter summary and self-test</a></li>
   </ul>
 </nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content" tabindex="-1">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="Breadcrumbs"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../01-vector-calculus/index.html">Vector Calculus</a></li><li class="breadcrumb-item"><a href="../01-vector-calculus/operators.html"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Differential Operators</span></a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="Breadcrumbs"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../01-vector-calculus/index.html">Vector Calculus</a></li><li class="breadcrumb-item"><a href="../01-vector-calculus/operators.html"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Calculus, fluxes, and conservation</span></a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Differential Operators</span></h1>
+<h1 class="title"><span id="ch-calculus" class="quarto-section-identifier"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Calculus, fluxes, and conservation</span></span></h1>
 </div>
 
 
@@ -371,82 +434,117 @@ window.Quarto = {
 </header>
 
 
-<p>Let <span class="math inline">\(f : \mathbb{R}^3 \to \mathbb{R}\)</span> be a scalar field and <span class="math inline">\(\mathbf{F} : \mathbb{R}^3 \to \mathbb{R}^3\)</span> a vector field with components <span class="math inline">\(\mathbf{F} = (F_x, F_y, F_z)\)</span>.</p>
-<hr>
-<section id="gradient" class="level2" data-number="1.1">
-<h2 data-number="1.1" class="anchored" data-anchor-id="gradient"><span class="header-section-number">1.1</span> Gradient</h2>
-<p><strong>Definition (scalar field).</strong> The gradient of <span class="math inline">\(f : \mathbb{R}^3 \to \mathbb{R}\)</span> is the vector field</p>
-<p><span class="math display">\[\nabla f = \left(\frac{\partial f}{\partial x},\; \frac{\partial f}{\partial y},\; \frac{\partial f}{\partial z}\right).\]</span></p>
-<p><strong>Intuition.</strong> <span class="math inline">\(\nabla f(\mathbf{p})\)</span> points in the direction of steepest increase of <span class="math inline">\(f\)</span> at <span class="math inline">\(\mathbf{p}\)</span>. Its magnitude is the rate of change in that direction. Level sets of <span class="math inline">\(f\)</span> are everywhere perpendicular to <span class="math inline">\(\nabla f\)</span>.</p>
-<p><strong>Example.</strong> Let <span class="math inline">\(f(x, y) = x^2 + y^2\)</span>. Then <span class="math inline">\(\nabla f = (2x, 2y)\)</span>. At <span class="math inline">\(\mathbf{p} = (1, 1)\)</span>: <span class="math inline">\(\nabla f = (2, 2)\)</span>, pointing radially outward with magnitude <span class="math inline">\(2\sqrt{2}\)</span>.</p>
-<p><strong>Definition (vector field).</strong> The gradient of <span class="math inline">\(\mathbf{F} : \mathbb{R}^n \to \mathbb{R}^m\)</span> is the <span class="math inline">\(m \times n\)</span> tensor of partial derivatives</p>
-<p><span class="math display">\[(\nabla \mathbf{F})_{ij} = \frac{\partial F_i}{\partial x_j}.\]</span></p>
-<p>This is a second-order tensor (matrix). It maps a direction <span class="math inline">\(\hat{\mathbf{u}}\)</span> to the directional derivative <span class="math inline">\(D_{\hat{\mathbf{u}}} \mathbf{F} = (\nabla \mathbf{F})\,\hat{\mathbf{u}}\)</span>, generalizing the scalar case.</p>
-<p><strong>Example.</strong> Let <span class="math inline">\(\mathbf{F}(x, y) = (x^2 + y,\; xy)\)</span>. Then</p>
-<p><span class="math display">\[\nabla \mathbf{F} = \begin{pmatrix} 2x &amp; 1 \\ y &amp; x \end{pmatrix}.\]</span></p>
-<p>At <span class="math inline">\(\mathbf{p} = (1, 2)\)</span>: <span class="math inline">\(\nabla \mathbf{F} = \begin{pmatrix} 2 &amp; 1 \\ 2 &amp; 1 \end{pmatrix}\)</span>.</p>
-<p><em>Further reading: <span class="citation" data-cites="Kreyszig2011aem">Kreyszig (<a href="#ref-Kreyszig2011aem" role="doc-biblioref">2011</a>)</span>, Sec. 9.7 (scalar gradient and directional derivative); tensor gradient of vector fields is treated more fully in advanced calculus texts.</em></p>
-<hr>
+<!-- Generated by presentations/mathematical-prerequisites/sync_book.py; edit chapters/*.md and run build.py --sync-book. -->
+<section id="derivatives-local-linearization-and-transport" class="level2" data-number="2.1">
+<h2 data-number="2.1" class="anchored" data-anchor-id="derivatives-local-linearization-and-transport"><span class="header-section-number">2.1</span> Derivatives, local linearization, and transport</h2>
+<p><strong>Result and motivation.</strong> A derivative is a local linear approximation. Following a moving parcel introduces advection through the chain rule. Sources: <span class="citation" data-cites="ArfkenWeber2005">(<a href="#ref-ArfkenWeber2005" role="doc-biblioref">Arfken and Weber 2005, secs. 1.6, 5.5–5.7, 9.2</a>)</span>.</p>
+<p>For a scalar function <span class="math inline">\(f(x)\)</span>, <span class="math inline">\(f'(x)=\lim_{h\to0}[f(x+h)-f(x)]/h\)</span> when this limit exists. A partial derivative <span class="math inline">\(\partial_jf=\partial f/\partial x_j\)</span> holds all other variables fixed. Write <span class="math inline">\(f\in C^k\)</span> if its derivatives through order <span class="math inline">\(k\)</span> exist and are continuous. The notation <span class="math inline">\(r(h)=O(h^p)\)</span> means <span class="math inline">\(|r(h)|\le C|h|^p\)</span> for a constant <span class="math inline">\(C\)</span> and sufficiently small <span class="math inline">\(|h|\)</span>; <span class="math inline">\(r(h)=o(h)\)</span> means <span class="math inline">\(r(h)/h\to0\)</span>.</p>
+<p>A differentiable map <span class="math inline">\(\mathbf F:\mathbb R^n\to\mathbb R^m\)</span> has a Jacobian matrix <span class="math inline">\((D\mathbf F)_{ij}=\partial_jF_i\)</span> satisfying <span class="math inline">\(\mathbf F(\mathbf x+\mathbf h)=\mathbf F(\mathbf x)+D\mathbf F(\mathbf x)\mathbf h+o(|\mathbf h|)\)</span>. A scalar’s gradient is the vector <span class="math inline">\(\nabla f=(\partial_1f,\ldots,\partial_nf)\)</span>. Its Hessian <span class="math inline">\(H_f\)</span> is the matrix <span class="math inline">\((\partial_i\partial_jf)\)</span>. Taylor’s theorem for <span class="math inline">\(C^3\)</span> functions gives</p>
+<p><span class="math display">\[
+f(\mathbf x+\mathbf h)=f(\mathbf x)+\nabla f\cdot\mathbf h
++\tfrac12\mathbf h^{\mathsf T}H_f\mathbf h+O(|\mathbf h|^3).
+\tag{M2.1}
+\]</span></p>
+<p>The Hessian is symmetric for <span class="math inline">\(C^2\)</span> functions because mixed partial derivatives commute. A critical point has <span class="math inline">\(\nabla f=0\)</span>; a positive-definite Hessian at a critical point, meaning <span class="math inline">\(\mathbf h^{\mathsf T}H_f\mathbf h&gt;0\)</span> for every nonzero <span class="math inline">\(\mathbf h\)</span>, implies a strict local minimum.</p>
+<p>For differentiable one-variable functions, the product rule is <span class="math inline">\((fg)'=f'g+fg'\)</span> and the chain rule is <span class="math inline">\((f\circ g)'(x)=f'(g(x))g'(x)\)</span>, where <span class="math inline">\(f\circ g\)</span> means composition. The familiar derivatives <span class="math inline">\((e^x)'=e^x\)</span>, <span class="math inline">\((\sin x)'=\cos x\)</span>, and <span class="math inline">\((\cos x)'=-\sin x\)</span> follow from their defining series. A definite integral <span class="math inline">\(\int_a^b f(x)dx\)</span> is the limit of sums <span class="math inline">\(\sum_j f(\xi_j)\Delta x_j\)</span> as the largest partition width tends to zero, for continuous <span class="math inline">\(f\)</span>; <span class="math inline">\(\xi_j\)</span> is a point in the <span class="math inline">\(j\)</span>th subinterval. The fundamental theorem of calculus and the product rule give</p>
+<p><span class="math display">\[
+F'(x)=f(x)\ \Longrightarrow\ \int_a^b f(x)dx=F(b)-F(a),
+\qquad
+\int_a^b f g'\,dx=[fg]_a^b-\int_a^b f'g\,dx.
+\tag{M2.2}
+\]</span></p>
+<p>Here <span class="math inline">\([h]_a^b=h(b)-h(a)\)</span>; the second identity is integration by parts. For example, take <span class="math inline">\(f=x\)</span>, <span class="math inline">\(g'=e^x\)</span>, <span class="math inline">\(g=e^x\)</span> to obtain <span class="math inline">\(\int_0^1xe^x dx=[xe^x]_0^1-\int_0^1e^x dx=e-(e-1)=1\)</span>. The multivariable chain rule is the same local-linearization rule applied to a trajectory.</p>
+<p>Let <span class="math inline">\(\mathbf X(t)\)</span> be a parcel trajectory with <span class="math inline">\(d\mathbf X/dt=\mathbf u(\mathbf X,t)\)</span>. Applying the chain rule to <span class="math inline">\(q(\mathbf X(t),t)\)</span> gives the material derivative</p>
+<p><span class="math display">\[
+\frac{Dq}{Dt}:=\frac{d}{dt}q(\mathbf X(t),t)
+=\partial_tq+\mathbf u\cdot\nabla q.
+\tag{M2.3}
+\]</span></p>
+<p>The symbol <span class="math inline">\(:=\)</span> means “is defined as.” Local change <span class="math inline">\(\partial_tq\)</span> is measured at a fixed location; advection <span class="math inline">\(\mathbf u\cdot\nabla q\)</span> measures motion across spatial gradients. For constant speed <span class="math inline">\(c\)</span>, <span class="math inline">\(q(x,t)=q_0(x-ct)\)</span> satisfies <span class="math inline">\(\partial_tq+c\partial_xq=0\)</span> even while a fixed sensor sees a changing signal.</p>
 </section>
-<section id="jacobian" class="level2" data-number="1.2">
-<h2 data-number="1.2" class="anchored" data-anchor-id="jacobian"><span class="header-section-number">1.2</span> Jacobian</h2>
-<p><strong>Definition.</strong> For <span class="math inline">\(\mathbf{F} : \mathbb{R}^n \to \mathbb{R}^m\)</span>, the Jacobian matrix <span class="math inline">\(J_\mathbf{F}\)</span> is identical to <span class="math inline">\(\nabla \mathbf{F}\)</span>:</p>
-<p><span class="math display">\[J_\mathbf{F} = \begin{pmatrix} \dfrac{\partial F_1}{\partial x_1} &amp; \cdots &amp; \dfrac{\partial F_1}{\partial x_n} \\ \vdots &amp; \ddots &amp; \vdots \\ \dfrac{\partial F_m}{\partial x_1} &amp; \cdots &amp; \dfrac{\partial F_m}{\partial x_n} \end{pmatrix}.\]</span></p>
-<p>The Jacobian is the best linear approximation to <span class="math inline">\(\mathbf{F}\)</span> at a point: <span class="math inline">\(\mathbf{F}(\mathbf{p} + \mathbf{h}) \approx \mathbf{F}(\mathbf{p}) + J_\mathbf{F}(\mathbf{p})\,\mathbf{h}\)</span>.</p>
-<p><strong>Jacobian determinant.</strong> For square <span class="math inline">\(\mathbf{F} : \mathbb{R}^n \to \mathbb{R}^n\)</span>, <span class="math inline">\(\det(J_\mathbf{F})\)</span> measures local volume scaling under <span class="math inline">\(\mathbf{F}\)</span>. It appears in the change-of-variables formula:</p>
-<p><span class="math display">\[\int_{\mathbf{F}(V)} g(\mathbf{y})\, d\mathbf{y} = \int_V g(\mathbf{F}(\mathbf{x}))\,|\det J_\mathbf{F}(\mathbf{x})|\, d\mathbf{x}.\]</span></p>
-<p><strong>Example.</strong> The map to spherical coordinates <span class="math inline">\(\mathbf{F}(r, \theta, \phi) = (r\sin\theta\cos\phi,\; r\sin\theta\sin\phi,\; r\cos\theta)\)</span> has</p>
-<p><span class="math display">\[\det(J_\mathbf{F}) = r^2 \sin\theta,\]</span></p>
-<p>giving the volume element <span class="math inline">\(dV = r^2\sin\theta\, dr\, d\theta\, d\phi\)</span>.</p>
-<p><em>Further reading: <span class="citation" data-cites="Kreyszig2011aem">Kreyszig (<a href="#ref-Kreyszig2011aem" role="doc-biblioref">2011</a>)</span>, Sec. 9.6 (calculus review, change of variables) and Sec. 10.7 (Jacobian in the context of triple integrals).</em></p>
-<hr>
+<section id="gradient-divergence-curl-and-laplacian" class="level2" data-number="2.2">
+<h2 data-number="2.2" class="anchored" data-anchor-id="gradient-divergence-curl-and-laplacian"><span class="header-section-number">2.2</span> Gradient, divergence, curl, and Laplacian</h2>
+<p><strong>Result and motivation.</strong> Gradient measures directional change, divergence measures outward flux density, and curl measures circulation density. The scalar Laplacian is the divergence of a gradient. Sources: <span class="citation" data-cites="ArfkenWeber2005">(<a href="#ref-ArfkenWeber2005" role="doc-biblioref">Arfken and Weber 2005, secs. 1.6–1.9</a>)</span>.</p>
+<p>In right-handed Cartesian coordinates and for a <span class="math inline">\(C^1\)</span> vector field <span class="math inline">\(\mathbf F=(F_1,F_2,F_3)\)</span>, define</p>
+<p><span class="math display">\[
+\nabla\cdot\mathbf F=\sum_i\partial_iF_i,
+\qquad (\nabla\times\mathbf F)_i=\sum_{j,k}\epsilon_{ijk}\partial_jF_k,
+\qquad \Delta q=\nabla\cdot\nabla q=\sum_i\partial_i^2q.
+\tag{M2.4}
+\]</span></p>
+<p>For a unit direction <span class="math inline">\(\mathbf n\)</span>, <span class="math inline">\(\mathbf n\cdot\nabla q\)</span> is change per unit distance along <span class="math inline">\(\mathbf n\)</span>. For velocity, <span class="math inline">\(\nabla\cdot\mathbf u&gt;0\)</span> means a small parcel expands. The vorticity <span class="math inline">\(\boldsymbol\omega=\nabla\times\mathbf u\)</span> measures twice the local rigid rotation rate. Solid-body planar rotation <span class="math inline">\(\mathbf u=(-\Omega y,\Omega x,0)\)</span> has <span class="math inline">\(\nabla\cdot\mathbf u=0\)</span> and <span class="math inline">\(\boldsymbol\omega=(0,0,2\Omega)\)</span>; circulation is not the same as speed.</p>
+<p>Product differentiation and commuting mixed derivatives give</p>
+<p><span class="math display">\[
+\begin{aligned}
+\nabla\cdot(q\mathbf F)&amp;=\nabla q\cdot\mathbf F+q\nabla\cdot\mathbf F,\\
+\nabla\times\nabla q&amp;=0,\qquad \nabla\cdot(\nabla\times\mathbf F)=0,\\
+\nabla\times(\nabla\times\mathbf F)&amp;=\nabla(\nabla\cdot\mathbf F)-\Delta\mathbf F.
+\end{aligned}
+\tag{M2.5}
+\]</span></p>
+<p>The vector Laplacian in the last line acts on Cartesian components. These identities assume enough continuous derivatives. Curvilinear components require basis-variation terms; differentiating each spherical component as a Cartesian scalar is generally incorrect.</p>
 </section>
-<section id="directional-derivative" class="level2" data-number="1.3">
-<h2 data-number="1.3" class="anchored" data-anchor-id="directional-derivative"><span class="header-section-number">1.3</span> Directional Derivative</h2>
-<p><strong>Definition.</strong> The directional derivative of <span class="math inline">\(f\)</span> at <span class="math inline">\(\mathbf{p}\)</span> along unit vector <span class="math inline">\(\hat{\mathbf{u}}\)</span> is</p>
-<p><span class="math display">\[D_{\hat{\mathbf{u}}} f(\mathbf{p}) = \nabla f(\mathbf{p}) \cdot \hat{\mathbf{u}}.\]</span></p>
-<p>This is the rate of change of <span class="math inline">\(f\)</span> along <span class="math inline">\(\hat{\mathbf{u}}\)</span>. The gradient is the unique direction that maximizes <span class="math inline">\(D_{\hat{\mathbf{u}}} f\)</span>, with maximum value <span class="math inline">\(|\nabla f(\mathbf{p})|\)</span>.</p>
-<p><em>Further reading: <span class="citation" data-cites="Kreyszig2011aem">Kreyszig (<a href="#ref-Kreyszig2011aem" role="doc-biblioref">2011</a>)</span>, Sec. 9.7.</em></p>
-<hr>
+<section id="integration-jacobians-and-integral-theorems" class="level2" data-number="2.3">
+<h2 data-number="2.3" class="anchored" data-anchor-id="integration-jacobians-and-integral-theorems"><span class="header-section-number">2.3</span> Integration, Jacobians, and integral theorems</h2>
+<p><strong>Result and motivation.</strong> Conservation laws relate what crosses a boundary to what changes inside. Correct integration also fixes the weights in global means. Sources: <span class="citation" data-cites="ArfkenWeber2005">(<a href="#ref-ArfkenWeber2005" role="doc-biblioref">Arfken and Weber 2005, secs. 1.10-1.12, 2.1-2.2</a>)</span>.</p>
+<p>An integral sums a density over lengths, areas, or volumes. Write <span class="math inline">\(dV\)</span> for volume, <span class="math inline">\(dA\)</span> for surface area, and <span class="math inline">\(d\mathbf l\)</span> for an oriented tangent line element. Let <span class="math inline">\(V\subset\mathbb R^3\)</span> have a piecewise smooth closed boundary <span class="math inline">\(\partial V\)</span> with outward unit normal <span class="math inline">\(\mathbf n\)</span>. The divergence theorem is</p>
+<p><span class="math display">\[
+\int_V\nabla\cdot\mathbf F\,dV
+=\int_{\partial V}\mathbf F\cdot\mathbf n\,dA.
+\tag{M2.6}
+\]</span></p>
+<p>For an oriented smooth surface <span class="math inline">\(S\)</span> with boundary curve <span class="math inline">\(\partial S\)</span>, oriented by the right-hand rule, Stokes’ theorem is</p>
+<p><span class="math display">\[
+\int_S(\nabla\times\mathbf F)\cdot\mathbf n\,dA
+=\oint_{\partial S}\mathbf F\cdot d\mathbf l.
+\tag{M2.7}
+\]</span></p>
+<p>The circle on <span class="math inline">\(\oint\)</span> denotes integration around a closed curve. These identities require fields regular on the integration region; a singular vortex cannot be ignored inside it.</p>
+<p>A smooth invertible coordinate map <span class="math inline">\(\mathbf x=\mathbf X(\mathbf q)\)</span> changes volume by</p>
+<p><span class="math display">\[
+dV=\left|\det D\mathbf X(\mathbf q)\right|\,dq_1dq_2dq_3.
+\tag{M2.8}
+\]</span></p>
+<p>The determinant is the Jacobian factor: a small coordinate box maps to a parallelepiped spanned by <span class="math inline">\(\partial_{q_i}\mathbf X\,dq_i\)</span>. On a surface parametrized by <span class="math inline">\((a,b)\)</span>, its area factor is <span class="math inline">\(|\partial_a\mathbf X\times\partial_b\mathbf X|\)</span>. Coordinates are labels; these factors convert labels into physical measure.</p>
+<p>Substitute <span class="math inline">\(\mathbf F=f\nabla g\)</span> in (M2.6), with real <span class="math inline">\(C^2\)</span> functions <span class="math inline">\(f,g\)</span>, to obtain Green’s first identity,</p>
+<p><span class="math display">\[
+\int_V f\Delta g\,dV
+=\int_{\partial V}f\partial_ng\,dA-\int_V\nabla f\cdot\nabla g\,dV,
+\qquad \partial_ng=\mathbf n\cdot\nabla g.
+\tag{M2.9}
+\]</span></p>
+<p>This is multidimensional integration by parts. For complex <span class="math inline">\(f\)</span>, replace <span class="math inline">\(f\)</span> by <span class="math inline">\(\overline f\)</span> when constructing energy or adjoint identities. A boundary condition determines whether the boundary term vanishes.</p>
 </section>
-<section id="divergence" class="level2" data-number="1.4">
-<h2 data-number="1.4" class="anchored" data-anchor-id="divergence"><span class="header-section-number">1.4</span> Divergence</h2>
-<p><strong>Definition.</strong> The divergence of <span class="math inline">\(\mathbf{F}\)</span> is the scalar field</p>
-<p><span class="math display">\[\nabla \cdot \mathbf{F} = \frac{\partial F_x}{\partial x} + \frac{\partial F_y}{\partial y} + \frac{\partial F_z}{\partial z}.\]</span></p>
-<p><strong>Intuition.</strong> <span class="math inline">\(\nabla \cdot \mathbf{F}(\mathbf{p})\)</span> measures the net outward flux of <span class="math inline">\(\mathbf{F}\)</span> per unit volume at <span class="math inline">\(\mathbf{p}\)</span>. Positive divergence indicates a local source; negative indicates a sink; zero indicates incompressibility.</p>
-<p><strong>Example.</strong> Let <span class="math inline">\(\mathbf{F}(x, y, z) = (x, y, z)\)</span> (radial expansion). Then</p>
-<p><span class="math display">\[\nabla \cdot \mathbf{F} = 1 + 1 + 1 = 3.\]</span></p>
-<p>Uniform positive divergence everywhere: every point is a source.</p>
-<p><em>Further reading: <span class="citation" data-cites="Kreyszig2011aem">Kreyszig (<a href="#ref-Kreyszig2011aem" role="doc-biblioref">2011</a>)</span>, Sec. 9.8.</em></p>
-<hr>
+<section id="from-a-balance-law-to-a-pde" class="level2" data-number="2.4">
+<h2 data-number="2.4" class="anchored" data-anchor-id="from-a-balance-law-to-a-pde"><span class="header-section-number">2.4</span> From a balance law to a PDE</h2>
+<p><strong>Result and motivation.</strong> A local conservation PDE is the differential form of a balance for every fixed control volume. It distinguishes transport from sources. Sources: <span class="citation" data-cites="ArfkenWeber2005">(<a href="#ref-ArfkenWeber2005" role="doc-biblioref">Arfken and Weber 2005, secs. 1.7, 1.11, 9.8</a>)</span>; fluid interpretation: <span class="citation" data-cites="Vallis2006">(<a href="#ref-Vallis2006" role="doc-biblioref">Vallis 2006, secs. 1.2, 1.7</a>)</span>.</p>
+<p>Let <span class="math inline">\(q\)</span> be amount per unit volume, <span class="math inline">\(\mathbf J\)</span> its flux (amount per area per time), and <span class="math inline">\(s\)</span> its production per volume per time. For a fixed <span class="math inline">\(V\)</span>,</p>
+<p><span class="math display">\[
+\frac{d}{dt}\int_Vq\,dV=-\int_{\partial V}\mathbf J\cdot\mathbf n\,dA+\int_Vs\,dV
+\quad\Longrightarrow\quad
+\partial_tq+\nabla\cdot\mathbf J=s.
+\tag{M2.10}
+\]</span></p>
+<p>The implication uses (M2.6) and the fact that the integral of a continuous function over every small volume vanishes only if that function is zero. For an advected concentration with diffusion, <span class="math inline">\(\mathbf J=q\mathbf u-\kappa\nabla q\)</span>. Constant <span class="math inline">\(\kappa\)</span> gives</p>
+<p><span class="math display">\[
+\partial_tq+\mathbf u\cdot\nabla q+q\nabla\cdot\mathbf u
+=\kappa\Delta q+s.
+\tag{M2.11}
+\]</span></p>
+<p>When <span class="math inline">\(\nabla\cdot\mathbf u=0\)</span>, conservative and advective forms agree. Otherwise the compression term matters. A concentration per volume differs from a mixing ratio per unit mass; the latter uses mass continuity in its transport equation.</p>
 </section>
-<section id="curl" class="level2" data-number="1.5">
-<h2 data-number="1.5" class="anchored" data-anchor-id="curl"><span class="header-section-number">1.5</span> Curl</h2>
-<p><strong>Definition.</strong> The curl of <span class="math inline">\(\mathbf{F}\)</span> is the vector field</p>
-<p><span class="math display">\[\nabla \times \mathbf{F} = \begin{vmatrix} \hat{\mathbf{x}} &amp; \hat{\mathbf{y}} &amp; \hat{\mathbf{z}} \\ \partial_x &amp; \partial_y &amp; \partial_z \\ F_x &amp; F_y &amp; F_z \end{vmatrix} = \left(\frac{\partial F_z}{\partial y} - \frac{\partial F_y}{\partial z},\; \frac{\partial F_x}{\partial z} - \frac{\partial F_z}{\partial x},\; \frac{\partial F_y}{\partial x} - \frac{\partial F_x}{\partial y}\right).\]</span></p>
-<p><strong>Intuition.</strong> <span class="math inline">\(\nabla \times \mathbf{F}(\mathbf{p})\)</span> measures the infinitesimal rotation of <span class="math inline">\(\mathbf{F}\)</span> at <span class="math inline">\(\mathbf{p}\)</span>. Its direction is the axis of rotation (right-hand rule); its magnitude is twice the angular velocity. A field with <span class="math inline">\(\nabla \times \mathbf{F} = \mathbf{0}\)</span> everywhere is called irrotational.</p>
-<p><strong>Example.</strong> Let <span class="math inline">\(\mathbf{F}(x, y, z) = (-y, x, 0)\)</span>, solid-body rotation in the <span class="math inline">\(xy\)</span>-plane. Then</p>
-<p><span class="math display">\[\nabla \times \mathbf{F} = \left(0 - 0,\; 0 - 0,\; 1 - (-1)\right) = (0, 0, 2).\]</span></p>
-<p>The rotation axis is <span class="math inline">\(+\hat{\mathbf{z}}\)</span> with angular velocity <span class="math inline">\(1\)</span>.</p>
-<p><em>Further reading: <span class="citation" data-cites="Kreyszig2011aem">Kreyszig (<a href="#ref-Kreyszig2011aem" role="doc-biblioref">2011</a>)</span>, Sec. 9.9.</em></p>
-<hr>
-</section>
-<section id="laplacian" class="level2" data-number="1.6">
-<h2 data-number="1.6" class="anchored" data-anchor-id="laplacian"><span class="header-section-number">1.6</span> Laplacian</h2>
-<p><strong>Definition.</strong> The Laplacian of <span class="math inline">\(f\)</span> is</p>
-<p><span class="math display">\[\nabla^2 f = \nabla \cdot (\nabla f) = \frac{\partial^2 f}{\partial x^2} + \frac{\partial^2 f}{\partial y^2} + \frac{\partial^2 f}{\partial z^2}.\]</span></p>
-<p>For a vector field, the Laplacian acts component-wise: <span class="math inline">\(\nabla^2 \mathbf{F} = (\nabla^2 F_x, \nabla^2 F_y, \nabla^2 F_z)\)</span>.</p>
-<p><strong>Intuition.</strong> <span class="math inline">\(\nabla^2 f(\mathbf{p})\)</span> is proportional to the difference between <span class="math inline">\(f(\mathbf{p})\)</span> and the average of <span class="math inline">\(f\)</span> over an infinitesimal sphere centered at <span class="math inline">\(\mathbf{p}\)</span>. It governs diffusion, electrostatics, and fluid flow. The equation <span class="math inline">\(\nabla^2 f = 0\)</span> (Laplace equation) characterizes fields with no local sources or sinks.</p>
-<p><strong>Example.</strong> Let <span class="math inline">\(f(x, y) = x^2 - y^2\)</span>. Then <span class="math inline">\(\nabla^2 f = 2 - 2 = 0\)</span>: this function satisfies the Laplace equation.</p>
-<p><em>Further reading: <span class="citation" data-cites="Kreyszig2011aem">Kreyszig (<a href="#ref-Kreyszig2011aem" role="doc-biblioref">2011</a>)</span>, Sec. 9.8 (Laplacian as div of grad); <span class="citation" data-cites="Evans2010pde">Evans (<a href="#ref-Evans2010pde" role="doc-biblioref">2010</a>)</span>, Ch. 2 (Laplace equation and its properties).</em></p>
+<section id="chapter-summary-and-self-test" class="level2" data-number="2.5">
+<h2 data-number="2.5" class="anchored" data-anchor-id="chapter-summary-and-self-test"><span class="header-section-number">2.5</span> Chapter summary and self-test</h2>
+<p><strong>Main results and terms.</strong> The Jacobian is the local derivative map and its determinant changes volume. The gradient, divergence, curl, and Laplacian have the meanings in (M2.4). The material derivative (M2.3) follows parcels. Divergence and Stokes’ theorems convert volume or surface integrals to boundary flux or circulation. Green’s identity (M2.9) controls energy and adjoints. Equation (M2.10) connects integral conservation with a local PDE.</p>
+<p><strong>Self-test.</strong> Derive <span class="math inline">\(\partial_t\rho+\nabla\cdot(\rho\mathbf u)=0\)</span> for mass density <span class="math inline">\(\rho\)</span>. Under what condition does it imply <span class="math inline">\(D\rho/Dt=0\)</span>? Why is no source needed for the translating-profile example above?</p>
 
 
 <div id="refs" class="references csl-bib-body hanging-indent" role="list">
-<div id="ref-Evans2010pde" class="csl-entry" role="listitem">
-Evans, Lawrence C. 2010. <em>Partial Differential Equations</em>. 2nd ed. American Mathematical Society.
+<div id="ref-ArfkenWeber2005" class="csl-entry" role="listitem">
+Arfken, George B., and Hans J. Weber. 2005. <em>Mathematical Methods for Physicists</em>. 6th ed. Elsevier Academic Press.
 </div>
-<div id="ref-Kreyszig2011aem" class="csl-entry" role="listitem">
-Kreyszig, Erwin. 2011. <em>Advanced Engineering Mathematics</em>. 10th ed. Wiley.
+<div id="ref-Vallis2006" class="csl-entry" role="listitem">
+Vallis, Geoffrey K. 2006. <em>Atmospheric and Oceanic Fluid Dynamics: Fundamentals and Large-Scale Circulation</em>. Cambridge University Press.
 </div>
 </div>
 </section>
@@ -935,8 +1033,8 @@ Kreyszig, Erwin. 2011. <em>Advanced Engineering Mathematics</em>. 10th ed. Wiley
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../01-vector-calculus/integrals.html" class="pagination-link" aria-label="Integrals">
-        <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Integrals</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="../01-vector-calculus/spherical.html" class="pagination-link" aria-label="Geometry and calculus on the sphere">
+        <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Geometry and calculus on the sphere</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

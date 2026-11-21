@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>2&nbsp; Integrals – Global Physical Climatology</title>
+<title>Appendix A — Vector integrals – Global Physical Climatology</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -56,7 +56,7 @@ div.csl-indent {
 <script src="../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../">
 <link href="../01-vector-calculus/change-of-variables.html" rel="next">
-<link href="../01-vector-calculus/operators.html" rel="prev">
+<link href="../05-neural-operators/spectral-operators.html" rel="prev">
 <script src="../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="../site_libs/quarto-html/scrollable-regions/scrollable-regions.js" type="module"></script>
@@ -137,7 +137,7 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="Breadcrumbs"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../01-vector-calculus/index.html">Vector Calculus</a></li><li class="breadcrumb-item"><a href="../01-vector-calculus/integrals.html"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Integrals</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="Breadcrumbs"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../01-vector-calculus/integrals.html">Appendices</a></li><li class="breadcrumb-item"><a href="../01-vector-calculus/integrals.html"><span class="chapter-number">A</span>&nbsp; <span class="chapter-title">Vector integrals</span></a></li></ol></nav>
         <a class="flex-grow-1" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -170,41 +170,66 @@ window.Quarto = {
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a href="../01-vector-calculus/index.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text" id="quarto-sidebar-section-1-label">Vector Calculus</span></a>
-            <button type="button" class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-controls="quarto-sidebar-section-1" aria-expanded="true" aria-label="Toggle section: Vector Calculus">
+            <a href="../00-mathematical-foundations/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text" id="quarto-sidebar-section-1-label">Mathematical foundations</span></a>
+            <button type="button" class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-controls="quarto-sidebar-section-1" aria-expanded="true" aria-label="Toggle section: Mathematical foundations">
               <i class="bi bi-chevron-right ms-2" aria-hidden="true"></i>
             </button> 
       </div>
       <ul id="quarto-sidebar-section-1" aria-labelledby="quarto-sidebar-section-1-label" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="../00-mathematical-foundations/language.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Mathematical language and linear algebra</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../01-vector-calculus/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text" id="quarto-sidebar-section-2-label">Vector Calculus</span></a>
+            <button type="button" class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-controls="quarto-sidebar-section-2" aria-expanded="true" aria-label="Toggle section: Vector Calculus">
+              <i class="bi bi-chevron-right ms-2" aria-hidden="true"></i>
+            </button> 
+      </div>
+      <ul id="quarto-sidebar-section-2" aria-labelledby="quarto-sidebar-section-2-label" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="../01-vector-calculus/operators.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Differential Operators</span></span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../01-vector-calculus/integrals.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Integrals</span></span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../01-vector-calculus/change-of-variables.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Change of Variables</span></span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../01-vector-calculus/theorems.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Integral Theorems</span></span></a>
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Calculus, fluxes, and conservation</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../01-vector-calculus/spherical.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Spherical Coordinates</span></span></a>
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Geometry and calculus on the sphere</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <button type="button" class="sidebar-item-text sidebar-item-toggle sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-controls="quarto-sidebar-section-3" aria-expanded="true">
+ <span class="menu-text" id="quarto-sidebar-section-3-label">Function spaces and differential equations</span><i class="bi bi-chevron-right" aria-hidden="true"></i></button>
+      </div>
+      <ul id="quarto-sidebar-section-3" aria-labelledby="quarto-sidebar-section-3-label" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../02-harmonic-analysis/function-spaces.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Function spaces, limits, and weak derivatives</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../03-pdes/eigenfunctions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Differential equations and eigenfunction theory</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../03-pdes/foundations.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Partial differential equations and physical models</span></span></a>
   </div>
 </li>
       </ul>
@@ -212,51 +237,28 @@ window.Quarto = {
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a href="../02-harmonic-analysis/index.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text" id="quarto-sidebar-section-2-label">Harmonic Analysis</span></a>
-            <button type="button" class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-controls="quarto-sidebar-section-2" aria-expanded="true" aria-label="Toggle section: Harmonic Analysis">
+ <span class="menu-text" id="quarto-sidebar-section-4-label">Harmonic Analysis</span></a>
+            <button type="button" class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-controls="quarto-sidebar-section-4" aria-expanded="true" aria-label="Toggle section: Harmonic Analysis">
               <i class="bi bi-chevron-right ms-2" aria-hidden="true"></i>
             </button> 
       </div>
-      <ul id="quarto-sidebar-section-2" aria-labelledby="quarto-sidebar-section-2-label" class="collapse list-unstyled sidebar-section depth1 show">  
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../02-harmonic-analysis/function-spaces.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Function Spaces</span></span></a>
-  </div>
-</li>
+      <ul id="quarto-sidebar-section-4" aria-labelledby="quarto-sidebar-section-4-label" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../02-harmonic-analysis/fourier-series.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Fourier Series</span></span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../02-harmonic-analysis/fourier-transform.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Fourier Transform</span></span></a>
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Fourier analysis</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../02-harmonic-analysis/spherical-harmonics.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Spherical Harmonics</span></span></a>
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Legendre polynomials and spherical harmonics</span></span></a>
   </div>
 </li>
-      </ul>
-  </li>
-        <li class="sidebar-item sidebar-item-section">
-      <div class="sidebar-item-container"> 
-            <a href="../03-pdes/index.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text" id="quarto-sidebar-section-3-label">Partial Differential Equations</span></a>
-            <button type="button" class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-controls="quarto-sidebar-section-3" aria-expanded="true" aria-label="Toggle section: Partial Differential Equations">
-              <i class="bi bi-chevron-right ms-2" aria-hidden="true"></i>
-            </button> 
-      </div>
-      <ul id="quarto-sidebar-section-3" aria-labelledby="quarto-sidebar-section-3-label" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../03-pdes/spectral-methods.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Spectral numerical methods</span></span></a>
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Spectral discretization, quadrature, and stability</span></span></a>
   </div>
 </li>
       </ul>
@@ -264,94 +266,148 @@ window.Quarto = {
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a href="../04-geophysical-fluid-dynamics/index.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text" id="quarto-sidebar-section-4-label">Geophysical Fluid Dynamics</span></a>
-            <button type="button" class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-controls="quarto-sidebar-section-4" aria-expanded="true" aria-label="Toggle section: Geophysical Fluid Dynamics">
+ <span class="menu-text" id="quarto-sidebar-section-5-label">Geophysical Fluid Dynamics</span></a>
+            <button type="button" class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-controls="quarto-sidebar-section-5" aria-expanded="true" aria-label="Toggle section: Geophysical Fluid Dynamics">
               <i class="bi bi-chevron-right ms-2" aria-hidden="true"></i>
             </button> 
       </div>
-      <ul id="quarto-sidebar-section-4" aria-labelledby="quarto-sidebar-section-4-label" class="collapse list-unstyled sidebar-section depth1 show">  
+      <ul id="quarto-sidebar-section-5" aria-labelledby="quarto-sidebar-section-5-label" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../04-geophysical-fluid-dynamics/kinematics.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Kinematics and mathematical language</span></span></a>
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Kinematics and mathematical language</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../04-geophysical-fluid-dynamics/motion.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Mass, forces, and the momentum equation</span></span></a>
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Mass, forces, and the momentum equation</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../04-geophysical-fluid-dynamics/rotating.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Rotation and large-scale balances</span></span></a>
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Rotation and large-scale balances</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../04-geophysical-fluid-dynamics/vorticity.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Vorticity and circulation</span></span></a>
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Vorticity and circulation</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../04-geophysical-fluid-dynamics/layer-pv.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">A shallow layer and the barotropic reduction</span></span></a>
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">A shallow layer and the barotropic reduction</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../04-geophysical-fluid-dynamics/barotropic.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">The BVE on a rotating sphere</span></span></a>
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">The BVE on a rotating sphere</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../04-geophysical-fluid-dynamics/turbulence.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Invariants, turbulence, and eddy-driven flow</span></span></a>
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Invariants, turbulence, and eddy-driven flow</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../04-geophysical-fluid-dynamics/inversion.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Spherical harmonics, inversion, and dissipation</span></span></a>
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Spherical harmonics, inversion, and dissipation</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../04-geophysical-fluid-dynamics/stochastic.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Stochastic stirring and the closed forced model</span></span></a>
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Stochastic stirring and the closed forced model</span></span></a>
   </div>
 </li>
       </ul>
   </li>
         <li class="sidebar-item sidebar-item-section">
-      <span class="sidebar-item-text sidebar-link text-start">
- <span class="menu-text">Neural Operators</span></span>
+      <div class="sidebar-item-container"> 
+            <a href="../06-statistics/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text" id="quarto-sidebar-section-6-label">Probability and averages</span></a>
+            <button type="button" class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-controls="quarto-sidebar-section-6" aria-expanded="true" aria-label="Toggle section: Probability and averages">
+              <i class="bi bi-chevron-right ms-2" aria-hidden="true"></i>
+            </button> 
+      </div>
+      <ul id="quarto-sidebar-section-6" aria-labelledby="quarto-sidebar-section-6-label" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../06-statistics/averages.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Probability, averages, and climatological estimates</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../05-neural-operators/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text" id="quarto-sidebar-section-7-label">Neural Operators</span></a>
+            <button type="button" class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" aria-controls="quarto-sidebar-section-7" aria-expanded="true" aria-label="Toggle section: Neural Operators">
+              <i class="bi bi-chevron-right ms-2" aria-hidden="true"></i>
+            </button> 
+      </div>
+      <ul id="quarto-sidebar-section-7" aria-labelledby="quarto-sidebar-section-7-label" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../05-neural-operators/spectral-operators.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Integral operators, symmetries, and learned maps</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <button type="button" class="sidebar-item-text sidebar-item-toggle sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" aria-controls="quarto-sidebar-section-8" aria-expanded="true">
+ <span class="menu-text" id="quarto-sidebar-section-8-label">Appendices</span><i class="bi bi-chevron-right" aria-hidden="true"></i></button>
+      </div>
+      <ul id="quarto-sidebar-section-8" aria-labelledby="quarto-sidebar-section-8-label" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../01-vector-calculus/integrals.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">A</span>&nbsp; <span class="chapter-title">Vector integrals</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../01-vector-calculus/change-of-variables.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">B</span>&nbsp; <span class="chapter-title">Change of variables</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../01-vector-calculus/theorems.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">C</span>&nbsp; <span class="chapter-title">Integral theorems</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../02-harmonic-analysis/fourier-transform.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">D</span>&nbsp; <span class="chapter-title">Fourier transform</span></span></a>
+  </div>
+</li>
+      </ul>
   </li>
     </ul>
     </div>
 </nav>
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" aria-labelledby="toc-title" class="toc-active">
-    <h2 id="toc-title">Table of contents</h2>
-   
-  <ul>
-  <li><a href="#line-integral" id="toc-line-integral" class="nav-link active" data-scroll-target="#line-integral"><span class="header-section-number">2.1</span> Line Integral</a></li>
-  <li><a href="#surface-integral" id="toc-surface-integral" class="nav-link" data-scroll-target="#surface-integral"><span class="header-section-number">2.2</span> Surface Integral</a></li>
-  <li><a href="#volume-integral" id="toc-volume-integral" class="nav-link" data-scroll-target="#volume-integral"><span class="header-section-number">2.3</span> Volume Integral</a></li>
-  </ul>
-</nav>
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+        
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content" tabindex="-1">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="Breadcrumbs"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../01-vector-calculus/index.html">Vector Calculus</a></li><li class="breadcrumb-item"><a href="../01-vector-calculus/integrals.html"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Integrals</span></a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="Breadcrumbs"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../01-vector-calculus/integrals.html">Appendices</a></li><li class="breadcrumb-item"><a href="../01-vector-calculus/integrals.html"><span class="chapter-number">A</span>&nbsp; <span class="chapter-title">Vector integrals</span></a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Integrals</span></h1>
+<h1 class="title">Appendix A — Vector integrals</h1>
 </div>
 
 
@@ -368,44 +424,15 @@ window.Quarto = {
 </header>
 
 
-<section id="line-integral" class="level2" data-number="2.1">
-<h2 data-number="2.1" class="anchored" data-anchor-id="line-integral"><span class="header-section-number">2.1</span> Line Integral</h2>
-<p>Let <span class="math inline">\(C\)</span> be a smooth curve parametrized by <span class="math inline">\(\mathbf{r}(t)\)</span>, <span class="math inline">\(t \in [a, b]\)</span>.</p>
-<p><strong>Scalar form:</strong></p>
-<p><span class="math display">\[\int_C f \, ds = \int_a^b f(\mathbf{r}(t))\, |\mathbf{r}'(t)|\, dt.\]</span></p>
-<p><strong>Vector form (work):</strong></p>
-<p><span class="math display">\[\int_C \mathbf{F} \cdot d\mathbf{r} = \int_a^b \mathbf{F}(\mathbf{r}(t)) \cdot \mathbf{r}'(t)\, dt.\]</span></p>
-<p><strong>Example.</strong> Let <span class="math inline">\(\mathbf{F} = (y, 0)\)</span> and <span class="math inline">\(C\)</span> the segment from <span class="math inline">\((0,0)\)</span> to <span class="math inline">\((1,1)\)</span> parametrized as <span class="math inline">\(\mathbf{r}(t) = (t, t)\)</span>, <span class="math inline">\(t \in [0,1]\)</span>. Then <span class="math inline">\(\mathbf{r}'(t) = (1,1)\)</span> and <span class="math inline">\(\mathbf{F}(\mathbf{r}(t)) = (t, 0)\)</span>, so</p>
-<p><span class="math display">\[\int_C \mathbf{F} \cdot d\mathbf{r} = \int_0^1 t \, dt = \frac{1}{2}.\]</span></p>
-<p><em>Further reading: <span class="citation" data-cites="Kreyszig2011aem">Kreyszig (<a href="#ref-Kreyszig2011aem" role="doc-biblioref">2011</a>)</span>, Sec. 10.1.</em></p>
-<hr>
-</section>
-<section id="surface-integral" class="level2" data-number="2.2">
-<h2 data-number="2.2" class="anchored" data-anchor-id="surface-integral"><span class="header-section-number">2.2</span> Surface Integral</h2>
-<p>Let <span class="math inline">\(S\)</span> be an oriented surface with unit normal <span class="math inline">\(\hat{\mathbf{n}}\)</span> and area element <span class="math inline">\(dS\)</span>.</p>
-<p><strong>Scalar form:</strong></p>
-<p><span class="math display">\[\iint_S f \, dS.\]</span></p>
-<p><strong>Flux form:</strong></p>
-<p><span class="math display">\[\iint_S \mathbf{F} \cdot d\mathbf{S} = \iint_S \mathbf{F} \cdot \hat{\mathbf{n}} \, dS.\]</span></p>
-<p><strong>Example.</strong> Let <span class="math inline">\(\mathbf{F} = (0, 0, 1)\)</span> and <span class="math inline">\(S\)</span> the unit disk in the <span class="math inline">\(xy\)</span>-plane with <span class="math inline">\(\hat{\mathbf{n}} = (0, 0, 1)\)</span>. Then <span class="math inline">\(\mathbf{F} \cdot \hat{\mathbf{n}} = 1\)</span> everywhere, so the flux is</p>
-<p><span class="math display">\[\iint_S dS = \pi.\]</span></p>
-<p><em>Further reading: <span class="citation" data-cites="Kreyszig2011aem">Kreyszig (<a href="#ref-Kreyszig2011aem" role="doc-biblioref">2011</a>)</span>, Secs. 10.5-10.6.</em></p>
-<hr>
-</section>
-<section id="volume-integral" class="level2" data-number="2.3">
-<h2 data-number="2.3" class="anchored" data-anchor-id="volume-integral"><span class="header-section-number">2.3</span> Volume Integral</h2>
-<p><span class="math display">\[\iiint_V f \, dV = \iiint_V f(x, y, z)\, dx\, dy\, dz.\]</span></p>
-<p><strong>Example.</strong> <span class="math inline">\(f(x,y,z) = z\)</span> over the unit cube <span class="math inline">\([0,1]^3\)</span>:</p>
-<p><span class="math display">\[\iiint_{[0,1]^3} z \, dV = \int_0^1 z \, dz = \frac{1}{2}.\]</span></p>
-<p><em>Further reading: <span class="citation" data-cites="Kreyszig2011aem">Kreyszig (<a href="#ref-Kreyszig2011aem" role="doc-biblioref">2011</a>)</span>, Sec. 10.7.</em></p>
+<p>Line, area, and volume measures and their orientations are defined in <a href="../01-vector-calculus/operators.html#integration-jacobians-and-integral-theorems">calculus, fluxes, and conservation</a>. That treatment owns the divergence and Stokes identities used below.</p>
+<p>For a worked circulation check, take solid-body planar rotation <span class="math inline">\(\mathbf u=(-\Omega y,\Omega x,0)\)</span> around a counterclockwise circle of radius <span class="math inline">\(a\)</span>. The tangential speed is <span class="math inline">\(\Omega a\)</span>, so <span class="math inline">\(\oint\mathbf u\cdot d\mathbf l=2\pi\Omega a^2\)</span>. Its vorticity is <span class="math inline">\(2\Omega\mathbf e_z\)</span>; integrating through the disk gives the same <span class="math inline">\(2\Omega\pi a^2\)</span>. The orientation fixes the sign. This example uses Stokes’ theorem <span class="citation" data-cites="ArfkenWeber2005">Arfken and Weber (<a href="#ref-ArfkenWeber2005" role="doc-biblioref">2005</a>)</span>, Section 1.12.</p>
 
 
 <div id="refs" class="references csl-bib-body hanging-indent" role="list">
-<div id="ref-Kreyszig2011aem" class="csl-entry" role="listitem">
-Kreyszig, Erwin. 2011. <em>Advanced Engineering Mathematics</em>. 10th ed. Wiley.
+<div id="ref-ArfkenWeber2005" class="csl-entry" role="listitem">
+Arfken, George B., and Hans J. Weber. 2005. <em>Mathematical Methods for Physicists</em>. 6th ed. Elsevier Academic Press.
 </div>
 </div>
-</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
@@ -886,13 +913,13 @@ Kreyszig, Erwin. 2011. <em>Advanced Engineering Mathematics</em>. 10th ed. Wiley
   </script>
 <nav class="page-navigation" aria-label="Page">
   <div class="nav-page nav-page-previous">
-      <a href="../01-vector-calculus/operators.html" class="pagination-link" aria-label="Differential Operators">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Differential Operators</span></span>
+      <a href="../05-neural-operators/spectral-operators.html" class="pagination-link" aria-label="Integral operators, symmetries, and learned maps">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Integral operators, symmetries, and learned maps</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../01-vector-calculus/change-of-variables.html" class="pagination-link" aria-label="Change of Variables">
-        <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Change of Variables</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="../01-vector-calculus/change-of-variables.html" class="pagination-link" aria-label="Change of variables">
+        <span class="nav-page-text"><span class="chapter-number">B</span>&nbsp; <span class="chapter-title">Change of variables</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

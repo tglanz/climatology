@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>10&nbsp; Spectral numerical methods – Global Physical Climatology</title>
+<title>9&nbsp; Spectral discretization, quadrature, and stability – Global Physical Climatology</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -56,7 +56,7 @@ div.csl-indent {
 <script src="../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../">
 <link href="../04-geophysical-fluid-dynamics/index.html" rel="next">
-<link href="../03-pdes/index.html" rel="prev">
+<link href="../02-harmonic-analysis/spherical-harmonics.html" rel="prev">
 <script src="../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="../site_libs/quarto-html/scrollable-regions/scrollable-regions.js" type="module"></script>
@@ -137,7 +137,7 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="Breadcrumbs"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../03-pdes/index.html">Partial Differential Equations</a></li><li class="breadcrumb-item"><a href="../03-pdes/spectral-methods.html"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Spectral numerical methods</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="Breadcrumbs"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../02-harmonic-analysis/index.html">Harmonic Analysis</a></li><li class="breadcrumb-item"><a href="../03-pdes/spectral-methods.html"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Spectral discretization, quadrature, and stability</span></a></li></ol></nav>
         <a class="flex-grow-1" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -170,41 +170,66 @@ window.Quarto = {
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a href="../01-vector-calculus/index.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text" id="quarto-sidebar-section-1-label">Vector Calculus</span></a>
-            <button type="button" class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-controls="quarto-sidebar-section-1" aria-expanded="true" aria-label="Toggle section: Vector Calculus">
+            <a href="../00-mathematical-foundations/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text" id="quarto-sidebar-section-1-label">Mathematical foundations</span></a>
+            <button type="button" class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-controls="quarto-sidebar-section-1" aria-expanded="true" aria-label="Toggle section: Mathematical foundations">
               <i class="bi bi-chevron-right ms-2" aria-hidden="true"></i>
             </button> 
       </div>
       <ul id="quarto-sidebar-section-1" aria-labelledby="quarto-sidebar-section-1-label" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="../00-mathematical-foundations/language.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Mathematical language and linear algebra</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../01-vector-calculus/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text" id="quarto-sidebar-section-2-label">Vector Calculus</span></a>
+            <button type="button" class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-controls="quarto-sidebar-section-2" aria-expanded="true" aria-label="Toggle section: Vector Calculus">
+              <i class="bi bi-chevron-right ms-2" aria-hidden="true"></i>
+            </button> 
+      </div>
+      <ul id="quarto-sidebar-section-2" aria-labelledby="quarto-sidebar-section-2-label" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="../01-vector-calculus/operators.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Differential Operators</span></span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../01-vector-calculus/integrals.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Integrals</span></span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../01-vector-calculus/change-of-variables.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Change of Variables</span></span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../01-vector-calculus/theorems.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Integral Theorems</span></span></a>
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Calculus, fluxes, and conservation</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../01-vector-calculus/spherical.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Spherical Coordinates</span></span></a>
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Geometry and calculus on the sphere</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <button type="button" class="sidebar-item-text sidebar-item-toggle sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-controls="quarto-sidebar-section-3" aria-expanded="true">
+ <span class="menu-text" id="quarto-sidebar-section-3-label">Function spaces and differential equations</span><i class="bi bi-chevron-right" aria-hidden="true"></i></button>
+      </div>
+      <ul id="quarto-sidebar-section-3" aria-labelledby="quarto-sidebar-section-3-label" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../02-harmonic-analysis/function-spaces.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Function spaces, limits, and weak derivatives</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../03-pdes/eigenfunctions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Differential equations and eigenfunction theory</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../03-pdes/foundations.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Partial differential equations and physical models</span></span></a>
   </div>
 </li>
       </ul>
@@ -212,51 +237,28 @@ window.Quarto = {
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a href="../02-harmonic-analysis/index.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text" id="quarto-sidebar-section-2-label">Harmonic Analysis</span></a>
-            <button type="button" class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-controls="quarto-sidebar-section-2" aria-expanded="true" aria-label="Toggle section: Harmonic Analysis">
+ <span class="menu-text" id="quarto-sidebar-section-4-label">Harmonic Analysis</span></a>
+            <button type="button" class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-controls="quarto-sidebar-section-4" aria-expanded="true" aria-label="Toggle section: Harmonic Analysis">
               <i class="bi bi-chevron-right ms-2" aria-hidden="true"></i>
             </button> 
       </div>
-      <ul id="quarto-sidebar-section-2" aria-labelledby="quarto-sidebar-section-2-label" class="collapse list-unstyled sidebar-section depth1 show">  
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../02-harmonic-analysis/function-spaces.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Function Spaces</span></span></a>
-  </div>
-</li>
+      <ul id="quarto-sidebar-section-4" aria-labelledby="quarto-sidebar-section-4-label" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../02-harmonic-analysis/fourier-series.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Fourier Series</span></span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../02-harmonic-analysis/fourier-transform.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Fourier Transform</span></span></a>
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Fourier analysis</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../02-harmonic-analysis/spherical-harmonics.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Spherical Harmonics</span></span></a>
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Legendre polynomials and spherical harmonics</span></span></a>
   </div>
 </li>
-      </ul>
-  </li>
-        <li class="sidebar-item sidebar-item-section">
-      <div class="sidebar-item-container"> 
-            <a href="../03-pdes/index.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text" id="quarto-sidebar-section-3-label">Partial Differential Equations</span></a>
-            <button type="button" class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-controls="quarto-sidebar-section-3" aria-expanded="true" aria-label="Toggle section: Partial Differential Equations">
-              <i class="bi bi-chevron-right ms-2" aria-hidden="true"></i>
-            </button> 
-      </div>
-      <ul id="quarto-sidebar-section-3" aria-labelledby="quarto-sidebar-section-3-label" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../03-pdes/spectral-methods.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Spectral numerical methods</span></span></a>
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Spectral discretization, quadrature, and stability</span></span></a>
   </div>
 </li>
       </ul>
@@ -264,71 +266,133 @@ window.Quarto = {
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a href="../04-geophysical-fluid-dynamics/index.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text" id="quarto-sidebar-section-4-label">Geophysical Fluid Dynamics</span></a>
-            <button type="button" class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-controls="quarto-sidebar-section-4" aria-expanded="true" aria-label="Toggle section: Geophysical Fluid Dynamics">
+ <span class="menu-text" id="quarto-sidebar-section-5-label">Geophysical Fluid Dynamics</span></a>
+            <button type="button" class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-controls="quarto-sidebar-section-5" aria-expanded="true" aria-label="Toggle section: Geophysical Fluid Dynamics">
               <i class="bi bi-chevron-right ms-2" aria-hidden="true"></i>
             </button> 
       </div>
-      <ul id="quarto-sidebar-section-4" aria-labelledby="quarto-sidebar-section-4-label" class="collapse list-unstyled sidebar-section depth1 show">  
+      <ul id="quarto-sidebar-section-5" aria-labelledby="quarto-sidebar-section-5-label" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../04-geophysical-fluid-dynamics/kinematics.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Kinematics and mathematical language</span></span></a>
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Kinematics and mathematical language</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../04-geophysical-fluid-dynamics/motion.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Mass, forces, and the momentum equation</span></span></a>
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Mass, forces, and the momentum equation</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../04-geophysical-fluid-dynamics/rotating.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Rotation and large-scale balances</span></span></a>
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Rotation and large-scale balances</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../04-geophysical-fluid-dynamics/vorticity.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Vorticity and circulation</span></span></a>
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Vorticity and circulation</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../04-geophysical-fluid-dynamics/layer-pv.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">A shallow layer and the barotropic reduction</span></span></a>
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">A shallow layer and the barotropic reduction</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../04-geophysical-fluid-dynamics/barotropic.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">The BVE on a rotating sphere</span></span></a>
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">The BVE on a rotating sphere</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../04-geophysical-fluid-dynamics/turbulence.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Invariants, turbulence, and eddy-driven flow</span></span></a>
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Invariants, turbulence, and eddy-driven flow</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../04-geophysical-fluid-dynamics/inversion.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Spherical harmonics, inversion, and dissipation</span></span></a>
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Spherical harmonics, inversion, and dissipation</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../04-geophysical-fluid-dynamics/stochastic.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Stochastic stirring and the closed forced model</span></span></a>
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Stochastic stirring and the closed forced model</span></span></a>
   </div>
 </li>
       </ul>
   </li>
         <li class="sidebar-item sidebar-item-section">
-      <span class="sidebar-item-text sidebar-link text-start">
- <span class="menu-text">Neural Operators</span></span>
+      <div class="sidebar-item-container"> 
+            <a href="../06-statistics/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text" id="quarto-sidebar-section-6-label">Probability and averages</span></a>
+            <button type="button" class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-controls="quarto-sidebar-section-6" aria-expanded="true" aria-label="Toggle section: Probability and averages">
+              <i class="bi bi-chevron-right ms-2" aria-hidden="true"></i>
+            </button> 
+      </div>
+      <ul id="quarto-sidebar-section-6" aria-labelledby="quarto-sidebar-section-6-label" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../06-statistics/averages.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Probability, averages, and climatological estimates</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../05-neural-operators/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text" id="quarto-sidebar-section-7-label">Neural Operators</span></a>
+            <button type="button" class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" aria-controls="quarto-sidebar-section-7" aria-expanded="true" aria-label="Toggle section: Neural Operators">
+              <i class="bi bi-chevron-right ms-2" aria-hidden="true"></i>
+            </button> 
+      </div>
+      <ul id="quarto-sidebar-section-7" aria-labelledby="quarto-sidebar-section-7-label" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../05-neural-operators/spectral-operators.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Integral operators, symmetries, and learned maps</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <button type="button" class="sidebar-item-text sidebar-item-toggle sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" aria-controls="quarto-sidebar-section-8" aria-expanded="true">
+ <span class="menu-text" id="quarto-sidebar-section-8-label">Appendices</span><i class="bi bi-chevron-right" aria-hidden="true"></i></button>
+      </div>
+      <ul id="quarto-sidebar-section-8" aria-labelledby="quarto-sidebar-section-8-label" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../01-vector-calculus/integrals.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">A</span>&nbsp; <span class="chapter-title">Vector integrals</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../01-vector-calculus/change-of-variables.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">B</span>&nbsp; <span class="chapter-title">Change of variables</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../01-vector-calculus/theorems.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">C</span>&nbsp; <span class="chapter-title">Integral theorems</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../02-harmonic-analysis/fourier-transform.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">D</span>&nbsp; <span class="chapter-title">Fourier transform</span></span></a>
+  </div>
+</li>
+      </ul>
   </li>
     </ul>
     </div>
@@ -340,26 +404,21 @@ window.Quarto = {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#from-a-pde-to-coefficient-equations" id="toc-from-a-pde-to-coefficient-equations" class="nav-link active" data-scroll-target="#from-a-pde-to-coefficient-equations"><span class="header-section-number">10.1</span> From a PDE to coefficient equations</a></li>
-  <li><a href="#why-global-expansions-can-be-accurate" id="toc-why-global-expansions-can-be-accurate" class="nav-link" data-scroll-target="#why-global-expansions-can-be-accurate"><span class="header-section-number">10.2</span> Why global expansions can be accurate</a></li>
-  <li><a href="#spherical-harmonic-representation" id="toc-spherical-harmonic-representation" class="nav-link" data-scroll-target="#spherical-harmonic-representation"><span class="header-section-number">10.3</span> Spherical harmonic representation</a></li>
-  <li><a href="#sec-gaussian-quadrature" id="toc-sec-gaussian-quadrature" class="nav-link" data-scroll-target="#sec-gaussian-quadrature"><span class="header-section-number">10.4</span> Gaussian grid and quadrature</a>
-  <ul class="collapse">
-  <li><a href="#worked-quadrature-example" id="toc-worked-quadrature-example" class="nav-link" data-scroll-target="#worked-quadrature-example"><span class="header-section-number">10.4.1</span> Worked quadrature example</a></li>
-  </ul></li>
-  <li><a href="#why-this-grid-helps-the-sht" id="toc-why-this-grid-helps-the-sht" class="nav-link" data-scroll-target="#why-this-grid-helps-the-sht"><span class="header-section-number">10.5</span> Why this grid helps the SHT</a></li>
-  <li><a href="#solving-equations-in-spectral-space" id="toc-solving-equations-in-spectral-space" class="nav-link" data-scroll-target="#solving-equations-in-spectral-space"><span class="header-section-number">10.6</span> Solving equations in spectral space</a></li>
-  <li><a href="#nonlinear-terms-and-aliasing" id="toc-nonlinear-terms-and-aliasing" class="nav-link" data-scroll-target="#nonlinear-terms-and-aliasing"><span class="header-section-number">10.7</span> Nonlinear terms and aliasing</a></li>
-  <li><a href="#uses-and-numerical-checks" id="toc-uses-and-numerical-checks" class="nav-link" data-scroll-target="#uses-and-numerical-checks"><span class="header-section-number">10.8</span> Uses and numerical checks</a></li>
+  <li><a href="#projection-and-the-method-of-weighted-residuals" id="toc-projection-and-the-method-of-weighted-residuals" class="nav-link active" data-scroll-target="#projection-and-the-method-of-weighted-residuals"><span class="header-section-number">9.1</span> Projection and the method of weighted residuals</a></li>
+  <li><a href="#gauss-legendre-quadrature-and-a-spherical-grid" id="toc-gauss-legendre-quadrature-and-a-spherical-grid" class="nav-link" data-scroll-target="#gauss-legendre-quadrature-and-a-spherical-grid"><span class="header-section-number">9.2</span> Gauss-Legendre quadrature and a spherical grid</a></li>
+  <li><a href="#exact-harmonic-recovery-and-nonlinear-aliasing" id="toc-exact-harmonic-recovery-and-nonlinear-aliasing" class="nav-link" data-scroll-target="#exact-harmonic-recovery-and-nonlinear-aliasing"><span class="header-section-number">9.3</span> Exact harmonic recovery and nonlinear aliasing</a></li>
+  <li><a href="#time-stepping-and-numerical-stability" id="toc-time-stepping-and-numerical-stability" class="nav-link" data-scroll-target="#time-stepping-and-numerical-stability"><span class="header-section-number">9.4</span> Time stepping and numerical stability</a></li>
+  <li><a href="#weighted-errors-and-verification" id="toc-weighted-errors-and-verification" class="nav-link" data-scroll-target="#weighted-errors-and-verification"><span class="header-section-number">9.5</span> Weighted errors and verification</a></li>
+  <li><a href="#chapter-summary-and-self-test" id="toc-chapter-summary-and-self-test" class="nav-link" data-scroll-target="#chapter-summary-and-self-test"><span class="header-section-number">9.6</span> Chapter summary and self-test</a></li>
   </ul>
 </nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content" tabindex="-1">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="Breadcrumbs"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../03-pdes/index.html">Partial Differential Equations</a></li><li class="breadcrumb-item"><a href="../03-pdes/spectral-methods.html"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Spectral numerical methods</span></a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="Breadcrumbs"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../02-harmonic-analysis/index.html">Harmonic Analysis</a></li><li class="breadcrumb-item"><a href="../03-pdes/spectral-methods.html"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Spectral discretization, quadrature, and stability</span></a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title"><span id="sec-spectral-methods" class="quarto-section-identifier"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Spectral numerical methods</span></span></h1>
+<h1 class="title"><span id="ch-numerics" class="quarto-section-identifier"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Spectral discretization, quadrature, and stability</span></span></h1>
 </div>
 
 
@@ -376,162 +435,93 @@ window.Quarto = {
 </header>
 
 
-<p>A spectral method approximates a field by a finite sum of global basis functions. It solves for their coefficients rather than for independent values in each cell. The basis should respect the domain: Fourier modes suit periodic intervals, orthogonal polynomials suit bounded intervals, and spherical harmonics suit the sphere. The <a href="../02-harmonic-analysis/function-spaces.html">function-space chapter</a> explains projection; here we turn projection into a numerical method.</p>
-<section id="from-a-pde-to-coefficient-equations" class="level2" data-number="10.1">
-<h2 data-number="10.1" class="anchored" data-anchor-id="from-a-pde-to-coefficient-equations"><span class="header-section-number">10.1</span> From a PDE to coefficient equations</h2>
-<p>Let <span class="math inline">\(u(x,t)\)</span> be a scalar field on a domain <span class="math inline">\(D\)</span>, and let <span class="math inline">\(\{\varphi_j\}\)</span> be an orthonormal basis for a specified inner product <span class="math inline">\(\langle\cdot,\cdot\rangle\)</span>. For <span class="math inline">\(J\)</span> retained functions, write</p>
+<!-- Generated by presentations/mathematical-prerequisites/sync_book.py; edit chapters/*.md and run build.py --sync-book. -->
+<section id="projection-and-the-method-of-weighted-residuals" class="level2" data-number="9.1">
+<h2 data-number="9.1" class="anchored" data-anchor-id="projection-and-the-method-of-weighted-residuals"><span class="header-section-number">9.1</span> Projection and the method of weighted residuals</h2>
+<p><strong>Result and motivation.</strong> A spectral method approximates a field in a finite basis and imposes equations on its coefficients. Spatial truncation and time integration introduce different errors. Sources: <span class="citation" data-cites="ArfkenWeber2005">(<a href="#ref-ArfkenWeber2005" role="doc-biblioref">Arfken and Weber 2005, secs. 10.4, 12.3, 14.6, 17.8</a>)</span>; numerical bounds below are derived for the stated finite spaces.</p>
+<p>For an evolution equation <span class="math inline">\(u_t=\mathcal Lu+\mathcal N(u)+f\)</span>, let <span class="math inline">\(\mathcal L\)</span> be a linear spatial operator, <span class="math inline">\(\mathcal N\)</span> a nonlinear term, and <span class="math inline">\(f\)</span> forcing. Choose orthonormal basis functions <span class="math inline">\(e_1,\ldots,e_K\)</span> satisfying the spatial conditions, and approximate <span class="math inline">\(u_K=\sum_{j=1}^Ka_j(t)e_j\)</span>. The residual is <span class="math inline">\(r_K=\partial_tu_K-\mathcal Lu_K-\mathcal N(u_K)-f\)</span>. Galerkin projection sets <span class="math inline">\(\langle r_K,e_i\rangle=0\)</span>:</p>
 <p><span class="math display">\[
-u_J(x,t)=\sum_{j=0}^{J-1}a_j(t)\varphi_j(x).
+a_i'=\sum_jL_{ij}a_j+\langle\mathcal N(u_K),e_i\rangle+f_i,
+\quad L_{ij}=\langle\mathcal Le_j,e_i\rangle,
+\quad f_i=\langle f,e_i\rangle.
+\tag{M9.1}
 \]</span></p>
-<p>For a PDE <span class="math inline">\(\partial_t u=\mathcal{L}u+\mathcal{N}(u)+g\)</span>, a Galerkin method requires the residual to be orthogonal to every retained basis function:</p>
-<p><span class="math display">\[
-\frac{da_i}{dt}
-=\sum_{j=0}^{J-1}\langle\mathcal{L}\varphi_j,\varphi_i\rangle a_j
-+\langle\mathcal{N}(u_J),\varphi_i\rangle
-+\langle g,\varphi_i\rangle.
-\]</span></p>
-<p>Here <span class="math inline">\(\mathcal{L}\)</span> is linear, <span class="math inline">\(\mathcal{N}\)</span> contains nonlinear terms, and <span class="math inline">\(g\)</span> is forcing. A nonorthonormal basis introduces a mass matrix <span class="math inline">\(M_{ij}=\langle\varphi_j,\varphi_i\rangle\)</span> on the left. Boundary conditions must be built into the basis or imposed separately. A <strong>collocation method</strong> instead sets the residual to zero at selected nodes. A <strong>pseudospectral method</strong> evaluates terms through transformations between coefficients and node values. With adequate quadrature and dealiasing, its computed nonlinear projection can agree with Galerkin projection. These distinctions concern spatial discretization; time integration is a separate numerical choice. See <span class="citation" data-cites="Boyd2001spectral">Boyd (<a href="#ref-Boyd2001spectral" role="doc-biblioref">2001</a>)</span> for the general framework.</p>
-<p>For a periodic interval <span class="math inline">\([0,2\pi)\)</span>, <span class="math inline">\(\partial_x e^{ikx}=ik e^{ikx}\)</span> and <span class="math inline">\(\partial_x^2e^{ikx}=-k^2e^{ikx}\)</span>. Differentiation becomes coefficient multiplication. With physical coordinate <span class="math inline">\(s=Rx\)</span>, the derivative is instead <span class="math inline">\(\partial_s=R^{-1}\partial_x\)</span>, so its units are inverse length.</p>
+<p>If <span class="math inline">\(\mathcal Le_j=\lambda_je_j\)</span>, <span class="math inline">\(L_{ij}=\lambda_j\delta_{ij}\)</span>. A nonorthonormal basis instead gives a mass matrix <span class="math inline">\(M_{ij}=\langle e_j,e_i\rangle\)</span> multiplying <span class="math inline">\(a_j'\)</span>. Collocation requires the PDE residual to vanish at selected nodes. A pseudospectral method evaluates products at grid points and transforms them back; with sufficiently accurate quadrature this reproduces Galerkin projection for those products.</p>
+<p>Three separate approximations are present: truncating the function space, approximating its integrals, and integrating its coefficient ODEs in time. Increasing the grid alone does not increase the retained degree; decreasing the time step does not remove spatial aliasing.</p>
 </section>
-<section id="why-global-expansions-can-be-accurate" class="level2" data-number="10.2">
-<h2 data-number="10.2" class="anchored" data-anchor-id="why-global-expansions-can-be-accurate"><span class="header-section-number">10.2</span> Why global expansions can be accurate</h2>
-<p>For an orthonormal basis, the squared <span class="math inline">\(L^2\)</span> truncation error is the energy in omitted coefficients. Rapid coefficient decay therefore gives rapid convergence. For periodic analytic functions that extend analytically into a complex strip, Fourier coefficients decay exponentially with mode number. Finite regularity usually gives algebraic decay. Discontinuities cause oscillations near jumps and slow convergence; increasing the truncation alone does not remove the Gibbs phenomenon. Spectral accuracy depends on regularity and compatible boundary conditions, not merely on choosing a transform.</p>
-<p>A global method is useful when smooth solutions need high accuracy, derivatives or elliptic inversions have simple coefficient formulas, or scale-dependent analysis is central. Local methods may be preferable for shocks, complex boundaries, local refinement, or localized communication.</p>
+<section id="gauss-legendre-quadrature-and-a-spherical-grid" class="level2" data-number="9.2">
+<h2 data-number="9.2" class="anchored" data-anchor-id="gauss-legendre-quadrature-and-a-spherical-grid"><span class="header-section-number">9.2</span> Gauss-Legendre quadrature and a spherical grid</h2>
+<p><strong>Result and motivation.</strong> Gaussian quadrature integrates polynomials up to degree <span class="math inline">\(2n-1\)</span> using <span class="math inline">\(n\)</span> carefully chosen latitude nodes. It accounts for spherical area through <span class="math inline">\(\mu=\sin\varphi\)</span>. Sources: Legendre orthogonality <span class="citation" data-cites="ArfkenWeber2005">(<a href="#ref-ArfkenWeber2005" role="doc-biblioref">Arfken and Weber 2005, sec. 12.3</a>)</span>; explicit quadrature rule <span class="citation" data-cites="NISTDLMFQuadrature">(<a href="#ref-NISTDLMFQuadrature" role="doc-biblioref">NIST Digital Library of Mathematical Functions, n.d.</a>)</span>.</p>
+<p>For <span class="math inline">\(n\ge1\)</span>, let <span class="math inline">\(\mu_i\)</span> be the <span class="math inline">\(n\)</span> distinct roots of <span class="math inline">\(P_n\)</span> in <span class="math inline">\((-1,1)\)</span>. Define weights <span class="math inline">\(w_i\)</span> by</p>
+<p><span class="math display">\[
+\int_{-1}^1p(\mu)d\mu=\sum_{i=1}^nw_ip(\mu_i)
+\quad (\deg p\le2n-1),\qquad
+w_i=\frac{2}{(1-\mu_i^2)[P_n'(\mu_i)]^2},\quad \sum_iw_i=2.
+\tag{M9.2}
+\]</span></p>
+<p>Here <span class="math inline">\(\deg p\)</span> is polynomial degree. To prove the exactness, divide any polynomial of degree at most <span class="math inline">\(2n-1\)</span> as <span class="math inline">\(p=P_ns+r\)</span>, with <span class="math inline">\(s,r\)</span> of degree at most <span class="math inline">\(n-1\)</span>. Orthogonality gives <span class="math inline">\(\int P_ns=0\)</span>, and <span class="math inline">\(p(\mu_i)=r(\mu_i)\)</span>. Integrating the degree-<span class="math inline">\((n-1)\)</span> Lagrange interpolant of <span class="math inline">\(r\)</span> exactly therefore integrates <span class="math inline">\(p\)</span>. The Lagrange function that is one at <span class="math inline">\(\mu_i\)</span> and zero at the other nodes is <span class="math inline">\(\ell_i(\mu)=P_n(\mu)/[(\mu-\mu_i)P_n'(\mu_i)]\)</span>; hence <span class="math inline">\(w_i=\int\ell_i\)</span>. Evaluating this integral with the Legendre recurrence yields the explicit weight formula in (M9.2), specified by the NIST Gauss-Legendre rule. This argument explains the extra exact degrees without assuming uniform latitude spacing.</p>
+<p>A full Gaussian grid combines latitudes <span class="math inline">\(\varphi_i=\arcsin\mu_i\)</span> with <span class="math inline">\(M\)</span> equally spaced longitudes <span class="math inline">\(\lambda_j=2\pi j/M\)</span>. No latitude node is at a pole. Then</p>
+<p><span class="math display">\[
+\int_{S^2}f\,d\Omega\approx\frac{2\pi}{M}\sum_{i,j}w_if_{ij},
+\qquad \langle f\rangle_A\approx\frac1{2M}\sum_{i,j}w_if_{ij}.
+\tag{M9.3}
+\]</span></p>
+<p>For a zonal profile the normalized latitude weights are <span class="math inline">\(w_i/2\)</span>. Multiplying by another <span class="math inline">\(\cos\varphi_i\)</span> would count the area Jacobian twice. With <span class="math inline">\(n=2\)</span>, nodes <span class="math inline">\(\pm1/\sqrt3\)</span> and weights one give the exact mean <span class="math inline">\(1/3\)</span> for <span class="math inline">\(\mu^2\)</span>, but <span class="math inline">\(1/9\)</span> for <span class="math inline">\(\mu^4\)</span> instead of <span class="math inline">\(1/5\)</span>; degree four exceeds the exactness guarantee.</p>
 </section>
-<section id="spherical-harmonic-representation" class="level2" data-number="10.3">
-<h2 data-number="10.3" class="anchored" data-anchor-id="spherical-harmonic-representation"><span class="header-section-number">10.3</span> Spherical harmonic representation</h2>
-<p>Use colatitude <span class="math inline">\(\theta\in[0,\pi]\)</span>, longitude <span class="math inline">\(\phi\in[0,2\pi)\)</span>, latitude <span class="math inline">\(\alpha=\pi/2-\theta\)</span>, and radius <span class="math inline">\(R&gt;0\)</span> in metres. Define <span class="math inline">\(\mu=\cos\theta=\sin\alpha\)</span>. Solid angle is dimensionless:</p>
+<section id="exact-harmonic-recovery-and-nonlinear-aliasing" class="level2" data-number="9.3">
+<h2 data-number="9.3" class="anchored" data-anchor-id="exact-harmonic-recovery-and-nonlinear-aliasing"><span class="header-section-number">9.3</span> Exact harmonic recovery and nonlinear aliasing</h2>
+<p><strong>Result and motivation.</strong> Recovering a degree-<span class="math inline">\(L\)</span> field needs fewer nodes than exactly projecting a quadratic product back to that degree. Dealiasing addresses this second requirement. Sources: <span class="citation" data-cites="ArfkenWeber2005">(<a href="#ref-ArfkenWeber2005" role="doc-biblioref">Arfken and Weber 2005, secs. 12.5–12.6, 14.6</a>)</span>; the sufficient spherical bounds follow below.</p>
+<p>For a scalar field bandlimited to degree <span class="math inline">\(L\)</span>, longitude analysis forms <span class="math inline">\(F_m(\mu_i)=M^{-1}\sum_jf_{ij}e^{-im\lambda_j}\)</span>. For <span class="math inline">\(m\ge0\)</span>, spherical analysis then uses</p>
 <p><span class="math display">\[
-d\Omega=\sin\theta\,d\theta\,d\phi=d\mu\,d\phi
+f_\ell^m=2\pi N_{\ell m}\sum_iw_iF_m(\mu_i)P_\ell^m(\mu_i),
+\qquad n\ge L+1,\quad M\ge2L+1.
+\tag{M9.4}
 \]</span></p>
-<p>when the <span class="math inline">\(\mu\)</span> integral runs from <span class="math inline">\(-1\)</span> to <span class="math inline">\(1\)</span>. Physical area is <span class="math inline">\(R^2d\Omega\)</span>. Use the orthonormal complex harmonics from the <a href="../02-harmonic-analysis/spherical-harmonics.html">spherical harmonics chapter</a>. For <span class="math inline">\(m\ge0\)</span>, their associated Legendre functions include the Condon–Shortley phase:</p>
-<p><span class="math display">\[
-P_\ell^m(\mu)=(-1)^m(1-\mu^2)^{m/2}
-\frac{d^mP_\ell}{d\mu^m},
-\qquad
-Y_\ell^m=N_{\ell m}P_\ell^m(\mu)e^{im\phi},
-\quad
-N_{\ell m}=\sqrt{\frac{2\ell+1}{4\pi}\frac{(\ell-m)!}{(\ell+m)!}}.
-\]</span></p>
-<p>Negative orders satisfy <span class="math inline">\(Y_\ell^{-m}=(-1)^m\overline{Y_\ell^m}\)</span>. Triangular truncation at degree <span class="math inline">\(L\)</span> retains</p>
-<p><span class="math display">\[
-f_L=\sum_{\ell=0}^{L}\sum_{m=-\ell}^{\ell}
-\widehat f_\ell^mY_\ell^m,
-\qquad
-\widehat f_\ell^m=\int_{S^2}f\overline{Y_\ell^m}\,d\Omega.
-\]</span></p>
-<p>There are <span class="math inline">\((L+1)^2\)</span> complex basis functions. A real field obeys <span class="math inline">\(\widehat f_\ell^{-m}=(-1)^m\overline{\widehat f_\ell^m}\)</span>, reducing independent storage. If <span class="math inline">\(f\)</span> has units <span class="math inline">\(U\)</span>, so do its coefficients under this dimensionless normalization. Truncation degree and the number of stored modes differ by one when degree zero is included.</p>
-</section>
-<section id="sec-gaussian-quadrature" class="level2" data-number="10.4">
-<h2 data-number="10.4" class="anchored" data-anchor-id="sec-gaussian-quadrature"><span class="header-section-number">10.4</span> Gaussian grid and quadrature</h2>
-<p>A quadrature rule approximates an integral by weighted function values. The <span class="math inline">\(n\)</span>-point Gauss–Legendre rule on <span class="math inline">\([-1,1]\)</span> uses the roots <span class="math inline">\(\mu_i\)</span> of the Legendre polynomial <span class="math inline">\(P_n\)</span> and positive weights</p>
-<p><span class="math display">\[
-\int_{-1}^{1}q(\mu)\,d\mu
-\approx\sum_{i=1}^{n}w_iq(\mu_i),
-\qquad
-w_i=\frac{2}{(1-\mu_i^2)[P_n'(\mu_i)]^2}.
-\]</span></p>
-<p>It is exact for polynomials of degree at most <span class="math inline">\(2n-1\)</span>, and <span class="math inline">\(\sum_iw_i=2\)</span>. <span class="citation" data-cites="GolubWelsch1969">Golub and Welsch (<a href="#ref-GolubWelsch1969" role="doc-biblioref">1969</a>)</span> gives algorithms for computing Gaussian rules from orthogonal-polynomial recurrences. The following argument explains why the Legendre nodes give this exactness.</p>
-<p>For a polynomial <span class="math inline">\(q\)</span> of degree at most <span class="math inline">\(2n-1\)</span>, polynomial division gives <span class="math inline">\(q=P_ns+r\)</span>, where <span class="math inline">\(s\)</span> and <span class="math inline">\(r\)</span> have degree at most <span class="math inline">\(n-1\)</span>. Legendre orthogonality makes <span class="math inline">\(\int P_ns=0\)</span>. At every node <span class="math inline">\(P_n(\mu_i)=0\)</span>, so <span class="math inline">\(q(\mu_i)=r(\mu_i)\)</span>. Choose weights that integrate the Lagrange interpolant of <span class="math inline">\(r\)</span> exactly. The same weighted sum then integrates <span class="math inline">\(q\)</span> exactly. The extra exact degrees come from orthogonality, not from uniformly spacing the nodes.</p>
-<p>A <strong>full Gaussian grid</strong> combines these nodes with <span class="math inline">\(M\)</span> equally spaced longitudes:</p>
-<p><span class="math display">\[
-\alpha_i=\arcsin\mu_i,\qquad
-\phi_j=\frac{2\pi j}{M},\quad j=0,\ldots,M-1.
-\]</span></p>
-<p>Latitudes are not equally spaced, and no node is at a pole. An equatorial node exists when <span class="math inline">\(n\)</span> is odd. Every latitude ring has the same <span class="math inline">\(M\)</span> longitudes; a reduced Gaussian grid instead varies their count and needs a corresponding transform algorithm. The full-grid formulas below do not apply unchanged to a reduced grid.</p>
-<p>The area integral and global mean are approximated by</p>
-<p><span class="math display">\[
-\int_{S_R^2}f\,dA
-\approx R^2\frac{2\pi}{M}\sum_{i,j}w_if_{ij},
-\qquad
-\langle f\rangle_A\approx\frac{1}{2M}\sum_{i,j}w_if_{ij}.
-\]</span></p>
-<p>Thus a constant integrates to <span class="math inline">\(4\pi R^2\)</span>. For a zonal profile, normalized latitude weights are <span class="math inline">\(w_i/2\)</span>. Do not multiply Gaussian weights by <span class="math inline">\(\cos\alpha_i\)</span> again: the substitution <span class="math inline">\(d\mu=\cos\alpha\,d\alpha\)</span> already accounts for the area Jacobian. Uniform weights per latitude ring would also be incorrect.</p>
-<section id="worked-quadrature-example" class="level3" data-number="10.4.1">
-<h3 data-number="10.4.1" class="anchored" data-anchor-id="worked-quadrature-example"><span class="header-section-number">10.4.1</span> Worked quadrature example</h3>
-<p>For <span class="math inline">\(n=2\)</span>, the nodes are <span class="math inline">\(\mu=\pm1/\sqrt3\)</span> and both weights are one. For <span class="math inline">\(f=\mu^2\)</span> the approximate global mean is</p>
-<p><span class="math display">\[
-\frac12\left[\left(-\frac1{\sqrt3}\right)^2+
-\left(\frac1{\sqrt3}\right)^2\right]=\frac13,
-\]</span></p>
-<p>which equals <span class="math inline">\(\frac12\int_{-1}^{1}\mu^2\,d\mu\)</span>. The same rule gives <span class="math inline">\(1/9\)</span> for the mean of <span class="math inline">\(\mu^4\)</span>, whereas its exact mean is <span class="math inline">\(1/5\)</span>. Degree four exceeds this rule’s degree-three guarantee.</p>
-</section>
-</section>
-<section id="why-this-grid-helps-the-sht" class="level2" data-number="10.5">
-<h2 data-number="10.5" class="anchored" data-anchor-id="why-this-grid-helps-the-sht"><span class="header-section-number">10.5</span> Why this grid helps the SHT</h2>
-<p>The spherical harmonic transform (SHT) separates into longitude Fourier analysis and latitude Legendre analysis. For <span class="math inline">\(m\ge0\)</span>, define</p>
-<p><span class="math display">\[
-F_m(\mu_i)=\frac1M\sum_{j=0}^{M-1}f(\mu_i,\phi_j)e^{-im\phi_j}.
-\]</span></p>
-<p>Then compute</p>
-<p><span class="math display">\[
-\widehat f_\ell^m\approx
-2\pi N_{\ell m}\sum_{i=1}^{n}w_iF_m(\mu_i)P_\ell^m(\mu_i).
-\]</span></p>
-<p>An FFT computes all longitude coefficients on each ring. Associated Legendre sums complete the forward transform; synthesis evaluates the harmonic sum at nodes. See <span class="citation" data-cites="Schaeffer2013sht">Schaeffer (<a href="#ref-Schaeffer2013sht" role="doc-biblioref">2013</a>)</span> for a practical transform algorithm.</p>
-<p>For a field bandlimited to degree <span class="math inline">\(L\)</span>, sufficient sampling conditions for exact coefficient recovery in exact arithmetic are</p>
-<p><span class="math display">\[
-n\ge L+1,\qquad M\ge 2L+1.
-\]</span></p>
-<p>To see why, expand the input in retained harmonics. The longitude sum contains <span class="math inline">\(e^{i(m'-m)\phi_j}\)</span> and is zero unless <span class="math inline">\(m'=m\)</span> under this sampling condition. For the surviving terms,</p>
-<p><span class="math display">\[
-P_\ell^m(\mu)P_{\ell'}^m(\mu)
-=(1-\mu^2)^m\frac{d^mP_\ell}{d\mu^m}
-\frac{d^mP_{\ell'}}{d\mu^m},
-\]</span></p>
-<p>which is a polynomial of degree at most <span class="math inline">\(\ell+\ell'\le2L\)</span>. Since <span class="math inline">\(2n-1\ge2L\)</span>, Gaussian quadrature integrates these products exactly. The discrete inner product therefore reproduces orthogonality on the retained harmonic space. This is why the nodes and weights are part of the transform definition.</p>
-<p>The statement does not claim that each <span class="math inline">\(P_\ell^m\)</span> is itself a polynomial: odd <span class="math inline">\(m\)</span> introduces a square root. The same-order product is polynomial. Nor does it promise exact coefficients for arbitrary sampled fields with energy above <span class="math inline">\(L\)</span>. Such unresolved structure can alias into retained modes.</p>
-<p>For the bandlimited field, discrete Parseval also follows:</p>
-<p><span class="math display">\[
-\frac{2\pi}{M}\sum_{i,j}w_i|f_L(\mu_i,\phi_j)|^2
-=\sum_{\ell=0}^{L}\sum_{m=-\ell}^{\ell}|\widehat f_\ell^m|^2.
-\]</span></p>
-<p>Round trips and this identity test normalization, weights, and coordinate order. Reversing latitude requires reversing the data and weights together. A shifted longitude origin requires consistent Fourier phases. Shape agreement alone does not establish transform compatibility.</p>
-<p>A direct separated implementation uses approximately <span class="math inline">\(O(nM\log M)\)</span> work for longitude FFTs and <span class="math inline">\(O(nL^2)\)</span> for the Legendre stage. For <span class="math inline">\(n,M=O(L)\)</span> the latter is cubic. An SHT is not simply a two-dimensional FFT. Recurrences, symmetry, precomputation, and specialized algorithms change practical costs and memory needs.</p>
-</section>
-<section id="solving-equations-in-spectral-space" class="level2" data-number="10.6">
-<h2 data-number="10.6" class="anchored" data-anchor-id="solving-equations-in-spectral-space"><span class="header-section-number">10.6</span> Solving equations in spectral space</h2>
-<p>On a radius-<span class="math inline">\(R\)</span> sphere, the physical Laplace–Beltrami operator satisfies</p>
-<p><span class="math display">\[
-\Delta_{S_R^2}Y_\ell^m=-\frac{\ell(\ell+1)}{R^2}Y_\ell^m.
-\]</span></p>
-<p>For Poisson’s equation <span class="math inline">\(\Delta_{S_R^2}u=f\)</span>, the sphere has no boundary and a constant is in the nullspace. A solution exists only when <span class="math inline">\(\int f\,d\Omega=0\)</span>. Fix the undetermined mean by setting <span class="math inline">\(\widehat u_0^0=0\)</span>. For every <span class="math inline">\(\ell\ge1\)</span>,</p>
-<p><span class="math display">\[
-\widehat u_\ell^m=-\frac{R^2}{\ell(\ell+1)}\widehat f_\ell^m.
-\]</span></p>
-<p>For example, if <span class="math inline">\(f=A Y_2^0\)</span>, then <span class="math inline">\(u=-AR^2Y_2^0/6\)</span>. Applying the Laplacian recovers <span class="math inline">\(f\)</span>, checking the sign and radius factor. If <span class="math inline">\(f\)</span> has units <span class="math inline">\(U\,\mathrm{m}^{-2}\)</span>, <span class="math inline">\(u\)</span> has units <span class="math inline">\(U\)</span>.</p>
-<p>For diffusion <span class="math inline">\(\partial_t u=\kappa\Delta_{S_R^2}u\)</span>, with diffusivity <span class="math inline">\(\kappa\)</span> in <span class="math inline">\(\mathrm{m}^2\mathrm{s}^{-1}\)</span>,</p>
-<p><span class="math display">\[
-\widehat u_\ell^m(t)=\widehat u_\ell^m(0)
-\exp\left[-\frac{\kappa\ell(\ell+1)}{R^2}t\right].
-\]</span></p>
-<p>The mean remains constant and smaller scales decay faster. If forward Euler is used instead of this exact update, stability for all retained diffusion modes requires <span class="math inline">\(\Delta t\le2R^2/[\kappa L(L+1)]\)</span> for <span class="math inline">\(L\ge1\)</span>. Accurate spatial differentiation does not remove time-step restrictions.</p>
-</section>
-<section id="nonlinear-terms-and-aliasing" class="level2" data-number="10.7">
-<h2 data-number="10.7" class="anchored" data-anchor-id="nonlinear-terms-and-aliasing"><span class="header-section-number">10.7</span> Nonlinear terms and aliasing</h2>
-<p>A product of fields bandlimited to <span class="math inline">\(L\)</span> can contain degrees up to <span class="math inline">\(2L\)</span>. Computing it on the minimally sampled grid and transforming back can fold unresolved modes into lower degrees. In a periodic example, grid samples cannot distinguish Fourier modes <span class="math inline">\(k\)</span> and <span class="math inline">\(k+M\)</span> because <span class="math inline">\(e^{i(k+M)2\pi j/M}=e^{ik2\pi j/M}\)</span>.</p>
-<p>For exact projection of a product of two scalar degree-<span class="math inline">\(L\)</span> fields onto degrees through <span class="math inline">\(L\)</span>, a sufficient full Gaussian grid satisfies</p>
+<p>These bounds make (M9.4) exact in exact arithmetic for the stated bandlimited field. Longitude orthogonality eliminates different orders without aliasing. For the same order, the product <span class="math inline">\(P_\ell^mP_j^m\)</span> is <span class="math inline">\((1-\mu^2)^m\)</span> times two polynomial derivatives, with total degree at most <span class="math inline">\(\ell+j\le2L\)</span>. Gaussian quadrature therefore integrates it exactly. Individual odd-order functions need not be polynomials; their same-order products are.</p>
+<p>The product of two degree-<span class="math inline">\(L\)</span> scalar fields can contain degree <span class="math inline">\(2L\)</span>. To compute its coefficients only through degree <span class="math inline">\(L\)</span>, the integrand contains three harmonics. A sufficient grid for exact projection is</p>
 <p><span class="math display">\[
 M&gt;3L,\qquad 2n-1\ge3L.
+\tag{M9.5}
 \]</span></p>
-<p>The longitude integrand contains three mode factors. Its maximum frequency is <span class="math inline">\(3L\)</span>. Surviving latitude products also have degree at most <span class="math inline">\(3L\)</span>: the longitude selection rule makes the sum of their absolute orders even, so the factors of <span class="math inline">\((1-\mu^2)^{1/2}\)</span> combine into an integer power. Gaussian exactness then applies. This is the spherical counterpart of padding each dimension by roughly <span class="math inline">\(3/2\)</span> for a quadratic product. Strict inequalities and integer rounding matter. Derivatives of vector components and higher-order nonlinearities require their own analysis; these bounds apply to scalar products as stated.</p>
-<p>A pseudospectral step therefore synthesizes on an adequate grid, evaluates the nonlinear expression there, analyzes it, and retains only the intended modes. Filtering damps selected coefficients but does not retroactively make an aliased projection exact. Dealiasing, physical diffusion, and numerical filtering serve different purposes.</p>
+<p>The largest possible longitude frequency in this triple product is <span class="math inline">\(3L\)</span>, so the strict inequality prevents a nonzero multiple of <span class="math inline">\(M\)</span> from masquerading as zero. After longitude selection, the sum of the three absolute orders is even, because their signed sum is zero. The factors <span class="math inline">\((1-\mu^2)^{|m|/2}\)</span> therefore combine into an integer power. The surviving latitude integrand is a polynomial of degree at most <span class="math inline">\(3L\)</span>, and (M9.2) applies. This proves exact low-degree projection, not exact recovery of every degree of the product. It is the reason for padding by roughly a factor <span class="math inline">\(3/2\)</span> relative to the minimal linear-transform grid. Vector derivatives and higher nonlinearities need their own degree analysis.</p>
+<p>For <span class="math inline">\(L=2\)</span>, linear recovery needs <span class="math inline">\(n\ge3\)</span>, <span class="math inline">\(M\ge5\)</span>; quadratic projection needs <span class="math inline">\(n\ge4\)</span>, <span class="math inline">\(M\ge7\)</span>. A solver may use larger integer-friendly sizes. A Fourier example makes the danger explicit: on eight longitude points, multiplying mode <span class="math inline">\(3\)</span> by mode <span class="math inline">\(3\)</span> produces mode <span class="math inline">\(6\)</span>, which aliases to <span class="math inline">\(-2\)</span>. Truncating after this aliased transform cannot identify which <span class="math inline">\(-2\)</span> contribution was physical. Filtering damps modes; dealiasing prevents an incorrect projection. They are different operations.</p>
 </section>
-<section id="uses-and-numerical-checks" class="level2" data-number="10.8">
-<h2 data-number="10.8" class="anchored" data-anchor-id="uses-and-numerical-checks"><span class="header-section-number">10.8</span> Uses and numerical checks</h2>
-<p>Spectral coefficients support elliptic inversion, diffusion, scale-dependent filtering, energy spectra, and comparison across resolutions. A scalar isotropic linear filter multiplies all orders at degree <span class="math inline">\(\ell\)</span> by the same factor; this preserves rotational symmetry. General position-dependent coefficients couple modes and need not yield diagonal operators.</p>
-<p>Before using a transform in a solver, verify a constant, an individual harmonic, a forward/inverse round trip, and discrete Parseval. Check an analytic PDE solution such as the diffusion mode above. Increase truncation and quadrature resolution separately: convergence in one does not demonstrate convergence in the other. Record basis normalization, phase convention, radius, retained degrees, node coordinates, and weights so that stored coefficients remain interpretable.</p>
+<section id="time-stepping-and-numerical-stability" class="level2" data-number="9.4">
+<h2 data-number="9.4" class="anchored" data-anchor-id="time-stepping-and-numerical-stability"><span class="header-section-number">9.4</span> Time stepping and numerical stability</h2>
+<p><strong>Result and motivation.</strong> Exact spatial modes do not guarantee stable time stepping. Each modal growth factor must fit the time integrator’s stability region. Source: <span class="citation" data-cites="ArfkenWeber2005">(<a href="#ref-ArfkenWeber2005" role="doc-biblioref">Arfken and Weber 2005, sec. 9.8</a>, modal diffusion)</span>; the discrete amplification calculation is given here explicitly.</p>
+<p>For <span class="math inline">\(a'=-\gamma a\)</span> with <span class="math inline">\(\gamma\ge0\)</span>, forward Euler with step <span class="math inline">\(\Delta t&gt;0\)</span> gives <span class="math inline">\(a^{r+1}=(1-\gamma\Delta t)a^r\)</span>, where <span class="math inline">\(r\)</span> is the integer time index. Avoiding growth requires <span class="math inline">\(|1-\gamma\Delta t|\le1\)</span>, or <span class="math inline">\(0\le\gamma\Delta t\le2\)</span>. For spherical diffusion through degree <span class="math inline">\(L\ge1\)</span>,</p>
+<p><span class="math display">\[
+\gamma_\ell=\frac{\kappa\ell(\ell+1)}{R^2},
+\qquad \Delta t\le\frac{2R^2}{\kappa L(L+1)}.
+\tag{M9.6}
+\]</span></p>
+<p>For pure advection <span class="math inline">\(a'=-i\omega a\)</span> with real nonzero <span class="math inline">\(\omega\)</span>, forward Euler instead has squared amplification <span class="math inline">\(|1-i\omega\Delta t|^2=1+\omega^2\Delta t^2&gt;1\)</span>. A small step reduces growth but does not make this scheme linearly stable for these modes. Backward Euler uses <span class="math inline">\(a^{r+1}=a^r/(1+\gamma\Delta t)\)</span> for diffusion and is stable for every positive step, while remaining inaccurate for unresolved decay times. An exact exponential update solves a constant linear modal term exactly; forcing and nonlinear coupling still require time approximation.</p>
+<p>The Courant number <span class="math inline">\(C=U\Delta t/\Delta x\)</span> compares motion in one step with a grid spacing. A Courant bound is scheme-dependent, not a universal theorem that <span class="math inline">\(C\le1\)</span> suffices for every method. Consistency means local discretization error vanishes as resolution increases; stability controls error amplification; convergence means the numerical solution approaches the desired continuum solution. Each is a separate claim.</p>
+</section>
+<section id="weighted-errors-and-verification" class="level2" data-number="9.5">
+<h2 data-number="9.5" class="anchored" data-anchor-id="weighted-errors-and-verification"><span class="header-section-number">9.5</span> Weighted errors and verification</h2>
+<p><strong>Result and motivation.</strong> A numerical norm approximates a specified continuum norm. Coordinates and weights belong to the scientific definition of an error. Sources: <span class="citation" data-cites="ArfkenWeber2005">(<a href="#ref-ArfkenWeber2005" role="doc-biblioref">Arfken and Weber 2005, secs. 10.3–10.4, 12.3</a>)</span>; formulas follow from (M9.3).</p>
+<p>Let <span class="math inline">\(a_i=w_i/2\)</span> for a zonal profile, truth <span class="math inline">\(y_i\)</span>, prediction <span class="math inline">\(\widehat y_i\)</span>, and error <span class="math inline">\(e_i=\widehat y_i-y_i\)</span>. Then</p>
+<p><span class="math display">\[
+\operatorname{RMSE}_A=\left(\sum_ia_ie_i^2\right)^{1/2},
+\qquad \operatorname{rel}L_A^2=\frac{(\sum_ia_ie_i^2)^{1/2}}{(\sum_ia_iy_i^2)^{1/2}}.
+\tag{M9.7}
+\]</span></p>
+<p>RMSE means root-mean-square error and has the field’s units; relative <span class="math inline">\(L^2\)</span> is dimensionless and undefined for zero-norm truth. An arbitrary positive denominator floor defines a different score. For a full field use weights <span class="math inline">\(w_i/(2M)\)</span>. Errors of variables with different units need separate reporting or explicit scales before aggregation.</p>
+<p>Useful independent checks are a constant’s area, one harmonic’s coefficients, a transform round trip, discrete Parseval, and an analytic diffusion mode. The first two test normalization and phase; the round trip alone does not test continuous sampling. Convergence studies vary retained degree, quadrature density, and time step separately. Reversing latitude requires reversing both data and weights; a changed longitude origin changes Fourier phases.</p>
+</section>
+<section id="chapter-summary-and-self-test" class="level2" data-number="9.6">
+<h2 data-number="9.6" class="anchored" data-anchor-id="chapter-summary-and-self-test"><span class="header-section-number">9.6</span> Chapter summary and self-test</h2>
+<p><strong>Main results and terms.</strong> Galerkin methods enforce residual orthogonality. Gaussian quadrature uses Legendre roots and integrates through degree <span class="math inline">\(2n-1\)</span>. Spherical integration weights already include the latitude Jacobian. Linear transform recovery needs (M9.4), while exact scalar quadratic projection needs (M9.5). Aliasing, filtering, and truncation are distinct. Modal amplification yields the diffusion time-step bound (M9.6). Weighted errors approximate a chosen physical-area norm.</p>
+<p><strong>Self-test.</strong> Give sufficient <span class="math inline">\(n,M\)</span> for linear recovery and quadratic projection at <span class="math inline">\(L=3\)</span>. Does adding latitude points change a fixed spectral cutoff? Why can a stable implicit diffusion step still be inaccurate?</p>
 
 
 <div id="refs" class="references csl-bib-body hanging-indent" role="list">
-<div id="ref-Boyd2001spectral" class="csl-entry" role="listitem">
-Boyd, John P. 2001. <em>Chebyshev and Fourier Spectral Methods</em>. 2, revised. Dover Publications. <a href="https://public.websites.umich.edu/~jpboyd/AOSS555.html">https://public.websites.umich.edu/~jpboyd/AOSS555.html</a>.
+<div id="ref-ArfkenWeber2005" class="csl-entry" role="listitem">
+Arfken, George B., and Hans J. Weber. 2005. <em>Mathematical Methods for Physicists</em>. 6th ed. Elsevier Academic Press.
 </div>
-<div id="ref-GolubWelsch1969" class="csl-entry" role="listitem">
-Golub, Gene H., and John H. Welsch. 1969. <span>“Calculation of <span>Gauss</span> Quadrature Rules.”</span> <em>Mathematics of Computation</em> 23 (106): 221–30. <a href="https://doi.org/10.1090/S0025-5718-69-99647-1">https://doi.org/10.1090/S0025-5718-69-99647-1</a>.
-</div>
-<div id="ref-Schaeffer2013sht" class="csl-entry" role="listitem">
-Schaeffer, Nathanaël. 2013. <span>“Efficient Spherical Harmonic Transforms Aimed at Pseudospectral Numerical Simulations.”</span> <em>Geochemistry, Geophysics, Geosystems</em> 14 (3): 751–58. <a href="https://doi.org/10.1002/ggge.20071">https://doi.org/10.1002/ggge.20071</a>.
+<div id="ref-NISTDLMFQuadrature" class="csl-entry" role="listitem">
+NIST Digital Library of Mathematical Functions. n.d. <em>Section 3.5(v): Gauss Quadrature</em>. <a href="https://dlmf.nist.gov/3.5#v">https://dlmf.nist.gov/3.5#v</a>.
 </div>
 </div>
 </section>
@@ -1015,8 +1005,8 @@ Schaeffer, Nathanaël. 2013. <span>“Efficient Spherical Harmonic Transforms Ai
   </script>
 <nav class="page-navigation" aria-label="Page">
   <div class="nav-page nav-page-previous">
-      <a href="../03-pdes/index.html" class="pagination-link" aria-label="Partial Differential Equations">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Partial Differential Equations</span>
+      <a href="../02-harmonic-analysis/spherical-harmonics.html" class="pagination-link" aria-label="Legendre polynomials and spherical harmonics">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Legendre polynomials and spherical harmonics</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">

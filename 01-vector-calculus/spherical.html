@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>5&nbsp; Spherical Coordinates – Global Physical Climatology</title>
+<title>3&nbsp; Geometry and calculus on the sphere – Global Physical Climatology</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -55,8 +55,8 @@ div.csl-indent {
 <script src="../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../">
-<link href="../02-harmonic-analysis/index.html" rel="next">
-<link href="../01-vector-calculus/theorems.html" rel="prev">
+<link href="../02-harmonic-analysis/function-spaces.html" rel="next">
+<link href="../01-vector-calculus/operators.html" rel="prev">
 <script src="../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="../site_libs/quarto-html/scrollable-regions/scrollable-regions.js" type="module"></script>
@@ -137,7 +137,7 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="Breadcrumbs"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../01-vector-calculus/index.html">Vector Calculus</a></li><li class="breadcrumb-item"><a href="../01-vector-calculus/spherical.html"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Spherical Coordinates</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="Breadcrumbs"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../01-vector-calculus/index.html">Vector Calculus</a></li><li class="breadcrumb-item"><a href="../01-vector-calculus/spherical.html"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Geometry and calculus on the sphere</span></a></li></ol></nav>
         <a class="flex-grow-1" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -170,41 +170,66 @@ window.Quarto = {
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a href="../01-vector-calculus/index.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text" id="quarto-sidebar-section-1-label">Vector Calculus</span></a>
-            <button type="button" class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-controls="quarto-sidebar-section-1" aria-expanded="true" aria-label="Toggle section: Vector Calculus">
+            <a href="../00-mathematical-foundations/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text" id="quarto-sidebar-section-1-label">Mathematical foundations</span></a>
+            <button type="button" class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-controls="quarto-sidebar-section-1" aria-expanded="true" aria-label="Toggle section: Mathematical foundations">
               <i class="bi bi-chevron-right ms-2" aria-hidden="true"></i>
             </button> 
       </div>
       <ul id="quarto-sidebar-section-1" aria-labelledby="quarto-sidebar-section-1-label" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="../00-mathematical-foundations/language.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Mathematical language and linear algebra</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../01-vector-calculus/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text" id="quarto-sidebar-section-2-label">Vector Calculus</span></a>
+            <button type="button" class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-controls="quarto-sidebar-section-2" aria-expanded="true" aria-label="Toggle section: Vector Calculus">
+              <i class="bi bi-chevron-right ms-2" aria-hidden="true"></i>
+            </button> 
+      </div>
+      <ul id="quarto-sidebar-section-2" aria-labelledby="quarto-sidebar-section-2-label" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="../01-vector-calculus/operators.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Differential Operators</span></span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../01-vector-calculus/integrals.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Integrals</span></span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../01-vector-calculus/change-of-variables.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Change of Variables</span></span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../01-vector-calculus/theorems.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Integral Theorems</span></span></a>
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Calculus, fluxes, and conservation</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../01-vector-calculus/spherical.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Spherical Coordinates</span></span></a>
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Geometry and calculus on the sphere</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <button type="button" class="sidebar-item-text sidebar-item-toggle sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-controls="quarto-sidebar-section-3" aria-expanded="true">
+ <span class="menu-text" id="quarto-sidebar-section-3-label">Function spaces and differential equations</span><i class="bi bi-chevron-right" aria-hidden="true"></i></button>
+      </div>
+      <ul id="quarto-sidebar-section-3" aria-labelledby="quarto-sidebar-section-3-label" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../02-harmonic-analysis/function-spaces.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Function spaces, limits, and weak derivatives</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../03-pdes/eigenfunctions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Differential equations and eigenfunction theory</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../03-pdes/foundations.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Partial differential equations and physical models</span></span></a>
   </div>
 </li>
       </ul>
@@ -212,51 +237,28 @@ window.Quarto = {
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a href="../02-harmonic-analysis/index.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text" id="quarto-sidebar-section-2-label">Harmonic Analysis</span></a>
-            <button type="button" class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-controls="quarto-sidebar-section-2" aria-expanded="true" aria-label="Toggle section: Harmonic Analysis">
+ <span class="menu-text" id="quarto-sidebar-section-4-label">Harmonic Analysis</span></a>
+            <button type="button" class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-controls="quarto-sidebar-section-4" aria-expanded="true" aria-label="Toggle section: Harmonic Analysis">
               <i class="bi bi-chevron-right ms-2" aria-hidden="true"></i>
             </button> 
       </div>
-      <ul id="quarto-sidebar-section-2" aria-labelledby="quarto-sidebar-section-2-label" class="collapse list-unstyled sidebar-section depth1 show">  
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../02-harmonic-analysis/function-spaces.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Function Spaces</span></span></a>
-  </div>
-</li>
+      <ul id="quarto-sidebar-section-4" aria-labelledby="quarto-sidebar-section-4-label" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../02-harmonic-analysis/fourier-series.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Fourier Series</span></span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../02-harmonic-analysis/fourier-transform.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Fourier Transform</span></span></a>
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Fourier analysis</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../02-harmonic-analysis/spherical-harmonics.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Spherical Harmonics</span></span></a>
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Legendre polynomials and spherical harmonics</span></span></a>
   </div>
 </li>
-      </ul>
-  </li>
-        <li class="sidebar-item sidebar-item-section">
-      <div class="sidebar-item-container"> 
-            <a href="../03-pdes/index.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text" id="quarto-sidebar-section-3-label">Partial Differential Equations</span></a>
-            <button type="button" class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-controls="quarto-sidebar-section-3" aria-expanded="true" aria-label="Toggle section: Partial Differential Equations">
-              <i class="bi bi-chevron-right ms-2" aria-hidden="true"></i>
-            </button> 
-      </div>
-      <ul id="quarto-sidebar-section-3" aria-labelledby="quarto-sidebar-section-3-label" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../03-pdes/spectral-methods.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Spectral numerical methods</span></span></a>
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Spectral discretization, quadrature, and stability</span></span></a>
   </div>
 </li>
       </ul>
@@ -264,71 +266,133 @@ window.Quarto = {
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a href="../04-geophysical-fluid-dynamics/index.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text" id="quarto-sidebar-section-4-label">Geophysical Fluid Dynamics</span></a>
-            <button type="button" class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-controls="quarto-sidebar-section-4" aria-expanded="true" aria-label="Toggle section: Geophysical Fluid Dynamics">
+ <span class="menu-text" id="quarto-sidebar-section-5-label">Geophysical Fluid Dynamics</span></a>
+            <button type="button" class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-controls="quarto-sidebar-section-5" aria-expanded="true" aria-label="Toggle section: Geophysical Fluid Dynamics">
               <i class="bi bi-chevron-right ms-2" aria-hidden="true"></i>
             </button> 
       </div>
-      <ul id="quarto-sidebar-section-4" aria-labelledby="quarto-sidebar-section-4-label" class="collapse list-unstyled sidebar-section depth1 show">  
+      <ul id="quarto-sidebar-section-5" aria-labelledby="quarto-sidebar-section-5-label" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../04-geophysical-fluid-dynamics/kinematics.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Kinematics and mathematical language</span></span></a>
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Kinematics and mathematical language</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../04-geophysical-fluid-dynamics/motion.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Mass, forces, and the momentum equation</span></span></a>
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Mass, forces, and the momentum equation</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../04-geophysical-fluid-dynamics/rotating.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Rotation and large-scale balances</span></span></a>
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Rotation and large-scale balances</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../04-geophysical-fluid-dynamics/vorticity.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Vorticity and circulation</span></span></a>
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Vorticity and circulation</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../04-geophysical-fluid-dynamics/layer-pv.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">A shallow layer and the barotropic reduction</span></span></a>
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">A shallow layer and the barotropic reduction</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../04-geophysical-fluid-dynamics/barotropic.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">The BVE on a rotating sphere</span></span></a>
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">The BVE on a rotating sphere</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../04-geophysical-fluid-dynamics/turbulence.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Invariants, turbulence, and eddy-driven flow</span></span></a>
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Invariants, turbulence, and eddy-driven flow</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../04-geophysical-fluid-dynamics/inversion.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Spherical harmonics, inversion, and dissipation</span></span></a>
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Spherical harmonics, inversion, and dissipation</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../04-geophysical-fluid-dynamics/stochastic.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Stochastic stirring and the closed forced model</span></span></a>
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Stochastic stirring and the closed forced model</span></span></a>
   </div>
 </li>
       </ul>
   </li>
         <li class="sidebar-item sidebar-item-section">
-      <span class="sidebar-item-text sidebar-link text-start">
- <span class="menu-text">Neural Operators</span></span>
+      <div class="sidebar-item-container"> 
+            <a href="../06-statistics/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text" id="quarto-sidebar-section-6-label">Probability and averages</span></a>
+            <button type="button" class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-controls="quarto-sidebar-section-6" aria-expanded="true" aria-label="Toggle section: Probability and averages">
+              <i class="bi bi-chevron-right ms-2" aria-hidden="true"></i>
+            </button> 
+      </div>
+      <ul id="quarto-sidebar-section-6" aria-labelledby="quarto-sidebar-section-6-label" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../06-statistics/averages.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Probability, averages, and climatological estimates</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../05-neural-operators/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text" id="quarto-sidebar-section-7-label">Neural Operators</span></a>
+            <button type="button" class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" aria-controls="quarto-sidebar-section-7" aria-expanded="true" aria-label="Toggle section: Neural Operators">
+              <i class="bi bi-chevron-right ms-2" aria-hidden="true"></i>
+            </button> 
+      </div>
+      <ul id="quarto-sidebar-section-7" aria-labelledby="quarto-sidebar-section-7-label" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../05-neural-operators/spectral-operators.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Integral operators, symmetries, and learned maps</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <button type="button" class="sidebar-item-text sidebar-item-toggle sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" aria-controls="quarto-sidebar-section-8" aria-expanded="true">
+ <span class="menu-text" id="quarto-sidebar-section-8-label">Appendices</span><i class="bi bi-chevron-right" aria-hidden="true"></i></button>
+      </div>
+      <ul id="quarto-sidebar-section-8" aria-labelledby="quarto-sidebar-section-8-label" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../01-vector-calculus/integrals.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">A</span>&nbsp; <span class="chapter-title">Vector integrals</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../01-vector-calculus/change-of-variables.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">B</span>&nbsp; <span class="chapter-title">Change of variables</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../01-vector-calculus/theorems.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">C</span>&nbsp; <span class="chapter-title">Integral theorems</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../02-harmonic-analysis/fourier-transform.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">D</span>&nbsp; <span class="chapter-title">Fourier transform</span></span></a>
+  </div>
+</li>
+      </ul>
   </li>
     </ul>
     </div>
@@ -340,21 +404,19 @@ window.Quarto = {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#coordinate-system" id="toc-coordinate-system" class="nav-link active" data-scroll-target="#coordinate-system"><span class="header-section-number">5.1</span> Coordinate System</a></li>
-  <li><a href="#scale-factors" id="toc-scale-factors" class="nav-link" data-scroll-target="#scale-factors"><span class="header-section-number">5.2</span> Scale Factors</a></li>
-  <li><a href="#general-operator-formulas-for-orthogonal-curvilinear-coordinates" id="toc-general-operator-formulas-for-orthogonal-curvilinear-coordinates" class="nav-link" data-scroll-target="#general-operator-formulas-for-orthogonal-curvilinear-coordinates"><span class="header-section-number">5.3</span> General Operator Formulas for Orthogonal Curvilinear Coordinates</a></li>
-  <li><a href="#operators-in-spherical-coordinates" id="toc-operators-in-spherical-coordinates" class="nav-link" data-scroll-target="#operators-in-spherical-coordinates"><span class="header-section-number">5.4</span> Operators in Spherical Coordinates</a></li>
-  <li><a href="#laplace-beltrami-operator-on-s2" id="toc-laplace-beltrami-operator-on-s2" class="nav-link" data-scroll-target="#laplace-beltrami-operator-on-s2"><span class="header-section-number">5.5</span> Laplace-Beltrami Operator on <span class="math inline">\(S^2\)</span></a></li>
-  <li><a href="#worked-examples" id="toc-worked-examples" class="nav-link" data-scroll-target="#worked-examples"><span class="header-section-number">5.6</span> Worked Examples</a></li>
+  <li><a href="#coordinates-metric-factors-and-area" id="toc-coordinates-metric-factors-and-area" class="nav-link active" data-scroll-target="#coordinates-metric-factors-and-area"><span class="header-section-number">3.1</span> Coordinates, metric factors, and area</a></li>
+  <li><a href="#tangent-differential-operators" id="toc-tangent-differential-operators" class="nav-link" data-scroll-target="#tangent-differential-operators"><span class="header-section-number">3.2</span> Tangent differential operators</a></li>
+  <li><a href="#regularity-streamfunction-and-the-closed-surface" id="toc-regularity-streamfunction-and-the-closed-surface" class="nav-link" data-scroll-target="#regularity-streamfunction-and-the-closed-surface"><span class="header-section-number">3.3</span> Regularity, streamfunction, and the closed surface</a></li>
+  <li><a href="#chapter-summary-and-self-test" id="toc-chapter-summary-and-self-test" class="nav-link" data-scroll-target="#chapter-summary-and-self-test"><span class="header-section-number">3.4</span> Chapter summary and self-test</a></li>
   </ul>
 </nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content" tabindex="-1">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="Breadcrumbs"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../01-vector-calculus/index.html">Vector Calculus</a></li><li class="breadcrumb-item"><a href="../01-vector-calculus/spherical.html"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Spherical Coordinates</span></a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="Breadcrumbs"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../01-vector-calculus/index.html">Vector Calculus</a></li><li class="breadcrumb-item"><a href="../01-vector-calculus/spherical.html"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Geometry and calculus on the sphere</span></a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Spherical Coordinates</span></h1>
+<h1 class="title"><span id="ch-sphere" class="quarto-section-identifier"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Geometry and calculus on the sphere</span></span></h1>
 </div>
 
 
@@ -371,82 +433,98 @@ window.Quarto = {
 </header>
 
 
-<section id="coordinate-system" class="level2" data-number="5.1">
-<h2 data-number="5.1" class="anchored" data-anchor-id="coordinate-system"><span class="header-section-number">5.1</span> Coordinate System</h2>
-<p>Spherical coordinates <span class="math inline">\((r, \theta, \phi)\)</span> relate to Cartesian coordinates by</p>
-<p><span class="math display">\[x = r\sin\theta\cos\phi, \quad y = r\sin\theta\sin\phi, \quad z = r\cos\theta,\]</span></p>
-<p>where <span class="math inline">\(r \geq 0\)</span> is the radial distance, <span class="math inline">\(\theta \in [0, \pi]\)</span> is the polar angle (colatitude, from the north pole), and <span class="math inline">\(\phi \in [0, 2\pi)\)</span> is the azimuthal angle (longitude). The orthonormal basis <span class="math inline">\((\hat{r}, \hat{\theta}, \hat{\phi})\)</span> points in the directions of increasing <span class="math inline">\(r\)</span>, <span class="math inline">\(\theta\)</span>, <span class="math inline">\(\phi\)</span> respectively, and rotates with position.</p>
-<hr>
+<!-- Generated by presentations/mathematical-prerequisites/sync_book.py; edit chapters/*.md and run build.py --sync-book. -->
+<section id="coordinates-metric-factors-and-area" class="level2" data-number="3.1">
+<h2 data-number="3.1" class="anchored" data-anchor-id="coordinates-metric-factors-and-area"><span class="header-section-number">3.1</span> Coordinates, metric factors, and area</h2>
+<p><strong>Result and motivation.</strong> Spherical coordinates have unequal physical scale factors. The area measure becomes uniform in sine of latitude, which explains Gaussian latitude weights. Sources: <span class="citation" data-cites="ArfkenWeber2005">(<a href="#ref-ArfkenWeber2005" role="doc-biblioref">Arfken and Weber 2005, secs. 2.1–2.2, 2.5</a>)</span>.</p>
+<p>Let <span class="math inline">\(r&gt;0\)</span> be radius, <span class="math inline">\(\theta\in[0,\pi]\)</span> colatitude measured from the north pole, and <span class="math inline">\(\lambda\in[0,2\pi)\)</span> east longitude. Latitude is <span class="math inline">\(\varphi=\pi/2-\theta\)</span>. Write</p>
+<p><span class="math display">\[
+\mathbf x=r(\sin\theta\cos\lambda,\sin\theta\sin\lambda,\cos\theta),
+\qquad \mu=\cos\theta=\sin\varphi.
+\tag{M3.1}
+\]</span></p>
+<p>The unit vectors <span class="math inline">\(\mathbf e_r,\mathbf e_\theta,\mathbf e_\lambda\)</span> point toward increasing coordinates. Differentiating (M3.1) gives mutually perpendicular vectors of lengths <span class="math inline">\(1,r,r\sin\theta\)</span>. These are scale factors <span class="math inline">\(h_i=|\partial_{q_i}\mathbf x|\)</span>. The metric is the rule for squared distance:</p>
+<p><span class="math display">\[
+ds^2=dr^2+r^2d\theta^2+r^2\sin^2\theta\,d\lambda^2,
+\qquad dV=r^2\sin\theta\,dr\,d\theta\,d\lambda.
+\tag{M3.2}
+\]</span></p>
+<p>On the radius-<span class="math inline">\(R\)</span> sphere <span class="math inline">\(S_R^2=\{\mathbf x:|\mathbf x|=R\}\)</span>, use solid angle <span class="math inline">\(d\Omega=dA/R^2\)</span>. Then</p>
+<p><span class="math display">\[
+dA=R^2\sin\theta\,d\theta\,d\lambda
+=R^2\cos\varphi\,d\varphi\,d\lambda,
+\qquad
+\int_{S_R^2}q\,dA=R^2\int_{-1}^1\int_0^{2\pi}q(\mu,\lambda)\,d\lambda\,d\mu.
+\tag{M3.3}
+\]</span></p>
+<p>The last equality reverses the <span class="math inline">\(\mu\)</span> bounds to absorb <span class="math inline">\(d\mu=-\sin\theta\,d\theta\)</span>. It uses a positive area measure, not an oriented two-form. The total area is <span class="math inline">\(4\pi R^2\)</span>. For <span class="math inline">\(q=\mu^2\)</span>, its global area mean is <span class="math inline">\(\frac12\int_{-1}^1\mu^2\,d\mu=1/3\)</span>; equal weights on equally spaced latitudes would give a different average.</p>
 </section>
-<section id="scale-factors" class="level2" data-number="5.2">
-<h2 data-number="5.2" class="anchored" data-anchor-id="scale-factors"><span class="header-section-number">5.2</span> Scale Factors</h2>
-<p>For an orthogonal curvilinear coordinate system <span class="math inline">\((q_1, q_2, q_3)\)</span>, the scale factors are</p>
-<p><span class="math display">\[h_i = \left|\frac{\partial \mathbf{r}}{\partial q_i}\right|,\]</span></p>
-<p>converting coordinate differentials to physical arc lengths: <span class="math inline">\(ds_i = h_i\, dq_i\)</span>. The volume element is <span class="math inline">\(dV = h_1 h_2 h_3\, dq_1\, dq_2\, dq_3\)</span>.</p>
-<p>For spherical coordinates, computing <span class="math inline">\(\partial \mathbf{r}/\partial r\)</span>, <span class="math inline">\(\partial \mathbf{r}/\partial \theta\)</span>, <span class="math inline">\(\partial \mathbf{r}/\partial \phi\)</span> and taking magnitudes gives</p>
-<p><span class="math display">\[h_r = 1, \qquad h_\theta = r, \qquad h_\phi = r\sin\theta,\]</span></p>
-<p>and hence <span class="math inline">\(dV = r^2\sin\theta\, dr\, d\theta\, d\phi\)</span>, consistent with the Jacobian determinant from the operators section.</p>
-<p><em>Further reading: <span class="citation" data-cites="Kreyszig2011aem">Kreyszig (<a href="#ref-Kreyszig2011aem" role="doc-biblioref">2011</a>)</span>, Sec. 10.7 (spherical volume element in the context of triple integrals).</em></p>
-<hr>
+<section id="tangent-differential-operators" class="level2" data-number="3.2">
+<h2 data-number="3.2" class="anchored" data-anchor-id="tangent-differential-operators"><span class="header-section-number">3.2</span> Tangent differential operators</h2>
+<p><strong>Result and motivation.</strong> Physical derivatives divide coordinate derivatives by arc lengths. These scale factors determine the spherical Laplacian and the correct signs of wind and vorticity. Sources: <span class="citation" data-cites="ArfkenWeber2005">(<a href="#ref-ArfkenWeber2005" role="doc-biblioref">Arfken and Weber 2005, secs. 2.2, 2.5</a>)</span>.</p>
+<p>The surface gradient <span class="math inline">\(\nabla_s q\)</span> is tangent to the sphere and satisfies <span class="math inline">\(dq=\nabla_s q\cdot d\mathbf x\)</span> for tangent displacements. For <span class="math inline">\(\mathbf F=F_\theta\mathbf e_\theta+F_\lambda\mathbf e_\lambda\)</span>, where <span class="math inline">\(F_\theta,F_\lambda\)</span> are physical components, one obtains</p>
+<p><span class="math display">\[
+\begin{aligned}
+\nabla_s q&amp;=\frac{\mathbf e_\theta}{R}\partial_\theta q
++\frac{\mathbf e_\lambda}{R\sin\theta}\partial_\lambda q,\\
+\nabla_s\cdot\mathbf F&amp;=\frac{1}{R\sin\theta}
+\left[\partial_\theta(\sin\theta F_\theta)+\partial_\lambda F_\lambda\right],\\
+(\nabla\times\mathbf F)\cdot\mathbf e_r&amp;=\frac{1}{R\sin\theta}
+\left[\partial_\theta(\sin\theta F_\lambda)-\partial_\lambda F_\theta\right].
+\end{aligned}
+\tag{M3.4}
+\]</span></p>
+<p>For the divergence formula, consider a small patch with sides <span class="math inline">\(R\,d\theta\)</span> and <span class="math inline">\(R\sin\theta\,d\lambda\)</span>. The difference of meridional fluxes through its latitude edges is <span class="math inline">\(R\partial_\theta(\sin\theta F_\theta)d\theta d\lambda\)</span>; the longitude edges contribute <span class="math inline">\(R\partial_\lambda F_\lambda d\theta d\lambda\)</span>. Divide by patch area. Applying Stokes’ theorem to the same patch yields the curl formula, with counterclockwise orientation viewed from outside.</p>
+<p>The Laplace-Beltrami operator is the surface divergence of the surface gradient:</p>
+<p><span class="math display">\[
+\Delta_s q:=\nabla_s\cdot\nabla_s q
+=\frac1{R^2}\left[\frac1{\sin\theta}\partial_\theta(\sin\theta\partial_\theta q)
++\frac1{\sin^2\theta}\partial_\lambda^2q\right].
+\tag{M3.5}
+\]</span></p>
+<p>Define the dimensionless angular operator <span class="math inline">\(\Delta_\Omega=R^2\Delta_s\)</span>. In latitude and in <span class="math inline">\(\mu\)</span>,</p>
+<p><span class="math display">\[
+\Delta_s q=\frac1{R^2\cos\varphi}\partial_\varphi(\cos\varphi\partial_\varphi q)
++\frac1{R^2\cos^2\varphi}\partial_\lambda^2q
+=\frac1{R^2}\left[\partial_\mu((1-\mu^2)\partial_\mu q)
++\frac{\partial_\lambda^2q}{1-\mu^2}\right].
+\tag{M3.6}
+\]</span></p>
+<p>In three-dimensional space, the full scalar Laplacian is <span class="math inline">\(\Delta q=r^{-2}\partial_r(r^2\partial_rq)+r^{-2}\Delta_\Omega q\)</span>. Restricting to a surface and assuming radial independence are distinct operations; (M3.5) is intrinsic to the surface. Its units are field units divided by <span class="math inline">\(\mathrm m^2\)</span>.</p>
 </section>
-<section id="general-operator-formulas-for-orthogonal-curvilinear-coordinates" class="level2" data-number="5.3">
-<h2 data-number="5.3" class="anchored" data-anchor-id="general-operator-formulas-for-orthogonal-curvilinear-coordinates"><span class="header-section-number">5.3</span> General Operator Formulas for Orthogonal Curvilinear Coordinates</h2>
-<p>For coordinates <span class="math inline">\((q_1, q_2, q_3)\)</span> with scale factors <span class="math inline">\((h_1, h_2, h_3)\)</span> and vector field <span class="math inline">\(\mathbf{F} = F_1\hat{e}_1 + F_2\hat{e}_2 + F_3\hat{e}_3\)</span>:</p>
-<p><strong>Gradient:</strong> <span class="math display">\[\nabla f = \frac{1}{h_1}\frac{\partial f}{\partial q_1}\hat{e}_1 + \frac{1}{h_2}\frac{\partial f}{\partial q_2}\hat{e}_2 + \frac{1}{h_3}\frac{\partial f}{\partial q_3}\hat{e}_3.\]</span></p>
-<p><strong>Divergence:</strong> <span class="math display">\[\nabla \cdot \mathbf{F} = \frac{1}{h_1 h_2 h_3}\left[\frac{\partial(h_2 h_3 F_1)}{\partial q_1} + \frac{\partial(h_1 h_3 F_2)}{\partial q_2} + \frac{\partial(h_1 h_2 F_3)}{\partial q_3}\right].\]</span></p>
-<p><strong>Curl:</strong> <span class="math display">\[\nabla \times \mathbf{F} = \frac{1}{h_1 h_2 h_3} \begin{vmatrix} h_1\hat{e}_1 &amp; h_2\hat{e}_2 &amp; h_3\hat{e}_3 \\ \partial_{q_1} &amp; \partial_{q_2} &amp; \partial_{q_3} \\ h_1 F_1 &amp; h_2 F_2 &amp; h_3 F_3 \end{vmatrix}.\]</span></p>
-<p><strong>Laplacian:</strong> <span class="math display">\[\nabla^2 f = \frac{1}{h_1 h_2 h_3}\left[\frac{\partial}{\partial q_1}\!\left(\frac{h_2 h_3}{h_1}\frac{\partial f}{\partial q_1}\right) + \frac{\partial}{\partial q_2}\!\left(\frac{h_1 h_3}{h_2}\frac{\partial f}{\partial q_2}\right) + \frac{\partial}{\partial q_3}\!\left(\frac{h_1 h_2}{h_3}\frac{\partial f}{\partial q_3}\right)\right].\]</span></p>
-<p><em>Further reading: <span class="citation" data-cites="Kreyszig2011aem">Kreyszig (<a href="#ref-Kreyszig2011aem" role="doc-biblioref">2011</a>)</span>, Sec. 9.7-9.9 (operators in Cartesian); the general curvilinear derivation via scale factors is covered more fully in <span class="citation" data-cites="Taylor2005mechanics">Taylor (<a href="#ref-Taylor2005mechanics" role="doc-biblioref">2005</a>)</span>, Ch. 16 (curvilinear coordinates).</em></p>
-<hr>
+<section id="regularity-streamfunction-and-the-closed-surface" class="level2" data-number="3.3">
+<h2 data-number="3.3" class="anchored" data-anchor-id="regularity-streamfunction-and-the-closed-surface"><span class="header-section-number">3.3</span> Regularity, streamfunction, and the closed surface</h2>
+<p><strong>Result and motivation.</strong> Poles are coordinate singularities, not physical edges. A smooth nondivergent tangent velocity on the sphere has a streamfunction whose mean is arbitrary. Sources: <span class="citation" data-cites="ArfkenWeber2005">(<a href="#ref-ArfkenWeber2005" role="doc-biblioref">Arfken and Weber 2005, secs. 1.16, 2.5, 12.11</a>)</span>; fluid application: <span class="citation" data-cites="Vallis2006">(<a href="#ref-Vallis2006" role="doc-biblioref">Vallis 2006, secs. 2.2, 4.5</a>)</span>.</p>
+<p>All longitudes at a pole describe one point. A smooth scalar has a unique value there; nonzero longitude Fourier orders must vanish at the poles with the behavior derived in <a href="../02-harmonic-analysis/spherical-harmonics.html">spherical harmonics</a>. The local tangent basis itself depends on longitude, so smooth vector components need not be longitude-independent at a pole. Smoothness is a geometric condition, not a command to set all derivatives to zero.</p>
+<p>For a smooth real streamfunction <span class="math inline">\(\psi\)</span> with units <span class="math inline">\(\mathrm m^2\,\mathrm s^{-1}\)</span>, set <span class="math inline">\(\mathbf u=\mathbf e_r\times\nabla_s\psi\)</span>. Let <span class="math inline">\(u\)</span> be eastward speed and <span class="math inline">\(v\)</span> northward speed, so <span class="math inline">\(F_\lambda=u\)</span> and <span class="math inline">\(F_\theta=-v\)</span>. Equation (M3.4) gives</p>
+<p><span class="math display">\[
+u=-\frac1R\partial_\varphi\psi,
+\qquad v=\frac1{R\cos\varphi}\partial_\lambda\psi,
+\qquad \nabla_s\cdot\mathbf u=0,
+\qquad \zeta:=(\nabla\times\mathbf u)\cdot\mathbf e_r=\Delta_s\psi.
+\tag{M3.7}
+\]</span></p>
+<p>To check divergence, substitute the first two expressions into <span class="math inline">\([\partial_\lambda u+\partial_\varphi(v\cos\varphi)]/(R\cos\varphi)\)</span>; the mixed partials cancel. Substituting into the radial curl yields (M3.6). Adding a spatial constant to <span class="math inline">\(\psi\)</span> changes neither speed nor vorticity. The converse for every smooth divergence-free tangent field on the whole sphere is justified by the potential decomposition in <a href="../02-harmonic-analysis/spherical-harmonics.html#zonal-means-tangent-vectors-and-isotropy">the tangent-field decomposition</a>. Until then, (M3.7) defines the velocity class considered. Domains with holes can require additional circulation modes.</p>
+<p>Surface integration by parts has no external boundary term:</p>
+<p><span class="math display">\[
+\int_{S_R^2}f\Delta_sg\,dA=-\int_{S_R^2}\nabla_sf\cdot\nabla_sg\,dA,
+\qquad \int_{S_R^2}\Delta_sg\,dA=0.
+\tag{M3.8}
+\]</span></p>
+<p>Here <span class="math inline">\(f,g\)</span> are smooth real scalars. The second identity uses <span class="math inline">\(f=1\)</span>. Thus <span class="math inline">\(\Delta_sg=h\)</span> requires zero area integral of <span class="math inline">\(h\)</span>. The coordinate cuts at longitude <span class="math inline">\(0\)</span> and the poles are not physical boundaries; periodicity and regularity cancel their apparent terms.</p>
 </section>
-<section id="operators-in-spherical-coordinates" class="level2" data-number="5.4">
-<h2 data-number="5.4" class="anchored" data-anchor-id="operators-in-spherical-coordinates"><span class="header-section-number">5.4</span> Operators in Spherical Coordinates</h2>
-<p>Substituting <span class="math inline">\((h_r, h_\theta, h_\phi) = (1, r, r\sin\theta)\)</span>:</p>
-<p><strong>Gradient:</strong> <span class="math display">\[\nabla f = \frac{\partial f}{\partial r}\hat{r} + \frac{1}{r}\frac{\partial f}{\partial \theta}\hat{\theta} + \frac{1}{r\sin\theta}\frac{\partial f}{\partial \phi}\hat{\phi}.\]</span></p>
-<p><strong>Divergence:</strong> <span class="math display">\[\nabla \cdot \mathbf{F} = \frac{1}{r^2}\frac{\partial(r^2 F_r)}{\partial r} + \frac{1}{r\sin\theta}\frac{\partial(\sin\theta\, F_\theta)}{\partial \theta} + \frac{1}{r\sin\theta}\frac{\partial F_\phi}{\partial \phi}.\]</span></p>
-<p><strong>Curl:</strong> <span class="math display">\[\nabla \times \mathbf{F} = \frac{1}{r\sin\theta}\!\left(\frac{\partial(\sin\theta\, F_\phi)}{\partial \theta} - \frac{\partial F_\theta}{\partial \phi}\right)\hat{r} + \frac{1}{r}\!\left(\frac{1}{\sin\theta}\frac{\partial F_r}{\partial \phi} - \frac{\partial(r F_\phi)}{\partial r}\right)\hat{\theta} + \frac{1}{r}\!\left(\frac{\partial(r F_\theta)}{\partial r} - \frac{\partial F_r}{\partial \theta}\right)\hat{\phi}.\]</span></p>
-<p><strong>Laplacian:</strong> <span class="math display">\[\nabla^2 f = \frac{1}{r^2}\frac{\partial}{\partial r}\!\left(r^2\frac{\partial f}{\partial r}\right) + \frac{1}{r^2\sin\theta}\frac{\partial}{\partial \theta}\!\left(\sin\theta\frac{\partial f}{\partial \theta}\right) + \frac{1}{r^2\sin^2\theta}\frac{\partial^2 f}{\partial \phi^2}.\]</span></p>
-<hr>
-</section>
-<section id="laplace-beltrami-operator-on-s2" class="level2" data-number="5.5">
-<h2 data-number="5.5" class="anchored" data-anchor-id="laplace-beltrami-operator-on-s2"><span class="header-section-number">5.5</span> Laplace-Beltrami Operator on <span class="math inline">\(S^2\)</span></h2>
-<p>On the unit sphere (<span class="math inline">\(r = 1\)</span>, constant), only the angular part of the Laplacian survives. The Laplace-Beltrami operator is</p>
-<p><span class="math display">\[\Delta_{S^2} f = \frac{1}{\sin\theta}\frac{\partial}{\partial \theta}\!\left(\sin\theta\frac{\partial f}{\partial \theta}\right) + \frac{1}{\sin^2\theta}\frac{\partial^2 f}{\partial \phi^2}.\]</span></p>
-<p>The full Laplacian decomposes as</p>
-<p><span class="math display">\[\nabla^2 f = \frac{1}{r^2}\frac{\partial}{\partial r}\!\left(r^2\frac{\partial f}{\partial r}\right) + \frac{1}{r^2}\Delta_{S^2} f.\]</span></p>
-<p><span class="math inline">\(\Delta_{S^2}\)</span> is the operator whose eigenfunctions are the spherical harmonics.</p>
-<p><em>Further reading: <span class="citation" data-cites="Kreyszig2011aem">Kreyszig (<a href="#ref-Kreyszig2011aem" role="doc-biblioref">2011</a>)</span>, Sec. 12.10 (Laplace’s equation in spherical coordinates and the derivation of the spherical Laplacian); <span class="citation" data-cites="Evans2010pde">Evans (<a href="#ref-Evans2010pde" role="doc-biblioref">2010</a>)</span>, Appendix C (notation and operator identities).</em></p>
-<hr>
-</section>
-<section id="worked-examples" class="level2" data-number="5.6">
-<h2 data-number="5.6" class="anchored" data-anchor-id="worked-examples"><span class="header-section-number">5.6</span> Worked Examples</h2>
-<p><strong>Gradient of a radial function.</strong> Compute <span class="math inline">\(\nabla(r^2)\)</span> in spherical coordinates.</p>
-<p><span class="math inline">\(f = r^2\)</span> depends only on <span class="math inline">\(r\)</span>, so <span class="math inline">\(\partial f/\partial\theta = \partial f/\partial\phi = 0\)</span>:</p>
-<p><span class="math display">\[\nabla(r^2) = \frac{\partial(r^2)}{\partial r}\hat{r} = 2r\hat{r}.\]</span></p>
-<p>Consistent with the Cartesian result <span class="math inline">\(\nabla(x^2+y^2+z^2) = 2(x,y,z)\)</span>.</p>
-<hr>
-<p><strong>Divergence of a radial vector field.</strong> Let <span class="math inline">\(\mathbf{F} = r^2\hat{r}\)</span>. Compute <span class="math inline">\(\nabla \cdot \mathbf{F}\)</span>.</p>
-<p>Only the radial term contributes:</p>
-<p><span class="math display">\[\nabla \cdot \mathbf{F} = \frac{1}{r^2}\frac{\partial(r^2 \cdot r^2)}{\partial r} = \frac{1}{r^2}\frac{\partial r^4}{\partial r} = \frac{4r^3}{r^2} = 4r.\]</span></p>
-<hr>
-<p><strong>Fundamental solution of Laplace’s equation.</strong> Show <span class="math inline">\(\nabla^2(1/r) = 0\)</span> for <span class="math inline">\(r \neq 0\)</span>.</p>
-<p><span class="math display">\[\nabla^2\!\left(\frac{1}{r}\right) = \frac{1}{r^2}\frac{d}{dr}\!\left(r^2 \frac{d}{dr}\frac{1}{r}\right) = \frac{1}{r^2}\frac{d}{dr}\!\left(-1\right) = 0.\]</span></p>
-<p><span class="math inline">\(1/r\)</span> is the fundamental solution of the Laplace equation in <span class="math inline">\(\mathbb{R}^3\)</span> - the Green’s function for <span class="math inline">\(-\nabla^2\)</span>. Its angular average over any sphere centered at the origin is <span class="math inline">\(1/r\)</span>, constant on each sphere, which is why it is rotationally symmetric and satisfies <span class="math inline">\(\Delta_{S^2}(1/r) = 0\)</span> trivially (no angular dependence).</p>
-<hr>
-<p><strong>Solid angle integral.</strong> Compute <span class="math inline">\(\int_{S^2} \cos^2\theta\, d\Omega\)</span>.</p>
-<p><span class="math display">\[\int_{S^2} \cos^2\theta\, d\Omega = \int_0^{2\pi} d\phi \int_0^{\pi} \cos^2\theta\sin\theta\, d\theta = 2\pi \int_{-1}^{1} u^2\, du = 2\pi \cdot \frac{2}{3} = \frac{4\pi}{3}.\]</span></p>
-<p>The mean value of <span class="math inline">\(\cos^2\theta\)</span> over <span class="math inline">\(S^2\)</span> is <span class="math inline">\(\frac{1}{3}\)</span>, consistent with isotropy: <span class="math inline">\(\langle x^2\rangle = \langle y^2\rangle = \langle z^2\rangle = \langle r^2\rangle / 3\)</span>.</p>
+<section id="chapter-summary-and-self-test" class="level2" data-number="3.4">
+<h2 data-number="3.4" class="anchored" data-anchor-id="chapter-summary-and-self-test"><span class="header-section-number">3.4</span> Chapter summary and self-test</h2>
+<p><strong>Main results and terms.</strong> Colatitude <span class="math inline">\(\theta\)</span>, latitude <span class="math inline">\(\varphi\)</span>, and longitude <span class="math inline">\(\lambda\)</span> follow (M3.1); <span class="math inline">\(\mu=\sin\varphi\)</span>. Scale factors define distance, area, and differential operators. Area is uniform in <span class="math inline">\((\mu,\lambda)\)</span>, not <span class="math inline">\((\varphi,\lambda)\)</span>. The physical Laplace-Beltrami operator is <span class="math inline">\(\Delta_s=R^{-2}\Delta_\Omega\)</span>. With the convention <span class="math inline">\(\mathbf u=\mathbf e_r\times\nabla_s\psi\)</span>, vorticity is <span class="math inline">\(\zeta=\Delta_s\psi\)</span>. The Laplacian has zero integral and a constant nullspace.</p>
+<p><strong>Self-test.</strong> Verify <span class="math inline">\(\Delta_s\mu=-2\mu/R^2\)</span>. If <span class="math inline">\(\psi=A\sin\varphi\)</span>, find <span class="math inline">\(u\)</span>, <span class="math inline">\(v\)</span>, and <span class="math inline">\(\zeta\)</span>, including their units.</p>
 
 
 <div id="refs" class="references csl-bib-body hanging-indent" role="list">
-<div id="ref-Evans2010pde" class="csl-entry" role="listitem">
-Evans, Lawrence C. 2010. <em>Partial Differential Equations</em>. 2nd ed. American Mathematical Society.
+<div id="ref-ArfkenWeber2005" class="csl-entry" role="listitem">
+Arfken, George B., and Hans J. Weber. 2005. <em>Mathematical Methods for Physicists</em>. 6th ed. Elsevier Academic Press.
 </div>
-<div id="ref-Kreyszig2011aem" class="csl-entry" role="listitem">
-Kreyszig, Erwin. 2011. <em>Advanced Engineering Mathematics</em>. 10th ed. Wiley.
-</div>
-<div id="ref-Taylor2005mechanics" class="csl-entry" role="listitem">
-Taylor, John R. 2005. <em>Classical Mechanics</em>. University Science Books.
+<div id="ref-Vallis2006" class="csl-entry" role="listitem">
+Vallis, Geoffrey K. 2006. <em>Atmospheric and Oceanic Fluid Dynamics: Fundamentals and Large-Scale Circulation</em>. Cambridge University Press.
 </div>
 </div>
 </section>
@@ -930,13 +1008,13 @@ Taylor, John R. 2005. <em>Classical Mechanics</em>. University Science Books.
   </script>
 <nav class="page-navigation" aria-label="Page">
   <div class="nav-page nav-page-previous">
-      <a href="../01-vector-calculus/theorems.html" class="pagination-link" aria-label="Integral Theorems">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Integral Theorems</span></span>
+      <a href="../01-vector-calculus/operators.html" class="pagination-link" aria-label="Calculus, fluxes, and conservation">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Calculus, fluxes, and conservation</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../02-harmonic-analysis/index.html" class="pagination-link" aria-label="Harmonic Analysis">
-        <span class="nav-page-text">Harmonic Analysis</span> <i class="bi bi-arrow-right-short"></i>
+      <a href="../02-harmonic-analysis/function-spaces.html" class="pagination-link" aria-label="Function spaces, limits, and weak derivatives">
+        <span class="nav-page-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Function spaces, limits, and weak derivatives</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

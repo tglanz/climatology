@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Partial Differential Equations – Global Physical Climatology</title>
+<title>5&nbsp; Differential equations and eigenfunction theory – Global Physical Climatology</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -26,7 +26,26 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-</style>
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
 <script src="../site_libs/quarto-nav/quarto-nav.js"></script>
@@ -36,8 +55,8 @@ ul.task-list li input[type="checkbox"] {
 <script src="../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../">
-<link href="../03-pdes/spectral-methods.html" rel="next">
-<link href="../02-harmonic-analysis/spherical-harmonics.html" rel="prev">
+<link href="../03-pdes/foundations.html" rel="next">
+<link href="../02-harmonic-analysis/function-spaces.html" rel="prev">
 <script src="../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="../site_libs/quarto-html/scrollable-regions/scrollable-regions.js" type="module"></script>
@@ -77,6 +96,35 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-chtml.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 </head>
 
@@ -89,7 +137,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="Breadcrumbs"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../03-pdes/index.html">Partial Differential Equations</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="Breadcrumbs"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../02-harmonic-analysis/function-spaces.html">Function spaces and differential equations</a></li><li class="breadcrumb-item"><a href="../03-pdes/eigenfunctions.html"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Differential equations and eigenfunction theory</span></a></li></ol></nav>
         <a class="flex-grow-1" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -122,41 +170,66 @@ ul.task-list li input[type="checkbox"] {
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a href="../01-vector-calculus/index.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text" id="quarto-sidebar-section-1-label">Vector Calculus</span></a>
-            <button type="button" class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-controls="quarto-sidebar-section-1" aria-expanded="true" aria-label="Toggle section: Vector Calculus">
+            <a href="../00-mathematical-foundations/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text" id="quarto-sidebar-section-1-label">Mathematical foundations</span></a>
+            <button type="button" class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-controls="quarto-sidebar-section-1" aria-expanded="true" aria-label="Toggle section: Mathematical foundations">
               <i class="bi bi-chevron-right ms-2" aria-hidden="true"></i>
             </button> 
       </div>
       <ul id="quarto-sidebar-section-1" aria-labelledby="quarto-sidebar-section-1-label" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="../00-mathematical-foundations/language.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Mathematical language and linear algebra</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../01-vector-calculus/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text" id="quarto-sidebar-section-2-label">Vector Calculus</span></a>
+            <button type="button" class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-controls="quarto-sidebar-section-2" aria-expanded="true" aria-label="Toggle section: Vector Calculus">
+              <i class="bi bi-chevron-right ms-2" aria-hidden="true"></i>
+            </button> 
+      </div>
+      <ul id="quarto-sidebar-section-2" aria-labelledby="quarto-sidebar-section-2-label" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="../01-vector-calculus/operators.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Differential Operators</span></span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../01-vector-calculus/integrals.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Integrals</span></span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../01-vector-calculus/change-of-variables.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Change of Variables</span></span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../01-vector-calculus/theorems.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Integral Theorems</span></span></a>
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Calculus, fluxes, and conservation</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../01-vector-calculus/spherical.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Spherical Coordinates</span></span></a>
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Geometry and calculus on the sphere</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <button type="button" class="sidebar-item-text sidebar-item-toggle sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-controls="quarto-sidebar-section-3" aria-expanded="true">
+ <span class="menu-text" id="quarto-sidebar-section-3-label">Function spaces and differential equations</span><i class="bi bi-chevron-right" aria-hidden="true"></i></button>
+      </div>
+      <ul id="quarto-sidebar-section-3" aria-labelledby="quarto-sidebar-section-3-label" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../02-harmonic-analysis/function-spaces.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Function spaces, limits, and weak derivatives</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../03-pdes/eigenfunctions.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Differential equations and eigenfunction theory</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../03-pdes/foundations.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Partial differential equations and physical models</span></span></a>
   </div>
 </li>
       </ul>
@@ -164,51 +237,28 @@ ul.task-list li input[type="checkbox"] {
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a href="../02-harmonic-analysis/index.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text" id="quarto-sidebar-section-2-label">Harmonic Analysis</span></a>
-            <button type="button" class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-controls="quarto-sidebar-section-2" aria-expanded="true" aria-label="Toggle section: Harmonic Analysis">
+ <span class="menu-text" id="quarto-sidebar-section-4-label">Harmonic Analysis</span></a>
+            <button type="button" class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-controls="quarto-sidebar-section-4" aria-expanded="true" aria-label="Toggle section: Harmonic Analysis">
               <i class="bi bi-chevron-right ms-2" aria-hidden="true"></i>
             </button> 
       </div>
-      <ul id="quarto-sidebar-section-2" aria-labelledby="quarto-sidebar-section-2-label" class="collapse list-unstyled sidebar-section depth1 show">  
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../02-harmonic-analysis/function-spaces.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Function Spaces</span></span></a>
-  </div>
-</li>
+      <ul id="quarto-sidebar-section-4" aria-labelledby="quarto-sidebar-section-4-label" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../02-harmonic-analysis/fourier-series.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Fourier Series</span></span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../02-harmonic-analysis/fourier-transform.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Fourier Transform</span></span></a>
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Fourier analysis</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../02-harmonic-analysis/spherical-harmonics.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Spherical Harmonics</span></span></a>
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Legendre polynomials and spherical harmonics</span></span></a>
   </div>
 </li>
-      </ul>
-  </li>
-        <li class="sidebar-item sidebar-item-section">
-      <div class="sidebar-item-container"> 
-            <a href="../03-pdes/index.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text" id="quarto-sidebar-section-3-label">Partial Differential Equations</span></a>
-            <button type="button" class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-controls="quarto-sidebar-section-3" aria-expanded="true" aria-label="Toggle section: Partial Differential Equations">
-              <i class="bi bi-chevron-right ms-2" aria-hidden="true"></i>
-            </button> 
-      </div>
-      <ul id="quarto-sidebar-section-3" aria-labelledby="quarto-sidebar-section-3-label" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../03-pdes/spectral-methods.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Spectral numerical methods</span></span></a>
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Spectral discretization, quadrature, and stability</span></span></a>
   </div>
 </li>
       </ul>
@@ -216,86 +266,158 @@ ul.task-list li input[type="checkbox"] {
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a href="../04-geophysical-fluid-dynamics/index.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text" id="quarto-sidebar-section-4-label">Geophysical Fluid Dynamics</span></a>
-            <button type="button" class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-controls="quarto-sidebar-section-4" aria-expanded="true" aria-label="Toggle section: Geophysical Fluid Dynamics">
+ <span class="menu-text" id="quarto-sidebar-section-5-label">Geophysical Fluid Dynamics</span></a>
+            <button type="button" class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-controls="quarto-sidebar-section-5" aria-expanded="true" aria-label="Toggle section: Geophysical Fluid Dynamics">
               <i class="bi bi-chevron-right ms-2" aria-hidden="true"></i>
             </button> 
       </div>
-      <ul id="quarto-sidebar-section-4" aria-labelledby="quarto-sidebar-section-4-label" class="collapse list-unstyled sidebar-section depth1 show">  
+      <ul id="quarto-sidebar-section-5" aria-labelledby="quarto-sidebar-section-5-label" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../04-geophysical-fluid-dynamics/kinematics.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Kinematics and mathematical language</span></span></a>
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Kinematics and mathematical language</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../04-geophysical-fluid-dynamics/motion.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Mass, forces, and the momentum equation</span></span></a>
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Mass, forces, and the momentum equation</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../04-geophysical-fluid-dynamics/rotating.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Rotation and large-scale balances</span></span></a>
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Rotation and large-scale balances</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../04-geophysical-fluid-dynamics/vorticity.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Vorticity and circulation</span></span></a>
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Vorticity and circulation</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../04-geophysical-fluid-dynamics/layer-pv.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">A shallow layer and the barotropic reduction</span></span></a>
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">A shallow layer and the barotropic reduction</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../04-geophysical-fluid-dynamics/barotropic.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">The BVE on a rotating sphere</span></span></a>
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">The BVE on a rotating sphere</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../04-geophysical-fluid-dynamics/turbulence.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Invariants, turbulence, and eddy-driven flow</span></span></a>
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Invariants, turbulence, and eddy-driven flow</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../04-geophysical-fluid-dynamics/inversion.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Spherical harmonics, inversion, and dissipation</span></span></a>
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Spherical harmonics, inversion, and dissipation</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../04-geophysical-fluid-dynamics/stochastic.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Stochastic stirring and the closed forced model</span></span></a>
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Stochastic stirring and the closed forced model</span></span></a>
   </div>
 </li>
       </ul>
   </li>
         <li class="sidebar-item sidebar-item-section">
-      <span class="sidebar-item-text sidebar-link text-start">
- <span class="menu-text">Neural Operators</span></span>
+      <div class="sidebar-item-container"> 
+            <a href="../06-statistics/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text" id="quarto-sidebar-section-6-label">Probability and averages</span></a>
+            <button type="button" class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-controls="quarto-sidebar-section-6" aria-expanded="true" aria-label="Toggle section: Probability and averages">
+              <i class="bi bi-chevron-right ms-2" aria-hidden="true"></i>
+            </button> 
+      </div>
+      <ul id="quarto-sidebar-section-6" aria-labelledby="quarto-sidebar-section-6-label" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../06-statistics/averages.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Probability, averages, and climatological estimates</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../05-neural-operators/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text" id="quarto-sidebar-section-7-label">Neural Operators</span></a>
+            <button type="button" class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" aria-controls="quarto-sidebar-section-7" aria-expanded="true" aria-label="Toggle section: Neural Operators">
+              <i class="bi bi-chevron-right ms-2" aria-hidden="true"></i>
+            </button> 
+      </div>
+      <ul id="quarto-sidebar-section-7" aria-labelledby="quarto-sidebar-section-7-label" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../05-neural-operators/spectral-operators.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Integral operators, symmetries, and learned maps</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <button type="button" class="sidebar-item-text sidebar-item-toggle sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" aria-controls="quarto-sidebar-section-8" aria-expanded="true">
+ <span class="menu-text" id="quarto-sidebar-section-8-label">Appendices</span><i class="bi bi-chevron-right" aria-hidden="true"></i></button>
+      </div>
+      <ul id="quarto-sidebar-section-8" aria-labelledby="quarto-sidebar-section-8-label" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../01-vector-calculus/integrals.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">A</span>&nbsp; <span class="chapter-title">Vector integrals</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../01-vector-calculus/change-of-variables.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">B</span>&nbsp; <span class="chapter-title">Change of variables</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../01-vector-calculus/theorems.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">C</span>&nbsp; <span class="chapter-title">Integral theorems</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../02-harmonic-analysis/fourier-transform.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">D</span>&nbsp; <span class="chapter-title">Fourier transform</span></span></a>
+  </div>
+</li>
+      </ul>
   </li>
     </ul>
     </div>
 </nav>
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" aria-labelledby="toc-title" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#initial-value-equations-and-integrating-factors" id="toc-initial-value-equations-and-integrating-factors" class="nav-link active" data-scroll-target="#initial-value-equations-and-integrating-factors"><span class="header-section-number">5.1</span> Initial-value equations and integrating factors</a></li>
+  <li><a href="#boundary-conditions-and-sturm-liouville-operators" id="toc-boundary-conditions-and-sturm-liouville-operators" class="nav-link" data-scroll-target="#boundary-conditions-and-sturm-liouville-operators"><span class="header-section-number">5.2</span> Boundary conditions and Sturm-Liouville operators</a></li>
+  <li><a href="#separation-of-variables-and-spectral-solution" id="toc-separation-of-variables-and-spectral-solution" class="nav-link" data-scroll-target="#separation-of-variables-and-spectral-solution"><span class="header-section-number">5.3</span> Separation of variables and spectral solution</a></li>
+  <li><a href="#greens-functions-and-solvability" id="toc-greens-functions-and-solvability" class="nav-link" data-scroll-target="#greens-functions-and-solvability"><span class="header-section-number">5.4</span> Green’s functions and solvability</a></li>
+  <li><a href="#chapter-summary-and-self-test" id="toc-chapter-summary-and-self-test" class="nav-link" data-scroll-target="#chapter-summary-and-self-test"><span class="header-section-number">5.5</span> Chapter summary and self-test</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content" tabindex="-1">
 
-<header id="title-block-header" class="quarto-title-block default">
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="Breadcrumbs"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../02-harmonic-analysis/function-spaces.html">Function spaces and differential equations</a></li><li class="breadcrumb-item"><a href="../03-pdes/eigenfunctions.html"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Differential equations and eigenfunction theory</span></a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title">Partial Differential Equations</h1>
+<h1 class="title"><span id="ch-odes" class="quarto-section-identifier"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Differential equations and eigenfunction theory</span></span></h1>
 </div>
 
 
@@ -312,10 +434,88 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<p>Differential operators, boundary conditions, and forcing determine a PDE problem. Laplace and Poisson equations provide examples of Green’s functions and spectral solution methods. On the sphere, spherical harmonics connect these ideas to the Laplace-Beltrami operator.</p>
-<p>The <a href="../03-pdes/spectral-methods.html">spectral methods chapter</a> develops projection, Gaussian quadrature, spherical harmonic transforms, elliptic inversion, and nonlinear dealiasing.</p>
+<!-- Generated by presentations/mathematical-prerequisites/sync_book.py; edit chapters/*.md and run build.py --sync-book. -->
+<section id="initial-value-equations-and-integrating-factors" class="level2" data-number="5.1">
+<h2 data-number="5.1" class="anchored" data-anchor-id="initial-value-equations-and-integrating-factors"><span class="header-section-number">5.1</span> Initial-value equations and integrating factors</h2>
+<p><strong>Result and motivation.</strong> Linear evolution balances forcing against a response kernel. The same integrating-factor formula solves a single spectral mode of a PDE. Sources: <span class="citation" data-cites="ArfkenWeber2005">(<a href="#ref-ArfkenWeber2005" role="doc-biblioref">Arfken and Weber 2005, secs. 9.2, 9.7</a>)</span>.</p>
+<p>An ordinary differential equation (ODE) relates an unknown function of one independent variable to its derivatives. Its order is the highest derivative present. An initial condition specifies its state at an initial time. A linear equation has the unknown and its derivatives only to the first power, with coefficients independent of that unknown. “Homogeneous” means zero forcing.</p>
+<p>Let <span class="math inline">\(a(t)\)</span> be an unknown scalar amplitude, <span class="math inline">\(\gamma(t)\)</span> a known decay rate, <span class="math inline">\(b(t)\)</span> a known forcing, and <span class="math inline">\(a(0)=a_0\)</span>. Define <span class="math inline">\(I(t)=\exp(\int_0^t\gamma(s)ds)\)</span>. Since <span class="math inline">\(I'=\gamma I\)</span>,</p>
+<p><span class="math display">\[
+a'+\gamma a=b
+\quad\Longrightarrow\quad
+(Ia)'=Ib
+\quad\Longrightarrow\quad
+a(t)=I(t)^{-1}\left[a_0+\int_0^t I(s)b(s)ds\right].
+\tag{M5.1}
+\]</span></p>
+<p>For constant <span class="math inline">\(\gamma\)</span>, this is <span class="math inline">\(a(t)=a_0e^{-\gamma t}+\int_0^t e^{-\gamma(t-s)}b(s)ds\)</span>. Positive real <span class="math inline">\(\gamma\)</span> damps an initial perturbation; purely imaginary <span class="math inline">\(\gamma\)</span> changes phase; negative real <span class="math inline">\(\gamma\)</span> amplifies it. These statements concern the homogeneous response. Nonzero forcing can sustain a nonzero state.</p>
+<p>For a vector state, <span class="math inline">\(\mathbf a'=A\mathbf a\)</span> has solution <span class="math inline">\(\mathbf a(t)=e^{tA}\mathbf a(0)\)</span>, where <span class="math inline">\(e^{tA}=\sum_{n\ge0}t^nA^n/n!\)</span>. If <span class="math inline">\(A\)</span> has an eigenbasis, each eigencomponent evolves as <span class="math inline">\(e^{\lambda_jt}\)</span>. Eigenvalues alone need not describe transient growth for a nonnormal matrix (<span class="math inline">\(AA^*\ne A^*A\)</span>); we use orthogonal diagonalization only when its hypotheses hold.</p>
+</section>
+<section id="boundary-conditions-and-sturm-liouville-operators" class="level2" data-number="5.2">
+<h2 data-number="5.2" class="anchored" data-anchor-id="boundary-conditions-and-sturm-liouville-operators"><span class="header-section-number">5.2</span> Boundary conditions and Sturm-Liouville operators</h2>
+<p><strong>Result and motivation.</strong> An operator includes its domain and boundary conditions. Self-adjoint boundary conditions produce real eigenvalues and orthogonal eigenfunctions. Sources: <span class="citation" data-cites="ArfkenWeber2005">(<a href="#ref-ArfkenWeber2005" role="doc-biblioref">Arfken and Weber 2005, secs. 9.3, 10.1–10.2</a>)</span>.</p>
+<p>On a finite interval <span class="math inline">\([a,b]\)</span>, let real <span class="math inline">\(p,p',q,w\)</span> be continuous with <span class="math inline">\(p&gt;0\)</span> and <span class="math inline">\(w&gt;0\)</span>. Define</p>
+<p><span class="math display">\[
+\mathcal Ly=\frac1w\left[-(py')'+qy\right],
+\qquad \mathcal Ly=\lambda y,
+\qquad \langle f,g\rangle_w=\int_a^bf\overline g\,w\,dx.
+\tag{M5.2}
+\]</span></p>
+<p>The functions admitted by an operator, including their boundary conditions, form its domain. Dirichlet conditions specify <span class="math inline">\(y\)</span> at an endpoint; Neumann conditions specify its normal derivative; Robin conditions specify a linear combination. For homogeneous separated conditions use <span class="math inline">\(\alpha_ay(a)+\beta_ap(a)y'(a)=0\)</span> and <span class="math inline">\(\alpha_by(b)+\beta_bp(b)y'(b)=0\)</span>, with real coefficient pairs not both zero. Integration by parts gives</p>
+<p><span class="math display">\[
+\langle\mathcal Lf,g\rangle_w-\langle f,\mathcal Lg\rangle_w
+=\left[p(f\overline{g'}-f'\overline g)\right]_a^b=0.
+\tag{M5.3}
+\]</span></p>
+<p>Here <span class="math inline">\([h]_a^b=h(b)-h(a)\)</span>. The separated boundary conditions make each endpoint bracket zero. Matching periodic <span class="math inline">\(y\)</span> and <span class="math inline">\(py'\)</span> also cancels it. This proves symmetry; the regular Sturm-Liouville realization with these conditions is self-adjoint (its operator domain equals that of its adjoint). For a general unbounded differential operator, formal symmetry alone would not establish this stronger statement.</p>
+<p>Apply (M5.3) to eigenfunctions <span class="math inline">\(y_j,y_k\)</span>. The argument in (M1.3) gives real <span class="math inline">\(\lambda_j\)</span> and</p>
+<p><span class="math display">\[
+(\lambda_j-\lambda_k)\int_a^b y_j\overline{y_k}w\,dx=0.
+\tag{M5.4}
+\]</span></p>
+<p>The regular Sturm-Liouville theorem further gives a complete orthonormal eigenbasis in <span class="math inline">\(L_w^2\)</span>, a discrete spectrum bounded below, and eigenvalues tending to <span class="math inline">\(+\infty\)</span>. These existence and completeness assertions are quoted from AW, Chapter 10; orthogonality has just been derived. Singular endpoints, such as <span class="math inline">\(p=1-x^2=0\)</span> at <span class="math inline">\(x=\pm1\)</span>, require separate endpoint regularity conditions and cannot be covered by pretending <span class="math inline">\(p&gt;0\)</span> on the closed interval.</p>
+</section>
+<section id="separation-of-variables-and-spectral-solution" class="level2" data-number="5.3">
+<h2 data-number="5.3" class="anchored" data-anchor-id="separation-of-variables-and-spectral-solution"><span class="header-section-number">5.3</span> Separation of variables and spectral solution</h2>
+<p><strong>Result and motivation.</strong> Separation turns a linear PDE with compatible geometry into a spatial eigenproblem and scalar time equations. The spatial boundary conditions select the allowed modes. Sources: <span class="citation" data-cites="ArfkenWeber2005">(<a href="#ref-ArfkenWeber2005" role="doc-biblioref">Arfken and Weber 2005, secs. 9.3, 9.8, 10.4</a>)</span>.</p>
+<p>Consider diffusion on <span class="math inline">\(0&lt;x&lt;d\)</span>, where <span class="math inline">\(d&gt;0\)</span> is the interval length, <span class="math inline">\(\kappa&gt;0\)</span>, <span class="math inline">\(u(0,t)=u(d,t)=0\)</span>, and <span class="math inline">\(u(x,0)=u_0(x)\)</span> with <span class="math inline">\(u_0\in L^2(0,d)\)</span>. Seek a product <span class="math inline">\(u=X(x)T(t)\)</span>. Dividing <span class="math inline">\(XT'=\kappa X''T\)</span> by <span class="math inline">\(\kappa XT\)</span> where nonzero yields <span class="math inline">\(T'/(\kappa T)=X''/X=-\lambda\)</span>, because one side depends only on time and the other only on space. Thus</p>
+<p><span class="math display">\[
+-X''=\lambda X,\quad X(0)=X(d)=0,
+\qquad T'=-\kappa\lambda T.
+\tag{M5.5}
+\]</span></p>
+<p>A nonzero eigenfunction requires <span class="math inline">\(\lambda_n=(n\pi/d)^2\)</span> and <span class="math inline">\(X_n=\sqrt{2/d}\sin(n\pi x/d)\)</span>, <span class="math inline">\(n=1,2,\ldots\)</span>. For <span class="math inline">\(\lambda=0\)</span> the linear solution vanishes at both endpoints only if zero; for <span class="math inline">\(\lambda&lt;0\)</span> the exponential solutions likewise give no nonzero Dirichlet mode. Expanding the initial condition gives</p>
+<p><span class="math display">\[
+u(x,t)=\sum_{n=1}^{\infty}a_n e^{-\kappa\lambda_nt}X_n(x),
+\qquad a_n=\int_0^d u_0(x)X_n(x)dx.
+\tag{M5.6}
+\]</span></p>
+<p>This holds in <span class="math inline">\(L^2\)</span> at <span class="math inline">\(t=0\)</span> and is smooth in the interior for <span class="math inline">\(t&gt;0\)</span>. High modes decay faster. Neumann endpoints instead admit a constant mode with eigenvalue zero, so the spatial mean persists.</p>
+</section>
+<section id="greens-functions-and-solvability" class="level2" data-number="5.4">
+<h2 data-number="5.4" class="anchored" data-anchor-id="greens-functions-and-solvability"><span class="header-section-number">5.4</span> Green’s functions and solvability</h2>
+<p><strong>Result and motivation.</strong> A Green’s function is the response to a point source with specified boundary conditions. A zero eigenvalue replaces ordinary inversion with a compatibility condition. Sources: <span class="citation" data-cites="ArfkenWeber2005">(<a href="#ref-ArfkenWeber2005" role="doc-biblioref">Arfken and Weber 2005, secs. 1.15, 9.7, 10.5</a>)</span>.</p>
+<p>For <span class="math inline">\(\mathcal L\)</span> with orthonormal eigenfunctions <span class="math inline">\(e_n\)</span> in measure <span class="math inline">\(d\nu\)</span> and nonzero eigenvalues <span class="math inline">\(\lambda_n\)</span>, solving <span class="math inline">\(\mathcal Lu=f\)</span> gives <span class="math inline">\(u_n=f_n/\lambda_n\)</span>. Formally, or in the appropriate distributional sense,</p>
+<p><span class="math display">\[
+G(x,y)=\sum_n\frac{e_n(x)\overline{e_n(y)}}{\lambda_n},
+\qquad u(x)=\int G(x,y)f(y)d\nu(y).
+\tag{M5.7}
+\]</span></p>
+<p>The delta identity for this measure is <span class="math inline">\(\int\delta_\nu(x,y)f(y)d\nu(y)=f(x)\)</span>. Then <span class="math inline">\(\mathcal L_xG=\delta_\nu\)</span>. If <span class="math inline">\(\lambda_0=0\)</span> with normalized eigenfunction <span class="math inline">\(e_0\)</span>, solvability requires <span class="math inline">\(\langle f,e_0\rangle=0\)</span>. Excluding that mode gives <span class="math inline">\(\mathcal L_xG=\delta_\nu-e_0(x)\overline{e_0(y)}\)</span>. Set <span class="math inline">\(u_0=0\)</span> to choose one solution.</p>
+<p>For a direct check, on <span class="math inline">\(0&lt;x&lt;d\)</span> the Dirichlet Green’s function of <span class="math inline">\(-d^2/dx^2\)</span> is <span class="math inline">\(G(x,y)=x_&lt;(d-x_&gt;)/d\)</span>, where <span class="math inline">\(x_&lt;=\min(x,y)\)</span> and <span class="math inline">\(x_&gt;=\max(x,y)\)</span>. It vanishes at the endpoints, is continuous at <span class="math inline">\(x=y\)</span>, and its derivative in <span class="math inline">\(x\)</span> jumps by <span class="math inline">\(-1\)</span>. Therefore <span class="math inline">\(-\partial_x^2G=\delta(x-y)\)</span>, with the required sign.</p>
+</section>
+<section id="chapter-summary-and-self-test" class="level2" data-number="5.5">
+<h2 data-number="5.5" class="anchored" data-anchor-id="chapter-summary-and-self-test"><span class="header-section-number">5.5</span> Chapter summary and self-test</h2>
+<p><strong>Main results and terms.</strong> The integrating factor gives the forced modal solution (M5.1). Initial conditions specify a state; boundary conditions restrict spatial behavior. A regular self-adjoint Sturm-Liouville operator has real eigenvalues and a complete weighted orthonormal eigenbasis. Separation yields spatial eigenvalues and time factors as in (M5.5)-(M5.6). A Green’s function is a kernel for inversion; nullspace components require compatibility and a normalization.</p>
+<p><strong>Self-test.</strong> For <span class="math inline">\(u_0=\sin(2\pi x/d)\)</span> in (M5.6), what is the decay time? Why can <span class="math inline">\(-u''=1\)</span> on a periodic interval have no periodic solution?</p>
 
 
+<div id="refs" class="references csl-bib-body hanging-indent" role="list">
+<div id="ref-ArfkenWeber2005" class="csl-entry" role="listitem">
+Arfken, George B., and Hans J. Weber. 2005. <em>Mathematical Methods for Physicists</em>. 6th ed. Elsevier Academic Press.
+</div>
+</div>
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
@@ -796,13 +996,13 @@ ul.task-list li input[type="checkbox"] {
   </script>
 <nav class="page-navigation" aria-label="Page">
   <div class="nav-page nav-page-previous">
-      <a href="../02-harmonic-analysis/spherical-harmonics.html" class="pagination-link" aria-label="Spherical Harmonics">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Spherical Harmonics</span></span>
+      <a href="../02-harmonic-analysis/function-spaces.html" class="pagination-link" aria-label="Function spaces, limits, and weak derivatives">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Function spaces, limits, and weak derivatives</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../03-pdes/spectral-methods.html" class="pagination-link" aria-label="Spectral numerical methods">
-        <span class="nav-page-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Spectral numerical methods</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="../03-pdes/foundations.html" class="pagination-link" aria-label="Partial differential equations and physical models">
+        <span class="nav-page-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Partial differential equations and physical models</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

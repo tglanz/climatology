@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>6&nbsp; Function Spaces – Global Physical Climatology</title>
+<title>4&nbsp; Function spaces, limits, and weak derivatives – Global Physical Climatology</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -55,8 +55,8 @@ div.csl-indent {
 <script src="../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../">
-<link href="../02-harmonic-analysis/fourier-series.html" rel="next">
-<link href="../02-harmonic-analysis/index.html" rel="prev">
+<link href="../03-pdes/eigenfunctions.html" rel="next">
+<link href="../01-vector-calculus/spherical.html" rel="prev">
 <script src="../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="../site_libs/quarto-html/scrollable-regions/scrollable-regions.js" type="module"></script>
@@ -137,7 +137,7 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="Breadcrumbs"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../02-harmonic-analysis/index.html">Harmonic Analysis</a></li><li class="breadcrumb-item"><a href="../02-harmonic-analysis/function-spaces.html"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Function Spaces</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="Breadcrumbs"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../02-harmonic-analysis/function-spaces.html">Function spaces and differential equations</a></li><li class="breadcrumb-item"><a href="../02-harmonic-analysis/function-spaces.html"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Function spaces, limits, and weak derivatives</span></a></li></ol></nav>
         <a class="flex-grow-1" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -170,41 +170,66 @@ window.Quarto = {
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a href="../01-vector-calculus/index.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text" id="quarto-sidebar-section-1-label">Vector Calculus</span></a>
-            <button type="button" class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-controls="quarto-sidebar-section-1" aria-expanded="true" aria-label="Toggle section: Vector Calculus">
+            <a href="../00-mathematical-foundations/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text" id="quarto-sidebar-section-1-label">Mathematical foundations</span></a>
+            <button type="button" class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-controls="quarto-sidebar-section-1" aria-expanded="true" aria-label="Toggle section: Mathematical foundations">
               <i class="bi bi-chevron-right ms-2" aria-hidden="true"></i>
             </button> 
       </div>
       <ul id="quarto-sidebar-section-1" aria-labelledby="quarto-sidebar-section-1-label" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="../00-mathematical-foundations/language.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Mathematical language and linear algebra</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../01-vector-calculus/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text" id="quarto-sidebar-section-2-label">Vector Calculus</span></a>
+            <button type="button" class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-controls="quarto-sidebar-section-2" aria-expanded="true" aria-label="Toggle section: Vector Calculus">
+              <i class="bi bi-chevron-right ms-2" aria-hidden="true"></i>
+            </button> 
+      </div>
+      <ul id="quarto-sidebar-section-2" aria-labelledby="quarto-sidebar-section-2-label" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="../01-vector-calculus/operators.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Differential Operators</span></span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../01-vector-calculus/integrals.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Integrals</span></span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../01-vector-calculus/change-of-variables.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Change of Variables</span></span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../01-vector-calculus/theorems.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Integral Theorems</span></span></a>
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Calculus, fluxes, and conservation</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../01-vector-calculus/spherical.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Spherical Coordinates</span></span></a>
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Geometry and calculus on the sphere</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <button type="button" class="sidebar-item-text sidebar-item-toggle sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-controls="quarto-sidebar-section-3" aria-expanded="true">
+ <span class="menu-text" id="quarto-sidebar-section-3-label">Function spaces and differential equations</span><i class="bi bi-chevron-right" aria-hidden="true"></i></button>
+      </div>
+      <ul id="quarto-sidebar-section-3" aria-labelledby="quarto-sidebar-section-3-label" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../02-harmonic-analysis/function-spaces.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Function spaces, limits, and weak derivatives</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../03-pdes/eigenfunctions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Differential equations and eigenfunction theory</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../03-pdes/foundations.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Partial differential equations and physical models</span></span></a>
   </div>
 </li>
       </ul>
@@ -212,51 +237,28 @@ window.Quarto = {
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a href="../02-harmonic-analysis/index.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text" id="quarto-sidebar-section-2-label">Harmonic Analysis</span></a>
-            <button type="button" class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-controls="quarto-sidebar-section-2" aria-expanded="true" aria-label="Toggle section: Harmonic Analysis">
+ <span class="menu-text" id="quarto-sidebar-section-4-label">Harmonic Analysis</span></a>
+            <button type="button" class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-controls="quarto-sidebar-section-4" aria-expanded="true" aria-label="Toggle section: Harmonic Analysis">
               <i class="bi bi-chevron-right ms-2" aria-hidden="true"></i>
             </button> 
       </div>
-      <ul id="quarto-sidebar-section-2" aria-labelledby="quarto-sidebar-section-2-label" class="collapse list-unstyled sidebar-section depth1 show">  
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../02-harmonic-analysis/function-spaces.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Function Spaces</span></span></a>
-  </div>
-</li>
+      <ul id="quarto-sidebar-section-4" aria-labelledby="quarto-sidebar-section-4-label" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../02-harmonic-analysis/fourier-series.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Fourier Series</span></span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../02-harmonic-analysis/fourier-transform.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Fourier Transform</span></span></a>
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Fourier analysis</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../02-harmonic-analysis/spherical-harmonics.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Spherical Harmonics</span></span></a>
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Legendre polynomials and spherical harmonics</span></span></a>
   </div>
 </li>
-      </ul>
-  </li>
-        <li class="sidebar-item sidebar-item-section">
-      <div class="sidebar-item-container"> 
-            <a href="../03-pdes/index.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text" id="quarto-sidebar-section-3-label">Partial Differential Equations</span></a>
-            <button type="button" class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-controls="quarto-sidebar-section-3" aria-expanded="true" aria-label="Toggle section: Partial Differential Equations">
-              <i class="bi bi-chevron-right ms-2" aria-hidden="true"></i>
-            </button> 
-      </div>
-      <ul id="quarto-sidebar-section-3" aria-labelledby="quarto-sidebar-section-3-label" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../03-pdes/spectral-methods.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Spectral numerical methods</span></span></a>
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Spectral discretization, quadrature, and stability</span></span></a>
   </div>
 </li>
       </ul>
@@ -264,71 +266,133 @@ window.Quarto = {
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a href="../04-geophysical-fluid-dynamics/index.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text" id="quarto-sidebar-section-4-label">Geophysical Fluid Dynamics</span></a>
-            <button type="button" class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-controls="quarto-sidebar-section-4" aria-expanded="true" aria-label="Toggle section: Geophysical Fluid Dynamics">
+ <span class="menu-text" id="quarto-sidebar-section-5-label">Geophysical Fluid Dynamics</span></a>
+            <button type="button" class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-controls="quarto-sidebar-section-5" aria-expanded="true" aria-label="Toggle section: Geophysical Fluid Dynamics">
               <i class="bi bi-chevron-right ms-2" aria-hidden="true"></i>
             </button> 
       </div>
-      <ul id="quarto-sidebar-section-4" aria-labelledby="quarto-sidebar-section-4-label" class="collapse list-unstyled sidebar-section depth1 show">  
+      <ul id="quarto-sidebar-section-5" aria-labelledby="quarto-sidebar-section-5-label" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../04-geophysical-fluid-dynamics/kinematics.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Kinematics and mathematical language</span></span></a>
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Kinematics and mathematical language</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../04-geophysical-fluid-dynamics/motion.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Mass, forces, and the momentum equation</span></span></a>
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Mass, forces, and the momentum equation</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../04-geophysical-fluid-dynamics/rotating.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Rotation and large-scale balances</span></span></a>
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Rotation and large-scale balances</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../04-geophysical-fluid-dynamics/vorticity.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Vorticity and circulation</span></span></a>
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Vorticity and circulation</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../04-geophysical-fluid-dynamics/layer-pv.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">A shallow layer and the barotropic reduction</span></span></a>
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">A shallow layer and the barotropic reduction</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../04-geophysical-fluid-dynamics/barotropic.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">The BVE on a rotating sphere</span></span></a>
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">The BVE on a rotating sphere</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../04-geophysical-fluid-dynamics/turbulence.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Invariants, turbulence, and eddy-driven flow</span></span></a>
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Invariants, turbulence, and eddy-driven flow</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../04-geophysical-fluid-dynamics/inversion.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Spherical harmonics, inversion, and dissipation</span></span></a>
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Spherical harmonics, inversion, and dissipation</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../04-geophysical-fluid-dynamics/stochastic.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Stochastic stirring and the closed forced model</span></span></a>
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Stochastic stirring and the closed forced model</span></span></a>
   </div>
 </li>
       </ul>
   </li>
         <li class="sidebar-item sidebar-item-section">
-      <span class="sidebar-item-text sidebar-link text-start">
- <span class="menu-text">Neural Operators</span></span>
+      <div class="sidebar-item-container"> 
+            <a href="../06-statistics/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text" id="quarto-sidebar-section-6-label">Probability and averages</span></a>
+            <button type="button" class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-controls="quarto-sidebar-section-6" aria-expanded="true" aria-label="Toggle section: Probability and averages">
+              <i class="bi bi-chevron-right ms-2" aria-hidden="true"></i>
+            </button> 
+      </div>
+      <ul id="quarto-sidebar-section-6" aria-labelledby="quarto-sidebar-section-6-label" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../06-statistics/averages.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Probability, averages, and climatological estimates</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../05-neural-operators/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text" id="quarto-sidebar-section-7-label">Neural Operators</span></a>
+            <button type="button" class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" aria-controls="quarto-sidebar-section-7" aria-expanded="true" aria-label="Toggle section: Neural Operators">
+              <i class="bi bi-chevron-right ms-2" aria-hidden="true"></i>
+            </button> 
+      </div>
+      <ul id="quarto-sidebar-section-7" aria-labelledby="quarto-sidebar-section-7-label" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../05-neural-operators/spectral-operators.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Integral operators, symmetries, and learned maps</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <button type="button" class="sidebar-item-text sidebar-item-toggle sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" aria-controls="quarto-sidebar-section-8" aria-expanded="true">
+ <span class="menu-text" id="quarto-sidebar-section-8-label">Appendices</span><i class="bi bi-chevron-right" aria-hidden="true"></i></button>
+      </div>
+      <ul id="quarto-sidebar-section-8" aria-labelledby="quarto-sidebar-section-8-label" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../01-vector-calculus/integrals.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">A</span>&nbsp; <span class="chapter-title">Vector integrals</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../01-vector-calculus/change-of-variables.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">B</span>&nbsp; <span class="chapter-title">Change of variables</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../01-vector-calculus/theorems.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">C</span>&nbsp; <span class="chapter-title">Integral theorems</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../02-harmonic-analysis/fourier-transform.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">D</span>&nbsp; <span class="chapter-title">Fourier transform</span></span></a>
+  </div>
+</li>
+      </ul>
   </li>
     </ul>
     </div>
@@ -340,22 +404,19 @@ window.Quarto = {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#vector-spaces" id="toc-vector-spaces" class="nav-link active" data-scroll-target="#vector-spaces"><span class="header-section-number">6.1</span> Vector Spaces</a></li>
-  <li><a href="#norms-and-lp-spaces" id="toc-norms-and-lp-spaces" class="nav-link" data-scroll-target="#norms-and-lp-spaces"><span class="header-section-number">6.2</span> Norms and <span class="math inline">\(L^p\)</span> Spaces</a></li>
-  <li><a href="#inner-product-spaces" id="toc-inner-product-spaces" class="nav-link" data-scroll-target="#inner-product-spaces"><span class="header-section-number">6.3</span> Inner Product Spaces</a></li>
-  <li><a href="#hilbert-spaces" id="toc-hilbert-spaces" class="nav-link" data-scroll-target="#hilbert-spaces"><span class="header-section-number">6.4</span> Hilbert Spaces</a></li>
-  <li><a href="#orthogonality" id="toc-orthogonality" class="nav-link" data-scroll-target="#orthogonality"><span class="header-section-number">6.5</span> Orthogonality</a></li>
-  <li><a href="#orthonormal-bases-and-fourier-coefficients" id="toc-orthonormal-bases-and-fourier-coefficients" class="nav-link" data-scroll-target="#orthonormal-bases-and-fourier-coefficients"><span class="header-section-number">6.6</span> Orthonormal Bases and Fourier Coefficients</a></li>
-  <li><a href="#sturm-liouville-theory" id="toc-sturm-liouville-theory" class="nav-link" data-scroll-target="#sturm-liouville-theory"><span class="header-section-number">6.7</span> Sturm-Liouville Theory</a></li>
+  <li><a href="#norms-inner-products-and-convergence" id="toc-norms-inner-products-and-convergence" class="nav-link active" data-scroll-target="#norms-inner-products-and-convergence"><span class="header-section-number">4.1</span> Norms, inner products, and convergence</a></li>
+  <li><a href="#orthogonal-expansions-and-approximation" id="toc-orthogonal-expansions-and-approximation" class="nav-link" data-scroll-target="#orthogonal-expansions-and-approximation"><span class="header-section-number">4.2</span> Orthogonal expansions and approximation</a></li>
+  <li><a href="#distributions-weak-derivatives-and-energy-spaces" id="toc-distributions-weak-derivatives-and-energy-spaces" class="nav-link" data-scroll-target="#distributions-weak-derivatives-and-energy-spaces"><span class="header-section-number">4.3</span> Distributions, weak derivatives, and energy spaces</a></li>
+  <li><a href="#chapter-summary-and-self-test" id="toc-chapter-summary-and-self-test" class="nav-link" data-scroll-target="#chapter-summary-and-self-test"><span class="header-section-number">4.4</span> Chapter summary and self-test</a></li>
   </ul>
 </nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content" tabindex="-1">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="Breadcrumbs"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../02-harmonic-analysis/index.html">Harmonic Analysis</a></li><li class="breadcrumb-item"><a href="../02-harmonic-analysis/function-spaces.html"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Function Spaces</span></a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="Breadcrumbs"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../02-harmonic-analysis/function-spaces.html">Function spaces and differential equations</a></li><li class="breadcrumb-item"><a href="../02-harmonic-analysis/function-spaces.html"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Function spaces, limits, and weak derivatives</span></a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Function Spaces</span></h1>
+<h1 class="title"><span id="ch-spaces" class="quarto-section-identifier"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Function spaces, limits, and weak derivatives</span></span></h1>
 </div>
 
 
@@ -372,148 +433,72 @@ window.Quarto = {
 </header>
 
 
-<p>Before Fourier series or spherical harmonics can be stated precisely, we need the ambient space in which they live and the notion of convergence they satisfy. This section develops that theory abstractly. Fourier series and spherical harmonics are then special cases of a single general structure: an orthonormal basis for a Hilbert space.</p>
-<hr>
-<section id="vector-spaces" class="level2" data-number="6.1">
-<h2 data-number="6.1" class="anchored" data-anchor-id="vector-spaces"><span class="header-section-number">6.1</span> Vector Spaces</h2>
-<p><strong>Definition.</strong> A vector space over <span class="math inline">\(\mathbb{R}\)</span> (or <span class="math inline">\(\mathbb{C}\)</span>) is a set <span class="math inline">\(V\)</span> equipped with addition and scalar multiplication satisfying the usual axioms (commutativity, associativity, distributivity, identity, inverses).</p>
-<p>The central examples here are spaces of functions:</p>
-<ul>
-<li><span class="math inline">\(C([a,b])\)</span>: continuous functions on <span class="math inline">\([a,b]\)</span>, with pointwise operations.</li>
-<li><span class="math inline">\(C^k([a,b])\)</span>: <span class="math inline">\(k\)</span>-times continuously differentiable functions.</li>
-<li><span class="math inline">\(\mathcal{P}_n\)</span>: polynomials of degree at most <span class="math inline">\(n\)</span>.</li>
-<li><span class="math inline">\(L^2([a,b])\)</span>: square-integrable functions (defined below).</li>
-</ul>
-<p>The spaces <span class="math inline">\(C([a,b])\)</span>, <span class="math inline">\(C^k([a,b])\)</span>, and <span class="math inline">\(L^2([a,b])\)</span> are infinite-dimensional. In contrast, <span class="math inline">\(\mathcal{P}_n\)</span> has dimension <span class="math inline">\(n+1\)</span>, with basis <span class="math inline">\(1,x,\ldots,x^n\)</span>.</p>
-<hr>
+<!-- Generated by presentations/mathematical-prerequisites/sync_book.py; edit chapters/*.md and run build.py --sync-book. -->
+<section id="norms-inner-products-and-convergence" class="level2" data-number="4.1">
+<h2 data-number="4.1" class="anchored" data-anchor-id="norms-inner-products-and-convergence"><span class="header-section-number">4.1</span> Norms, inner products, and convergence</h2>
+<p><strong>Result and motivation.</strong> A function expansion is meaningful only after specifying the measure and the kind of convergence. Mean-square accuracy does not imply accuracy at every point or of every derivative. Sources: <span class="citation" data-cites="ArfkenWeber2005">(<a href="#ref-ArfkenWeber2005" role="doc-biblioref">Arfken and Weber 2005, secs. 5.5, 10.2–10.4, 14.1, 14.4</a>)</span>.</p>
+<p>Let <span class="math inline">\(D\)</span> be an interval, a spatial region, or a sphere, with positive integration measure <span class="math inline">\(d\nu\)</span> (for example <span class="math inline">\(dx\)</span>, <span class="math inline">\(dV\)</span>, or <span class="math inline">\(d\Omega\)</span>). A norm <span class="math inline">\(\|\cdot\|\)</span> is nonnegative, zero only on the zero element, homogeneous (<span class="math inline">\(\|af\|=|a|\|f\|\)</span>), and obeys the triangle inequality. For <span class="math inline">\(1\le p&lt;\infty\)</span>, define</p>
+<p><span class="math display">\[
+L^p(D,d\nu)=\left\{f:\int_D|f|^p\,d\nu&lt;\infty\right\},
+\qquad \|f\|_p=\left(\int_D|f|^p\,d\nu\right)^{1/p}.
+\tag{M4.1}
+\]</span></p>
+<p>Functions here are measurable, meaning their level sets can be assigned the chosen measure. Functions that differ only on a set of measure zero are identified. “Almost everywhere” means except on such a set. For <span class="math inline">\(L^\infty\)</span>, the norm is the essential supremum: the smallest bound valid almost everywhere. These identifications make the integral norms genuine norms. We use the standard completeness of <span class="math inline">\(L^p\)</span> without a measure-theoretic proof.</p>
+<p>For complex functions choose</p>
+<p><span class="math display">\[
+\langle f,g\rangle=\int_D f\overline g\,d\nu,
+\qquad \|f\|_2^2=\langle f,f\rangle,
+\qquad |\langle f,g\rangle|\le\|f\|_2\|g\|_2.
+\tag{M4.2}
+\]</span></p>
+<p>The final statement is Cauchy-Schwarz. To derive it when <span class="math inline">\(g\ne0\)</span>, set <span class="math inline">\(a=\langle f,g\rangle/\|g\|_2^2\)</span> and expand <span class="math inline">\(0\le\|f-ag\|_2^2=\|f\|_2^2-|\langle f,g\rangle|^2/\|g\|_2^2\)</span>. A positive weight <span class="math inline">\(w(x)\)</span> defines <span class="math inline">\(d\nu=w(x)dx\)</span>; changing <span class="math inline">\(w\)</span> changes orthogonality, projections, and losses.</p>
+<p>A sequence <span class="math inline">\(f_n\)</span> converges in <span class="math inline">\(L^2\)</span> to <span class="math inline">\(f\)</span> if <span class="math inline">\(\|f_n-f\|_2\to0\)</span>. It converges pointwise if <span class="math inline">\(f_n(x)\to f(x)\)</span> at each <span class="math inline">\(x\)</span>, and uniformly if <span class="math inline">\(\sup_x|f_n(x)-f(x)|\to0\)</span>. On a finite-measure domain, uniform convergence implies <span class="math inline">\(L^2\)</span> convergence because <span class="math inline">\(\|f_n-f\|_2^2\le\nu(D)\sup|f_n-f|^2\)</span>. The reverse fails: a triangular pulse of height one and width <span class="math inline">\(1/n\)</span> has vanishing <span class="math inline">\(L^2\)</span> norm but no vanishing maximum.</p>
+<p>A sequence is Cauchy if <span class="math inline">\(\|f_n-f_m\|\to0\)</span> as both indices grow. A space is complete when every Cauchy sequence has a limit in it. A Hilbert space is a complete inner product space. <span class="math inline">\(L^2\)</span> is Hilbert; continuous functions with the <span class="math inline">\(L^2\)</span> norm are not complete, because increasingly sharp continuous transitions can converge in that norm to a step.</p>
 </section>
-<section id="norms-and-lp-spaces" class="level2" data-number="6.2">
-<h2 data-number="6.2" class="anchored" data-anchor-id="norms-and-lp-spaces"><span class="header-section-number">6.2</span> Norms and <span class="math inline">\(L^p\)</span> Spaces</h2>
-<p><strong>Definition.</strong> A norm on a vector space <span class="math inline">\(V\)</span> is a function <span class="math inline">\(\|\cdot\| : V \to [0,\infty)\)</span> satisfying:</p>
-<ol type="1">
-<li><span class="math inline">\(\|f\| = 0\)</span> iff <span class="math inline">\(f = 0\)</span>.</li>
-<li><span class="math inline">\(\|\alpha f\| = |\alpha|\|f\|\)</span>.</li>
-<li><span class="math inline">\(\|f + g\| \leq \|f\| + \|g\|\)</span> (triangle inequality).</li>
-</ol>
-<p>A normed space is a vector space equipped with a norm.</p>
-<p><strong>Definition.</strong> For <span class="math inline">\(1 \leq p &lt; \infty\)</span>, the <span class="math inline">\(L^p\)</span> space on a domain <span class="math inline">\(\Omega\)</span> is</p>
-<p><span class="math display">\[L^p(\Omega) = \left\{ f : \Omega \to \mathbb{C} \;\Big|\; \int_\Omega |f(x)|^p\, dx &lt; \infty \right\},\]</span></p>
-<p>with norm <span class="math inline">\(\|f\|_p = \left(\int_\Omega |f|^p\, dx\right)^{1/p}\)</span>. Functions equal almost everywhere are identified.</p>
-<p>The case <span class="math inline">\(p = 2\)</span> is by far the most important for harmonic analysis:</p>
-<p><span class="math display">\[L^2(\Omega) = \left\{ f : \Omega \to \mathbb{C} \;\Big|\; \int_\Omega |f(x)|^2\, dx &lt; \infty \right\}, \quad \|f\|_2 = \left(\int_\Omega |f|^2\right)^{1/2}.\]</span></p>
-<p><span class="math inline">\(L^2\)</span> is the natural space for energy: <span class="math inline">\(\|f\|_2^2\)</span> is the total “energy” of <span class="math inline">\(f\)</span>.</p>
-<p><em>Further reading: <span class="citation" data-cites="Kreyszig2011aem">Kreyszig (<a href="#ref-Kreyszig2011aem" role="doc-biblioref">2011</a>)</span>, Sec. 11.5 (function spaces in the context of Sturm-Liouville); <span class="citation" data-cites="Evans2010pde">Evans (<a href="#ref-Evans2010pde" role="doc-biblioref">2010</a>)</span>, Appendix E (<span class="math inline">\(L^p\)</span> spaces).</em></p>
-<hr>
+<section id="orthogonal-expansions-and-approximation" class="level2" data-number="4.2">
+<h2 data-number="4.2" class="anchored" data-anchor-id="orthogonal-expansions-and-approximation"><span class="header-section-number">4.2</span> Orthogonal expansions and approximation</h2>
+<p><strong>Result and motivation.</strong> An orthonormal basis converts squared function error into a sum of squared coefficient errors. Truncation is the best approximation in the chosen norm, rather than a claim of pointwise exactness. Sources: <span class="citation" data-cites="ArfkenWeber2005">(<a href="#ref-ArfkenWeber2005" role="doc-biblioref">Arfken and Weber 2005, secs. 10.3–10.4</a>)</span>.</p>
+<p>Functions <span class="math inline">\(e_j\)</span> are orthonormal if <span class="math inline">\(\langle e_j,e_k\rangle=\delta_{jk}\)</span>. A complete orthonormal system has no nonzero function orthogonal to all its members. For such a system in a Hilbert space, define coefficients <span class="math inline">\(c_j=\langle f,e_j\rangle\)</span> and projection <span class="math inline">\(P_Nf=\sum_{j=1}^Nc_je_j\)</span>. Orthogonality gives</p>
+<p><span class="math display">\[
+\|f-P_Nf\|_2^2=\|f\|_2^2-\sum_{j=1}^N|c_j|^2,
+\qquad \|f\|_2^2=\sum_{j=1}^{\infty}|c_j|^2.
+\tag{M4.3}
+\]</span></p>
+<p>The first identity implies Bessel’s inequality <span class="math inline">\(\sum_j|c_j|^2\le\|f\|_2^2\)</span> even for an incomplete orthonormal system. Completeness makes the remainder converge to zero and yields the second identity, Parseval’s identity. Applying the Pythagorean argument (M1.4) shows that <span class="math inline">\(P_Nf\)</span> minimizes error over the retained span. Completeness of Fourier and spherical harmonic systems is a theorem, used below rather than inferred from orthogonality alone.</p>
+<p>For independent functions <span class="math inline">\(f_j\)</span>, Gram-Schmidt constructs an orthonormal system by</p>
+<p><span class="math display">\[
+g_n=f_n-\sum_{j&lt;n}\langle f_n,e_j\rangle e_j,
+\qquad e_n=g_n/\|g_n\|_2.
+\tag{M4.4}
+\]</span></p>
+<p>For example, with normalized measure <span class="math inline">\(d\mu/2\)</span> on <span class="math inline">\([-1,1]\)</span>, the functions <span class="math inline">\(1\)</span>, <span class="math inline">\(\sqrt3\mu\)</span>, and <span class="math inline">\(\frac{\sqrt5}{2}(3\mu^2-1)\)</span> are orthonormal. Their normalization differs from that under <span class="math inline">\(d\mu\)</span>. This distinction explains factors of <span class="math inline">\(2\)</span> and <span class="math inline">\(4\pi\)</span> in latitude and spherical expansions.</p>
 </section>
-<section id="inner-product-spaces" class="level2" data-number="6.3">
-<h2 data-number="6.3" class="anchored" data-anchor-id="inner-product-spaces"><span class="header-section-number">6.3</span> Inner Product Spaces</h2>
-<p><strong>Definition.</strong> An inner product on a vector space <span class="math inline">\(V\)</span> is a map <span class="math inline">\(\langle\cdot,\cdot\rangle : V \times V \to \mathbb{C}\)</span> satisfying:</p>
-<ol type="1">
-<li><span class="math inline">\(\langle f, f\rangle \geq 0\)</span>, with <span class="math inline">\(\langle f,f\rangle = 0\)</span> iff <span class="math inline">\(f = 0\)</span>.</li>
-<li><span class="math inline">\(\langle f, g\rangle = \overline{\langle g, f\rangle}\)</span> (conjugate symmetry).</li>
-<li><span class="math inline">\(\langle \alpha f + \beta g, h\rangle = \alpha\langle f,h\rangle + \beta\langle g,h\rangle\)</span> (linearity in first argument).</li>
-</ol>
-<p>The inner product induces a norm: <span class="math inline">\(\|f\| = \sqrt{\langle f,f\rangle}\)</span>.</p>
-<p><strong>On <span class="math inline">\(L^2(\Omega)\)</span>:</strong></p>
-<p><span class="math display">\[\langle f, g\rangle = \int_\Omega f(x)\,\overline{g(x)}\, dx.\]</span></p>
-<p><strong>Cauchy-Schwarz inequality.</strong> For any <span class="math inline">\(f, g \in V\)</span>:</p>
-<p><span class="math display">\[|\langle f, g\rangle| \leq \|f\|\,\|g\|.\]</span></p>
-<p>Equality holds iff <span class="math inline">\(f\)</span> and <span class="math inline">\(g\)</span> are proportional. This is the generalization of the dot product inequality <span class="math inline">\(|\mathbf{u}\cdot\mathbf{v}| \leq |\mathbf{u}||\mathbf{v}|\)</span> to infinite dimensions.</p>
-<p><em>Further reading: <span class="citation" data-cites="Kreyszig2011aem">Kreyszig (<a href="#ref-Kreyszig2011aem" role="doc-biblioref">2011</a>)</span>, Sec. 11.5.</em></p>
-<hr>
+<section id="distributions-weak-derivatives-and-energy-spaces" class="level2" data-number="4.3">
+<h2 data-number="4.3" class="anchored" data-anchor-id="distributions-weak-derivatives-and-energy-spaces"><span class="header-section-number">4.3</span> Distributions, weak derivatives, and energy spaces</h2>
+<p><strong>Result and motivation.</strong> Weak derivatives transfer differentiation to smooth test functions. They describe finite-energy fields and point sources without pretending that every solution is classically smooth. Sources: <span class="citation" data-cites="ArfkenWeber2005">(<a href="#ref-ArfkenWeber2005" role="doc-biblioref">Arfken and Weber 2005, secs. 1.15, 9.7, 10.5</a>)</span>; the <span class="math inline">\(H^1\)</span> definition follows <span class="citation" data-cites="HunterPDE">(<a href="#ref-HunterPDE" role="doc-biblioref">Hunter, n.d., sec. 3.5</a> and 3.9)</span>.</p>
+<p>A test function <span class="math inline">\(\eta\in C_c^\infty(D)\)</span> is infinitely differentiable and zero outside a closed bounded subset lying inside <span class="math inline">\(D\)</span> (compact support). A distribution <span class="math inline">\(T\)</span> is a linear rule assigning a scalar <span class="math inline">\(T[\eta]\)</span> to each test function, continuous in the following sense: if all test functions have support in one fixed compact subset and every derivative converges uniformly to zero, their values under <span class="math inline">\(T\)</span> tend to zero. A locally integrable function (one integrable on every compact subset of <span class="math inline">\(D\)</span>) defines <span class="math inline">\(T_f[\eta]=\int_D f\eta\)</span>. The Dirac delta at <span class="math inline">\(x_0\)</span> is the distribution <span class="math inline">\(\delta_{x_0}[\eta]=\eta(x_0)\)</span>; it is not an ordinary function of infinite height. In one dimension,</p>
+<p><span class="math display">\[
+T_f'[\eta]=-T_f[\eta'],\qquad
+\int f\eta'=-\int g\eta\ \Longrightarrow\ g=\partial_x f
+\text{ in the weak sense}.
+\tag{M4.5}
+\]</span></p>
+<p>The integral equality must hold for every test function <span class="math inline">\(\eta\)</span>. There is no boundary term because the test function vanishes near the boundary. For the step <span class="math inline">\(H(x)=0\)</span> for <span class="math inline">\(x&lt;0\)</span>, <span class="math inline">\(H(x)=1\)</span> for <span class="math inline">\(x&gt;0\)</span>, <span class="math inline">\(T_H'[\eta]=-\int_0^\infty\eta'(x)dx=\eta(0)\)</span>, so <span class="math inline">\(H'=\delta_0\)</span> as distributions. Values at <span class="math inline">\(x=0\)</span> do not affect this identity.</p>
+<p>The Sobolev space <span class="math inline">\(H^1(D)\)</span> consists of <span class="math inline">\(L^2\)</span> functions whose first weak partial derivatives are also in <span class="math inline">\(L^2\)</span>. With dimensionless coordinates, its norm is <span class="math inline">\(\|f\|_{H^1}^2=\|f\|_2^2+\sum_j\|\partial_jf\|_2^2\)</span>. With dimensional coordinates one can insert a reference length squared on the derivative terms; otherwise the displayed sum mixes units. <span class="math inline">\(H_0^1(D)\)</span> consists of all limits in the <span class="math inline">\(H^1\)</span> norm of sequences of compactly supported smooth functions. On a sufficiently regular bounded domain it encodes zero boundary values. This functional-analytic notation is an explicit extension of AW’s energy and integration-by-parts methods; no general Sobolev embedding theorem is needed here.</p>
+<p>On the dimensionless <span class="math inline">\(2\pi\)</span>-periodic coordinate <span class="math inline">\(x\)</span>, <span class="math inline">\(f_n(x)=\sin(nx)/n\)</span> tends uniformly to zero, but <span class="math inline">\(f_n'(x)=\cos(nx)\)</span> does not tend to zero in <span class="math inline">\(L^2\)</span>. An <span class="math inline">\(L^2\)</span> approximation to a field does not by itself control gradients, wind inferred from a streamfunction, or vorticity inferred from wind.</p>
 </section>
-<section id="hilbert-spaces" class="level2" data-number="6.4">
-<h2 data-number="6.4" class="anchored" data-anchor-id="hilbert-spaces"><span class="header-section-number">6.4</span> Hilbert Spaces</h2>
-<p>A normed space is <strong>complete</strong> if every Cauchy sequence converges to an element of the space. Completeness is the key property that allows infinite series to be controlled.</p>
-<p><strong>Definition.</strong> A <strong>Hilbert space</strong> is a complete inner product space.</p>
-<p><strong>Key example.</strong> <span class="math inline">\(L^2(\Omega)\)</span> is a Hilbert space. This is not obvious: it requires showing that limits of <span class="math inline">\(L^2\)</span>-Cauchy sequences are again in <span class="math inline">\(L^2\)</span>. The pointwise limit of a sequence of <span class="math inline">\(L^2\)</span> functions need not be the <span class="math inline">\(L^2\)</span> limit.</p>
-<p><span class="math inline">\(C([a,b])\)</span> with the <span class="math inline">\(L^2\)</span> norm is an inner product space but is not complete (the limit of a Cauchy sequence of continuous functions can be discontinuous). Completing it gives <span class="math inline">\(L^2([a,b])\)</span>.</p>
-<p><strong>Intuition.</strong> A Hilbert space is an infinite-dimensional generalization of <span class="math inline">\(\mathbb{R}^n\)</span> with dot product. Virtually all geometric intuitions from <span class="math inline">\(\mathbb{R}^n\)</span> carry over: projections, angles, decompositions into orthogonal components.</p>
-<p><em>Further reading: <span class="citation" data-cites="Evans2010pde">Evans (<a href="#ref-Evans2010pde" role="doc-biblioref">2010</a>)</span>, Appendix E; <span class="citation" data-cites="Kreyszig2011aem">Kreyszig (<a href="#ref-Kreyszig2011aem" role="doc-biblioref">2011</a>)</span>, Sec. 11.6.</em></p>
-<hr>
-</section>
-<section id="orthogonality" class="level2" data-number="6.5">
-<h2 data-number="6.5" class="anchored" data-anchor-id="orthogonality"><span class="header-section-number">6.5</span> Orthogonality</h2>
-<p><strong>Definition.</strong> <span class="math inline">\(f, g \in V\)</span> are <strong>orthogonal</strong> if <span class="math inline">\(\langle f, g\rangle = 0\)</span>, written <span class="math inline">\(f \perp g\)</span>. A set <span class="math inline">\(\{e_n\}\)</span> is:</p>
-<ul>
-<li><strong>Orthogonal</strong> if <span class="math inline">\(\langle e_n, e_m\rangle = 0\)</span> for <span class="math inline">\(n \neq m\)</span>.</li>
-<li><strong>Orthonormal</strong> if additionally <span class="math inline">\(\langle e_n, e_n\rangle = 1\)</span> for all <span class="math inline">\(n\)</span>.</li>
-</ul>
-<p><strong>Pythagorean theorem.</strong> If <span class="math inline">\(f \perp g\)</span>, then <span class="math inline">\(\|f + g\|^2 = \|f\|^2 + \|g\|^2\)</span>.</p>
-<p>More generally, for a finite orthonormal set <span class="math inline">\(\{e_1, \ldots, e_N\}\)</span> and coefficients <span class="math inline">\(c_n = \langle f, e_n\rangle\)</span>:</p>
-<p><span class="math display">\[\left\|f - \sum_{n=1}^N c_n e_n\right\|^2 = \|f\|^2 - \sum_{n=1}^N |c_n|^2.\]</span></p>
-<p>The partial sum <span class="math inline">\(\sum c_n e_n\)</span> is the orthogonal projection of <span class="math inline">\(f\)</span> onto <span class="math inline">\(\text{span}\{e_1,\ldots,e_N\}\)</span>, and is the best approximation to <span class="math inline">\(f\)</span> in that subspace.</p>
-<p><strong>Gram-Schmidt process.</strong> Any countable linearly independent set <span class="math inline">\(\{f_n\}\)</span> can be orthonormalized: set <span class="math inline">\(e_1 = f_1/\|f_1\|\)</span>, then iteratively subtract the projection onto the span of previous <span class="math inline">\(e_k\)</span> and normalize.</p>
-<hr>
-</section>
-<section id="orthonormal-bases-and-fourier-coefficients" class="level2" data-number="6.6">
-<h2 data-number="6.6" class="anchored" data-anchor-id="orthonormal-bases-and-fourier-coefficients"><span class="header-section-number">6.6</span> Orthonormal Bases and Fourier Coefficients</h2>
-<p><strong>Definition.</strong> An orthonormal set <span class="math inline">\(\{e_n\}_{n=1}^\infty\)</span> in a Hilbert space <span class="math inline">\(H\)</span> is an <strong>orthonormal basis</strong> (or complete orthonormal system) if the only element orthogonal to every <span class="math inline">\(e_n\)</span> is zero:</p>
-<p><span class="math display">\[\langle f, e_n\rangle = 0 \text{ for all } n \implies f = 0.\]</span></p>
-<p>Equivalently, <span class="math inline">\(\{e_n\}\)</span> is an ONB iff every <span class="math inline">\(f \in H\)</span> expands as</p>
-<p><span class="math display">\[f = \sum_{n=1}^\infty \langle f, e_n\rangle\, e_n,\]</span></p>
-<p>where the sum converges in the norm of <span class="math inline">\(H\)</span> (not necessarily pointwise). The coefficients <span class="math inline">\(\hat{f}_n = \langle f, e_n\rangle\)</span> are the <strong>generalized Fourier coefficients</strong> of <span class="math inline">\(f\)</span> with respect to <span class="math inline">\(\{e_n\}\)</span>.</p>
-<p><strong>Bessel’s inequality.</strong> For any ONS (not necessarily a basis) and any <span class="math inline">\(f \in H\)</span>:</p>
-<p><span class="math display">\[\sum_n |\langle f, e_n\rangle|^2 \leq \|f\|^2.\]</span></p>
-<p><strong>Parseval’s identity.</strong> If <span class="math inline">\(\{e_n\}\)</span> is an ONB:</p>
-<p><span class="math display">\[\sum_n |\langle f, e_n\rangle|^2 = \|f\|^2.\]</span></p>
-<p>Parseval says the ONB is “complete”: no energy is lost in the decomposition. It is equivalent to the ONB condition.</p>
-<p><em>Further reading: <span class="citation" data-cites="Kreyszig2011aem">Kreyszig (<a href="#ref-Kreyszig2011aem" role="doc-biblioref">2011</a>)</span>, Sec. 11.6 (generalized Fourier series, Parseval); <span class="citation" data-cites="Evans2010pde">Evans (<a href="#ref-Evans2010pde" role="doc-biblioref">2010</a>)</span>, Appendix E.</em></p>
-<hr>
-</section>
-<section id="sturm-liouville-theory" class="level2" data-number="6.7">
-<h2 data-number="6.7" class="anchored" data-anchor-id="sturm-liouville-theory"><span class="header-section-number">6.7</span> Sturm-Liouville Theory</h2>
-<p>Orthogonal function families do not arise by accident. They are the eigenfunctions of self-adjoint differential operators - a general principle captured by Sturm-Liouville theory.</p>
-<p><strong>The Sturm-Liouville problem.</strong> On <span class="math inline">\([a,b]\)</span>, with weight function <span class="math inline">\(w(x) &gt; 0\)</span>:</p>
-<p><span class="math display">\[-\frac{d}{dx}\!\left(p(x)\frac{df}{dx}\right) + q(x)f = \lambda\, w(x)\, f, \qquad \text{(with boundary conditions)}.\]</span></p>
-<p><strong>Theorem.</strong> Under mild regularity conditions, the Sturm-Liouville problem has:</p>
-<ol type="1">
-<li>A countable set of real eigenvalues <span class="math inline">\(\lambda_1 \leq \lambda_2 \leq \cdots \to \infty\)</span>.</li>
-<li>Eigenfunctions <span class="math inline">\(\{f_n\}\)</span> that are orthogonal in the weighted <span class="math inline">\(L^2\)</span> space with inner product <span class="math inline">\(\langle f, g\rangle_w = \int_a^b f(x)\overline{g(x)}\, w(x)\, dx\)</span>.</li>
-<li>The eigenfunctions form a complete orthonormal basis for <span class="math inline">\(L^2_w([a,b])\)</span>.</li>
-</ol>
-<p><strong>Connection to specific bases:</strong></p>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 33%">
-<col style="width: 33%">
-<col style="width: 33%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Problem</th>
-<th>Operator</th>
-<th>Eigenfunctions</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><span class="math inline">\(-f'' = \lambda f\)</span> on <span class="math inline">\([-\pi,\pi]\)</span>, periodic BC</td>
-<td><span class="math inline">\(-\frac{d^2}{dx^2}\)</span></td>
-<td><span class="math inline">\(e^{inx}\)</span>, Fourier basis</td>
-</tr>
-<tr class="even">
-<td>Legendre’s equation on <span class="math inline">\([-1,1]\)</span></td>
-<td>specific <span class="math inline">\(p,q,w\)</span></td>
-<td>Legendre polynomials <span class="math inline">\(P_l\)</span></td>
-</tr>
-<tr class="odd">
-<td><span class="math inline">\(-\Delta_{S^2} f = \lambda f\)</span> on <span class="math inline">\(S^2\)</span></td>
-<td><span class="math inline">\(-\Delta_{S^2}\)</span></td>
-<td>Spherical harmonics <span class="math inline">\(Y_l^m\)</span></td>
-</tr>
-</tbody>
-</table>
-<p>Fourier series and spherical harmonic expansions are eigenfunction expansions of self-adjoint operators. Separating the spherical problem gives associated Legendre equations, which are singular Sturm-Liouville problems with endpoint regularity conditions; the sphere is not itself a one-dimensional interval problem.</p>
-<p><em>Further reading: <span class="citation" data-cites="Kreyszig2011aem">Kreyszig (<a href="#ref-Kreyszig2011aem" role="doc-biblioref">2011</a>)</span>, Sec. 11.5 (Sturm-Liouville problems and orthogonal functions) and Sec. 12.10 (spherical harmonics as the Sturm-Liouville problem on <span class="math inline">\(S^2\)</span>).</em></p>
+<section id="chapter-summary-and-self-test" class="level2" data-number="4.4">
+<h2 data-number="4.4" class="anchored" data-anchor-id="chapter-summary-and-self-test"><span class="header-section-number">4.4</span> Chapter summary and self-test</h2>
+<p><strong>Main results and terms.</strong> The measure belongs to the definition of an <span class="math inline">\(L^p\)</span> norm. A Hilbert space is complete with an inner product. Pointwise, uniform, and norm convergence are distinct. Projection, Bessel’s inequality, and Parseval follow from orthogonality plus the appropriate completeness assumption. A distribution acts on test functions; a weak derivative is defined by integration by parts. <span class="math inline">\(H^1\)</span> controls both the field and its first derivatives.</p>
+<p><strong>Self-test.</strong> Show that <span class="math inline">\(\sqrt3\mu\)</span> has norm one under <span class="math inline">\(d\mu/2\)</span>. Why does small <span class="math inline">\(L^2\)</span> error in a streamfunction fail to guarantee small wind error? Which object is the derivative of a step?</p>
 
 
 <div id="refs" class="references csl-bib-body hanging-indent" role="list">
-<div id="ref-Evans2010pde" class="csl-entry" role="listitem">
-Evans, Lawrence C. 2010. <em>Partial Differential Equations</em>. 2nd ed. American Mathematical Society.
+<div id="ref-ArfkenWeber2005" class="csl-entry" role="listitem">
+Arfken, George B., and Hans J. Weber. 2005. <em>Mathematical Methods for Physicists</em>. 6th ed. Elsevier Academic Press.
 </div>
-<div id="ref-Kreyszig2011aem" class="csl-entry" role="listitem">
-Kreyszig, Erwin. 2011. <em>Advanced Engineering Mathematics</em>. 10th ed. Wiley.
+<div id="ref-HunterPDE" class="csl-entry" role="listitem">
+Hunter, John K. n.d. <em>Notes on Partial Differential Equations</em>. University of California, Davis. <a href="https://www.math.ucdavis.edu/~hunter/m218a_09/pde_notes.pdf">https://www.math.ucdavis.edu/~hunter/m218a_09/pde_notes.pdf</a>.
 </div>
 </div>
 </section>
@@ -997,13 +982,13 @@ Kreyszig, Erwin. 2011. <em>Advanced Engineering Mathematics</em>. 10th ed. Wiley
   </script>
 <nav class="page-navigation" aria-label="Page">
   <div class="nav-page nav-page-previous">
-      <a href="../02-harmonic-analysis/index.html" class="pagination-link" aria-label="Harmonic Analysis">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Harmonic Analysis</span>
+      <a href="../01-vector-calculus/spherical.html" class="pagination-link" aria-label="Geometry and calculus on the sphere">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Geometry and calculus on the sphere</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../02-harmonic-analysis/fourier-series.html" class="pagination-link" aria-label="Fourier Series">
-        <span class="nav-page-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Fourier Series</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="../03-pdes/eigenfunctions.html" class="pagination-link" aria-label="Differential equations and eigenfunction theory">
+        <span class="nav-page-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Differential equations and eigenfunction theory</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

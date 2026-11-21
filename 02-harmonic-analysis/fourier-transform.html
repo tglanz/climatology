@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>8&nbsp; Fourier Transform – Global Physical Climatology</title>
+<title>Appendix D — Fourier transform – Global Physical Climatology</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -26,26 +26,7 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-/* CSS for citations */
-div.csl-bib-body { }
-div.csl-entry {
-  clear: both;
-}
-.hanging-indent div.csl-entry {
-  margin-left:2em;
-  text-indent:-2em;
-}
-div.csl-left-margin {
-  min-width:2em;
-  float:left;
-}
-div.csl-right-inline {
-  margin-left:2em;
-  padding-left:1em;
-}
-div.csl-indent {
-  margin-left: 2em;
-}</style>
+</style>
 
 
 <script src="../site_libs/quarto-nav/quarto-nav.js"></script>
@@ -55,8 +36,7 @@ div.csl-indent {
 <script src="../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../">
-<link href="../02-harmonic-analysis/spherical-harmonics.html" rel="next">
-<link href="../02-harmonic-analysis/fourier-series.html" rel="prev">
+<link href="../01-vector-calculus/theorems.html" rel="prev">
 <script src="../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="../site_libs/quarto-html/scrollable-regions/scrollable-regions.js" type="module"></script>
@@ -137,7 +117,7 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="Breadcrumbs"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../02-harmonic-analysis/index.html">Harmonic Analysis</a></li><li class="breadcrumb-item"><a href="../02-harmonic-analysis/fourier-transform.html"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Fourier Transform</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="Breadcrumbs"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../01-vector-calculus/integrals.html">Appendices</a></li><li class="breadcrumb-item"><a href="../02-harmonic-analysis/fourier-transform.html"><span class="chapter-number">D</span>&nbsp; <span class="chapter-title">Fourier transform</span></a></li></ol></nav>
         <a class="flex-grow-1" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -170,41 +150,66 @@ window.Quarto = {
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a href="../01-vector-calculus/index.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text" id="quarto-sidebar-section-1-label">Vector Calculus</span></a>
-            <button type="button" class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-controls="quarto-sidebar-section-1" aria-expanded="true" aria-label="Toggle section: Vector Calculus">
+            <a href="../00-mathematical-foundations/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text" id="quarto-sidebar-section-1-label">Mathematical foundations</span></a>
+            <button type="button" class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-controls="quarto-sidebar-section-1" aria-expanded="true" aria-label="Toggle section: Mathematical foundations">
               <i class="bi bi-chevron-right ms-2" aria-hidden="true"></i>
             </button> 
       </div>
       <ul id="quarto-sidebar-section-1" aria-labelledby="quarto-sidebar-section-1-label" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="../00-mathematical-foundations/language.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Mathematical language and linear algebra</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../01-vector-calculus/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text" id="quarto-sidebar-section-2-label">Vector Calculus</span></a>
+            <button type="button" class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-controls="quarto-sidebar-section-2" aria-expanded="true" aria-label="Toggle section: Vector Calculus">
+              <i class="bi bi-chevron-right ms-2" aria-hidden="true"></i>
+            </button> 
+      </div>
+      <ul id="quarto-sidebar-section-2" aria-labelledby="quarto-sidebar-section-2-label" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="../01-vector-calculus/operators.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Differential Operators</span></span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../01-vector-calculus/integrals.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Integrals</span></span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../01-vector-calculus/change-of-variables.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Change of Variables</span></span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../01-vector-calculus/theorems.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Integral Theorems</span></span></a>
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Calculus, fluxes, and conservation</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../01-vector-calculus/spherical.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Spherical Coordinates</span></span></a>
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Geometry and calculus on the sphere</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <button type="button" class="sidebar-item-text sidebar-item-toggle sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-controls="quarto-sidebar-section-3" aria-expanded="true">
+ <span class="menu-text" id="quarto-sidebar-section-3-label">Function spaces and differential equations</span><i class="bi bi-chevron-right" aria-hidden="true"></i></button>
+      </div>
+      <ul id="quarto-sidebar-section-3" aria-labelledby="quarto-sidebar-section-3-label" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../02-harmonic-analysis/function-spaces.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Function spaces, limits, and weak derivatives</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../03-pdes/eigenfunctions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Differential equations and eigenfunction theory</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../03-pdes/foundations.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Partial differential equations and physical models</span></span></a>
   </div>
 </li>
       </ul>
@@ -212,51 +217,28 @@ window.Quarto = {
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a href="../02-harmonic-analysis/index.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text" id="quarto-sidebar-section-2-label">Harmonic Analysis</span></a>
-            <button type="button" class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-controls="quarto-sidebar-section-2" aria-expanded="true" aria-label="Toggle section: Harmonic Analysis">
+ <span class="menu-text" id="quarto-sidebar-section-4-label">Harmonic Analysis</span></a>
+            <button type="button" class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-controls="quarto-sidebar-section-4" aria-expanded="true" aria-label="Toggle section: Harmonic Analysis">
               <i class="bi bi-chevron-right ms-2" aria-hidden="true"></i>
             </button> 
       </div>
-      <ul id="quarto-sidebar-section-2" aria-labelledby="quarto-sidebar-section-2-label" class="collapse list-unstyled sidebar-section depth1 show">  
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../02-harmonic-analysis/function-spaces.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Function Spaces</span></span></a>
-  </div>
-</li>
+      <ul id="quarto-sidebar-section-4" aria-labelledby="quarto-sidebar-section-4-label" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../02-harmonic-analysis/fourier-series.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Fourier Series</span></span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../02-harmonic-analysis/fourier-transform.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Fourier Transform</span></span></a>
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Fourier analysis</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../02-harmonic-analysis/spherical-harmonics.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Spherical Harmonics</span></span></a>
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Legendre polynomials and spherical harmonics</span></span></a>
   </div>
 </li>
-      </ul>
-  </li>
-        <li class="sidebar-item sidebar-item-section">
-      <div class="sidebar-item-container"> 
-            <a href="../03-pdes/index.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text" id="quarto-sidebar-section-3-label">Partial Differential Equations</span></a>
-            <button type="button" class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-controls="quarto-sidebar-section-3" aria-expanded="true" aria-label="Toggle section: Partial Differential Equations">
-              <i class="bi bi-chevron-right ms-2" aria-hidden="true"></i>
-            </button> 
-      </div>
-      <ul id="quarto-sidebar-section-3" aria-labelledby="quarto-sidebar-section-3-label" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../03-pdes/spectral-methods.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Spectral numerical methods</span></span></a>
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Spectral discretization, quadrature, and stability</span></span></a>
   </div>
 </li>
       </ul>
@@ -264,102 +246,148 @@ window.Quarto = {
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a href="../04-geophysical-fluid-dynamics/index.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text" id="quarto-sidebar-section-4-label">Geophysical Fluid Dynamics</span></a>
-            <button type="button" class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-controls="quarto-sidebar-section-4" aria-expanded="true" aria-label="Toggle section: Geophysical Fluid Dynamics">
+ <span class="menu-text" id="quarto-sidebar-section-5-label">Geophysical Fluid Dynamics</span></a>
+            <button type="button" class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-controls="quarto-sidebar-section-5" aria-expanded="true" aria-label="Toggle section: Geophysical Fluid Dynamics">
               <i class="bi bi-chevron-right ms-2" aria-hidden="true"></i>
             </button> 
       </div>
-      <ul id="quarto-sidebar-section-4" aria-labelledby="quarto-sidebar-section-4-label" class="collapse list-unstyled sidebar-section depth1 show">  
+      <ul id="quarto-sidebar-section-5" aria-labelledby="quarto-sidebar-section-5-label" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../04-geophysical-fluid-dynamics/kinematics.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Kinematics and mathematical language</span></span></a>
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Kinematics and mathematical language</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../04-geophysical-fluid-dynamics/motion.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Mass, forces, and the momentum equation</span></span></a>
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Mass, forces, and the momentum equation</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../04-geophysical-fluid-dynamics/rotating.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Rotation and large-scale balances</span></span></a>
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Rotation and large-scale balances</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../04-geophysical-fluid-dynamics/vorticity.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Vorticity and circulation</span></span></a>
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Vorticity and circulation</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../04-geophysical-fluid-dynamics/layer-pv.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">A shallow layer and the barotropic reduction</span></span></a>
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">A shallow layer and the barotropic reduction</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../04-geophysical-fluid-dynamics/barotropic.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">The BVE on a rotating sphere</span></span></a>
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">The BVE on a rotating sphere</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../04-geophysical-fluid-dynamics/turbulence.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Invariants, turbulence, and eddy-driven flow</span></span></a>
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Invariants, turbulence, and eddy-driven flow</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../04-geophysical-fluid-dynamics/inversion.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Spherical harmonics, inversion, and dissipation</span></span></a>
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Spherical harmonics, inversion, and dissipation</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../04-geophysical-fluid-dynamics/stochastic.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Stochastic stirring and the closed forced model</span></span></a>
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Stochastic stirring and the closed forced model</span></span></a>
   </div>
 </li>
       </ul>
   </li>
         <li class="sidebar-item sidebar-item-section">
-      <span class="sidebar-item-text sidebar-link text-start">
- <span class="menu-text">Neural Operators</span></span>
+      <div class="sidebar-item-container"> 
+            <a href="../06-statistics/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text" id="quarto-sidebar-section-6-label">Probability and averages</span></a>
+            <button type="button" class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-controls="quarto-sidebar-section-6" aria-expanded="true" aria-label="Toggle section: Probability and averages">
+              <i class="bi bi-chevron-right ms-2" aria-hidden="true"></i>
+            </button> 
+      </div>
+      <ul id="quarto-sidebar-section-6" aria-labelledby="quarto-sidebar-section-6-label" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../06-statistics/averages.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Probability, averages, and climatological estimates</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../05-neural-operators/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text" id="quarto-sidebar-section-7-label">Neural Operators</span></a>
+            <button type="button" class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" aria-controls="quarto-sidebar-section-7" aria-expanded="true" aria-label="Toggle section: Neural Operators">
+              <i class="bi bi-chevron-right ms-2" aria-hidden="true"></i>
+            </button> 
+      </div>
+      <ul id="quarto-sidebar-section-7" aria-labelledby="quarto-sidebar-section-7-label" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../05-neural-operators/spectral-operators.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Integral operators, symmetries, and learned maps</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <button type="button" class="sidebar-item-text sidebar-item-toggle sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" aria-controls="quarto-sidebar-section-8" aria-expanded="true">
+ <span class="menu-text" id="quarto-sidebar-section-8-label">Appendices</span><i class="bi bi-chevron-right" aria-hidden="true"></i></button>
+      </div>
+      <ul id="quarto-sidebar-section-8" aria-labelledby="quarto-sidebar-section-8-label" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../01-vector-calculus/integrals.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">A</span>&nbsp; <span class="chapter-title">Vector integrals</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../01-vector-calculus/change-of-variables.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">B</span>&nbsp; <span class="chapter-title">Change of variables</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../01-vector-calculus/theorems.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">C</span>&nbsp; <span class="chapter-title">Integral theorems</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../02-harmonic-analysis/fourier-transform.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">D</span>&nbsp; <span class="chapter-title">Fourier transform</span></span></a>
+  </div>
+</li>
+      </ul>
   </li>
     </ul>
     </div>
 </nav>
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" aria-labelledby="toc-title" class="toc-active">
-    <h2 id="toc-title">Table of contents</h2>
-   
-  <ul>
-  <li><a href="#definition" id="toc-definition" class="nav-link active" data-scroll-target="#definition"><span class="header-section-number">8.1</span> Definition</a></li>
-  <li><a href="#key-properties" id="toc-key-properties" class="nav-link" data-scroll-target="#key-properties"><span class="header-section-number">8.2</span> Key Properties</a></li>
-  <li><a href="#differential-equations-via-fourier-transform" id="toc-differential-equations-via-fourier-transform" class="nav-link" data-scroll-target="#differential-equations-via-fourier-transform"><span class="header-section-number">8.3</span> Differential Equations via Fourier Transform</a></li>
-  <li><a href="#discrete-fourier-transform" id="toc-discrete-fourier-transform" class="nav-link" data-scroll-target="#discrete-fourier-transform"><span class="header-section-number">8.4</span> Discrete Fourier Transform</a></li>
-  <li><a href="#key-identities-derivations" id="toc-key-identities-derivations" class="nav-link" data-scroll-target="#key-identities-derivations"><span class="header-section-number">8.5</span> Key Identities: Derivations</a>
-  <ul class="collapse">
-  <li><a href="#derivative-property" id="toc-derivative-property" class="nav-link" data-scroll-target="#derivative-property"><span class="header-section-number">8.5.1</span> Derivative Property</a></li>
-  <li><a href="#convolution-theorem" id="toc-convolution-theorem" class="nav-link" data-scroll-target="#convolution-theorem"><span class="header-section-number">8.5.2</span> Convolution Theorem</a></li>
-  <li><a href="#gaussian-identity" id="toc-gaussian-identity" class="nav-link" data-scroll-target="#gaussian-identity"><span class="header-section-number">8.5.3</span> Gaussian Identity</a></li>
-  <li><a href="#dirac-delta" id="toc-dirac-delta" class="nav-link" data-scroll-target="#dirac-delta"><span class="header-section-number">8.5.4</span> Dirac Delta</a></li>
-  </ul></li>
-  </ul>
-</nav>
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+        
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content" tabindex="-1">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="Breadcrumbs"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../02-harmonic-analysis/index.html">Harmonic Analysis</a></li><li class="breadcrumb-item"><a href="../02-harmonic-analysis/fourier-transform.html"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Fourier Transform</span></a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="Breadcrumbs"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../01-vector-calculus/integrals.html">Appendices</a></li><li class="breadcrumb-item"><a href="../02-harmonic-analysis/fourier-transform.html"><span class="chapter-number">D</span>&nbsp; <span class="chapter-title">Fourier transform</span></a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Fourier Transform</span></h1>
+<h1 class="title">Appendix D — Fourier transform</h1>
 </div>
 
 
@@ -376,109 +404,9 @@ window.Quarto = {
 </header>
 
 
-<section id="definition" class="level2" data-number="8.1">
-<h2 data-number="8.1" class="anchored" data-anchor-id="definition"><span class="header-section-number">8.1</span> Definition</h2>
-<p>The Fourier transform extends Fourier series to functions on <span class="math inline">\(\mathbb{R}\)</span>, replacing the discrete sum over frequencies with a continuous integral.</p>
-<p><strong>Definition.</strong> For <span class="math inline">\(f \in L^1(\mathbb{R})\)</span>, the Fourier transform is</p>
-<p><span class="math display">\[\hat{f}(\xi) = \int_{-\infty}^{\infty} f(x)\, e^{-2\pi i \xi x}\, dx.\]</span></p>
-<p>The inverse Fourier transform recovers <span class="math inline">\(f\)</span> from <span class="math inline">\(\hat{f}\)</span>:</p>
-<p><span class="math display">\[f(x) = \int_{-\infty}^{\infty} \hat{f}(\xi)\, e^{2\pi i \xi x}\, d\xi.\]</span></p>
-<p><span class="math inline">\(\hat{f}(\xi)\)</span> is the amplitude of the frequency component <span class="math inline">\(\xi\)</span> in <span class="math inline">\(f\)</span>. The transform is well-defined and invertible for <span class="math inline">\(f \in L^2(\mathbb{R})\)</span> (Plancherel theorem).</p>
-<p><strong>Alternative convention.</strong> With angular frequency <span class="math inline">\(\omega = 2\pi\xi\)</span>:</p>
-<p><span class="math display">\[\hat{f}(\omega) = \int_{-\infty}^{\infty} f(x)\, e^{-i\omega x}\, dx, \qquad f(x) = \frac{1}{2\pi}\int_{-\infty}^{\infty} \hat{f}(\omega)\, e^{i\omega x}\, d\omega.\]</span></p>
-<p>Both conventions are standard; the choice affects normalization factors.</p>
-<p><em>Further reading: <span class="citation" data-cites="Kreyszig2011aem">Kreyszig (<a href="#ref-Kreyszig2011aem" role="doc-biblioref">2011</a>)</span>, Sec. 11.7 (Fourier integral) and Sec. 11.9 (Fourier transform); <span class="citation" data-cites="BruntonKutz2022">Brunton and Kutz (<a href="#ref-BruntonKutz2022" role="doc-biblioref">2022</a>)</span>, Sec. 2.1.</em></p>
-<hr>
-</section>
-<section id="key-properties" class="level2" data-number="8.2">
-<h2 data-number="8.2" class="anchored" data-anchor-id="key-properties"><span class="header-section-number">8.2</span> Key Properties</h2>
-<p>Let <span class="math inline">\(\mathcal{F}[f] = \hat{f}\)</span>.</p>
-<p><strong>Linearity:</strong> <span class="math inline">\(\mathcal{F}[\alpha f + \beta g] = \alpha\hat{f} + \beta\hat{g}\)</span>.</p>
-<p><strong>Shift:</strong> <span class="math inline">\(\mathcal{F}[f(x - a)](\xi) = e^{-2\pi i \xi a}\hat{f}(\xi)\)</span>. Shifting in space is multiplication by a phase in frequency.</p>
-<p><strong>Derivative:</strong> <span class="math inline">\(\mathcal{F}[f^{(n)}](\xi) = (2\pi i \xi)^n \hat{f}(\xi)\)</span>. Differentiation in space is multiplication by <span class="math inline">\(i\xi\)</span> in frequency. This is the key property that converts differential equations into algebraic equations.</p>
-<p><strong>Convolution theorem:</strong> For <span class="math inline">\((f * g)(x) = \int f(y)\, g(x-y)\, dy\)</span>:</p>
-<p><span class="math display">\[\mathcal{F}[f * g] = \hat{f} \cdot \hat{g}.\]</span></p>
-<p>Convolution in the spatial domain is pointwise multiplication in the frequency domain.</p>
-<p><strong>Parseval / Plancherel:</strong></p>
-<p><span class="math display">\[\int_{-\infty}^{\infty} |f(x)|^2\, dx = \int_{-\infty}^{\infty} |\hat{f}(\xi)|^2\, d\xi.\]</span></p>
-<p><em>Further reading: <span class="citation" data-cites="Kreyszig2011aem">Kreyszig (<a href="#ref-Kreyszig2011aem" role="doc-biblioref">2011</a>)</span>, Sec. 11.9 (properties and convolution theorem).</em></p>
-<hr>
-</section>
-<section id="differential-equations-via-fourier-transform" class="level2" data-number="8.3">
-<h2 data-number="8.3" class="anchored" data-anchor-id="differential-equations-via-fourier-transform"><span class="header-section-number">8.3</span> Differential Equations via Fourier Transform</h2>
-<p>The derivative property makes the Fourier transform a natural tool for solving linear PDEs with constant coefficients. Applying <span class="math inline">\(\mathcal{F}\)</span> converts <span class="math inline">\(\partial_x \to 2\pi i\xi\)</span>, turning a PDE into an algebraic equation in frequency space.</p>
-<p><strong>Example.</strong> Solve <span class="math inline">\(f'(x) + af(x) = g(x)\)</span> on <span class="math inline">\(\mathbb{R}\)</span>. Taking the Fourier transform:</p>
-<p><span class="math display">\[(2\pi i\xi + a)\hat{f}(\xi) = \hat{g}(\xi) \implies \hat{f}(\xi) = \frac{\hat{g}(\xi)}{2\pi i\xi + a}.\]</span></p>
-<p>Inverting gives <span class="math inline">\(f = \mathcal{F}^{-1}[\hat{g}/(2\pi i\xi + a)]\)</span>. This solution is a convolution <span class="math inline">\(f = g * h\)</span> where <span class="math inline">\(h = \mathcal{F}^{-1}[1/(2\pi i\xi + a)]\)</span> is the impulse response - the Green’s function of the operator <span class="math inline">\(\partial_x + a\)</span>.</p>
-<p><em>Further reading: <span class="citation" data-cites="Evans2010pde">Evans (<a href="#ref-Evans2010pde" role="doc-biblioref">2010</a>)</span>, Ch. 4 (Fourier transform applied to PDEs, Green’s functions on <span class="math inline">\(\mathbb{R}^n\)</span>).</em></p>
-<hr>
-</section>
-<section id="discrete-fourier-transform" class="level2" data-number="8.4">
-<h2 data-number="8.4" class="anchored" data-anchor-id="discrete-fourier-transform"><span class="header-section-number">8.4</span> Discrete Fourier Transform</h2>
-<p>For a finite sequence <span class="math inline">\(x_0, \ldots, x_{N-1}\)</span>, the Discrete Fourier Transform (DFT) is</p>
-<p><span class="math display">\[X_k = \sum_{n=0}^{N-1} x_n\, e^{-2\pi i kn/N}, \qquad k = 0, \ldots, N-1.\]</span></p>
-<p>The Fast Fourier Transform (FFT) computes the DFT in <span class="math inline">\(O(N\log N)\)</span> rather than <span class="math inline">\(O(N^2)\)</span>. The convolution theorem holds exactly for the DFT, making the FFT the computational backbone of spectral methods and the Fourier Neural Operator.</p>
-<p><em>Further reading: <span class="citation" data-cites="Kreyszig2011aem">Kreyszig (<a href="#ref-Kreyszig2011aem" role="doc-biblioref">2011</a>)</span>, Sec. 11.9 (DFT and FFT); <span class="citation" data-cites="BruntonKutz2022">Brunton and Kutz (<a href="#ref-BruntonKutz2022" role="doc-biblioref">2022</a>)</span>, Sec. 2.2 (FFT and applications in data-driven methods).</em></p>
-<hr>
-</section>
-<section id="key-identities-derivations" class="level2" data-number="8.5">
-<h2 data-number="8.5" class="anchored" data-anchor-id="key-identities-derivations"><span class="header-section-number">8.5</span> Key Identities: Derivations</h2>
-<p>All derivations below use the convention <span class="math inline">\(\hat{f}(\xi) = \int_{-\infty}^{\infty} f(x)\, e^{-2\pi i\xi x}\, dx\)</span>.</p>
-<section id="derivative-property" class="level3" data-number="8.5.1">
-<h3 data-number="8.5.1" class="anchored" data-anchor-id="derivative-property"><span class="header-section-number">8.5.1</span> Derivative Property</h3>
-<p><strong>Claim.</strong> <span class="math inline">\(\mathcal{F}[f^{(n)}](\xi) = (2\pi i\xi)^n \hat{f}(\xi)\)</span>.</p>
-<p><strong>Derivation (n=1).</strong> Integrate by parts, assuming <span class="math inline">\(f(x) \to 0\)</span> as <span class="math inline">\(|x| \to \infty\)</span>:</p>
-<p><span class="math display">\[\mathcal{F}[f'](\xi) = \int_{-\infty}^{\infty} f'(x)\, e^{-2\pi i\xi x}\, dx = \underbrace{\left[f(x) e^{-2\pi i\xi x}\right]_{-\infty}^{\infty}}_{= 0} + 2\pi i\xi \int_{-\infty}^{\infty} f(x)\, e^{-2\pi i\xi x}\, dx = 2\pi i\xi\, \hat{f}(\xi).\]</span></p>
-<p>Applying the same identity <span class="math inline">\(n\)</span> times gives the general result. Differentiation in the spatial domain is multiplication by <span class="math inline">\(2\pi i\xi\)</span> in the frequency domain, converting a differential operator into an algebraic one.</p>
-<hr>
-</section>
-<section id="convolution-theorem" class="level3" data-number="8.5.2">
-<h3 data-number="8.5.2" class="anchored" data-anchor-id="convolution-theorem"><span class="header-section-number">8.5.2</span> Convolution Theorem</h3>
-<p><strong>Claim.</strong> <span class="math inline">\(\mathcal{F}[f * g](\xi) = \hat{f}(\xi)\cdot\hat{g}(\xi)\)</span>.</p>
-<p><strong>Derivation.</strong> Write out the transform of the convolution and swap the order of integration (Fubini):</p>
-<p><span class="math display">\[\mathcal{F}[f * g](\xi) = \int_{-\infty}^{\infty} \left(\int_{-\infty}^{\infty} f(y)\, g(x-y)\, dy\right) e^{-2\pi i\xi x}\, dx = \int_{-\infty}^{\infty} f(y) \left(\int_{-\infty}^{\infty} g(x-y)\, e^{-2\pi i\xi x}\, dx\right) dy.\]</span></p>
-<p>Substitute <span class="math inline">\(u = x - y\)</span> in the inner integral (<span class="math inline">\(du = dx\)</span>, <span class="math inline">\(x = u + y\)</span>):</p>
-<p><span class="math display">\[= \int_{-\infty}^{\infty} f(y) \left(\int_{-\infty}^{\infty} g(u)\, e^{-2\pi i\xi(u+y)}\, du\right) dy = \int_{-\infty}^{\infty} f(y)\, e^{-2\pi i\xi y}\, dy \cdot \int_{-\infty}^{\infty} g(u)\, e^{-2\pi i\xi u}\, du = \hat{f}(\xi)\cdot\hat{g}(\xi).\]</span></p>
-<p>The reverse direction also holds: pointwise multiplication in frequency corresponds to convolution in space, <span class="math inline">\(\mathcal{F}^{-1}[\hat{f}\cdot\hat{g}] = f * g\)</span>. This is the basis for the FNO: learned filters applied in the frequency domain correspond to convolution operators in the spatial domain.</p>
-<hr>
-</section>
-<section id="gaussian-identity" class="level3" data-number="8.5.3">
-<h3 data-number="8.5.3" class="anchored" data-anchor-id="gaussian-identity"><span class="header-section-number">8.5.3</span> Gaussian Identity</h3>
-<p><strong>Claim.</strong> For <span class="math inline">\(a &gt; 0\)</span>: <span class="math inline">\(\mathcal{F}[e^{-\pi a x^2}](\xi) = a^{-1/2}\, e^{-\pi \xi^2/a}\)</span>.</p>
-<p>In particular, <span class="math inline">\(\mathcal{F}[e^{-\pi x^2}] = e^{-\pi\xi^2}\)</span>: the standard Gaussian is a fixed point of the Fourier transform.</p>
-<p><strong>Derivation.</strong> Let <span class="math inline">\(I(\xi) = \int_{-\infty}^{\infty} e^{-\pi a x^2} e^{-2\pi i\xi x}\, dx\)</span>. Complete the square in the exponent:</p>
-<p><span class="math display">\[-\pi a x^2 - 2\pi i\xi x = -\pi a\!\left(x + \frac{i\xi}{a}\right)^2 - \frac{\pi\xi^2}{a}.\]</span></p>
-<p>Factoring out the <span class="math inline">\(\xi\)</span>-dependent constant:</p>
-<p><span class="math display">\[I(\xi) = e^{-\pi\xi^2/a} \int_{-\infty}^{\infty} e^{-\pi a(x + i\xi/a)^2}\, dx.\]</span></p>
-<p>The substitution <span class="math inline">\(u = \sqrt{a}(x + i\xi/a)\)</span> (shifting the contour in the complex plane, justified by analyticity) gives <span class="math inline">\(du = \sqrt{a}\, dx\)</span> and:</p>
-<p><span class="math display">\[I(\xi) = e^{-\pi\xi^2/a} \cdot \frac{1}{\sqrt{a}} \int_{-\infty}^{\infty} e^{-\pi u^2}\, du = \frac{e^{-\pi\xi^2/a}}{\sqrt{a}},\]</span></p>
-<p>using the Gaussian integral <span class="math inline">\(\int_{-\infty}^{\infty} e^{-\pi u^2}\, du = 1\)</span>.</p>
-<p>The Gaussian plays a central role in analysis because it is maximally concentrated simultaneously in space and frequency (saturating the uncertainty principle), and because it is self-dual under the Fourier transform.</p>
-<hr>
-</section>
-<section id="dirac-delta" class="level3" data-number="8.5.4">
-<h3 data-number="8.5.4" class="anchored" data-anchor-id="dirac-delta"><span class="header-section-number">8.5.4</span> Dirac Delta</h3>
-<p>The Dirac delta <span class="math inline">\(\delta(x)\)</span> is the distribution satisfying <span class="math inline">\(\int_{-\infty}^{\infty} \delta(x)\, f(x)\, dx = f(0)\)</span> for any test function <span class="math inline">\(f\)</span>.</p>
-<p><strong>Claim.</strong> <span class="math inline">\(\mathcal{F}[\delta](\xi) = 1\)</span> and <span class="math inline">\(\mathcal{F}[1](\xi) = \delta(\xi)\)</span>.</p>
-<p><strong>Derivation of <span class="math inline">\(\mathcal{F}[\delta] = 1\)</span>.</strong></p>
-<p><span class="math display">\[\hat{\delta}(\xi) = \int_{-\infty}^{\infty} \delta(x)\, e^{-2\pi i\xi x}\, dx = e^{-2\pi i\xi \cdot 0} = 1.\]</span></p>
-<p>A point mass in space has equal energy at all frequencies - a flat spectrum. This is the distributional analogue of the impulse response: the Green’s function of a differential operator <span class="math inline">\(L\)</span> is the function <span class="math inline">\(G\)</span> satisfying <span class="math inline">\(LG = \delta\)</span>, and in frequency space this becomes <span class="math inline">\(\hat{L}(\xi)\hat{G}(\xi) = 1\)</span>, so <span class="math inline">\(\hat{G}(\xi) = 1/\hat{L}(\xi)\)</span>.</p>
-<p><strong>Shifted delta.</strong> <span class="math inline">\(\mathcal{F}[\delta(\cdot - a)](\xi) = e^{-2\pi i\xi a}\)</span>. A pure spatial shift is a linear phase in frequency.</p>
+<p>The Fourier transform, inverse normalization, derivative and shift rules, convolution theorem, Gaussian heat kernel, and DFT sampling limits are developed in <a href="../02-harmonic-analysis/fourier-series.html#the-fourier-transform-and-its-normalization">Fourier analysis</a>. That chapter also explains conversion between angular wavenumber <span class="math inline">\(k\)</span> and cyclic frequency <span class="math inline">\(\xi=k/(2\pi)\)</span>, so factors of <span class="math inline">\(2\pi\)</span> remain paired with the chosen measure.</p>
 
 
-<div id="refs" class="references csl-bib-body hanging-indent" role="list">
-<div id="ref-BruntonKutz2022" class="csl-entry" role="listitem">
-Brunton, Steven L., and J. Nathan Kutz. 2022. <em>Data-Driven Science and Engineering: Machine Learning, Dynamical Systems, and Control</em>. 2nd ed. Cambridge University Press.
-</div>
-<div id="ref-Evans2010pde" class="csl-entry" role="listitem">
-Evans, Lawrence C. 2010. <em>Partial Differential Equations</em>. 2nd ed. American Mathematical Society.
-</div>
-<div id="ref-Kreyszig2011aem" class="csl-entry" role="listitem">
-Kreyszig, Erwin. 2011. <em>Advanced Engineering Mathematics</em>. 10th ed. Wiley.
-</div>
-</div>
-</section>
-</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
@@ -959,14 +887,11 @@ Kreyszig, Erwin. 2011. <em>Advanced Engineering Mathematics</em>. 10th ed. Wiley
   </script>
 <nav class="page-navigation" aria-label="Page">
   <div class="nav-page nav-page-previous">
-      <a href="../02-harmonic-analysis/fourier-series.html" class="pagination-link" aria-label="Fourier Series">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Fourier Series</span></span>
+      <a href="../01-vector-calculus/theorems.html" class="pagination-link" aria-label="Integral theorems">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">C</span>&nbsp; <span class="chapter-title">Integral theorems</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../02-harmonic-analysis/spherical-harmonics.html" class="pagination-link" aria-label="Spherical Harmonics">
-        <span class="nav-page-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Spherical Harmonics</span></span> <i class="bi bi-arrow-right-short"></i>
-      </a>
   </div>
 </nav>
 </div> <!-- /content -->
