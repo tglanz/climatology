@@ -1,0 +1,137 @@
+# Calculus, fluxes, and conservation {#ch-calculus}
+
+## Derivatives, local linearization, and transport
+
+**Result and motivation.** A derivative is a local linear approximation. Following a moving parcel introduces advection through the chain rule. Sources: [@ArfkenWeber2005, Sections 1.6, 5.5-5.7, 9.2].
+
+For a scalar function $f(x)$, $f'(x)=\lim_{h\to0}[f(x+h)-f(x)]/h$ when this limit exists. A partial derivative $\partial_jf=\partial f/\partial x_j$ holds all other variables fixed. Write $f\in C^k$ if its derivatives through order $k$ exist and are continuous. The notation $r(h)=O(h^p)$ means $|r(h)|\le C|h|^p$ for a constant $C$ and sufficiently small $|h|$; $r(h)=o(h)$ means $r(h)/h\to0$.
+
+A differentiable map $\mathbf F:\mathbb R^n\to\mathbb R^m$ has a Jacobian matrix $(D\mathbf F)_{ij}=\partial_jF_i$ satisfying $\mathbf F(\mathbf x+\mathbf h)=\mathbf F(\mathbf x)+D\mathbf F(\mathbf x)\mathbf h+o(|\mathbf h|)$. A scalar's gradient is the vector $\nabla f=(\partial_1f,\ldots,\partial_nf)$. Its Hessian $H_f$ is the matrix $(\partial_i\partial_jf)$. Taylor's theorem for $C^3$ functions gives
+
+$$
+f(\mathbf x+\mathbf h)=f(\mathbf x)+\nabla f\cdot\mathbf h
++\tfrac12\mathbf h^{\mathsf T}H_f\mathbf h+O(|\mathbf h|^3).
+\tag{2.1}
+$$
+
+The Hessian is symmetric for $C^2$ functions because mixed partial derivatives commute. A critical point has $\nabla f=0$; a positive-definite Hessian at a critical point, meaning $\mathbf h^{\mathsf T}H_f\mathbf h>0$ for every nonzero $\mathbf h$, implies a strict local minimum.
+
+For differentiable one-variable functions, the product rule is $(fg)'=f'g+fg'$ and the chain rule is $(f\circ g)'(x)=f'(g(x))g'(x)$, where $f\circ g$ means composition. The familiar derivatives $(e^x)'=e^x$, $(\sin x)'=\cos x$, and $(\cos x)'=-\sin x$ follow from their defining series. A definite integral $\int_a^b f(x)dx$ is the limit of sums $\sum_j f(\xi_j)\Delta x_j$ as the largest partition width tends to zero, for continuous $f$; $\xi_j$ is a point in the $j$th subinterval. The fundamental theorem of calculus and the product rule give
+
+$$
+F'(x)=f(x)\ \Longrightarrow\ \int_a^b f(x)dx=F(b)-F(a),
+\qquad
+\int_a^b f g'\,dx=[fg]_a^b-\int_a^b f'g\,dx.
+\tag{2.2}
+$$
+
+Here $[h]_a^b=h(b)-h(a)$; the second identity is integration by parts. For example, take $f=x$, $g'=e^x$, $g=e^x$ to obtain $\int_0^1xe^x dx=[xe^x]_0^1-\int_0^1e^x dx=e-(e-1)=1$. The multivariable chain rule is the same local-linearization rule applied to a trajectory.
+
+Let $\mathbf X(t)$ be a parcel trajectory with $d\mathbf X/dt=\mathbf u(\mathbf X,t)$. Applying the chain rule to $q(\mathbf X(t),t)$ gives the material derivative
+
+$$
+\frac{Dq}{Dt}:=\frac{d}{dt}q(\mathbf X(t),t)
+=\partial_tq+\mathbf u\cdot\nabla q.
+\tag{2.3}
+$$
+
+The symbol $:=$ means "is defined as." Local change $\partial_tq$ is measured at a fixed location; advection $\mathbf u\cdot\nabla q$ measures motion across spatial gradients. For constant speed $c$, $q(x,t)=q_0(x-ct)$ satisfies $\partial_tq+c\partial_xq=0$ even while a fixed sensor sees a changing signal.
+
+## Gradient, divergence, curl, and Laplacian
+
+**Result and motivation.** Gradient measures directional change, divergence measures outward flux density, and curl measures circulation density. The scalar Laplacian is the divergence of a gradient. Sources: [@ArfkenWeber2005, Sections 1.6-1.9].
+
+In right-handed Cartesian coordinates and for a $C^1$ vector field $\mathbf F=(F_1,F_2,F_3)$, define
+
+$$
+\nabla\cdot\mathbf F=\sum_i\partial_iF_i,
+\qquad (\nabla\times\mathbf F)_i=\sum_{j,k}\epsilon_{ijk}\partial_jF_k,
+\qquad \Delta q=\nabla\cdot\nabla q=\sum_i\partial_i^2q.
+\tag{2.4}
+$$
+
+For a unit direction $\mathbf n$, $\mathbf n\cdot\nabla q$ is change per unit distance along $\mathbf n$. For velocity, $\nabla\cdot\mathbf u>0$ means a small parcel expands. The vorticity $\boldsymbol\omega=\nabla\times\mathbf u$ measures twice the local rigid rotation rate. Solid-body planar rotation $\mathbf u=(-\Omega y,\Omega x,0)$ has $\nabla\cdot\mathbf u=0$ and $\boldsymbol\omega=(0,0,2\Omega)$; circulation is not the same as speed.
+
+Product differentiation and commuting mixed derivatives give
+
+$$
+\begin{aligned}
+\nabla\cdot(q\mathbf F)&=\nabla q\cdot\mathbf F+q\nabla\cdot\mathbf F,\\
+\nabla\times\nabla q&=0,\qquad \nabla\cdot(\nabla\times\mathbf F)=0,\\
+\nabla\times(\nabla\times\mathbf F)&=\nabla(\nabla\cdot\mathbf F)-\Delta\mathbf F.
+\end{aligned}
+\tag{2.5}
+$$
+
+The vector Laplacian in the last line acts on Cartesian components. These identities assume enough continuous derivatives. Curvilinear components require basis-variation terms; differentiating each spherical component as a Cartesian scalar is generally incorrect.
+
+## Integration, Jacobians, and integral theorems
+
+**Result and motivation.** Conservation laws relate what crosses a boundary to what changes inside. Correct integration also fixes the weights in global means. Sources: [@ArfkenWeber2005, Sections 1.10-1.12, 2.1-2.2].
+
+An integral sums a density over lengths, areas, or volumes. Write $dV$ for volume, $dA$ for surface area, and $d\mathbf l$ for an oriented tangent line element. Let $V\subset\mathbb R^3$ have a piecewise smooth closed boundary $\partial V$ with outward unit normal $\mathbf n$. The divergence theorem is
+
+$$
+\int_V\nabla\cdot\mathbf F\,dV
+=\int_{\partial V}\mathbf F\cdot\mathbf n\,dA.
+\tag{2.6}
+$$
+
+For an oriented smooth surface $S$ with boundary curve $\partial S$, oriented by the right-hand rule, Stokes' theorem is
+
+$$
+\int_S(\nabla\times\mathbf F)\cdot\mathbf n\,dA
+=\oint_{\partial S}\mathbf F\cdot d\mathbf l.
+\tag{2.7}
+$$
+
+The circle on $\oint$ denotes integration around a closed curve. These identities require fields regular on the integration region; a singular vortex cannot be ignored inside it.
+
+A smooth invertible coordinate map $\mathbf x=\mathbf X(\mathbf q)$ changes volume by
+
+$$
+dV=\left|\det D\mathbf X(\mathbf q)\right|\,dq_1dq_2dq_3.
+\tag{2.8}
+$$
+
+The determinant is the Jacobian factor: a small coordinate box maps to a parallelepiped spanned by $\partial_{q_i}\mathbf X\,dq_i$. On a surface parametrized by $(a,b)$, its area factor is $|\partial_a\mathbf X\times\partial_b\mathbf X|$. Coordinates are labels; these factors convert labels into physical measure.
+
+Substitute $\mathbf F=f\nabla g$ in (2.6), with real $C^2$ functions $f,g$, to obtain Green's first identity,
+
+$$
+\int_V f\Delta g\,dV
+=\int_{\partial V}f\partial_ng\,dA-\int_V\nabla f\cdot\nabla g\,dV,
+\qquad \partial_ng=\mathbf n\cdot\nabla g.
+\tag{2.9}
+$$
+
+This is multidimensional integration by parts. For complex $f$, replace $f$ by $\overline f$ when constructing energy or adjoint identities. A boundary condition determines whether the boundary term vanishes.
+
+## From a balance law to a PDE
+
+**Result and motivation.** A local conservation PDE is the differential form of a balance for every fixed control volume. It distinguishes transport from sources. Sources: [@ArfkenWeber2005, Sections 1.7, 1.11, 9.8]; fluid interpretation: [@Vallis2006, Sections 1.2, 1.7].
+
+Let $q$ be amount per unit volume, $\mathbf J$ its flux (amount per area per time), and $s$ its production per volume per time. For a fixed $V$,
+
+$$
+\frac{d}{dt}\int_Vq\,dV=-\int_{\partial V}\mathbf J\cdot\mathbf n\,dA+\int_Vs\,dV
+\quad\Longrightarrow\quad
+\partial_tq+\nabla\cdot\mathbf J=s.
+\tag{2.10}
+$$
+
+The implication uses (2.6) and the fact that the integral of a continuous function over every small volume vanishes only if that function is zero. For an advected concentration with diffusion, $\mathbf J=q\mathbf u-\kappa\nabla q$. Constant $\kappa$ gives
+
+$$
+\partial_tq+\mathbf u\cdot\nabla q+q\nabla\cdot\mathbf u
+=\kappa\Delta q+s.
+\tag{2.11}
+$$
+
+When $\nabla\cdot\mathbf u=0$, conservative and advective forms agree. Otherwise the compression term matters. A concentration per volume differs from a mixing ratio per unit mass; the latter uses mass continuity in its transport equation.
+
+## Chapter summary and self-test
+
+**Main results and terms.** The Jacobian is the local derivative map and its determinant changes volume. The gradient, divergence, curl, and Laplacian have the meanings in (2.4). The material derivative (2.3) follows parcels. Divergence and Stokes' theorems convert volume or surface integrals to boundary flux or circulation. Green's identity (2.9) controls energy and adjoints. Equation (2.10) connects integral conservation with a local PDE.
+
+**Self-test.** Derive $\partial_t\rho+\nabla\cdot(\rho\mathbf u)=0$ for mass density $\rho$. Under what condition does it imply $D\rho/Dt=0$? Why is no source needed for the translating-profile example above?

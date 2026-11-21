@@ -7,21 +7,22 @@ book:
   author: "Tal Glanzman"
   chapters:
     - index.qmd
+    - part: 00-mathematical-foundations/index.qmd
+      chapters:
+        - 00-mathematical-foundations/language.qmd
     - part: 01-vector-calculus/index.qmd
       chapters:
         - 01-vector-calculus/operators.qmd
-        - 01-vector-calculus/integrals.qmd
-        - 01-vector-calculus/change-of-variables.qmd
-        - 01-vector-calculus/theorems.qmd
         - 01-vector-calculus/spherical.qmd
-    - part: 02-harmonic-analysis/index.qmd
+    - part: "Function spaces and differential equations"
       chapters:
         - 02-harmonic-analysis/function-spaces.qmd
-        - 02-harmonic-analysis/fourier-series.qmd
-        - 02-harmonic-analysis/fourier-transform.qmd
-        - 02-harmonic-analysis/spherical-harmonics.qmd
-    - part: 03-pdes/index.qmd
+        - 03-pdes/eigenfunctions.qmd
+        - 03-pdes/foundations.qmd
+    - part: 02-harmonic-analysis/index.qmd
       chapters:
+        - 02-harmonic-analysis/fourier-series.qmd
+        - 02-harmonic-analysis/spherical-harmonics.qmd
         - 03-pdes/spectral-methods.qmd
     - part: 04-geophysical-fluid-dynamics/index.qmd
       chapters:
@@ -34,8 +35,18 @@ book:
         - 04-geophysical-fluid-dynamics/turbulence.qmd
         - 04-geophysical-fluid-dynamics/inversion.qmd
         - 04-geophysical-fluid-dynamics/stochastic.qmd
+    - part: 06-statistics/index.qmd
+      chapters:
+        - 06-statistics/averages.qmd
     - part: 05-neural-operators/index.qmd
-      chapters: []
+      chapters:
+        - 05-neural-operators/spectral-operators.qmd
+
+  appendices:
+    - 01-vector-calculus/integrals.qmd
+    - 01-vector-calculus/change-of-variables.qmd
+    - 01-vector-calculus/theorems.qmd
+    - 02-harmonic-analysis/fourier-transform.qmd
 
 format:
   html:

@@ -1,0 +1,28 @@
+# Mathematical foundations
+
+The mathematical sequence develops fields and linear algebra, calculus and
+surface geometry, function spaces, differential equations, Fourier analysis,
+spherical harmonics, and numerical projection. Probability and integral operators
+then connect physical averages to learned maps.
+
+These chapters share their source with the
+[mathematical-prerequisites companion](https://github.com/tglanz/climatology/blob/main/presentations/mathematical-prerequisites/mathematical-prerequisites.md),
+which also supplies a linked PDF, chapter summaries, self-tests, and answers.
+Arfken and Weber's sixth edition, abbreviated AW, is the principal source @ArfkenWeber2005;
+Hunter defines the weak-solution notation @HunterPDE, and NIST gives the explicit
+Gaussian quadrature rule @NISTDLMFQuadrature.
+
+Equations prefixed **M** retain the companion's chapter-equation numbers, independently
+of the book's chapter order. Equations prefixed **P** belong to the physical
+companion. Guide chapter numbers in plural cross-references refer to the companion;
+linked concept names refer to their owning book chapter. The mathematical
+companion's fluid application is represented here by the more detailed
+[fluid-dynamics sequence](../04-geophysical-fluid-dynamics/index.qmd).
+
+The mathematical chapters use colatitude $\theta$, latitude $\varphi$, longitude
+$\lambda$, physical radius $R$, and $d\Omega=dA/R^2$. Some fluid chapters write
+latitude as $\phi$ and solid angle as $d\omega$; these denote the same geometric
+quantities. Inner products are linear in the first argument. Fourier series
+use normalized measure $dx/d$ on a period $d$; the whole-line transform uses
+angular wavenumber $k$ and inverse factor $1/(2\pi)$. Every transform and physical
+average states its measure explicitly.

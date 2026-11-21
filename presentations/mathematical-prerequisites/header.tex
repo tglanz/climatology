@@ -1,0 +1,29 @@
+\usepackage{fancyhdr}
+\usepackage{microtype}
+\usepackage{needspace}
+\usepackage{titlesec}
+\titlespacing*{\chapter}{0pt}{0pt}{20pt}
+\usepackage{etoolbox}
+\setlength{\headheight}{26pt}
+\setlength{\headsep}{14pt}
+\pagestyle{fancy}
+\fancyhf{}
+\renewcommand{\chaptermark}[1]{\markboth{\thechapter.\ #1}{}}
+\renewcommand{\sectionmark}[1]{\markright{\thesection.\ #1}}
+\fancyhead[L]{\parbox[b]{\textwidth}{\footnotesize\nouppercase{\leftmark}\\\nouppercase{\sectiononpage}}}
+\fancyfoot[C]{\small\thepage}
+\renewcommand{\headrulewidth}{0.3pt}
+\fancypagestyle{plain}{\fancyhf{}\fancyhead[L]{\parbox[b]{\textwidth}{\footnotesize\nouppercase{\leftmark}\\\nouppercase{\sectiononpage}}}\fancyfoot[C]{\small\thepage}\renewcommand{\headrulewidth}{0.3pt}}
+\AtBeginDocument{\markboth{Mathematical prerequisites}{Scope and sources}}
+\pretocmd{\section}{\Needspace{6\baselineskip}}{}{}
+\setlength{\emergencystretch}{2em}
+\allowdisplaybreaks[1]
+\AtBeginDocument{\hypersetup{bookmarksnumbered=true}}
+
+\patchcmd{\titlepage}{\thispagestyle{empty}}{\thispagestyle{fancy}}{}{}
+
+\AtBeginDocument{\renewcommand{\boldsymbol}[1]{\symbf{#1}}}
+
+\makeatletter
+\newcommand{\sectiononpage}{\expandafter\@rightmark\botmark\@empty\@empty}
+\makeatother

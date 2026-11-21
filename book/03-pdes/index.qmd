@@ -1,10 +1,9 @@
-# Partial Differential Equations
+# Differential equations
 
-Differential operators, boundary conditions, and forcing determine a PDE problem.
-Laplace and Poisson equations provide examples of Green's functions and spectral
-solution methods. On the sphere, spherical harmonics connect these ideas to the
-Laplace-Beltrami operator.
-
-The [spectral methods chapter](spectral-methods.qmd) develops projection,
-Gaussian quadrature, spherical harmonic transforms, elliptic inversion, and
-nonlinear dealiasing.
+[Eigenfunction theory](eigenfunctions.qmd) develops ODEs, boundary conditions,
+self-adjoint Sturm-Liouville problems, separation, and Green's functions.
+[PDE foundations](foundations.qmd) then defines problem types, energy estimates,
+weak solutions, characteristics, and dimensionless scales.
+[Spectral numerical methods](spectral-methods.qmd) combine those ideas with
+Fourier and spherical harmonic representations, Gaussian quadrature, and
+separate spatial and temporal error checks.

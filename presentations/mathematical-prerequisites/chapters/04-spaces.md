@@ -1,0 +1,80 @@
+# Function spaces, limits, and weak derivatives {#ch-spaces}
+
+## Norms, inner products, and convergence
+
+**Result and motivation.** A function expansion is meaningful only after specifying the measure and the kind of convergence. Mean-square accuracy does not imply accuracy at every point or of every derivative. Sources: [@ArfkenWeber2005, Sections 5.5, 10.2-10.4, 14.1, 14.4].
+
+Let $D$ be an interval, a spatial region, or a sphere, with positive integration measure $d\nu$ (for example $dx$, $dV$, or $d\Omega$). A norm $\|\cdot\|$ is nonnegative, zero only on the zero element, homogeneous ($\|af\|=|a|\|f\|$), and obeys the triangle inequality. For $1\le p<\infty$, define
+
+$$
+L^p(D,d\nu)=\left\{f:\int_D|f|^p\,d\nu<\infty\right\},
+\qquad \|f\|_p=\left(\int_D|f|^p\,d\nu\right)^{1/p}.
+\tag{4.1}
+$$
+
+Functions here are measurable, meaning their level sets can be assigned the chosen measure. Functions that differ only on a set of measure zero are identified. "Almost everywhere" means except on such a set. For $L^\infty$, the norm is the essential supremum: the smallest bound valid almost everywhere. These identifications make the integral norms genuine norms. We use the standard completeness of $L^p$ without a measure-theoretic proof.
+
+For complex functions choose
+
+$$
+\langle f,g\rangle=\int_D f\overline g\,d\nu,
+\qquad \|f\|_2^2=\langle f,f\rangle,
+\qquad |\langle f,g\rangle|\le\|f\|_2\|g\|_2.
+\tag{4.2}
+$$
+
+The final statement is Cauchy-Schwarz. To derive it when $g\ne0$, set $a=\langle f,g\rangle/\|g\|_2^2$ and expand $0\le\|f-ag\|_2^2=\|f\|_2^2-|\langle f,g\rangle|^2/\|g\|_2^2$. A positive weight $w(x)$ defines $d\nu=w(x)dx$; changing $w$ changes orthogonality, projections, and losses.
+
+A sequence $f_n$ converges in $L^2$ to $f$ if $\|f_n-f\|_2\to0$. It converges pointwise if $f_n(x)\to f(x)$ at each $x$, and uniformly if $\sup_x|f_n(x)-f(x)|\to0$. On a finite-measure domain, uniform convergence implies $L^2$ convergence because $\|f_n-f\|_2^2\le\nu(D)\sup|f_n-f|^2$. The reverse fails: a triangular pulse of height one and width $1/n$ has vanishing $L^2$ norm but no vanishing maximum.
+
+A sequence is Cauchy if $\|f_n-f_m\|\to0$ as both indices grow. A space is complete when every Cauchy sequence has a limit in it. A Hilbert space is a complete inner product space. $L^2$ is Hilbert; continuous functions with the $L^2$ norm are not complete, because increasingly sharp continuous transitions can converge in that norm to a step.
+
+## Orthogonal expansions and approximation
+
+**Result and motivation.** An orthonormal basis converts squared function error into a sum of squared coefficient errors. Truncation is the best approximation in the chosen norm, rather than a claim of pointwise exactness. Sources: [@ArfkenWeber2005, Sections 10.3-10.4].
+
+Functions $e_j$ are orthonormal if $\langle e_j,e_k\rangle=\delta_{jk}$. A complete orthonormal system has no nonzero function orthogonal to all its members. For such a system in a Hilbert space, define coefficients $c_j=\langle f,e_j\rangle$ and projection $P_Nf=\sum_{j=1}^Nc_je_j$. Orthogonality gives
+
+$$
+\|f-P_Nf\|_2^2=\|f\|_2^2-\sum_{j=1}^N|c_j|^2,
+\qquad \|f\|_2^2=\sum_{j=1}^{\infty}|c_j|^2.
+\tag{4.3}
+$$
+
+The first identity implies Bessel's inequality $\sum_j|c_j|^2\le\|f\|_2^2$ even for an incomplete orthonormal system. Completeness makes the remainder converge to zero and yields the second identity, Parseval's identity. Applying the Pythagorean argument (1.4) shows that $P_Nf$ minimizes error over the retained span. Completeness of Fourier and spherical harmonic systems is a theorem, used below rather than inferred from orthogonality alone.
+
+For independent functions $f_j$, Gram-Schmidt constructs an orthonormal system by
+
+$$
+g_n=f_n-\sum_{j<n}\langle f_n,e_j\rangle e_j,
+\qquad e_n=g_n/\|g_n\|_2.
+\tag{4.4}
+$$
+
+For example, with normalized measure $d\mu/2$ on $[-1,1]$, the functions $1$, $\sqrt3\mu$, and $\frac{\sqrt5}{2}(3\mu^2-1)$ are orthonormal. Their normalization differs from that under $d\mu$. This distinction explains factors of $2$ and $4\pi$ in latitude and spherical expansions.
+
+## Distributions, weak derivatives, and energy spaces
+
+**Result and motivation.** Weak derivatives transfer differentiation to smooth test functions. They describe finite-energy fields and point sources without pretending that every solution is classically smooth. Sources: [@ArfkenWeber2005, Sections 1.15, 9.7, 10.5]; the $H^1$ definition follows [@HunterPDE, Sections 3.5 and 3.9].
+
+A test function $\eta\in C_c^\infty(D)$ is infinitely differentiable and zero outside a closed bounded subset lying inside $D$ (compact support). A distribution $T$ is a linear rule assigning a scalar $T[\eta]$ to each test function, continuous in the following sense: if all test functions have support in one fixed compact subset and every derivative converges uniformly to zero, their values under $T$ tend to zero. A locally integrable function (one integrable on every compact subset of $D$) defines $T_f[\eta]=\int_D f\eta$. The Dirac delta at $x_0$ is the distribution $\delta_{x_0}[\eta]=\eta(x_0)$; it is not an ordinary function of infinite height. In one dimension,
+
+$$
+T_f'[\eta]=-T_f[\eta'],\qquad
+\int f\eta'=-\int g\eta\ \Longrightarrow\ g=\partial_x f
+\text{ in the weak sense}.
+\tag{4.5}
+$$
+
+The integral equality must hold for every test function $\eta$. There is no boundary term because the test function vanishes near the boundary. For the step $H(x)=0$ for $x<0$, $H(x)=1$ for $x>0$,
+$T_H'[\eta]=-\int_0^\infty\eta'(x)dx=\eta(0)$, so $H'=\delta_0$ as distributions. Values at $x=0$ do not affect this identity.
+
+The Sobolev space $H^1(D)$ consists of $L^2$ functions whose first weak partial derivatives are also in $L^2$. With dimensionless coordinates, its norm is $\|f\|_{H^1}^2=\|f\|_2^2+\sum_j\|\partial_jf\|_2^2$. With dimensional coordinates one can insert a reference length squared on the derivative terms; otherwise the displayed sum mixes units. $H_0^1(D)$ consists of all limits in the $H^1$ norm of sequences of compactly supported smooth functions. On a sufficiently regular bounded domain it encodes zero boundary values. This functional-analytic notation is an explicit extension of AW's energy and integration-by-parts methods; no general Sobolev embedding theorem is needed here.
+
+On the dimensionless $2\pi$-periodic coordinate $x$, $f_n(x)=\sin(nx)/n$ tends uniformly to zero, but $f_n'(x)=\cos(nx)$ does not tend to zero in $L^2$. An $L^2$ approximation to a field does not by itself control gradients, wind inferred from a streamfunction, or vorticity inferred from wind.
+
+## Chapter summary and self-test
+
+**Main results and terms.** The measure belongs to the definition of an $L^p$ norm. A Hilbert space is complete with an inner product. Pointwise, uniform, and norm convergence are distinct. Projection, Bessel's inequality, and Parseval follow from orthogonality plus the appropriate completeness assumption. A distribution acts on test functions; a weak derivative is defined by integration by parts. $H^1$ controls both the field and its first derivatives.
+
+**Self-test.** Show that $\sqrt3\mu$ has norm one under $d\mu/2$. Why does small $L^2$ error in a streamfunction fail to guarantee small wind error? Which object is the derivative of a step?

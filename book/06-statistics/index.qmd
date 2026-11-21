@@ -1,0 +1,6 @@
+# Probability and averages
+
+An area mean, a time mean, and an ensemble expectation are different mathematical
+operators. Probability and serial dependence determine what a finite sample can
+say about a climatological quantity. The next chapter defines these averages,
+derives sample-mean uncertainty, and connects quadratic loss to conditional means.

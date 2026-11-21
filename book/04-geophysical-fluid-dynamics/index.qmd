@@ -22,6 +22,6 @@ of the book's chapter ordering.
 Primary sources are @Vallis2006, @BarotropicNotes, and @ArfkenWeber2005.
 The specific finite-memory stirring process comes from @VallisEtAl2004.
 The angular convention here is longitude $\lambda$, latitude $\phi$;
-other book chapters use colatitude $\theta=\pi/2-\phi$ and longitude $\varphi$.
+the mathematical chapters use colatitude $\theta=\pi/2-\varphi$, latitude $\varphi$, and longitude $\lambda$.
 This is a change of coordinates, not a change in the harmonic normalization:
 $\int |Y_\ell^m|^2d\omega=1$ in both.

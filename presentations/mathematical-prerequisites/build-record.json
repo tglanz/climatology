@@ -1,0 +1,21 @@
+{
+  "date": "2026-11-21",
+  "input_sha256": {
+    "presentations/mathematical-prerequisites/mathematical-prerequisites.md": "30c6055d3b6c27ae6356ec5ff7b3dd81b3442795ec57b0f300e6be9ec2e1c4fd",
+    "presentations/mathematical-prerequisites/header.tex": "a315a6b32889c4306f116a9955d237918d2b812adad9a233d75dcfd5f2a9445a",
+    "presentations/mathematical-prerequisites/headers.lua": "f5121d240da67ab4fb634257b985e5f51c4caf174b446063ece079f1bd03e893",
+    "presentations/mathematical-prerequisites/build.py": "0a3a9dcde329cc251d894943ab4ab70eac0785488b40696b734bdb9a4a027a7f",
+    "book/references.bib": "a20bd3a156a5bdb8702d20b8a69aea4857c37f6dcebc59c0281029d3c99d94ef"
+  },
+  "evidence_sha256": {
+    "papers/methods-of-mathemacial-for-physicists.pdf": "ec644ce2c50b2d065e6f58c1070f5c2616fa4111b63fe29cd347d6c1effe15f4",
+    "papers/atmospheric-and-oceanic-fluid-dymamics.pdf": "f4760570d419a46756f987c1667dcdb184a818435e1399d0b1daba013cf909b3",
+    "papers/fno.pdf": "6cd2645d4a50d1a61a261529b33747c674d78851bdbe6993b0961f81a17dc6f2",
+    "papers/sfno.pdf": "3d24e686dc3dab1192bc691815363bd5f545a0d4bac31a31b40b2afd11c928ae"
+  },
+  "pdf_sha256": "c88fb0ec08af038495f3c5fb2256095eac9d14d176bc335597c79885e3c56e6b",
+  "repository_revision_at_build": "29fd5a85ad9b5b67ae8faea3e558c112f4697306",
+  "pandoc": "pandoc 3.12.1",
+  "engine": "XeLaTeX; three passes; report; A4; 11pt",
+  "book_equations": "M prefix, source chapter numbering; physical companion owns fluid sequence"
+}

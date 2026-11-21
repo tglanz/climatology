@@ -1,0 +1,135 @@
+# Legendre polynomials and spherical harmonics {#ch-harmonics}
+
+## Angular separation and Legendre's equation
+
+**Result and motivation.** Spherical harmonics are the globally regular eigenfunctions of the spherical Laplacian. Longitude periodicity and pole regularity quantize their two indices. Sources: [@ArfkenWeber2005, Sections 9.3-9.5, 12.1-12.6].
+
+Seek $\Delta_\Omega Y=-\Lambda Y$ on the unit sphere, where $\Lambda$ is dimensionless and $Y(\theta,\lambda)=\Theta(\theta)\Phi(\lambda)$. Substitution into (3.5) separates the longitude equation $\Phi''+m^2\Phi=0$. Single-valued $2\pi$-periodicity requires an integer $m$, and choose $\Phi=e^{im\lambda}$. The remaining equation, written in $\mu=\cos\theta$, is
+
+$$
+\frac{d}{d\mu}\left[(1-\mu^2)\frac{d\Theta}{d\mu}\right]
++\left[\Lambda-\frac{m^2}{1-\mu^2}\right]\Theta=0.
+\tag{8.1}
+$$
+
+For $m=0$, insert a power series $\Theta=\sum_{j\ge0}a_j\mu^j$. Equal powers give
+
+$$
+a_{j+2}=\frac{j(j+1)-\Lambda}{(j+2)(j+1)}a_j.
+\tag{8.2}
+$$
+
+If $\Lambda=\ell(\ell+1)$ for $\ell\in\mathbb N_0$, one parity branch terminates at degree $\ell$. Its normalization $P_\ell(1)=1$ defines the Legendre polynomial $P_\ell$. The other independent solution is singular at an endpoint. The global regularity theorem for (8.1) selects these discrete eigenvalues; the recurrence exhibits the regular polynomial solutions but is not by itself a proof that all other $\Lambda$ fail both endpoint conditions. For integer $m\ne0$, admissible degrees satisfy $\ell\ge|m|$.
+
+For $m=0$ the Legendre equation has singular Sturm-Liouville endpoints because $p=1-\mu^2$ vanishes at $\pm1$. The boundary condition is regularity of the scalar on the sphere, rather than arbitrary Dirichlet data at coordinate poles.
+
+## Polynomial normalization and associated functions
+
+**Result and motivation.** Explicit normalization and phase conventions make coefficients comparable. Associated Legendre functions supply the latitude dependence for nonzero longitude order. Sources: [@ArfkenWeber2005, Sections 12.2-12.5].
+
+Rodrigues' formula, the first polynomials, and their orthogonality are
+
+$$
+\begin{aligned}
+P_\ell(\mu)&=\frac1{2^\ell\ell!}\frac{d^\ell}{d\mu^\ell}(\mu^2-1)^\ell,\\
+P_0&=1,\quad P_1=\mu,\quad P_2=\tfrac12(3\mu^2-1),\\
+\int_{-1}^1P_\ell(\mu)P_j(\mu)d\mu&=\frac2{2\ell+1}\delta_{\ell j}.
+\end{aligned}
+\tag{8.3}
+$$
+
+Orthogonality for different degrees follows by multiplying their differential equations, subtracting, and integrating; the boundary factor $1-\mu^2$ makes the regular polynomial boundary terms zero. The norm can also be derived from Rodrigues. The leading coefficient of $P_\ell$ is $a_\ell=(2\ell)!/[2^\ell(\ell!)^2]$. Since $P_\ell-a_\ell\mu^\ell$ has lower degree, orthogonality gives $\int P_\ell^2=a_\ell\int P_\ell\mu^\ell$. Define $I_\ell=\int_{-1}^1(1-\mu^2)^\ell d\mu$. Integrating Rodrigues by parts $\ell$ times gives $\int P_\ell\mu^\ell=2^{-\ell}I_\ell$: all endpoint terms vanish and $d^\ell\mu^\ell/d\mu^\ell=\ell!$.
+
+For $\ell\ge1$, integrate the derivative of $\mu(1-\mu^2)^\ell$ over $[-1,1]$ to get $0=I_\ell-2\ell(I_{\ell-1}-I_\ell)$. Thus $I_\ell=2\ell I_{\ell-1}/(2\ell+1)$ with $I_0=2$. Iterating gives $I_\ell=2^{2\ell+1}(\ell!)^2/(2\ell+1)!$, and the norm is $a_\ell2^{-\ell}I_\ell=2/(2\ell+1)$.
+
+
+For integer $0\le m\le\ell$, choose the Condon-Shortley phase by defining
+
+$$
+P_\ell^m(\mu)=(-1)^m(1-\mu^2)^{m/2}\frac{d^mP_\ell}{d\mu^m},
+\qquad
+\int_{-1}^1(P_\ell^m)^2d\mu
+=\frac2{2\ell+1}\frac{(\ell+m)!}{(\ell-m)!}.
+\tag{8.4}
+$$
+
+Differentiating Legendre's equation $m$ times and multiplying by $(1-\mu^2)^{m/2}$ gives (8.1). The associated-function norm in (8.4) is quoted from AW, Section 12.5; its repeated-integration proof is not reproduced here. The factor $(1-\mu^2)^{m/2}=\sin^m\theta$ enforces the required vanishing of a regular scalar's nonzero longitude order at the poles. Odd-$m$ associated functions are not polynomials in $\mu$.
+
+A stable degree recurrence follows from Rodrigues or the generating function:
+$(\ell+1)P_{\ell+1}=(2\ell+1)\mu P_\ell-\ell P_{\ell-1}$. It constructs all degrees from $P_0,P_1$; high-degree numerical algorithms still need controlled normalization to avoid overflow.
+
+## Spherical harmonic expansion and Parseval
+
+**Result and motivation.** The spherical harmonic transform is longitude Fourier analysis coupled to weighted latitude analysis. Degree measures total angular scale; order measures longitude variation. Sources: [@ArfkenWeber2005, Sections 12.5-12.6].
+
+For $m\ge0$, define
+
+$$
+Y_\ell^m(\theta,\lambda)=N_{\ell m}P_\ell^m(\cos\theta)e^{im\lambda},
+\qquad N_{\ell m}=\left[\frac{2\ell+1}{4\pi}\frac{(\ell-m)!}{(\ell+m)!}\right]^{1/2},
+\qquad Y_\ell^{-m}=(-1)^m\overline{Y_\ell^m}.
+\tag{8.5}
+$$
+
+Degree is $\ell=0,1,\ldots$ and order is $-\ell\le m\le\ell$. Combining longitude orthogonality with (8.4) gives
+
+$$
+\int_{S^2}Y_\ell^m\overline{Y_j^n}d\Omega=\delta_{\ell j}\delta_{mn},
+\qquad \Delta_sY_\ell^m=-\frac{\ell(\ell+1)}{R^2}Y_\ell^m.
+\tag{8.6}
+$$
+
+The symbol $S^2$ denotes the unit sphere; these angular functions are also evaluated on $S_R^2$. They are normalized under $d\Omega$, not physical area $dA$. In particular $Y_0^0=1/\sqrt{4\pi}$ and $Y_1^0=\sqrt{3/(4\pi)}\cos\theta$.
+
+For $f\in L^2(S^2,d\Omega)$, completeness gives
+
+$$
+\begin{aligned}
+f&=\sum_{\ell=0}^{\infty}\sum_{m=-\ell}^{\ell}f_\ell^mY_\ell^m,
+& f_\ell^m&=\int_{S^2}f\overline{Y_\ell^m}d\Omega,\\
+\int_{S^2}|f|^2d\Omega&=\sum_{\ell,m}|f_\ell^m|^2,
+& \langle f\rangle_A&=f_0^0/\sqrt{4\pi}.
+\end{aligned}
+\tag{8.7}
+$$
+
+The expansion converges in $L^2$; smooth fields admit stronger convergence. Real $f$ obeys $f_\ell^{-m}=(-1)^m\overline{f_\ell^m}$. A cutoff $0\le\ell\le L$ retains $(L+1)^2$ basis functions, or the same number of independent real coefficients for a real field. The physical inverse length is approximately $\sqrt{\ell(\ell+1)}/R$; degree zero is the mean, not a finite wavelength.
+
+For $f=\mu^2$, equation (8.3) gives $\mu^2=P_0/3+2P_2/3$. Hence $f_0^0=\sqrt{4\pi}/3$, $f_2^0=(2/3)\sqrt{4\pi/5}$, and all other coefficients vanish. The area mean is $1/3$. Parseval gives $\int\mu^4d\Omega=4\pi/5$, agreeing with direct integration.
+
+## Zonal means, tangent vectors, and isotropy
+
+**Result and motivation.** Longitude averaging keeps only order zero. Tangent vectors need geometric basis functions, while rotationally invariant scalar filters must act identically on all orders of a degree. Sources: [@ArfkenWeber2005, Sections 12.6, 12.8, 12.11].
+
+The zonal mean is $\overline f(\mu)=(2\pi)^{-1}\int_0^{2\pi}f(\mu,\lambda)d\lambda$. Because the average of $e^{im\lambda}$ is zero for $m\ne0$, only $m=0$ survives. For a profile use $b_\ell(\mu)=\sqrt{2\ell+1}P_\ell(\mu)$, orthonormal under $d\mu/2$. Then $\overline f=\sum_\ell a_\ell b_\ell$ with $a_\ell=\frac12\int_{-1}^1\overline f b_\ell d\mu$. A scalar profile and an eastward velocity component have different pole regularity: an arbitrary scalar Legendre expansion of speed does not by itself define a smooth tangent vector field.
+
+For $\ell\ge1$, dimensionless tangent vector harmonics are
+
+$$
+\mathbf E_\ell^m=\frac{R\nabla_sY_\ell^m}{\sqrt{\ell(\ell+1)}},
+\qquad
+\mathbf B_\ell^m=\mathbf e_r\times\mathbf E_\ell^m.
+\tag{8.8}
+$$
+
+Integration by parts and (8.6) show unit norms under $d\Omega$. The gradient family is curl-free on the surface; the rotated-gradient family is divergence-free. AW's vector harmonics also include radial components and use a coupled angular-momentum convention. Equation (8.8) specifies the tangent gradient/rotated-gradient convention used here; its normalization follows from (3.8) and (8.6), rather than from equating names across conventions.
+
+For a smooth tangent field $\mathbf v$, let $\delta=\nabla_s\cdot\mathbf v$ and $\zeta=(\nabla\times\mathbf v)\cdot\mathbf e_r$. Both have zero area integral by the surface divergence and Stokes identities. Scalar harmonic inversion therefore supplies zero-mean potentials $\chi,\psi$ with $\Delta_s\chi=\delta$ and $\Delta_s\psi=\zeta$, by dividing each degree-$\ell\ge1$ coefficient by $-\ell(\ell+1)/R^2$. Then $\mathbf w=\mathbf v-\nabla_s\chi-\mathbf e_r\times\nabla_s\psi$ has zero divergence and radial curl. Such a field is called a harmonic tangent field.
+
+The sphere is simply connected: every closed loop can be continuously shrunk to a point. Stokes' theorem therefore makes the integral of a curl-free smooth tangent field around every loop zero. Its line integral from a reference point is path-independent and defines a scalar $h$ with $\mathbf w=\nabla_sh$ (the potential-field argument of AW, Section 1.13). Since $\Delta_sh=0$, (3.8) gives $\int|\nabla_sh|^2dA=0$, hence $\mathbf w=0$. This proves the smooth decomposition $\mathbf v=\nabla_s\chi+\mathbf e_r\times\nabla_s\psi$. In particular, a divergence-free smooth field has the streamfunction representation. Expanding these potentials gives the $\mathbf E/\mathbf B$ modes; the construction here only needs smooth fields. A velocity generated from a streamfunction uses the latter family; treating its coordinate components as unrelated scalars does not encode that constraint.
+
+For unit vectors $\mathbf n,\mathbf n'$ separated by angle $\gamma$, with $\cos\gamma=\mathbf n\cdot\mathbf n'$, the addition theorem is
+
+$$
+P_\ell(\mathbf n\cdot\mathbf n')
+=\frac{4\pi}{2\ell+1}\sum_{m=-\ell}^{\ell}Y_\ell^m(\mathbf n)\overline{Y_\ell^m(\mathbf n')}.
+\tag{8.9}
+$$
+
+This theorem is quoted from AW, Section 12.8. It shows why an isotropic kernel, depending only on angular separation, multiplies every order at fixed degree by the same scalar. Chapter 12 derives the multiplier. Keeping all orders through a degree gives a rotation-invariant subspace (triangular truncation). Selecting unrelated orders can break that property.
+
+## Chapter summary and self-test
+
+**Main results and terms.** Longitude periodicity selects integer order $m$; global regularity selects integer degree $\ell\ge|m|$. Rodrigues' formula defines $P_\ell$, and the Condon-Shortley choice fixes the phase of $P_\ell^m$. Equations (8.5)-(8.7) define the normalized spherical harmonic transform, eigenvalues, and Parseval identity. Zonal means keep $m=0$. Vector harmonics separate gradient and nondivergent tangent fields. The addition theorem underlies isotropic spherical kernels.
+
+**Self-test.** Expand $\mu^2-1/3$ and solve $\Delta_s\psi=A(\mu^2-1/3)$ with zero mean. How many independent real degrees of freedom remain at cutoff $L=2$? Why is a two-dimensional periodic FFT on latitude-longitude coordinates not spherical harmonic analysis?
