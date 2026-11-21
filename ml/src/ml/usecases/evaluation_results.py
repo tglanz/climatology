@@ -20,6 +20,9 @@ class ProfileCase:
     split: str
     truth: np.ndarray
     prediction: np.ndarray
+    window_predictions: np.ndarray | None = None
+    window_baselines: np.ndarray | None = None
+    target_overlap: float | None = None
 
 
 @dataclass(frozen=True)
@@ -62,6 +65,7 @@ class TargetEvaluation:
     scores: list[PredictorScore] = field(default_factory=list)
     nearest: list[NearestMatch] = field(default_factory=list)
     variability: list[ReplicateVariability] = field(default_factory=list)
+    learning: dict = field(default_factory=dict)
 
     @property
     def test_cases(self) -> list[ProfileCase]:
@@ -122,6 +126,42 @@ def _nearest_profiles(
     return Predictor("nearest configuration", np.stack(profiles)), matches
 
 
+def _parameter_profiles(train, tests, sweep):
+    """Fixed ridge regression: fit only training-configuration mean targets."""
+    if sweep is None or len({c.code for c in train}) < 2:
+        return Predictor(
+            "parameter ridge",
+            None,
+            "Need parameter metadata and at least two training configurations",
+        )
+    keys = sweep.varying_keys()
+    codes = sorted({c.code for c in train})
+    if not keys or any(
+        sweep.params_for(c) is None or any(k not in sweep.params_for(c) for k in keys)
+        for c in codes + [c.code for c in tests]
+    ):
+        return Predictor(
+            "parameter ridge", None, "Incomplete or constant parameter metadata"
+        )
+    x = np.array([[sweep.params_for(c)[k] for k in keys] for c in codes], dtype=float)
+    query = np.array(
+        [[sweep.params_for(c.code)[k] for k in keys] for c in tests], dtype=float
+    )
+    if not np.isfinite(x).all() or not np.isfinite(query).all():
+        return Predictor("parameter ridge", None, "Nonfinite parameter metadata")
+    mean, scale = x.mean(0), x.std(0)
+    scale[scale == 0] = 1
+    design = np.column_stack((np.ones(len(x)), (x - mean) / scale))
+    query = np.column_stack((np.ones(len(query)), (query - mean) / scale))
+    truth = np.stack(
+        [np.mean([c.truth for c in train if c.code == code], axis=0) for code in codes]
+    )
+    penalty = np.eye(design.shape[1]) * 1e-6
+    penalty[0, 0] = 0
+    coefficients = np.linalg.solve(design.T @ design + penalty, design.T @ truth)
+    return Predictor("parameter ridge", query @ coefficients)
+
+
 def baseline_predictions(cases: list[ProfileCase], sweep: SweepFile | None):
     """Training-derived predictions depend only on train targets and test parameters."""
     train = [case for case in cases if case.split == "train"]
@@ -144,6 +184,19 @@ def baseline_predictions(cases: list[ProfileCase], sweep: SweepFile | None):
         Predictor("zero", np.zeros(shape)),
         mean,
         nearest,
+        _parameter_profiles(train, tests, sweep),
+        (
+            Predictor(
+                "short-window mean",
+                np.stack([c.window_baselines.mean(0) for c in tests]),
+            )
+            if all(c.window_baselines is not None for c in tests)
+            else Predictor(
+                "short-window mean",
+                None,
+                "Prepared data lack window averaging references; prepare again",
+            )
+        ),
         Predictor("model", np.stack([case.prediction for case in tests])),
     ], matches
 
@@ -225,6 +278,17 @@ def build_target_evaluation(
                 membership[sr.sim_dir.resolve()],
                 sr.truth_profile[index],
                 sr.pred_profile[index],
+                (
+                    getattr(sr, "window_predictions", None)[:, index]
+                    if getattr(sr, "window_predictions", None) is not None
+                    else None
+                ),
+                (
+                    sr.window_baselines[:, index]
+                    if getattr(sr, "window_baselines", None) is not None
+                    else None
+                ),
+                getattr(sr, "target_overlap", None),
             )
             for sr in results
         ],
@@ -235,4 +299,7 @@ def build_target_evaluation(
         for p in target.predictors
     ]
     target.variability = _replicate_variability(target.cases, target.latitude)
+    from ml.diagnostics.learning import learning_diagnostics
+
+    target.learning = learning_diagnostics(target)
     return target

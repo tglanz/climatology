@@ -27,6 +27,9 @@ class SimulationPrediction:
     metadata: DataMetadata
     truth_profile: np.ndarray
     pred_profile: np.ndarray
+    window_predictions: np.ndarray | None = None
+    window_baselines: np.ndarray | None = None
+    target_overlap: float | None = None
 
     @property
     def code(self) -> str:

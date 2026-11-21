@@ -80,6 +80,7 @@ Each of `train.h5`, `val.h5`, and `test.h5` has this HDF5 schema:
 |---|---|---|
 | `x` | float32 `(N, K*V, H, W)` | Physical inputs; channels ordered by time, then variable |
 | `y` | float32 `(N, C, H)` | Finite-run time-mean zonal-mean profiles, repeated per window |
+| `window_baselines` | float32 `(N, C, H)` | Target-field mean over each input window; optional for older artifacts, used only as an evaluation reference |
 | `simulation_targets` | float32 `(S, C, H)` | One profile per accepted simulation; supports equal simulation weighting |
 | `simulation_paths` | UTF-8 `(S,)` | Stable source identities; downstream stages do not open these paths |
 | `simulation_offsets` | int64 `(S+1,)` | Simulation `i` owns rows `[offsets[i], offsets[i+1])`; starts at zero, ends at `N` |

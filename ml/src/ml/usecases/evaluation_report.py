@@ -95,6 +95,58 @@ def write_report(
             )
         if not target.test_cases:
             lines.extend(["", "No test simulations loaded."])
+        lines.extend(
+            [
+                "",
+                "### Does the model use its inputs?",
+                "",
+                "Positive skill beats the training mean. A variance ratio near zero indicates collapsed configuration predictions.",
+                "Correlation measures matching changes across configurations; slope measures their amplitude. These are undefined without variation.",
+                "",
+                "| Split | Configurations | RMSE | Skill over train mean | Variance ratio | Anomaly correlation | Anomaly slope | Pairing permutation p | Input/target overlap |",
+                "|---|---:|---:|---:|---:|---:|---:|---:|---:|",
+            ]
+        )
+        for split, row in target.learning["splits"].items():
+            values = [
+                row["mse"] ** 0.5,
+                row["skill_over_train_mean"],
+                row["configuration_variance_ratio"],
+                row["configuration_anomaly_correlation"],
+                row["configuration_anomaly_slope"],
+                row["permutation_p"],
+                row["input_target_overlap_fraction"],
+            ]
+            lines.append(
+                f"| {split} | {row['configurations']} | "
+                + " | ".join(_number(v) for v in values)
+                + " |"
+            )
+        lines.extend(
+            [
+                "",
+                "Pairing permutations exchange complete configuration-mean predictions within each split (199 draws, seed 17). Small p supports correct input/target pairing, not physical causation.",
+                "Input/target overlap is the mean fraction of input snapshots inside the target averaging interval. Positive overlap limits a forecasting claim.",
+                "",
+                "### Paired test comparison",
+                "",
+                "| Reference | Model skill | Reference MSE minus model MSE | 95% configuration bootstrap interval | Configurations |",
+                "|---|---:|---:|---|---:|",
+            ]
+        )
+        for reference_name, row in target.learning["paired_test_skill"].items():
+            interval = ", ".join(_number(v) for v in row["ci95"])
+            lines.append(
+                f"| {reference_name} | {_number(row['skill'])} | {_number(row['mse_improvement'])} | [{interval}] | {row['configurations']} |"
+            )
+        lines.extend(
+            [
+                "",
+                "Positive MSE improvement favors the model. Bootstrap draws resample configurations, retaining their replicas together (1000 draws, seed 17). Few configurations give unstable intervals.",
+                "The short-window mean averages the target field over the same input windows. It can use extra observed quantities, such as wind when the model sees only vorticity; it is a physical averaging reference.",
+                "The parameter ridge uses only forcing parameters and training-configuration mean targets (fixed ridge 1e-6). It tests whether field inputs add value beyond a simple parameter map.",
+            ]
+        )
         if target.nearest:
             lines.extend(
                 [
@@ -137,6 +189,7 @@ def write_report(
                 )
         records[name] = {
             "units": target.diagnostic.units,
+            "learning": target.learning,
             "aggregation": "mean window prediction per simulation, then mean simulation score",
             "scores": [asdict(score) for score in target.scores],
             "replicate_variability": [asdict(row) for row in target.variability],

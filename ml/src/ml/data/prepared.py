@@ -73,6 +73,7 @@ class PreparedSimulation:
     truth: np.ndarray
     starts: tuple[int, ...]
     provenance: dict
+    window_baselines: np.ndarray | None = None
 
 
 def iter_simulations(directory: Path, splits: Splits):
@@ -98,6 +99,11 @@ def iter_simulations(directory: Path, splits: Splits):
                 or handle["window_starts"].shape != (len(handle["x"]),)
             ):
                 raise ValueError("invalid prepared window ownership")
+            if (
+                "window_baselines" in handle
+                and handle["window_baselines"].shape != handle["y"].shape
+            ):
+                raise ValueError("window baseline shape differs from targets")
             excluded = json.loads(handle.attrs["exclusions"])
             accepted = {p.resolve() for p in paths}
             rejected = {Path(p["simulation"]).resolve() for p in excluded}
@@ -123,6 +129,11 @@ def iter_simulations(directory: Path, splits: Splits):
                     truth,
                     tuple(int(v) for v in handle["window_starts"][a:b]),
                     provenance[index],
+                    (
+                        handle["window_baselines"][a:b]
+                        if "window_baselines" in handle
+                        else None
+                    ),
                 )
 
 
@@ -139,9 +150,23 @@ def predict_prepared(directory, splits, checkpoint, device, batch_size):
         predictions = predict_windows(
             model, checkpoint.normalization, item.x, device, batch_size
         )
+        length = item.metadata.data_config["windows"]["length"]
+        a, b = item.provenance["target_interval"]
+        overlap = np.mean(
+            [
+                max(0, min(start + length, b) - max(start, a)) / length
+                for start in item.starts
+            ]
+        )
         results.append(
             SimulationPrediction(
-                item.path, item.metadata, item.truth, predictions.mean(axis=0)
+                item.path,
+                item.metadata,
+                item.truth,
+                predictions.mean(axis=0),
+                predictions,
+                item.window_baselines,
+                float(overlap),
             )
         )
     for split in ("train", "val", "test"):

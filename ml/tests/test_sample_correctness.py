@@ -197,3 +197,27 @@ def test_input_units_are_part_of_saved_identity(simulation):
     assert metadata[0].input_units == ("K",)
     assert not metadata[0].matches(metadata[1])
     assert not DataMetadata.from_dict(metadata[0].to_dict()).matches(metadata[1])
+
+
+def test_window_averaging_reference_uses_exact_input_times(simulation):
+    from ml.data.simulation_data import read_simulation
+    from ml.data.climatology import nc_var_for
+    import xarray as xr
+
+    paths, _, cfg = simulation
+    samples = read_simulation(paths[0].parent.parent, cfg.data)
+    with xr.open_mfdataset(paths, decode_times=False) as dataset:
+        expected = np.stack(
+            [
+                np.stack(
+                    [
+                        dataset[nc_var_for(name)]
+                        .values[start : start + cfg.data.windows.length]
+                        .mean(axis=(0, 2))
+                        for name in cfg.data.y_vars
+                    ]
+                )
+                for start in samples.starts
+            ]
+        )
+    np.testing.assert_allclose(samples.window_baselines, expected)

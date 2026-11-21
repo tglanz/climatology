@@ -82,3 +82,17 @@ class GaussianGrid:
         if values.get("kind") != "legendre-gauss":
             raise ValueError("unsupported saved grid; regenerate the experiment")
         return cls(values["latitudes"], values["longitudes"])
+
+
+def legendre_basis(latitudes: np.ndarray, modes: int) -> np.ndarray:
+    """Basis orthonormal under normalized Gaussian weights, in supplied row order."""
+    weights = gaussian_latitude_weights(latitudes)
+    if (
+        not isinstance(modes, int)
+        or isinstance(modes, bool)
+        or not 1 <= modes <= len(weights)
+    ):
+        raise ValueError("head_modes must be between one and the latitude count")
+    return np.polynomial.legendre.legvander(
+        np.sin(np.deg2rad(latitudes)), modes - 1
+    ) * np.sqrt(2 * np.arange(modes) + 1)

@@ -37,6 +37,7 @@ class SimulationSamples:
     target_interval: tuple[int, int]
     timeline_length: int
     predictions: np.ndarray | None = None
+    window_baselines: np.ndarray | None = None
 
     @property
     def pred_profile(self) -> np.ndarray | None:
@@ -238,6 +239,19 @@ def read_simulation(sim_dir: Path, cfg: IscaDataConfig) -> SimulationSamples:
             t_c,
             (a, b),
             source.length,
+            window_baselines=np.stack(
+                [
+                    np.stack(
+                        [
+                            source.read_field(nc_var_for(name))[
+                                start : start + cfg.windows.length
+                            ].mean(axis=(0, 2))
+                            for name in cfg.y_vars
+                        ]
+                    )
+                    for start in starts
+                ]
+            ).astype(np.float32),
         )
 
 

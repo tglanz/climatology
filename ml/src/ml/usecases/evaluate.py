@@ -26,6 +26,7 @@ from ml.visualization.evaluation import (
     plot_model_vs_variability,
     plot_replicate_variability,
     plot_training_curve,
+    plot_learning_evidence,
 )
 
 log = logging.getLogger(__name__)
@@ -41,6 +42,12 @@ def _render_target(target: TargetEvaluation, sweep, save):
 
     def emit(figure, filename, caption):
         save(figure, f"{name}/{filename}", caption, name)
+
+    emit(
+        plot_learning_evidence(target),
+        "learning.png",
+        "Split RMSE, test anomalies, latitude-mode energy, and truth truncation error. Scatter points are correlated latitude values, not independent samples.",
+    )
 
     valid_scores = [
         score for score in target.scores if score.relative_l2.mean is not None
@@ -251,6 +258,12 @@ def run(
         simulation_paths=np.array([str(r.sim_dir) for r in loaded.results]),
         target_names=np.array(norm.metadata.y_vars),
         latitudes=norm.metadata.grid.latitudes,
+        splits=np.array(
+            [
+                next(c.split for c in targets[0].cases if c.sim_dir == r.sim_dir)
+                for r in loaded.results
+            ]
+        ),
         truth=np.stack([r.truth_profile for r in loaded.results]),
         predictions=np.stack([r.pred_profile for r in loaded.results]),
     )

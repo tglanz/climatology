@@ -71,3 +71,56 @@ eastward jet.
 Notebook source calls these shared APIs. Historical saved notebook outputs are
 retained and do not establish that the corrected calculations have regenerated
 those earlier experiments.
+
+
+## Evidence for learning and generalization
+
+Use whole forcing configurations as split groups. Windows from the same
+trajectory and replicas of one configuration must stay together. Random window
+splits can test recognition of a trajectory rather than transfer to new forcing.
+This follows the grouped-validation principle in [Roberts et al. (2017)](https://doi.org/10.1111/ecog.02881).
+Keep test configurations fixed across heads and seeds. Use validation only to
+choose a checkpoint or hyperparameters. Report interpolation and extrapolation
+as separate experiments; a single test split does not establish both.
+
+The report adds these checks:
+
+- **Constant output:** compare physical MSE with the training-simulation mean.
+  Skill is `1 - model_MSE / reference_MSE`; positive values favor the model.
+- **Parameter lookup:** compare with nearest training configuration and a fixed
+  linear ridge map from standardized forcing parameters to configuration-mean
+  targets. Fit coefficients and scaling on training configurations only.
+- **Simple averaging:** compare with target-field means over the exact saved
+  input windows. This reference may have extra measurements: the wind average
+  observes wind even when the network receives only vorticity. It tests whether
+  the learned prediction improves on direct short-trajectory averaging.
+- **Output collapse:** report the ratio of predicted to true configuration
+  variance, their centered anomaly correlation, and regression slope. A constant
+  profile has zero variance; high correlation with a small slope still indicates
+  underestimated response amplitude. Use the anomaly scatter to locate failures.
+- **Input identity:** compare correctly paired configuration predictions with
+  199 shuffled pairings within the same split, seed 17. Report the fraction of
+  shuffled MSEs at least as good as the observed MSE, with a plus-one correction.
+  This is a conditional association check. Correlated forcing and initial states
+  prevent a causal interpretation. It requires at least three configurations.
+- **Uncertainty:** bootstrap paired MSE improvements over 1000 configuration
+  resamples. Keep replicas together. Intervals are descriptive and unstable with
+  few configurations; do not treat latitude points or windows as independent.
+- **Representation:** show Gaussian-weighted Legendre energy and the error from
+  projecting true targets onto truncated bases before learning. The basis is
+  orthonormal for weights summing to one; see [NIST DLMF](https://dlmf.nist.gov/18.3).
+- **Temporal information:** save prediction dispersion across windows and the
+  fraction of input snapshots inside the target averaging interval. Overlap
+  permits reconstruction claims but weakens claims of future prediction.
+
+`evaluation/scores.json` retains these results under each target's `learning`
+field. `profiles.npz` includes split labels for paired comparisons across heads.
+New prepared files include `window_baselines (N,C,H)`. Older prepared files remain
+loadable, but their short-window reference is explicitly unavailable.
+
+A convincing result improves on the mean and parameter baselines on held-out
+configurations, resolves their different profiles, and performs better with
+correct input/target pairing. Beating short-window averaging supports value beyond
+an instantaneous estimate. Several training seeds and finite-run replica targets
+are needed before ranking heads confidently. Success does not by itself establish
+that the network learned the dynamical equations.

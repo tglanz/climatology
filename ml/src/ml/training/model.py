@@ -11,7 +11,7 @@ from neuralop.models import FNO
 
 from ml import patches
 from ml.config import ModelConfig
-from ml.diagnostics.grid import GaussianGrid
+from ml.diagnostics.grid import GaussianGrid, legendre_basis
 
 
 class CoordinateEmbedding(GridEmbedding2D):
@@ -84,12 +84,7 @@ class LegendreHead(nn.Module):
         self.outputs, self.modes = outputs, modes
         self.coefficients = nn.Linear(channels * modes, outputs * modes)
         if grid is not None:
-            if modes > grid.shape[0]:
-                raise ValueError("head_modes exceeds the latitude grid")
-            # Orthonormal for normalized angular area: sum_i w_i = 1.
-            basis = np.polynomial.legendre.legvander(
-                np.sin(np.deg2rad(grid.latitudes)), modes - 1
-            ) * np.sqrt(2 * np.arange(modes) + 1)
+            basis = legendre_basis(grid.latitudes, modes)
             self.register_buffer(
                 "basis", torch.tensor(basis, dtype=torch.float32), persistent=False
             )

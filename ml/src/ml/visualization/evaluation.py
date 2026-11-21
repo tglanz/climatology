@@ -287,3 +287,60 @@ def plot_model_vs_variability(
     ax.grid(alpha=0.3)
     fig.tight_layout()
     return fig
+
+
+def plot_learning_evidence(target):
+    """Show split skill, resolved profile variation, and representation error."""
+    fig, axes = plt.subplots(2, 2, figsize=(12, 9), constrained_layout=True)
+    rows = target.learning["splits"]
+    names = list(rows)
+    axes[0, 0].bar(names, [np.sqrt(rows[n]["mse"]) for n in names])
+    axes[0, 0].set(title="Simulation RMSE by split", ylabel=target.diagnostic.units)
+    tests = target.test_cases
+    train = [c for c in target.cases if c.split == "train"]
+    if tests and train:
+        reference = np.mean([c.truth for c in train], axis=0)
+        axes[0, 1].scatter(
+            (np.stack([c.truth for c in tests]) - reference).ravel(),
+            (np.stack([c.prediction for c in tests]) - reference).ravel(),
+            s=8,
+            alpha=0.5,
+        )
+        extent = (
+            max(
+                np.abs(np.stack([c.truth - reference for c in tests])).max(),
+                np.abs(np.stack([c.prediction - reference for c in tests])).max(),
+                1e-12,
+            )
+            * 1.05
+        )
+        axes[0, 1].plot([-extent, extent], [-extent, extent], "k--", linewidth=1)
+        axes[0, 1].set_xlim(-extent, extent)
+        axes[0, 1].set_ylim(-extent, extent)
+    axes[0, 1].set(
+        title="Test anomalies relative to train mean",
+        xlabel="truth",
+        ylabel="prediction",
+    )
+    energy = target.learning["spectrum"]
+    degree = np.arange(len(energy["truth_energy"]))
+    axes[1, 0].semilogy(
+        degree, np.maximum(energy["truth_energy"], 1e-30), label="truth"
+    )
+    axes[1, 0].semilogy(
+        degree, np.maximum(energy["error_energy"], 1e-30), label="prediction error"
+    )
+    axes[1, 0].set(
+        title="Latitude-mode energy: all splits",
+        xlabel="Legendre degree",
+        ylabel=f"({target.diagnostic.units})^2",
+    )
+    axes[1, 0].legend()
+    truncation = target.learning["truncation_rmse"]
+    axes[1, 1].plot([int(k) for k in truncation], list(truncation.values()), "o-")
+    axes[1, 1].set(
+        title="Truth projection error before learning",
+        xlabel="retained coefficients",
+        ylabel=f"RMSE [{target.diagnostic.units}]",
+    )
+    return fig

@@ -45,7 +45,7 @@ def _extract_pairs(
     output_path.parent.mkdir(parents=True, exist_ok=True)
     try:
         with h5py.File(output_path, "x") as handle:
-            xs = ys = None
+            xs = ys = baselines = None
             for outcome in tqdm(results, total=len(paths), desc=output_path.stem):
                 samples = outcome.samples
                 if samples is None:
@@ -73,7 +73,16 @@ def _extract_pairs(
                         maxshape=(None, *samples.y_windows.shape[1:]),
                         dtype="float32",
                     )
+                if baselines is None:
+                    baselines = handle.create_dataset(
+                        "window_baselines",
+                        shape=(0, *samples.y_windows.shape[1:]),
+                        maxshape=(None, *samples.y_windows.shape[1:]),
+                        dtype="float32",
+                    )
                 n = len(samples.x_windows)
+                baselines.resize(written + n, axis=0)
+                baselines[written : written + n] = samples.window_baselines
                 xs.resize(written + n, axis=0)
                 ys.resize(written + n, axis=0)
                 xs[written : written + n], ys[written : written + n] = (
