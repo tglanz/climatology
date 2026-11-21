@@ -8,6 +8,7 @@ from pathlib import Path
 import re
 import subprocess
 import tempfile
+from urllib.parse import urldefrag, unquote
 
 import numpy as np
 
@@ -49,6 +50,23 @@ function Pandoc(doc)
       for j = i, stop do result:insert(doc.blocks[j]) end
       result:insert(pandoc.RawBlock('latex', '\\end{minipage}\\par\\medskip'))
       i = stop + 1
+    elseif block.t == 'Header' and block.level == 1 then
+      local title = pandoc.utils.stringify(block.content)
+      local label = title
+      if title:match('^Chapter 1:') then
+        label = 'Chapter 1: Spherical fields and geometry'
+      elseif title:match('^Chapter 13:') then
+        label = 'Chapter 13: The repository implementation'
+      elseif title:match('^Roadmap') then
+        label = 'Roadmap: Chapters 2--12 are planned'
+      end
+      result:insert(pandoc.RawBlock('latex', '\\markboth{' .. label .. '}{' .. label .. '}'))
+      result:insert(block)
+      i = i + 1
+    elseif block.t == 'Para' and pandoc.utils.stringify(block):match('^Sanity Check%.') then
+      result:insert(pandoc.RawBlock('latex', '\\Needspace{10\\baselineskip}'))
+      result:insert(block)
+      i = i + 1
     elseif block.t == 'CodeBlock' then
       result:insert(pandoc.RawBlock('latex',
         '\\par\\medskip\\noindent\\begin{minipage}{\\linewidth}'))
@@ -69,6 +87,21 @@ LATEX_HEADER = r'''
 \usepackage{etoolbox}
 \usepackage{enumitem}
 \usepackage{float}
+\usepackage{fancyhdr}
+\setlength{\headheight}{15pt}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\nouppercase{\leftmark}}
+\fancyhead[R]{\small\thepage}
+\renewcommand{\headrulewidth}{0.3pt}
+\renewcommand{\sectionmark}[1]{}
+\renewcommand{\subsectionmark}[1]{}
+\fancypagestyle{plain}{
+  \fancyhf{}
+  \fancyhead[L]{\small\nouppercase{\leftmark}}
+  \fancyhead[R]{\small\thepage}
+  \renewcommand{\headrulewidth}{0.3pt}
+}
 \setlist[itemize]{itemsep=2pt,parsep=0pt,topsep=5pt}
 \setlength{\emergencystretch}{2em}
 \clubpenalty=10000
@@ -84,14 +117,21 @@ def check_source(source: str) -> None:
         "The Problem", "The Intuition", "The Mechanism", "Reading the Math",
         "Code Connection", "Sanity Check",
     ]
-    if re.findall(r"^## (.+)$", source, re.M) != expected:
-        raise ValueError("Chapter sections differ from the requested six-section structure")
-    if len(re.findall(r"^# Chapter ", source, re.M)) != 1:
-        raise ValueError("This installment must contain only Chapter 1")
+    chapter_blocks = re.findall(r"^# Chapter (\d+):[^\n]*\n(.*?)(?=^# |\Z)", source, re.M | re.S)
+    if [n for n, _ in chapter_blocks] != ["1", "13"]:
+        raise ValueError("Only the requested Chapters 1 and 13 may be written")
+    for chapter, body in chapter_blocks:
+        sections = re.findall(r"^## ([^\n{]+)", body, re.M)
+        wanted = expected if chapter == "1" else [
+            "Simulations and preprocessing", "Training", "Evaluation"
+        ]
+        if [section.strip() for section in sections] != wanted:
+            raise ValueError(f"Incorrect requested structure in Chapter {chapter}")
+        labels = re.findall(r"\\tag\{" + chapter + r"\.(\d+)\}", body)
+        count = len(re.findall(r"^\$\$", body, re.M)) // 2
+        if labels != [str(i) for i in range(1, count + 1)]:
+            raise ValueError(f"Equation labels are not consecutive in Chapter {chapter}")
     blocks = re.findall(r"^\$\$\n(.*?)\n\$\$", source, re.M | re.S)
-    labels = re.findall(r"\\tag\{1\.(\d+)\}", source)
-    if labels != [str(i) for i in range(1, len(blocks) + 1)]:
-        raise ValueError("Equation labels are not consecutive")
     for marker in ("**Symbol-by-Symbol**", "**Plain-English Translation:**"):
         if source.count(marker) != len(blocks):
             raise ValueError(f"Every equation needs {marker}")
@@ -100,13 +140,20 @@ def check_source(source: str) -> None:
         raise ValueError("A prohibited phrase or phonetic symbol name was found")
     if not source.isascii():
         raise ValueError("Use ASCII prose and LaTeX for mathematics")
+    anchors = set(re.findall(r"\{#([^}]+)\}", source))
     for link in re.findall(r"\]\(([^)]+)\)", source):
-        if not link.startswith(("https://", "http://")):
-            if link.startswith("figures/"):
-                continue  # Generated below, then checked by Pandoc.
-            if not (DIRECTORY / link).exists():
-                raise ValueError(f"Missing local source: {link}")
-    print(f"PASS: six sections, {len(blocks)} interpreted equations, notation, and source links")
+        if link.startswith(("https://", "http://")):
+            continue
+        filename, fragment = urldefrag(unquote(link))
+        if not filename:
+            if fragment not in anchors:
+                raise ValueError(f"Missing internal destination: {link}")
+        elif not filename.startswith("figures/") and not (DIRECTORY / filename).exists():
+            raise ValueError(f"Missing local source: {link}")
+    for number in range(1, 14):
+        if f"](#chapter-{number})" not in source:
+            raise ValueError(f"Missing clickable contents entry {number}")
+    print(f"PASS: requested chapter structures, {len(blocks)} interpreted equations, notation, and source links")
 
 
 def check_examples(source: str) -> None:
@@ -264,7 +311,7 @@ def build_pdf() -> None:
             "pandoc", "textbook.md", "--standalone", "--pdf-engine=xelatex",
             f"--lua-filter={filter_path}", f"--include-in-header={header_path}",
             "--metadata", "title=From Spherical Fields to Neural Operators",
-            "--metadata", "date=Table of contents and Chapter 1",
+            "--metadata", "date=Foundations and implementation - revised 21 November 2026",
             "-V", "documentclass=article", "-V", "fontsize=11pt",
             "-V", "papersize=a4", "-V", "geometry:margin=23mm",
             "-V", "colorlinks=true", "-V", "urlcolor=blue",
