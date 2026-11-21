@@ -400,8 +400,12 @@ class ModelConfig:
     architecture: str
     fno: FNOModelConfig | None = None
     sfno: SFNOModelConfig | None = None
+    head: str = "field"
+    head_modes: int = 16
 
     def __post_init__(self):
+        _choice("model.head", self.head, ("field", "profile", "legendre"))
+        _integer("model.head_modes", self.head_modes)
         _choice("architecture", self.architecture, VALID_ARCHITECTURES)
         _require(
             self.active_sub_config() is not None, "active model section is missing"
@@ -579,7 +583,13 @@ def load(path: Path, *, data_only: bool = False) -> Config | PreparationConfig:
             out_channels=s["out_channels"],
             n_layers=s.get("n_layers", 4),
         )
-    model = ModelConfig(architecture=architecture, fno=fno_cfg, sfno=sfno_cfg)
+    model = ModelConfig(
+        architecture=architecture,
+        fno=fno_cfg,
+        sfno=sfno_cfg,
+        head=model_raw.get("head", "field"),
+        head_modes=model_raw.get("head_modes", 16),
+    )
 
     t = raw["training"]
     s = t.get("scheduler", {})

@@ -47,6 +47,12 @@ stirring_lat0 = [70.0]
 # if present so toggling architecture is a one-line change here.
 [model]
 architecture = "sfno"
+# field: project full field, then zonal mean (legacy default).
+# profile: zonal-mean trunk features, then predict latitude values.
+# legendre: predict retained coefficients, then synthesize a profile.
+head = "field"
+# Used only by the legendre head; must not exceed the number of latitudes.
+head_modes = 16
 
 [model.fno]
 n_modes = [32, 64]

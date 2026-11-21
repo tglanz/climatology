@@ -61,11 +61,15 @@ def test_gaussian_model_uses_real_coordinates_and_orientation(simulation):
     )
 
 
-def test_checkpoint_restores_physical_predictions_for_all_targets(simulation, tmp_path):
+@pytest.mark.parametrize("head", ["field", "profile", "legendre"])
+def test_checkpoint_restores_physical_predictions_for_all_targets(
+    simulation, tmp_path, head
+):
     _, _, cfg = simulation
     grid = GaussianGrid(
         np.rad2deg(np.arcsin(np.polynomial.legendre.leggauss(4)[0])), np.arange(12) * 30
     )
+    cfg = replace(cfg, model=replace(cfg.model, head=head, head_modes=3))
     torch.manual_seed(17)
     model = build_model(cfg.model, grid).eval()
     x = torch.randn(5, 6, 4, 12) * 1e-7
@@ -148,3 +152,59 @@ def test_unweighted_relative_loss_ignores_supplied_quadrature():
     weighted = create_loss_fn("lat_weighted_relative_l2", weights)(prediction, truth)
     assert unweighted.item() == pytest.approx(np.sqrt(0.5))
     assert weighted.item() == pytest.approx(np.sqrt(0.1))
+
+
+@pytest.mark.parametrize("head", ["field", "profile", "legendre"])
+def test_heads_backpropagate_and_count_actual_parameters(
+    simulation, gaussian_coordinates, head
+):
+    from ml.training.model import model_parameter_counts
+
+    _, _, cfg = simulation
+    grid = GaussianGrid(*gaussian_coordinates)
+    config = replace(cfg.model, head=head, head_modes=3)
+    model = build_model(config, grid)
+    x = torch.randn(2, config.active_sub_config().in_channels, *grid.shape)
+    result = model(x)
+    assert result.shape == (2, config.active_sub_config().out_channels, grid.shape[0])
+    result.square().mean().backward()
+    assert all(
+        p.grad is not None and torch.isfinite(p.grad).all() for p in model.parameters()
+    )
+    assert model_parameter_counts(config).total == sum(
+        p.numel() for p in model.parameters()
+    )
+
+
+def test_legendre_head_reconstructs_known_modes_and_rejects_aliasing(
+    gaussian_coordinates,
+):
+    from ml.training.model import LegendreHead
+
+    grid = GaussianGrid(*gaussian_coordinates)
+    head = LegendreHead(1, 1, 3, grid)
+    with torch.no_grad():
+        head.coefficients.weight.copy_(torch.eye(3))
+        head.coefficients.bias.zero_()
+    nodes = torch.tensor(np.sin(np.deg2rad(grid.latitudes)), dtype=torch.float32)
+    profile = 2 + 3 * nodes + 0.5 * (3 * nodes**2 - 1)
+    field = profile[None, None, :, None].expand(2, 1, -1, grid.shape[1])
+    torch.testing.assert_close(
+        head(field)[..., 0], profile[None, None].expand(2, 1, -1)
+    )
+    with pytest.raises(ValueError, match="head_modes"):
+        LegendreHead(1, 1, grid.shape[0] + 1, grid)
+
+
+def test_head_configuration_roundtrip_and_validation(simulation, tmp_path):
+    from ml.config import load, save
+
+    _, _, cfg = simulation
+    cfg = replace(cfg, model=replace(cfg.model, head="legendre", head_modes=3))
+    path = tmp_path / "head.toml"
+    save(cfg, path)
+    assert load(path).model == cfg.model
+    with pytest.raises(ValueError, match="model.head"):
+        replace(cfg.model, head="unknown")
+    with pytest.raises(ValueError, match="head_modes"):
+        replace(cfg.model, head_modes=0)

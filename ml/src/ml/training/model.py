@@ -65,6 +65,48 @@ class ZonalMeanWrapper(nn.Module):
         return self.model(x).mean(dim=-1)
 
 
+class ProfileHead(nn.Module):
+    """Pool trunk features in longitude, then predict each latitude value."""
+
+    def __init__(self, projection):
+        super().__init__()
+        self.projection = projection
+
+    def forward(self, features):
+        return self.projection(features.mean(dim=-1, keepdim=True))
+
+
+class LegendreHead(nn.Module):
+    """Predict retained coefficients from Gaussian-projected trunk features."""
+
+    def __init__(self, channels, outputs, modes, grid=None):
+        super().__init__()
+        self.outputs, self.modes = outputs, modes
+        self.coefficients = nn.Linear(channels * modes, outputs * modes)
+        if grid is not None:
+            if modes > grid.shape[0]:
+                raise ValueError("head_modes exceeds the latitude grid")
+            # Orthonormal for normalized angular area: sum_i w_i = 1.
+            basis = np.polynomial.legendre.legvander(
+                np.sin(np.deg2rad(grid.latitudes)), modes - 1
+            ) * np.sqrt(2 * np.arange(modes) + 1)
+            self.register_buffer(
+                "basis", torch.tensor(basis, dtype=torch.float32), persistent=False
+            )
+            self.register_buffer(
+                "analysis",
+                torch.tensor(basis * grid.weights[:, None], dtype=torch.float32),
+                persistent=False,
+            )
+
+    def forward(self, features):
+        moments = features.mean(dim=-1) @ self.analysis.to(dtype=features.dtype)
+        coefficients = self.coefficients(moments.flatten(1)).reshape(
+            -1, self.outputs, self.modes
+        )
+        return (coefficients @ self.basis.to(dtype=features.dtype).T).unsqueeze(-1)
+
+
 def build_model(cfg: ModelConfig, grid: GaussianGrid, dropout: float | None = None):
     sub = cfg.active_sub_config()
     height, width = grid.shape
@@ -81,12 +123,14 @@ def build_model(cfg: ModelConfig, grid: GaussianGrid, dropout: float | None = No
             raise ValueError(
                 "SFNO longitude modes must be even and compatible with harmonic degree"
             )
-    model = _build_operator(cfg, CoordinateEmbedding(sub.in_channels, grid), dropout)
+    model = _build_operator(
+        cfg, CoordinateEmbedding(sub.in_channels, grid), dropout, grid
+    )
     return ZonalMeanWrapper(model, grid)
 
 
 def _build_operator(
-    cfg: ModelConfig, embedding: GridEmbedding2D | str, dropout: float | None
+    cfg: ModelConfig, embedding: GridEmbedding2D | str, dropout: float | None, grid=None
 ):
     sub = cfg.active_sub_config()
     kwargs = asdict(sub)
@@ -97,7 +141,14 @@ def _build_operator(
     if cfg.architecture == "sfno":
         patches.apply()
         kwargs["conv_module"] = GaussianSphericalConv
-    return FNO(**kwargs)
+    model = FNO(**kwargs)
+    if cfg.head == "profile":
+        model.projection = ProfileHead(model.projection)
+    elif cfg.head == "legendre":
+        model.projection = LegendreHead(
+            sub.hidden_channels, sub.out_channels, cfg.head_modes, grid
+        )
+    return model
 
 
 @dataclass(frozen=True)

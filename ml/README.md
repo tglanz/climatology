@@ -57,6 +57,26 @@ Training and evaluation accept `--device cpu` for bounded checks. Training uses
 the saved `training.seed` (default zero). Prepared splits retain one target per
 simulation so baseline fitting weights simulations equally.
 
+## Output heads
+
+Set `[model] head = "field"`, `"profile"`, or `"legendre"` in the run recipe.
+The default `field` preserves existing checkpoints: predict a full field, then
+average longitude. `profile` averages trunk features before the nonlinear output
+projection. `legendre` projects trunk features onto Gaussian-weighted latitude
+modes, predicts coefficients, then synthesizes the profile. All heads keep the
+same two-dimensional trunk and output `(batch, target, latitude)`.
+
+For `legendre`, set `[model] head_modes = 16` (at most the latitude count).
+Its basis is `sqrt(2*l+1) * P_l(sin(latitude))`, orthonormal under normalized
+Gaussian area weights. It represents normalized targets; the saved normalization
+converts predictions back to physical units. A scalar Legendre head does not
+enforce tangent-wind behavior at the poles. The streamfunction proposal is a
+separate representation. Compare truncation error before interpreting learning.
+
+Model settings, including the head and cutoff, are saved in each run's config.
+Use a fresh run directory for each head and seed, with the same prepared inputs,
+normalization procedure, loss, and trunk settings.
+
 ## Library ownership
 
 | Package or module | Responsibility |

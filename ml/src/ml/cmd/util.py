@@ -40,6 +40,9 @@ def model_info(config_path: Path):
 
     sub = cfg.model.active_sub_config()
     print(f"architecture:    {cfg.model.architecture}")
+    print(f"head:            {cfg.model.head}")
+    if cfg.model.head == "legendre":
+        print(f"head_modes:      {cfg.model.head_modes}")
     print(f"n_modes:         {sub.n_modes}")
     print(f"hidden_channels: {sub.hidden_channels}")
     print(f"n_layers:        {sub.n_layers}")
