@@ -1,0 +1,19 @@
+{
+  "manuscript_sha256": "af54212c0ddd4dcc4f510b1b0dc2afb2ca55a9f3f41dc7eca68f7d504f3aa5ec",
+  "evidence_sha256": {
+    "papers/atmospheric-and-oceanic-fluid-dymamics.pdf": "f4760570d419a46756f987c1667dcdb184a818435e1399d0b1daba013cf909b3",
+    "papers/barotropic.pdf": "34f639f55bdbb8297473cd216d28f87a0c32f181bacd48829670d8a4a176c28e",
+    "papers/methods-of-mathemacial-for-physicists.pdf": "ec644ce2c50b2d065e6f58c1070f5c2616fa4111b63fe29cd347d6c1effe15f4",
+    "papers/vallis-etal-2024.pdf": "d07943f72a34b727eddff882da4405b25f4069ce5601093d1164de72c654b3a9",
+    "sim/barotropic_stirring.py": "e8cd79bea6b9f07405242c36412d35baf2576b6736235deb52d165e5c91cb5d7",
+    "submodules/isca/src/atmos_spectral_barotropic/barotropic_dynamics.F90": "1ea6097a21c52934adfbb1281901e153620f4f7042f2186f4c8b765eb5e79774",
+    "submodules/isca/src/atmos_spectral_barotropic/stirring.F90": "34dc1b34403da36754436a41ed7ef8dbee4232e4f6b8eb04c2c3fda3bf0ed346",
+    "submodules/isca/src/atmos_spectral/model/spectral_damping.F90": "64574f69384bea9d2bcb2a48cd1e81d95df497e4b6da682df955084323a86c75"
+  },
+  "repository_revision_at_build": "d4e3594261929178b066afd223da3d44307e1fbc",
+  "isca_revision": "a290bc376d84d0ee83adbb80eb374b9f629c3534",
+  "isca_worktree_status": " M src/extra/python/isca/templates/compile.sh\n M src/extra/python/isca/templates/run.sh\n M src/shared/memutils/memutils.F90\n M src/shared/mosaic/create_xgrid.c\n M src/shared/mpp/affinity.c\n M src/shared/mpp/mpp_memutils.F90\n?? isca\n",
+  "pandoc": "pandoc 3.12.1",
+  "engine": "XeLaTeX, three passes; header.tex; report, A4, 11pt",
+  "equation_numbering": "Explicit chapter-equation tags; book uses P prefix"
+}

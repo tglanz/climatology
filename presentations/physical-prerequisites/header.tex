@@ -1,0 +1,35 @@
+\usepackage{amsmath,amssymb}
+\usepackage{fancyhdr}
+\usepackage{microtype}
+\usepackage{etoolbox}
+\usepackage{needspace}
+\usepackage{xurl}
+\setlength{\headheight}{29pt}
+\setlength{\headsep}{16pt}
+\setlength{\emergencystretch}{2em}
+\allowdisplaybreaks[1]
+\numberwithin{equation}{chapter}
+\renewcommand{\chaptermark}[1]{\markboth{\thechapter.\ #1}{}}
+\renewcommand{\sectionmark}[1]{\markright{\thesection.\ #1}}
+\newcommand{\prereqpagestyle}{%
+  \fancyhf{}%
+  \fancyhead[L]{\parbox[b]{\textwidth}{\nouppercase{\small\leftmark}\\[-1pt]\nouppercase{\footnotesize\lastsectionmark}}}%
+  \fancyfoot[C]{\small\thepage}%
+  \renewcommand{\headrulewidth}{0.35pt}%
+}
+\pagestyle{fancy}
+\prereqpagestyle
+\fancypagestyle{plain}{\prereqpagestyle}
+\markboth{Physical prerequisites}{From forces to stochastic stirring}
+\AtBeginEnvironment{longtable}{\footnotesize}
+\setcounter{tocdepth}{1}
+\AtBeginDocument{\hypersetup{linkcolor=blue!45!black,citecolor=blue!45!black,urlcolor=blue!45!black}}
+\makeatletter
+\newcommand{\lastsectionmark}{\expandafter\@rightmark\botmark\@empty\@empty}
+\makeatother
+\patchcmd{\titlepage}{\thispagestyle{empty}}{\thispagestyle{fancy}}{}{\errmessage{Cannot set cover header}}
+\usepackage{titlesec}
+\titleformat{\chapter}[display]{\normalfont\huge\bfseries\raggedright\hyphenpenalty=10000}{\large\chaptertitlename\ \thechapter}{8pt}{}
+\titlespacing*{\chapter}{0pt}{12pt}{24pt}
+\fancypagestyle{cover}{\prereqpagestyle\fancyfoot{}}
+\patchcmd{\titlepage}{\thispagestyle{fancy}}{\thispagestyle{cover}}{}{\errmessage{Cannot set cover style}}

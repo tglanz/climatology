@@ -1,5 +1,27 @@
 # Geophysical Fluid Dynamics
 
-The rotating-frame equations introduce the Coriolis force and the variation of
-planetary vorticity. Vorticity and circulation connect these equations to shallow
-horizontal flow and the barotropic vorticity equation.
+The sequence derives the stochastically stirred barotropic vorticity equation
+from continuum mass and momentum conservation. It introduces rotating frames,
+absolute circulation, layer potential vorticity, constant-depth reduction,
+spherical inversion, energy and enstrophy, damping, and finite-memory forcing.
+The assumptions of each reduction are stated separately.
+
+The mathematical prerequisites are [vector calculus](../01-vector-calculus/index.qmd),
+[orthogonal expansions](../02-harmonic-analysis/index.qmd), and
+[spectral numerical methods](../03-pdes/spectral-methods.qmd). The fluid chapters
+also define the operators and probability needed for their derivations.
+
+These chapters share a source with the
+[physical-prerequisites document](https://github.com/tglanz/climatology/blob/main/presentations/physical-prerequisites/physical-prerequisites.md).
+The book includes the parcel-kinematics and transport derivations, while
+cross-referencing its vector-calculus chapters for the shared operator theory.
+It retains the general fluid theory and excludes the companion's implementation appendix. Equation labels prefixed P
+refer to the companion document's stable chapter-equation numbers, independently
+of the book's chapter ordering.
+
+Primary sources are @Vallis2006, @BarotropicNotes, and @ArfkenWeber2005.
+The specific finite-memory stirring process comes from @VallisEtAl2004.
+The angular convention here is longitude $\lambda$, latitude $\phi$;
+other book chapters use colatitude $\theta=\pi/2-\phi$ and longitude $\varphi$.
+This is a change of coordinates, not a change in the harmonic normalization:
+$\int |Y_\ell^m|^2d\omega=1$ in both.

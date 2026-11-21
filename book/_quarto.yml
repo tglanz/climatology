@@ -25,9 +25,15 @@ book:
         - 03-pdes/spectral-methods.qmd
     - part: 04-geophysical-fluid-dynamics/index.qmd
       chapters:
+        - 04-geophysical-fluid-dynamics/kinematics.qmd
         - 04-geophysical-fluid-dynamics/motion.qmd
         - 04-geophysical-fluid-dynamics/rotating.qmd
         - 04-geophysical-fluid-dynamics/vorticity.qmd
+        - 04-geophysical-fluid-dynamics/layer-pv.qmd
+        - 04-geophysical-fluid-dynamics/barotropic.qmd
+        - 04-geophysical-fluid-dynamics/turbulence.qmd
+        - 04-geophysical-fluid-dynamics/inversion.qmd
+        - 04-geophysical-fluid-dynamics/stochastic.qmd
     - part: 05-neural-operators/index.qmd
       chapters: []
 
