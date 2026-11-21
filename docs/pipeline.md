@@ -8,7 +8,7 @@ iterations share that artifact and write separate run directories. Evaluation
 uses the saved samples, so changes to raw simulation directories cannot change
 an existing experiment's inputs.
 
-The implementation lives in [stage commands](../ml/src/ml/cmd/pipeline.py),
+The implementation lives in [preprocessing commands](../ml/src/ml/cmd/preprocess.py),
 [preparation](../ml/src/ml/usecases/preprocess.py),
 [training](../ml/src/ml/cmd/train.py), and
 [evaluation](../ml/src/ml/usecases/evaluate.py).
@@ -61,9 +61,9 @@ or require model or training settings.
 
 A split JSON contains `train`, `validation`, and `test` arrays of simulation paths
 relative to the JSON's directory. `meta` records description, timestamp, and split
-policy. Assignments must be disjoint, including configuration replicas. Supplying
-`--split` preserves an explicit fixed subset; otherwise preparation generates
-assignments using the configured policy. Ratio assignment sorts configuration
+policy. Assignments must be disjoint, including configuration replicas. `preprocess generate-splits` creates assignments using the configured policy.
+`preprocess training-data --split PATH` uses those assignments or an explicit
+fixed subset. Ratio assignment sorts configuration
 codes deterministically. It does not randomize individual windows.
 
 ### 3. Prepared dataset
@@ -164,71 +164,52 @@ windows individually, so it answers a different aggregation question.
 ## Command reference
 
 Run from the repository root after `uv sync --project ml --all-groups`.
-`bash scripts/pipeline.sh` is a thin wrapper for
-`uv run --project ml --all-groups ml pipeline`.
+The flow is `preprocess`, `train`, then `evaluate`. Each command owns one stage.
 
-| Stage | Reference command |
-|---|---|
-| Generate a bounded recipe | `bash scripts/pipeline.sh example --directory output/pipeline-smoke` |
-| Prepare the fixed assignments | `bash scripts/pipeline.sh prepare -c output/pipeline-smoke/prepare.toml --split output/pipeline-smoke/splits/fixed.json` |
-| Train then evaluate | `bash scripts/pipeline.sh run -c output/pipeline-smoke/run.toml --device cpu` |
-| Change only model width; reuse data | `bash scripts/pipeline.sh run -c output/pipeline-smoke/run-wide.toml --device cpu` |
-| Train alone | `uv run --project ml --all-groups ml train -c output/pipeline-smoke/run.toml --device cpu --track-metrics` |
-| Evaluate alone | `uv run --project ml --all-groups ml evaluate model --training-dir output/pipeline-smoke/run --device cpu --n-workers 0` |
-| Evaluate after relocating prepared data | Add `--prepared-dir PATH` to the evaluation command; saved checksums must still match |
+```bash
+uv run --project ml --all-groups ml preprocess generate-splits -c prepare.toml --name fixed
+uv run --project ml --all-groups ml preprocess training-data -c prepare.toml --split PATH/TO/splits/fixed.json
+uv run --project ml --all-groups ml train -c run.toml --device cpu --track-metrics
+uv run --project ml --all-groups ml evaluate model --training-dir PATH/TO/run --device cpu --n-workers 0
+```
 
-`pipeline run` trains and evaluates. It does not prepare again. If training fails,
-evaluation does not run. `--workers` controls preparation processes or training
-DataLoader workers. Prepared evaluation is serial over simulations and batches
-predictions; the legacy `--n-workers` evaluation option remains accepted for
-caller compatibility and does not start raw-data workers.
+For another model, change its model settings and `paths.training_dir`, then run
+`train` and `evaluate` again. Reuse the same prepared directory. To regenerate
+figures, run only `evaluate`. After relocating prepared data, pass
+`--prepared-dir PATH`; saved checksums must still match.
+
+`--workers` controls preprocessing processes or training DataLoader workers.
+Prepared evaluation is serial over simulations and batches predictions;
+`--n-workers` remains accepted for caller compatibility.
 
 ### Small experiments
 
-The synthetic example writes three short labelled Gaussian-grid NetCDF
-trajectories using seed 17, then uses the normal pipeline. It tests software
-behavior and is not a physical simulation or an estimate of model quality.
-
-For a fixed real subset, use a separate destination:
+Create a bounded recipe with the example module, then use the same stage commands:
 
 ```bash
-bash scripts/pipeline.sh example --directory output/pipeline-real \
-    --real-root output/barotropic_stirring-T85
-bash scripts/pipeline.sh prepare -c output/pipeline-real/prepare.toml \
-    --split output/pipeline-real/splits/fixed.json
-bash scripts/pipeline.sh run -c output/pipeline-real/run.toml --device cpu
-bash scripts/pipeline.sh run -c output/pipeline-real/run-wide.toml --device cpu
+uv run --project ml --all-groups python -m ml.usecases.experiment_example --directory output/experiment-smoke
+uv run --project ml --all-groups ml preprocess training-data -c output/experiment-smoke/prepare.toml --split output/experiment-smoke/splits/fixed.json
+uv run --project ml --all-groups ml train -c output/experiment-smoke/run.toml --device cpu --track-metrics
+uv run --project ml --all-groups ml evaluate model --training-dir output/experiment-smoke/run --device cpu --n-workers 0
 ```
 
-The selected trajectories are `10bb40-0` (train), `0f0ad6-0` (validation), and
-`021787-0` (test). The real recipe preserves the default detectors, target rules,
-and window length, caps windows at two per trajectory, and uses a one-layer,
-four-channel SFNO for two epochs. It records these identities in `recipe.json`.
-These deliberately small splits measure workflow behavior, not generalization.
-The [implementation results](../action-items/03-pipeline-results.md) record
-measured time, memory, and verification limits.
+Add `--real-root output/barotropic_stirring-T85` to the example module invocation
+for a fixed real subset. Use a fresh destination. Its trajectories are
+`10bb40-0` (train), `0f0ad6-0` (validation), and `021787-0` (test).
+The real recipe retains the default detectors, target rules, and window length,
+caps windows at two per trajectory, and uses a one-layer, four-channel SFNO for
+two epochs. The synthetic recipe writes three short Gaussian-grid trajectories
+with seed 17. These examples check software behavior, not model quality.
+`run-wide.toml` changes only model width and the run destination.
 
 ### Slurm
 
-Submit from the repository root. Preparation and model execution use the same
-wrapper as local runs:
-
-```bash
-mkdir -p slurm/output
-sbatch slurm/pipeline.slurm prepare -c output/pipeline-real/prepare.toml \
-    --split output/pipeline-real/splits/fixed.json
-# Alternatively, construct both jobs in a fresh experiment:
-bash scripts/submit-pipeline.sh output/pipeline-real/prepare.toml \
-    output/pipeline-real/run.toml output/pipeline-real/splits/fixed.json
-```
-
-The two-job helper sets `afterok:<preparation-job-id>` on the model job. Failed
-submission stops the helper. Failed preparation prevents the dependent job from
-running. The run command stops before evaluation if training fails. Shell wrappers
-preserve the child process's exit status. The supplied Slurm resources suit small
-CPU checks; full runs need explicit resource choices. A cluster needs the same
-checkout, locked environment, and shared artifact paths. Historical sweep and
-individual-stage Slurm scripts remain separate legacy entry points.
+The individual stage scripts call the same `preprocess`, `train`, and `evaluate`
+commands. Existing scripts under `slurm/` document their submission directories
+and resource requests. Submit dependent jobs using `sbatch --dependency=afterok:ID`
+so failed preparation or training prevents dependent work from running. Set
+resources explicitly for the actual experiment. A cluster needs the same
+checkout, locked environment, and shared artifact paths.
 
 ## Decisions and limits
 

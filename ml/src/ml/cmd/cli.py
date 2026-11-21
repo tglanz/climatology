@@ -8,7 +8,6 @@ from ml.cmd.util import util
 from ml.cmd.evaluate import evaluate
 from ml.cmd.data import data
 from ml.cmd.tmp import tmp
-from ml.cmd.pipeline import pipeline
 
 
 @click.group()
@@ -23,7 +22,6 @@ cli.add_command(util)
 cli.add_command(evaluate)
 cli.add_command(data)
 cli.add_command(tmp)
-cli.add_command(pipeline)
 
 if __name__ == "__main__":
     cli()

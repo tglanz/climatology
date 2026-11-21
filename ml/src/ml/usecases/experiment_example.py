@@ -73,7 +73,7 @@ def create(directory: Path, real_root: Path | None = None):
     )
     save(PreparationConfig(data, base.logging, paths_cfg), directory / "prepare.toml")
     Splits([paths[2]], [paths[1]], [paths[0]]).save(
-        directory / "splits", "fixed", "Fixed pipeline iteration subset", data.split
+        directory / "splits", "fixed", "Fixed experiment iteration subset", data.split
     )
     model = replace(
         base.model,
@@ -127,3 +127,13 @@ def create(directory: Path, real_root: Path | None = None):
         )
         + "\n"
     )
+
+
+if __name__ == "__main__":
+    import argparse
+
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--directory", required=True, type=Path)
+    parser.add_argument("--real-root", type=Path)
+    args = parser.parse_args()
+    create(args.directory, args.real_root)

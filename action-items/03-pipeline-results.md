@@ -19,8 +19,10 @@ directory. Evaluation predicts from the exact saved inputs and retains physical
 profiles, scores, figures, and input hashes. Data-only commands do not require
 model or training configuration. Existing artifacts and Isca patches are preserved.
 
-Local and Slurm runs use the same pipeline entry point. The two-job submission
-helper uses `afterok` dependencies. Training failure stops evaluation. Existing
+The public workflow is now `preprocess`, `train`, and `evaluate`. The redundant
+`pipeline` command and its wrappers were removed on 2026-11-21. Stage commands
+retain the artifact and reproducibility improvements. Slurm jobs can use
+`afterok` dependencies. Existing
 prepared and run destinations fail explicitly instead of repeating unrelated work
 or rotating previous results.
 
@@ -80,9 +82,8 @@ included in Git.
 ## Limits
 
 Actual Slurm jobs were not submitted: this workstation has no cluster scheduler.
-Tests check argument construction, `afterok`, failed submission, and propagation
-of a failing local program through the exact Slurm wrapper using controlled
-command substitutes. CUDA/MPS and full-scale training were not run. Preparation
+The original wrapper tests checked argument construction and failure handling;
+those tests were removed with the redundant wrapper. CUDA/MPS and full-scale training were not run. Preparation
 still materializes one raw trajectory per worker, so memory use scales with source
 size and worker count. Hash verification adds a full sequential read per stage.
 Small CPU runs provide routine workflow feedback; large-run resource sizing

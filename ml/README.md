@@ -30,17 +30,15 @@ uv run --project ml --group train --group vis ml util --help
 
 The [pipeline overview](../docs/pipeline.md) describes stages, intermediate artifact
 formats and schemas, the flow diagram, commands, and local/Slurm execution.
-Use `ml pipeline example`, `ml pipeline prepare`, and `ml pipeline run` for the
-normal iteration workflow. Prepare once; reuse the completed artifact for each
-model iteration in a fresh run directory. Evaluation reads the saved prepared
-windows and simulation identities rather than reopening raw trajectories.
+Use `ml preprocess`, `ml train`, and `ml evaluate` for the normal workflow.
+Prepare once; reuse the completed artifact for each model iteration in a fresh
+run directory. Evaluation reads saved windows and simulation identities.
 
 ```bash
-bash scripts/pipeline.sh example --directory output/pipeline-smoke
-bash scripts/pipeline.sh prepare -c output/pipeline-smoke/prepare.toml \
-    --split output/pipeline-smoke/splits/fixed.json
-bash scripts/pipeline.sh run -c output/pipeline-smoke/run.toml --device cpu
-bash scripts/pipeline.sh run -c output/pipeline-smoke/run-wide.toml --device cpu
+uv run --project ml --all-groups python -m ml.usecases.experiment_example --directory output/experiment-smoke
+uv run --project ml --all-groups ml preprocess training-data -c output/experiment-smoke/prepare.toml --split output/experiment-smoke/splits/fixed.json
+uv run --project ml --all-groups ml train -c output/experiment-smoke/run.toml --device cpu --track-metrics
+uv run --project ml --all-groups ml evaluate model --training-dir output/experiment-smoke/run --device cpu --n-workers 0
 ```
 
 Preparation accepts a data-only TOML recipe. A model recipe can reference it with
