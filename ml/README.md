@@ -44,6 +44,50 @@ Set `simulations.dir` explicitly and make the pattern relative to it. For the
 existing legacy layout, use `dir = "./output/barotropic_stirring-T85/simulations"`
 and `pattern = "*"`. No simulation data is moved by loading a config.
 
+## BVE presets
+
+```text
+ml/configs/
+  bvet42/
+    default.toml
+    lat-extra-hi-hold-out.toml
+    lat-intra-hold-out.toml
+  bvet85/
+    default.toml
+    lat-extra-hi-hold-out.toml
+    lat-intra-hold-out.toml
+```
+
+| Config | T42 test split | T85 test split |
+|---|---|---|
+| `default.toml` | 20% of configuration groups | 20% of configuration groups |
+| `lat-extra-hi-hold-out.toml` | Latitude 70 | Latitude 70 |
+| `lat-intra-hold-out.toml` | Latitude 60 | Latitude 40 |
+
+Defaults reserve 5% of all configuration groups for validation. Named latitude
+holdouts reserve 5% of the remaining groups, with at least one validation group.
+All replicas of a configuration stay together. Ratio splits use the existing
+deterministic ordering of configuration IDs.
+
+[bvet42](configs/bvet42/) reads the [T42 narrow pool](../scripts/sim-bve-t42-2-narrow.sh).
+[bvet85](configs/bvet85/) reads the [T85 standard pool](../scripts/sim-bve-t85-4-standard.sh).
+Model and training defaults are shared by all variants. Each config writes its own
+ML assets under `output/experiments/<pool>/<variant>/` and shares its pool's raw
+simulations. Pass the selected config with `-c` for indexing, validation, splitting,
+preprocessing, and training. Evaluation reads the resulting training directory.
+
+The existing local helpers now select one config explicitly:
+
+```bash
+./scripts/create-sweep-file.sh ml/configs/bvet42/default.toml
+./scripts/preprocess.sh ml/configs/bvet42/default.toml
+```
+
+The preprocessing helper validates the source, builds its sweep index, and writes
+`splits/fixed.json` for that experiment. Run `preprocess training-data` explicitly
+to create HDF5 data. Slurm submission wrappers accept `bvet42` or `bvet85` and
+submit the three variants for that pool; omitted pool selection defaults to `bvet85`.
+
 ## Current commands
 
 ```bash

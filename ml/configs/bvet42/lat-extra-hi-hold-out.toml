@@ -1,5 +1,5 @@
 [simulations]
-dir = "./output/simulations/barotropic_stirring-T85"
+dir = "./output/simulations/barotropic_stirring-T42"
 pattern = "*"
 segment_pattern = "run*/atmos_daily.nc"
 
@@ -39,7 +39,6 @@ end_at = "end"
 
 [data.split]
 validation_ratio = 0.05
-# test_ratio = 0.05
 
 [data.split.test_hold_out]
 stirring_lat0 = [70.0]
@@ -94,7 +93,7 @@ dropout      = 0.1    # forwarded to FNO as channel_mlp_dropout
 [training.early_stopping.target_loss]
 value = 0.1
 # val | train
-monitor = "val" 
+monitor = "val"
 
 [training.early_stopping.patience]
 patience = 20
@@ -125,4 +124,4 @@ level = "INFO"
 stdout = true
 
 [paths]
-experiment_dir = "./output/experiments/default"
+experiment_dir = "./output/experiments/bvet42/lat-extra-hi-hold-out"

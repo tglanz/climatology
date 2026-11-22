@@ -8,6 +8,37 @@ See the [model explanation](../docs/isca-barotropic-stirring.md),
 [namelist reference](../docs/barotropic-namelist.md), and
 [diagnostic fields](../docs/barotropic-diagnostics.md) for methods and source details.
 
+## Preset pools
+
+These Bash scripts use the existing scanner and GNU Parallel:
+
+| Script | Latitudes | Widths | Amplitudes | Replicas | Runs |
+|---|---|---|---|---:|---:|
+| [T42 narrow](../scripts/sim-bve-t42-2-narrow.sh) | 0, 30, 60, 70 | 8, 16 | 1.5e-11, 1e-10, 1.25e-10 | 2 | 48 |
+| [T85 standard](../scripts/sim-bve-t85-4-standard.sh) | -10, 0, 30, 40, 50, 60, 70 | 8, 12, 16 | 7.5e-11, 1e-10, 1.25e-10 | 4 | 252 |
+
+Both use 150 seven-day segments, a 600-second timestep, and two MPI processes per
+simulation. T42 runs two jobs concurrently; T85 runs three. Each script compiles
+once before submitting foreground jobs. Completed runs are skipped by the scanner.
+Run one preset at a time: they share Isca build and work directories.
+
+Choose either preset:
+
+```bash
+./scripts/sim-bve-t42-2-narrow.sh
+```
+
+or:
+
+```bash
+./scripts/sim-bve-t85-4-standard.sh
+```
+
+Scripts locate the repository root themselves. On macOS, optionally prefix a
+command with `caffeinate -i`. Outputs use the scanner's standard
+`output/simulations/barotropic_stirring-T42/` or `barotropic_stirring-T85/` directory.
+Point the ML config's `[simulations].dir` at the pool being used.
+
 ## Mac: prevent sleep during long runs
 
 Wrap any command with `caffeinate -i` to keep the machine awake:

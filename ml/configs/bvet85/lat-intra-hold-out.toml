@@ -1,0 +1,127 @@
+[simulations]
+dir = "./output/simulations/barotropic_stirring-T85"
+pattern = "*"
+segment_pattern = "run*/atmos_daily.nc"
+
+[data]
+x_vars = ["vor"]
+y_vars = ["time_mean_zonal_mean_ucomp"]
+
+# Windowing surface. See docs/pre-processing.md for semantics.
+# [data.spinup] and [data.convergence] are optional; omit either
+# section to disable that detector. [data.windows] is always required.
+
+[data.windows]
+# "beginning" | "spinup". "spinup" requires [data.spinup].
+start_at = "spinup"
+# "end" | "convergence". "convergence" requires [data.convergence].
+end_at = "end"
+# K consecutive snapshots per input.
+length = 10
+# Gap between consecutive window starts: K + 1 leaves one snapshot unused.
+stride = 11
+# optional cap on windows per simulation; omit for no cap.
+limit = 15
+
+[data.spinup]
+z_threshold = 2.0
+stable_time = 3
+window_size = 10
+
+[data.convergence]
+threshold = 0.05
+hold = 3
+
+[data.climatology]
+start_at = "convergence"
+end_at = "end"
+
+
+[data.split]
+validation_ratio = 0.05
+
+[data.split.test_hold_out]
+stirring_lat0 = [40.0]
+
+# Architecture selector. Valid: "fno" | "sfno".
+# Per-architecture options live in [model.<arch>]; only the active
+# sub-section is consumed at load time, but the inactive one is parsed
+# if present so toggling architecture is a one-line change here.
+[model]
+architecture = "sfno"
+# field: project full field, then zonal mean (legacy default).
+# profile: zonal-mean trunk features, then predict latitude values.
+# legendre: predict retained coefficients, then synthesize a profile.
+head = "field"
+# Used only by the legendre head; must not exceed the number of latitudes.
+head_modes = 16
+
+[model.fno]
+n_modes = [32, 64]
+hidden_channels = 64
+n_layers = 4
+# in_channels MUST equal data.windows.length * len(data.x_vars). Validated at config load.
+in_channels = 10
+out_channels = 1
+
+[model.sfno]
+n_modes = [32, 64]
+hidden_channels = 32
+n_layers = 3
+in_channels = 10
+out_channels = 1
+
+[training]
+epochs = 100
+batch_size = 64
+learning_rate = 1e-3
+# mse | relative_l2 | lat_weighted_relative_l2
+loss = "lat_weighted_relative_l2"
+# adam | adamw
+optimizer = "adamw"
+# gradient norm clipping
+grad_clip = 1.0
+
+# Regularization. No defaults; absent fields are not applied.
+[training.regularization]
+weight_decay = 1e-3   # only used when optimizer = "adamw"
+dropout      = 0.1    # forwarded to FNO as channel_mlp_dropout
+
+# Early stopping. Each subsection that is present is enabled. Any criterion
+# firing stops training. Remove a subsection to disable it.
+
+[training.early_stopping.target_loss]
+value = 0.1
+# val | train
+monitor = "val"
+
+[training.early_stopping.patience]
+patience = 20
+min_delta = 1e-4
+# val | train
+monitor = "val"
+
+[training.scheduler]
+# step | cosine | plateau | none
+kind = "cosine"
+
+[training.scheduler.step]
+step_size = 100
+gamma = 0.5
+
+[training.scheduler.cosine]
+# t_max defaults to training.epochs when omitted
+eta_min = 1e-5
+
+[training.scheduler.plateau]
+patience = 15
+factor = 0.5
+threshold = 1e-4
+eta_min = 0.0
+
+[logging]
+level = "INFO"
+stdout = true
+
+[paths]
+experiment_dir = "./output/experiments/bvet85/lat-intra-hold-out"

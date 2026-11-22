@@ -25,7 +25,9 @@ REAL_CODES = ("10bb40-0", "0f0ad6-0", "021787-0")  # train, validation, test
 
 def create(directory: Path, real_root: Path | None = None):
     directory = directory.resolve()
-    base = load(Path(__file__).resolve().parents[3] / "configs" / "default.toml")
+    base = load(
+        Path(__file__).resolve().parents[3] / "configs" / "bvet85" / "default.toml"
+    )
     source = (
         real_root.resolve()
         if real_root

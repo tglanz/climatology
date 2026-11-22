@@ -63,7 +63,7 @@ def write_simulation(root, lat, lon, offset=0.0):
 def simulation(gaussian_coordinates, tmp_path):
     lat, lon = gaussian_coordinates
     paths, values = write_simulation(tmp_path / "simulations" / "code-0", lat, lon)
-    base = load(Path("ml/configs/default.toml"))
+    base = load(Path("ml/configs/bvet85/default.toml"))
     data = replace(
         base.data,
         spinup=None,

@@ -219,6 +219,12 @@ two epochs. The synthetic recipe writes three short Gaussian-grid trajectories
 with seed 17. These examples check software behavior, not model quality.
 `run-wide.toml` changes only model width and the run destination.
 
+The shipped presets live under `ml/configs/bvet42/` and `ml/configs/bvet85/`.
+Each has `default.toml`, `lat-extra-hi-hold-out.toml`, and `lat-intra-hold-out.toml`.
+The default uses 20% test and 5% validation configuration groups. Latitude holdouts
+use 70 for extrapolation and 60 (T42) or 40 (T85) for interpolation. Each variant
+has a distinct experiment directory under `output/experiments/<pool>/<variant>/`.
+
 ### Slurm
 
 The individual stage scripts call the same `preprocess`, `train`, and `evaluate`

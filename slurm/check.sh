@@ -1,30 +1,12 @@
-#!/bin/bash
-# Run from the repository root: bash slurm/check.sh
+#!/usr/bin/env bash
+set -euo pipefail
 
-set -e
-
-CONFIGS=(
-    "./ml/configs/lat0-inter-hold-out.toml"
-)
-
-SPLIT_NAMES=(
-    "lat0-inter"
-)
-
-# cd into the project's root
-cd $(dirname $0)/..
-
-source ./ml/.venv/bin/activate
-
-EXPERIMENT_DIR=./output/barotropic_stirring-T85
-
-
-uv run --project ml ml preprocess create-sweep-file \
-    --experiment-dir "$EXPERIMENT_DIR" \
-    --key stirring_lat0=stirring_nml.lat0 \
-    --key stirring_amplitude=stirring_nml.amplitude \
-    --key stirring_widthy=stirring_nml.widthy
-
-for i in "${!CONFIGS[@]}"; do
-    sbatch ./slurm/preprocess.slurm "${CONFIGS[$i]}" "${SPLIT_NAMES[$i]}"
-done
+POOL="${1:-bvet85}"
+case "$POOL" in
+    bvet42|bvet85) ;;
+    *) echo "usage: $0 [bvet42|bvet85]" >&2; exit 2 ;;
+esac
+REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+CONFIG="$REPO_ROOT/ml/configs/$POOL/lat-intra-hold-out.toml"
+cd "$REPO_ROOT/slurm"
+exec sbatch ./preprocess.slurm "$CONFIG" lat-intra-hold-out

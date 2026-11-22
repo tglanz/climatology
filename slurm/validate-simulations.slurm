@@ -10,6 +10,8 @@
 #SBATCH --output=output/%x.out
 #SBATCH --error=output/%x.err
 
+set -euo pipefail
+
 if [[ "$SLURM_SUBMIT_DIR" != */climatology/slurm ]]; then
     echo "Unexpected submit dir: $SLURM_SUBMIT_DIR" 1>&2
     exit 1
@@ -17,12 +19,12 @@ fi
 
 echo "Slurm submit dir: $SLURM_SUBMIT_DIR"
 
-ROOT_DIR="$(realpath $SLURM_SUBMIT_DIR/..)"
-cd $ROOT_DIR
+ROOT_DIR="$(realpath "$SLURM_SUBMIT_DIR/..")"
 
 echo "Root dir: $ROOT_DIR"
 
-CONFIG="$ROOT_DIR/ml/configs/default.toml"
+CONFIG="$(realpath "${1:-$ROOT_DIR/ml/configs/bvet85/default.toml}")"
+cd "$ROOT_DIR"
 echo "Config $CONFIG"
 
 
@@ -32,7 +34,7 @@ cat "$CONFIG"
 echo ""
 
 echo "Validating: "
-uv run --project ml ml preprocess validate-simulations -c "$CONFIG" \
+uv run --project ml --all-groups ml preprocess validate-simulations -c "$CONFIG" \
     --validate-spinup \
     --validate-convergence \
     --validate-climatology \

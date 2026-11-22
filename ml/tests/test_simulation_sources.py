@@ -269,9 +269,9 @@ def test_conflicting_replicas_do_not_publish_an_index(external_source):
 
 
 def test_shipped_configs_have_independent_sources():
-    for path in Path("ml/configs").glob("*.toml"):
+    for path in Path("ml/configs").rglob("*.toml"):
         cfg = load(path)
-        assert cfg.simulations.dir == Path("output/simulations/barotropic_stirring-T85")
+        assert cfg.simulations.dir.parent == Path("output/simulations")
         assert cfg.simulations.pattern == "*"
         assert not cfg.paths.experiment_dir.is_relative_to(cfg.simulations.dir)
 

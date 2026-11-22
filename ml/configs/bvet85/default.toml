@@ -18,7 +18,7 @@ start_at = "spinup"
 end_at = "end"
 # K consecutive snapshots per input.
 length = 10
-# gap between consecutive window starts. 6 = K + 1 (tumbling-equivalent).
+# Gap between consecutive window starts: K + 1 leaves one snapshot unused.
 stride = 11
 # optional cap on windows per simulation; omit for no cap.
 limit = 15
@@ -39,10 +39,7 @@ end_at = "end"
 
 [data.split]
 validation_ratio = 0.05
-# test_ratio = 0.05
-
-[data.split.test_hold_out]
-stirring_lat0 = [-10.0]
+test_ratio = 0.20
 
 # Architecture selector. Valid: "fno" | "sfno".
 # Per-architecture options live in [model.<arch>]; only the active
@@ -50,13 +47,19 @@ stirring_lat0 = [-10.0]
 # if present so toggling architecture is a one-line change here.
 [model]
 architecture = "sfno"
+# field: project full field, then zonal mean (legacy default).
+# profile: zonal-mean trunk features, then predict latitude values.
+# legendre: predict retained coefficients, then synthesize a profile.
+head = "field"
+# Used only by the legendre head; must not exceed the number of latitudes.
+head_modes = 16
 
 [model.fno]
 n_modes = [32, 64]
 hidden_channels = 64
 n_layers = 4
 # in_channels MUST equal data.windows.length * len(data.x_vars). Validated at config load.
-in_channels = 5
+in_channels = 10
 out_channels = 1
 
 [model.sfno]
@@ -88,7 +91,7 @@ dropout      = 0.1    # forwarded to FNO as channel_mlp_dropout
 [training.early_stopping.target_loss]
 value = 0.1
 # val | train
-monitor = "val" 
+monitor = "val"
 
 [training.early_stopping.patience]
 patience = 20
@@ -96,7 +99,6 @@ min_delta = 1e-4
 # val | train
 monitor = "val"
 
-# TODO: this can just be training.scheduler
 [training.scheduler]
 # step | cosine | plateau | none
 kind = "cosine"
@@ -120,4 +122,4 @@ level = "INFO"
 stdout = true
 
 [paths]
-experiment_dir = "./output/experiments/lat0-extra-low-hold-out"
+experiment_dir = "./output/experiments/bvet85/default"

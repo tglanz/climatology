@@ -13,7 +13,7 @@
 ## usage: sbatch ./slurm/preprocess.slurm <config.toml> <split-name>
 ##
 ## Example:
-##   sbatch ./preprocess.slurm ./ml/configs/lat0-inter-hold-out.toml lat0-inter
+##   sbatch ./preprocess.slurm ../ml/configs/bvet85/lat-intra-hold-out.toml lat-intra-hold-out
 
 set -e
 
@@ -38,7 +38,8 @@ if [ ! -f "$CONFIG" ]; then
   exit 1
 fi
 
-cd $SLURM_SUBMIT_DIR/..
+CONFIG="$(realpath "$CONFIG")"
+cd "$SLURM_SUBMIT_DIR/.."
 
 source ./ml/.venv/bin/activate
 
@@ -46,12 +47,18 @@ SPLITS_DIR=$(python -c "from ml.config import load; import sys; print(load(sys.a
 echo "Splits dir: $SPLITS_DIR"
 
 
+echo "Indexing simulations..."
+uv run --project ml --all-groups ml preprocess create-sweep-file -c "$CONFIG" \
+    --key stirring_lat0=stirring_nml.lat0 \
+    --key stirring_widthy=stirring_nml.widthy \
+    --key stirring_amplitude=stirring_nml.amplitude
+
 echo "Generating splits..."
-uv run --project ml ml preprocess generate-splits -c "$CONFIG" --name "$SPLIT_NAME"
+uv run --project ml --all-groups ml preprocess generate-splits -c "$CONFIG" --name "$SPLIT_NAME"
 curl -s -d "generate splits $SPLIT_NAME done" ntfy.sh/tglanz-general-51189
 
 echo "Preprocessing..."
-uv run --project ml ml preprocess training-data -c "$CONFIG" \
+uv run --project ml --all-groups ml preprocess training-data -c "$CONFIG" \
     --split "$SPLITS_DIR/$SPLIT_NAME.json" \
     --workers 8
 
