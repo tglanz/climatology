@@ -17,4 +17,4 @@ Supplementary sources are identified where used. **V** denotes the supplied 2006
 | 11. Probability and averages | 19.1-19.2, 19.5-19.6; correlation interpretation from V |
 | 12. Integral and learned operators | 10.5; 12.8; 15.5; 16.1-16.4; learned maps from F and S |
 
-Read Chapters 1-8 in order for the analytic foundations. Chapter 9 uses both Fourier and spherical analysis. Chapter 10 adds physical models, Chapter 11 adds statistical interpretation, and Chapter 12 connects them to integral and learned operators. Each subchapter starts with its result and purpose. Each chapter ends with a compact summary and retrieval questions; answers are separated at the end.
+Read Chapters 1-8 in order. Chapter 9 adds discretization, Chapter 10 fluid applications, Chapter 11 statistics, and Chapter 12 operator maps. Teaching objects share one counter per chapter; equations and exercises have separate counters. Definitions have a left rule, results a frame, and examples a top rule. Proofs and derivations identify their target result. Exercises close sections; checked solutions are supplied in a separate instructor key.

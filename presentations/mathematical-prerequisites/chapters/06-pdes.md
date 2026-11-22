@@ -1,12 +1,25 @@
 # Partial differential equations and physical models {#ch-pdes}
 
+Which data make a PDE problem meaningful, and what can be proved without an explicit solution? We distinguish balance, transport, diffusion, and waves, then use energy estimates to control solutions. Nondimensionalization finally identifies which terms can compete at a stated physical scale.
+
 ## Order, classification, and well-posedness
 
-**Result and motivation.** A PDE is defined by its differential equation together with its domain and data. Elliptic, parabolic, and hyperbolic equations ask different kinds of physical questions. Sources: [@ArfkenWeber2005, Sections 9.1, 9.3, 9.8].
+A PDE is defined by its differential equation together with its domain and data. Elliptic, parabolic, and hyperbolic equations ask different kinds of physical questions. Sources: [@ArfkenWeber2005, Sections 9.1, 9.3, 9.8].
+
+::: {.tb-definition #obj-6-1}
+**Definition 6.1 - PDE order, linearity, and superposition**
 
 A partial differential equation (PDE) relates a field of several independent variables to its partial derivatives. Its order is the highest derivative order. A PDE is linear if it has the form $Lu=f$ with $L$ linear and $f$ prescribed. A nonlinear term such as $u\partial_xu$ makes superposition invalid: the sum of solutions need not be a solution.
+:::
+
+::: {.tb-definition #obj-6-2}
+**Definition 6.2 - Second-order type and principal symbol**
 
 For a real second-order scalar equation in two variables whose highest-order part is $A u_{xx}+2B u_{xy}+C u_{yy}$, the sign of $B^2-AC$ classifies that part as elliptic if negative, parabolic if zero, or hyperbolic if positive. Coefficients can depend on position; the classification can change with position. More general systems use their principal symbol, the polynomial formed from the highest-order derivatives by replacing derivatives with frequency components. The two-variable discriminant is not a universal classification rule for all evolution equations.
+:::
+
+::: {.tb-model #obj-6-3}
+**Model 6.3 - Three prototype equations**
 
 The prototypes are
 
@@ -18,14 +31,46 @@ $$
 $$
 
 Here $\kappa>0$ is diffusivity and $c>0$ wave speed. Poisson's equation determines a spatial balance from boundary data. Diffusion takes one initial field. The wave equation takes both initial displacement and initial velocity. Advection $\partial_tu+\mathbf v\cdot\nabla u=0$ is first-order transport along trajectories; inflow boundaries specify arriving values, not arbitrary data on all boundaries.
+:::
 
-A problem is well posed in a chosen norm if a solution exists, is unique, and depends continuously on its data. This is a property of the full initial/boundary-value problem. A formula alone does not guarantee it. For backward diffusion, a Fourier mode grows as $e^{\kappa k^2t}$; arbitrarily small high-frequency errors can grow without bound, so this inverse-time problem is not continuously stable in $L^2$.
+::: {.tb-definition #obj-6-4}
+**Definition 6.4 - Well-posedness and its norm**
+
+A problem is well posed in a chosen norm if a solution exists, is unique, and depends continuously on its data. This is a property of the full initial/boundary-value problem. A formula alone does not guarantee it.
+:::
+
+::: {.tb-counterexample #obj-6-5}
+**Counterexample 6.5 - Backward diffusion amplifies unresolved scales**
+
+For backward diffusion, a Fourier mode grows as $e^{\kappa k^2t}$; arbitrarily small high-frequency errors can grow without bound, so this inverse-time problem is not continuously stable in $L^2$.
+:::
+
+::: {.tb-exercise #ex-6-1}
+**Exercise 6.1 - Count the required time data**
+
+*Reasoning.* Compare the initial data required by $u_t=\kappa\Delta u$ and $u_{tt}=c^2\Delta u$. Why is the same initial field alone insufficient for the latter?
+:::
 
 ## Energy estimates, uniqueness, and weak formulation
 
-**Result and motivation.** Multiplication by the solution and integration by parts can prove decay and uniqueness without knowing a closed-form solution. Sources: [@ArfkenWeber2005, Sections 1.13-1.14, 9.8, 10.2, 17.4].
+Multiplication by the solution and integration by parts can prove decay and uniqueness without knowing a closed-form solution. Sources: [@ArfkenWeber2005, Sections 1.13-1.14, 9.8, 10.2, 17.4].
 
-On a bounded smooth domain $D$, take real diffusion with zero Dirichlet data, homogeneous Neumann data, or matching periodic data, so boundary terms vanish. Define squared-amplitude energy $E(t)=\frac12\int_Du^2dV$. Equations (2.9) and (6.1) imply
+::: {.tb-assumption #obj-6-6}
+**Assumption 6.6 - Regularity and nontransmitting boundaries**
+
+On a bounded smooth domain $D$, take real diffusion with zero Dirichlet data, homogeneous Neumann data, or matching periodic data, so boundary terms vanish.
+:::
+
+::: {.tb-definition #obj-6-7}
+**Definition 6.7 - Squared-amplitude energy**
+
+Set $E(t)=\frac12\int_Du^2dV$ for the real diffusion field.
+:::
+
+::: {.tb-result #obj-6-8}
+**Result 6.8 - Diffusion dissipates squared amplitude**
+
+Let $\kappa>0$ and let $u$ solve $u_t=\kappa\Delta u$ with enough regularity for integration by parts and one of the homogeneous or periodic boundary conditions just stated. Then
 
 $$
 \frac{dE}{dt}=\int_Du\partial_tu\,dV
@@ -33,8 +78,28 @@ $$
 =-\kappa\int_D|\nabla u|^2dV\le0.
 \tag{6.2}
 $$
+:::
 
-This is a mathematical energy; its physical units depend on $u$. For two solutions with the same forcing and data, their difference obeys the homogeneous equation and starts with zero energy. Equation (6.2) keeps that difference zero, proving uniqueness and a contraction estimate. A nonzero boundary flux would enter the budget rather than vanish.
+::: {.tb-proof}
+**Proof of Result 6.8**
+
+Differentiate $E$ under the integral, insert the diffusion equation, and apply Green's first identity (2.9). The boundary term vanishes under the chosen conditions. Since $\kappa>0$, the remaining gradient-square integral is nonpositive. $\square$
+:::
+
+::: {.tb-result #obj-6-9}
+**Result 6.9 - Diffusion uniqueness and contraction**
+
+Let $u,v$ be sufficiently regular solutions with the same positive constant diffusivity, forcing, and homogeneous Dirichlet, homogeneous Neumann, or periodic boundary conditions of Result 6.8. Then $\|u(t)-v(t)\|_2\le\|u(0)-v(0)\|_2$. In particular, the same initial field gives a unique solution. This mathematical energy has units determined by the field.
+:::
+
+::: {.tb-proof}
+**Proof of Result 6.9**
+
+The difference $w=u-v$ obeys unforced diffusion with homogeneous boundary conditions. Applying (6.2) to $w$ and integrating in time gives $\|w(t)\|_2^2\le\|w(0)\|_2^2$. Take square roots. If the initial difference is zero, its norm stays zero. $\square$
+:::
+
+::: {.tb-definition #obj-6-10}
+**Definition 6.10 - Weak Dirichlet formulation**
 
 For real $f\in L^2(D)$, $-\Delta u=f$, and zero Dirichlet data, a weak solution $u\in H_0^1(D)$ satisfies
 
@@ -43,35 +108,116 @@ $$
 \quad\text{for every real }\eta\in H_0^1(D).
 \tag{6.3}
 $$
+:::
 
-Only one weak derivative of $u$ is required. The same equation comes from stationarity of the functional (a map from functions to numbers)
-$\mathcal J[u]=\frac12\int|\nabla u|^2-\int fu$: substitute $u+\varepsilon\eta$, differentiate with respect to the real parameter $\varepsilon$ at zero, and set the result to zero. The positive quadratic term makes this the energy minimization principle under the stated boundary constraints. For a bounded smooth domain and $f\in L^2(D)$, existence and uniqueness in $H_0^1(D)$ are a separate weak Dirichlet theorem [@HunterPDE, Section 4.5]. The variation derives the equation; it does not prove that theorem.
+::: {.tb-result #obj-6-11}
+**Result 6.11 - Variational equation and weak existence**
 
-With Neumann data $\partial_nu=g$, integrate $-\Delta u=f$ to obtain the necessary compatibility condition $\int_Df\,dV=-\int_{\partial D}g\,dA$. A constant can still be added to $u$. On a closed sphere the corresponding condition is zero integral of $f$.
+For real $f\in L^2(D)$ on a bounded smooth domain with zero Dirichlet data, the stationary points of $\mathcal J[u]=\frac12\int_D|\nabla u|^2dV-\int_Dfu\,dV$ satisfy (6.3). A unique solution exists in $H_0^1(D)$; existence is a quoted weak Dirichlet theorem [@HunterPDE, Section 4.5].
+:::
+
+::: {.tb-proof}
+**Proof of Result 6.11**
+
+For the variational assertion, substitute $u+\varepsilon\eta$ and differentiate at $\varepsilon=0$. The coefficient of $\varepsilon$ is $\int\nabla u\cdot\nabla\eta-\int f\eta$, giving (6.3). This derives the stationary equation, while the existence assertion uses the cited theorem. $\square$
+:::
+
+::: {.tb-result #obj-6-12}
+**Result 6.12 - Neumann compatibility and an arbitrary constant**
+
+If a $C^2$ function $u$ solves $-\Delta u=f$ on a bounded regular region $D$ with $\partial_nu=g$, the data necessarily satisfy $\int_Df\,dV=-\int_{\partial D}g\,dA$. Adding a spatial constant to a solution preserves its equation and boundary data. On a closed sphere the corresponding compatibility condition is zero integral of $f$.
+:::
+
+::: {.tb-proof}
+**Proof of Result 6.12**
+
+Integrate $-\Delta u=f$ over $D$ and apply the divergence theorem to $\nabla u$; substitute $\partial_nu=g$. A constant has zero gradient and zero Laplacian, proving the stated freedom. On the closed sphere there is no boundary flux. $\square$
+:::
+
+::: {.tb-exercise #ex-6-2}
+**Exercise 6.2 - Estimate the difference of two solutions**
+
+*Proof.* If two homogeneous-boundary diffusion solutions have initial fields differing by $w_0$, prove $\|u(t)-v(t)\|_2\le\|w_0\|_2$.
+:::
 
 ## Characteristics, waves, and dispersion
 
-**Result and motivation.** Characteristics track transport; dispersion describes the frequency-dependent phase of waves. These notions explain why diffusion smooths while advection moves patterns. Sources: [@ArfkenWeber2005, Sections 9.1-9.3, 15.4, 15.7].
+Characteristics track transport; dispersion describes the frequency-dependent phase of waves. These notions explain why diffusion smooths while advection moves patterns. Sources: [@ArfkenWeber2005, Sections 9.1-9.3, 15.4, 15.7].
 
-For $\partial_tu+c\partial_xu=0$ with constant real $c$, the curves $x(t)=x_0+ct$ have $du(x(t),t)/dt=0$, so $u(x,t)=u_0(x-ct)$. These curves are characteristics. In contrast, $u_t+uu_x=0$ carries each initial value at its own speed; characteristics can cross, after which a classical differentiable solution fails and a conservation-law weak solution needs an additional admissibility rule. No such shock theory is assumed below.
+::: {.tb-example #obj-6-13}
+**Example 6.13 - Transport along characteristics**
 
-A plane wave has the form $u=Ae^{i(kx-\omega t)}$, where $A$ is amplitude, $k$ angular wavenumber, and $\omega$ angular frequency. Substituting into $u_{tt}=c^2u_{xx}$ gives
+For $\partial_tu+c\partial_xu=0$ with constant real $c$, the curves $x(t)=x_0+ct$ have $du(x(t),t)/dt=0$, so $u(x,t)=u_0(x-ct)$. These curves are characteristics.
+:::
+
+::: {.tb-counterexample #obj-6-14}
+**Counterexample 6.14 - Nonlinear transport need not stay smooth**
+
+For nonlinear transport, $u_t+uu_x=0$ carries each initial value at its own speed; characteristics can cross, after which a classical differentiable solution fails and a conservation-law weak solution needs an additional admissibility rule. For a concrete smooth periodic initial field $u_0(\xi)=-\sin\xi$, a characteristic is $x(\xi,t)=\xi-t\sin\xi$. Its derivative $\partial x/\partial\xi=1-t\cos\xi$ first vanishes at $t=1$, so the smooth invertible characteristic map fails there. For $t>1$ nearby characteristics cross. No further shock theory is needed here.
+:::
+
+::: {.tb-definition #obj-6-15}
+**Definition 6.15 - Plane waves and dispersion**
+
+A plane wave has the form $u=Ae^{i(kx-\omega t)}$, where $A$ is amplitude, $k$ angular wavenumber, and $\omega$ angular frequency. A dispersion relation specifies the allowed $\omega$ as a function of wavenumber.
+:::
+
+::: {.tb-result #obj-6-16}
+**Result 6.16 - Wave frequency, phase speed, and group speed**
+
+For the one-dimensional wave equation with constant $c>0$, a nonzero plane wave has $\omega^2=c^2k^2$. For $k\ne0$, phase speed is $\omega/k$; a smooth branch has group speed $d\omega/dk$:
 
 $$
 \omega^2=c^2k^2,\qquad c_{\rm phase}=\omega/k,
 \qquad c_{\rm group}=d\omega/dk.
 \tag{6.4}
 $$
+:::
+
+::: {.tb-proof}
+**Proof of Result 6.16**
+
+Two time derivatives multiply the plane wave by $-\omega^2$, and two spatial derivatives multiply it by $-k^2$. Substitute into $u_{tt}=c^2u_{xx}$ and cancel the nonzero wave. Constant phase $kx-\omega t$ gives $dx/dt=\omega/k$; linearizing $\omega(k)$ about a narrow packet's central wavenumber gives its envelope speed. $\square$
+:::
+
+::: {.tb-remark #obj-6-17}
+**Remark 6.17 - Propagation versus amplitude change**
 
 The phase speed moves constant-phase crests; the group speed moves the envelope of a narrow packet when the dispersion relation is smooth. For the one-dimensional wave equation the right- and left-traveling branches have constant speeds $\pm c$. Other equations have $\omega(k)$ nonlinear in $k$, so different scales travel at different phase speeds. A complex $\omega$ also encodes decay or growth through $e^{\operatorname{Im}\omega\,t}$.
+:::
 
-For the wave equation, multiply by $u_t$ and integrate to obtain conservation of $\frac12\int(u_t^2+c^2|\nabla u|^2)dV$ when the boundary transmits no energy. This differs from diffusion's monotone decay of $\int u^2$.
+::: {.tb-result #obj-6-18}
+**Result 6.18 - Wave energy with no boundary flux**
+
+For a sufficiently smooth real solution of $u_{tt}=c^2\Delta u$ with constant $c>0$, define $E=\tfrac12\int_D(u_t^2+c^2|\nabla u|^2)dV$. If the boundary flux satisfies $\int_{\partial D}u_t\partial_nu\,dA=0$, then $E$ is constant. Homogeneous fixed Dirichlet, homogeneous Neumann, and matching periodic data supply this condition.
+:::
+
+::: {.tb-proof}
+**Proof of Result 6.18**
+
+Differentiation gives $E\prime=\int_Du_tu_{tt}+c^2\nabla u\cdot\nabla u_t\,dV$. Substitute the wave equation and integrate $\int u_t\Delta u$ by parts. The two interior gradient integrals cancel, leaving $E\prime=c^2\int_{\partial D}u_t\partial_nu\,dA=0$. $\square$
+:::
+
+::: {.tb-exercise #ex-6-3}
+**Exercise 6.3 - Compare phase and group velocity**
+
+*Application.* For a hypothetical dispersion relation $\omega=ak^2$ with $a>0$ and $k>0$, find both speeds. Are they equal?
+:::
 
 ## Nondimensionalization and competing scales
 
-**Result and motivation.** Dimensionless ratios identify which terms can compete. Neglecting a term is a scale-dependent physical assumption. Sources: [@ArfkenWeber2005, Section 9.1, dimensional structure of the prototype equations]; fluid scaling: [@Vallis2006, Sections 1.11, 2.7-2.8].
+Dimensionless ratios identify which terms can compete. Neglecting a term is a scale-dependent physical assumption. Sources: [@ArfkenWeber2005, Section 9.1, dimensional structure of the prototype equations]; fluid scaling: [@Vallis2006, Sections 1.11, 2.7-2.8].
 
-For advection-diffusion $q_t+\mathbf u\cdot\nabla q=\kappa\Delta q$, take length $L_*>0$, speed $U_*>0$, amplitude $Q_*>0$, and advective time $T_*=L_*/U_*$. Write $\mathbf x=L_*\widetilde{\mathbf x}$, $t=T_*\widetilde t$, $q=Q_*\widetilde q$, and $\mathbf u=U_*\widetilde{\mathbf u}$. Dividing by $Q_*U_*/L_*$ gives
+::: {.tb-assumption #obj-6-19}
+**Assumption 6.19 - Reference scales and dimensionless variables**
+
+For advection-diffusion $q_t+\mathbf u\cdot\nabla q=\kappa\Delta q$, take length $L_*>0$, speed $U_*>0$, amplitude $Q_*>0$, and advective time $T_*=L_*/U_*$. Write $\mathbf x=L_*\widetilde{\mathbf x}$, $t=T_*\widetilde t$, $q=Q_*\widetilde q$, and $\mathbf u=U_*\widetilde{\mathbf u}$. All quantities with a tilde are dimensionless.
+:::
+
+::: {.tb-result #obj-6-20}
+**Result 6.20 - Peclet number in advection-diffusion**
+
+For constant $\kappa>0$ and the positive reference scales just chosen, advection-diffusion takes the dimensionless form
 
 $$
 \partial_{\widetilde t}\widetilde q+
@@ -80,11 +226,44 @@ $$
 \qquad \mathrm{Pe}=\frac{U_*L_*}{\kappa}.
 \tag{6.5}
 $$
+:::
 
-The Peclet number $\mathrm{Pe}$ is the ratio of diffusion time $L_*^2/\kappa$ to advection time. In momentum dynamics, the Reynolds number is $\mathrm{Re}=U_*L_*/\nu$ with kinematic viscosity $\nu$, and the Rossby number is $\mathrm{Ro}=U_*/(|f_*|L_*)$ with a nonzero reference Coriolis parameter $f_*$. Large $\mathrm{Pe}$ does not make diffusion negligible at all scales: diffusion at length $\ell$ scales as $\kappa/\ell^2$. Small scales or thin boundary layers can retain it.
+::: {.tb-proof}
+**Proof of Result 6.20**
 
-## Chapter summary and self-test
+The time derivative contributes $Q_*/T_*=Q_*U_*/L_*$; advection contributes the same factor. Diffusion contributes $\kappa Q_*/L_*^2$. Dividing by $Q_*U_*/L_*$ leaves $\kappa/(U_*L_*)=\mathrm{Pe}^{-1}$. $\square$
+:::
 
-**Main results and terms.** A PDE problem includes its domain, boundary data, initial data, and norm. Elliptic balance, parabolic diffusion, hyperbolic waves, and transport have different data requirements. Well-posedness means existence, uniqueness, and continuous dependence. Energy identities prove stability and uniqueness. A weak formulation lowers the derivative requirement. Characteristics carry information; a dispersion relation links frequency to wavenumber. Dimensionless numbers compare terms at stated scales.
+::: {.tb-definition #obj-6-21}
+**Definition 6.21 - Peclet, Reynolds, and Rossby numbers**
 
-**Self-test.** Use (6.2) to compare two diffusion solutions with different initial fields. Why is a homogeneous Neumann Poisson solution unique only after fixing its mean? Can a large Peclet number justify dropping diffusion at arbitrarily small length?
+The Peclet number $\mathrm{Pe}$ is the ratio of diffusion time $L_*^2/\kappa$ to advection time. In momentum dynamics, the Reynolds number is $\mathrm{Re}=U_*L_*/\nu$ with kinematic viscosity $\nu$, and the Rossby number is $\mathrm{Ro}=U_*/(|f_*|L_*)$ with a nonzero reference Coriolis parameter $f_*$.
+:::
+
+::: {.tb-remark #obj-6-22}
+**Remark 6.22 - A scale-dependent approximation**
+
+Large $\mathrm{Pe}$ does not make diffusion negligible at all scales: diffusion at length $\ell$ scales as $\kappa/\ell^2$. Small scales or thin boundary layers can retain it.
+:::
+
+::: {.tb-exercise #ex-6-4}
+**Exercise 6.4 - Compare two length scales**
+
+*Application.* A flow has $\mathrm{Pe}=100$ at length $L_*$. With the same speed and diffusivity, what is the Peclet number at $L_*/100$?
+:::
+
+## Chapter summary
+
+A PDE problem includes its domain, boundary data, initial data, and norm. Elliptic balance, parabolic diffusion, hyperbolic waves, and transport have different data requirements. Well-posedness means existence, uniqueness, and continuous dependence. Energy identities prove stability and uniqueness. A weak formulation lowers the derivative requirement. Characteristics carry information; a dispersion relation links frequency to wavenumber. Dimensionless numbers compare terms at stated scales.
+
+::: {.tb-exercise #ex-6-5}
+**Exercise 6.5 - Connect the chapter results**
+
+*Synthesis.* Use (6.2) to compare two diffusion solutions with different initial fields. Why is a homogeneous Neumann Poisson solution unique only after fixing its mean? Can a large Peclet number justify dropping diffusion at arbitrarily small length?
+:::
+
+::: {.tb-exercise #ex-6-6}
+**Exercise 6.6 - Construct unstable backward data**
+
+*Independent proof.* Use dimensionless periodic $x\in[0,2\pi]$, a dimensionless time $t$, and fixed $T>0$. For $u_t=-u_{xx}$, for positive integers $n$, consider $u_n(x,t)=e^{-n^2T}e^{n^2t}\sin(nx)$. Verify the PDE and show that its initial $L^2$ norm tends to zero while its norm at $T$ does not. What well-posedness property fails?
+:::

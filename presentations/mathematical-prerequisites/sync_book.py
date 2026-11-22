@@ -37,6 +37,7 @@ def expected_pages():
         # Qualify equations independently of the book's own chapter ordering.
         text = re.sub(r'\\tag\{(\d+\.\d+)\}', r'\\tag{M\1}', text)
         text = re.sub(r'\((\d+\.\d+)\)', r'(M\1)', text)
+        text = re.sub(r'\b(Definition|Assumption|Model|Law|Postulate|Result|Example|Counterexample|Remark|Exercise) (\d+\.\d+)\b', r'\1 M\2', text)
         # Turn guide chapter pointers into links to the owning book treatment.
         def link(match):
             n = int(match[1])

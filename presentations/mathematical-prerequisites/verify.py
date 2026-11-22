@@ -60,6 +60,7 @@ def pdf_checks():
     for name, expected in record['input_sha256'].items():
         assert hashlib.sha256((ROOT.parents[1]/name).read_bytes()).hexdigest() == expected, f'PDF is stale: {name}'
     assert hashlib.sha256((ROOT/'mathematical-prerequisites.pdf').read_bytes()).hexdigest() == record['pdf_sha256']
+    assert hashlib.sha256((ROOT/'instructor-solutions.md').read_bytes()).hexdigest() == record['instructor_key_sha256']
     reader = PdfReader(ROOT/'mathematical-prerequisites.pdf')
     pages = [page.extract_text() or '' for page in reader.pages]
     text = '\n'.join(pages)
@@ -70,6 +71,12 @@ def pdf_checks():
     assert all(page.strip() for page in pages), 'Empty page'
     assert '\ufffd' not in text, 'Replacement glyph'
     assert '[@' not in text, 'Unresolved citation'
+    assert 'Solution to Exercise' not in text, 'Instructor solutions leaked into student PDF'
+    flat = re.sub(r'\s+', ' ', text)
+    objects = re.findall(r'^\*\*((?:Definition|Assumption|Model|Law|Postulate|Result|Example|Counterexample|Remark|Exercise) \d+\.\d+) - ', source, re.M)
+    for label in objects:
+        assert label in flat, f'Missing teaching object in PDF: {label}'
+
     destinations = reader.named_destinations
     for number in range(1, 13):
         assert f'chapter.{number}' in destinations, f'Missing chapter destination {number}'
@@ -98,6 +105,7 @@ def pdf_checks():
         headers.append({'page': i, 'header': first})
     return {'pages': len(pages), 'numbered_equations': len(tags),
             'internal_links_checked': internal, 'named_destinations': len(destinations),
+            'teaching_objects_and_exercises': len(objects),
             'page_headers': headers}
 
 
@@ -105,6 +113,9 @@ def render():
     from PIL import Image, ImageDraw
     folder = ROOT/'.build/qa'
     folder.mkdir(parents=True, exist_ok=True)
+    for pattern in ('page-*.png', 'sheet-*.png'):
+        for previous in folder.glob(pattern):
+            previous.unlink()
     subprocess.run(['pdftoppm', '-r', '90', '-png',
                     str(ROOT/'mathematical-prerequisites.pdf'), str(folder/'page')], check=True)
     paths = sorted(folder.glob('page-*.png'))[:len(PdfReader(ROOT/'mathematical-prerequisites.pdf').pages)]

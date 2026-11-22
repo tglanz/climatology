@@ -1,10 +1,11 @@
 {
-  "date": "2026-11-21",
+  "date": "2026-11-22",
   "input_sha256": {
-    "presentations/mathematical-prerequisites/mathematical-prerequisites.md": "30c6055d3b6c27ae6356ec5ff7b3dd81b3442795ec57b0f300e6be9ec2e1c4fd",
-    "presentations/mathematical-prerequisites/header.tex": "a315a6b32889c4306f116a9955d237918d2b812adad9a233d75dcfd5f2a9445a",
-    "presentations/mathematical-prerequisites/headers.lua": "f5121d240da67ab4fb634257b985e5f51c4caf174b446063ece079f1bd03e893",
-    "presentations/mathematical-prerequisites/build.py": "0a3a9dcde329cc251d894943ab4ab70eac0785488b40696b734bdb9a4a027a7f",
+    "presentations/mathematical-prerequisites/mathematical-prerequisites.md": "1db464879d47816e0d2dbd03a20e69231fdb3dafe8479c30a4dc3b0afd7ef53a",
+    "presentations/mathematical-prerequisites/header.tex": "f2f1db55b8edd7b67e9016b6e17aa39416d4003e5b986fad1fb7479a33f614c3",
+    "presentations/mathematical-prerequisites/headers.lua": "5714d3bbb853f28491c94d09930ffba1f3c00d2b3400bcbc3d1f781a04ebfe3f",
+    "presentations/mathematical-prerequisites/objects.lua": "bd8751d3c7f306d8832f001585a4532c9a380d7f77e155a2123344b679365da8",
+    "presentations/mathematical-prerequisites/build.py": "242706c205ba3409e3d970148f153101350904fa548650e4290218ab771f6176",
     "book/references.bib": "a20bd3a156a5bdb8702d20b8a69aea4857c37f6dcebc59c0281029d3c99d94ef"
   },
   "evidence_sha256": {
@@ -13,9 +14,15 @@
     "papers/fno.pdf": "6cd2645d4a50d1a61a261529b33747c674d78851bdbe6993b0961f81a17dc6f2",
     "papers/sfno.pdf": "3d24e686dc3dab1192bc691815363bd5f545a0d4bac31a31b40b2afd11c928ae"
   },
-  "pdf_sha256": "c88fb0ec08af038495f3c5fb2256095eac9d14d176bc335597c79885e3c56e6b",
-  "repository_revision_at_build": "29fd5a85ad9b5b67ae8faea3e558c112f4697306",
+  "pdf_sha256": "e29fcf888a2c92cb0b85d0754a7691b1c849d3ba53bc85679bf5fdbbe01f0cbe",
+  "repository_revision_at_build": "a779244fa0c1d6a33084474cd72f5bd119dd65bb",
   "pandoc": "pandoc 3.12.1",
   "engine": "XeLaTeX; three passes; report; A4; 11pt",
-  "book_equations": "M prefix, source chapter numbering; physical companion owns fluid sequence"
+  "book_equations": "M prefix on equations, objects, and exercises; physical companion owns fluid sequence",
+  "editorial_skill": "/Users/tal.glanzman/own/dotfiles/agent/skills/tg-make-textbook/SKILL.md",
+  "student_edition": true,
+  "teaching_objects": 244,
+  "exercises": 63,
+  "instructor_key_sha256": "ae3d8cff7101b1052878ac21b9a0e2271339e64a0bb6bc2b518d61a2f5b70429",
+  "skill_sha256": "603d18035ed78b3b5a9ae38a8ba7e73fce360161f23e56e1b414749d19d2ddb9"
 }

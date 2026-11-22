@@ -2,31 +2,70 @@
 
 # Mathematical language and linear algebra {#ch-language}
 
+What information must accompany a field before we can calculate with it? Domains and units tell us which operations are meaningful; a basis tells us what its stored coefficients represent. We develop these ideas first for finite vectors, where projection and inversion can be seen directly, before applying them to functions in [function spaces](../02-harmonic-analysis/function-spaces.qmd).
+
 ## Scalars, functions, and dimensions
 
-**Result and motivation.** A field assigns a value to each position and time. Its domain, units, and type determine which equations and averages are meaningful. This is the starting point for interpreting either a PDE or an array of samples. Sources: [@ArfkenWeber2005, Sections 1.1-1.4, 2.6, 6.1].
+A field assigns a value to each position and time. Its domain, units, and type determine which equations and averages are meaningful. This is the starting point for interpreting either a PDE or an array of samples. Sources: [@ArfkenWeber2005, Sections 1.1-1.4, 2.6, 6.1].
+
+::: {.tb-definition #obj-1-1}
+**Definition M1.1 - Fields, domains, and number systems**
 
 The sets $\mathbb R$, $\mathbb C$, $\mathbb Z$, and $\mathbb N_0$ denote real numbers, complex numbers, integers, and nonnegative integers. The notation $x\in D$ means that $x$ belongs to the set $D$; $f:D\to V$ assigns a unique element of $V$ to every element of $D$. The image $f(x)$ is the value at $x$. A domain is the region on which a field is defined. A scalar field takes real or complex values; a vector field takes values in a vector space. A component is a scalar coordinate in a chosen basis.
 
 Write position as $\mathbf x=(x_1,x_2,x_3)$, time as $t$, and a real scalar field as $q(\mathbf x,t)$. A sampled array $q_{ij}$ stores values at specified positions; its indices are not physical coordinates. A continuous field and its finite sample array are different mathematical objects.
+:::
 
-The imaginary unit $i$ satisfies $i^2=-1$. For real $a,b$, define $z=a+ib$, conjugate $\overline z=a-ib$, real part $\operatorname{Re}z=a$, and modulus $|z|=(a^2+b^2)^{1/2}$. Euler's identity connects oscillations to algebra:
+::: {.tb-definition #obj-1-2}
+**Definition M1.2 - Complex numbers and oscillatory notation**
+
+The imaginary unit $i$ satisfies $i^2=-1$. For real $a,b$, define $z=a+ib$, conjugate $\overline z=a-ib$, real part $\operatorname{Re}z=a$, and modulus $|z|=(a^2+b^2)^{1/2}$.
+
+Here $\alpha$ is a dimensionless angle in radians. The exponential can be defined by $e^z=\sum_{n=0}^{\infty}z^n/n!$, where $n!=1\cdot2\cdots n$ and $0!=1$. A sum means repeated addition; an infinite sum denotes the limit of its finite partial sums. The sine and cosine are the imaginary and real parts of $e^{i\alpha}$.
+:::
+
+::: {.tb-result #obj-1-3}
+**Result M1.3 - Euler's identity and unit-modulus phase**
+
+For every real dimensionless angle $\alpha$, the complex exponential satisfies the following identities [@ArfkenWeber2005, Section 6.1].
 
 $$
 e^{i\alpha}=\cos\alpha+i\sin\alpha,\qquad
 \overline{e^{i\alpha}}=e^{-i\alpha},\qquad |e^{i\alpha}|=1.
 \tag{M1.1}
 $$
+:::
 
-Here $\alpha$ is a dimensionless angle in radians. The exponential can be defined by $e^z=\sum_{n=0}^{\infty}z^n/n!$, where $n!=1\cdot2\cdots n$ and $0!=1$. A sum means repeated addition; an infinite sum denotes the limit of its finite partial sums. The sine and cosine are the imaginary and real parts of $e^{i\alpha}$.
+::: {.tb-proof}
+**Proof of Result M1.3**
+
+Separate the even and odd terms of the exponential series. The even terms sum to $\cos\alpha$, and the odd terms sum to $i\sin\alpha$. Conjugating changes $i$ to $-i$; multiplying the two conjugate exponentials gives $e^{i\alpha}e^{-i\alpha}=1$. $\square$
+:::
+
+::: {.tb-definition #obj-1-4}
+**Definition M1.4 - Physical dimensions and admissible operations**
 
 Use $[q]$ for the physical dimensions of $q$. An equation can add only quantities with the same dimensions. If length and time have units $\mathrm m$ and $\mathrm s$, velocity has $[u]=\mathrm m\,\mathrm s^{-1}$, vorticity has $[\zeta]=\mathrm s^{-1}$, and a diffusivity has $[\kappa]=\mathrm m^2\,\mathrm s^{-1}$. Derivatives divide by the units of the independent variable. A logarithm or an exponential requires a dimensionless argument. For example, $\exp(-\kappa k^2t)$ is admissible when $k$ has units $\mathrm m^{-1}$.
+:::
+
+::: {.tb-exercise #ex-1-1}
+**Exercise M1.1 - Check a decay exponent**
+
+*Application.* A decay model uses $e^{-\kappa kt}$. If $[\kappa]=\mathrm m^2\,\mathrm s^{-1}$, $[k]=\mathrm m^{-1}$, and $[t]=\mathrm s$, is the exponent admissible? How would a diffusive exponent change?
+:::
 
 ## Vectors, bases, and linear maps
 
-**Result and motivation.** A basis separates a mathematical object from the coefficients used to store it. Changing basis changes coefficients, while the underlying vector or field stays the same. Sources: [@ArfkenWeber2005, Sections 1.2-1.5, 3.2-3.4].
+A basis separates a mathematical object from the coefficients used to store it. Changing basis changes coefficients, while the underlying vector or field stays the same. Sources: [@ArfkenWeber2005, Sections 1.2-1.5, 3.2-3.4].
+
+::: {.tb-definition #obj-1-5}
+**Definition M1.5 - Vector spaces, independence, and bases**
 
 A vector space is a set closed under addition and multiplication by scalars, with associative and commutative addition, a zero vector, additive inverses, and the distributive rules. Vectors $\mathbf e_1,\ldots,\mathbf e_n$ are linearly independent if $\sum_jc_j\mathbf e_j=0$ implies every $c_j=0$. Their span is the set of all such linear combinations. They form a basis of a space if they are independent and span it. The number $n$ of basis vectors is its dimension.
+:::
+
+::: {.tb-definition #obj-1-6}
+**Definition M1.6 - Euclidean products and orientation**
 
 In a real orthonormal Cartesian basis, the dot product and length are
 
@@ -37,16 +76,52 @@ $$
 $$
 
 Orthonormal means $\mathbf e_j\cdot\mathbf e_k=\delta_{jk}$, where the Kronecker symbol $\delta_{jk}$ is one for $j=k$ and zero otherwise. In three dimensions the cross product is the vector perpendicular to its arguments with components $(\mathbf u\times\mathbf v)_i=\sum_{j,k}\epsilon_{ijk}u_jv_k$. The permutation symbol $\epsilon_{ijk}$ is zero if an index repeats, $+1$ for an even permutation of $(1,2,3)$, and $-1$ for an odd permutation. Its sign fixes a right-handed orientation.
+:::
 
-A map $A$ is linear if $A(\alpha\mathbf u+\beta\mathbf v)=\alpha A\mathbf u+\beta A\mathbf v$. A matrix represents that map in chosen input and output bases: $(A\mathbf u)_i=\sum_jA_{ij}u_j$. Matrix multiplication represents composition. The identity matrix $I$ leaves vectors unchanged. The nullspace is $\ker A=\{\mathbf u:A\mathbf u=0\}$; the range is the set of outputs. An inverse $A^{-1}$ exists precisely when a square map has zero nullspace and full range. The determinant $\det A$ is its signed volume factor; invertibility is equivalent to $\det A\ne0$.
+::: {.tb-definition #obj-1-7}
+**Definition M1.7 - Linear maps, matrices, and nullspaces**
+
+A map $A$ is linear if $A(\alpha\mathbf u+\beta\mathbf v)=\alpha A\mathbf u+\beta A\mathbf v$. A matrix represents that map in chosen input and output bases: $(A\mathbf u)_i=\sum_jA_{ij}u_j$. Matrix multiplication represents composition. The identity matrix $I$ leaves vectors unchanged. The nullspace is $\ker A=\{\mathbf u:A\mathbf u=0\}$; the range is the set of outputs.
+:::
+
+::: {.tb-result #obj-1-8}
+**Result M1.8 - Invertibility in finite dimensions (quoted)**
+
+For a linear map between two $n$-dimensional spaces, an inverse exists if and only if its kernel is zero, equivalently its range is the whole target. For a square representing matrix, this is also equivalent to a nonzero determinant, its signed volume factor [@ArfkenWeber2005, Section 3.2].
+:::
+
+::: {.tb-definition #obj-1-9}
+**Definition M1.9 - Complex inner products and adjoint matrices**
 
 For complex vectors use the inner product $\langle\mathbf u,\mathbf v\rangle=\sum_j u_j\overline{v_j}$, linear in its first argument throughout this guide. The adjoint matrix $A^*=\overline A^{\mathsf T}$ is the conjugate transpose. A Hermitian matrix has $A=A^*$; a unitary matrix has $A^*A=I$. Unitary changes of coordinates preserve inner products and norms. A real unitary matrix is called orthogonal.
+:::
+
+::: {.tb-exercise #ex-1-2}
+**Exercise M1.2 - Change coefficients without changing length**
+
+*Application.* Let $Q=\begin{pmatrix}0&-1\\1&0\end{pmatrix}$ and $\mathbf u=(2,1)^{\mathsf T}$. Compute $Q\mathbf u$ and compare lengths. Is $Q$ orthogonal?
+:::
 
 ## Eigenvectors, projection, and conditioning
 
-**Result and motivation.** Hermitian operators admit orthogonal modes. In those modes differentiation, diffusion, and elliptic inversion become scalar calculations. Small eigenvalues also expose unstable inversions. Sources: [@ArfkenWeber2005, Sections 3.5-3.6, 10.2-10.3].
+Hermitian operators admit orthogonal modes. In those modes differentiation, diffusion, and elliptic inversion become scalar calculations. Small eigenvalues also expose unstable inversions. Sources: [@ArfkenWeber2005, Sections 3.5-3.6, 10.2-10.3].
 
-An eigenvector is a nonzero vector $\mathbf v$ such that $A\mathbf v=\lambda\mathbf v$; $\lambda$ is its eigenvalue. If $A=A^*$, then
+::: {.tb-definition #obj-1-10}
+**Definition M1.10 - Eigenvectors and eigenvalues**
+
+An eigenvector is a nonzero vector $\mathbf v$ such that $A\mathbf v=\lambda\mathbf v$; $\lambda$ is its eigenvalue.
+:::
+
+::: {.tb-result #obj-1-11}
+**Result M1.11 - Hermitian eigenvalues and orthogonality**
+
+If $A=A^*$ in the complex Euclidean inner product, every eigenvalue is real and eigenvectors with distinct eigenvalues are orthogonal.
+:::
+
+::: {.tb-proof}
+**Proof of Result M1.11**
+
+Use the adjoint identity to compare the scalar with its conjugate. For $A\mathbf v=\lambda\mathbf v$ and $\mathbf v\ne0$,
 
 $$
 \lambda\|\mathbf v\|^2
@@ -56,9 +131,25 @@ $$
 \tag{M1.3}
 $$
 
-Thus $\lambda$ is real. Applying the same identity to eigenvectors with eigenvalues $\lambda$ and $\eta$ gives $(\lambda-\eta)\langle\mathbf v,\mathbf w\rangle=0$; distinct eigenvalues have orthogonal eigenvectors. The finite-dimensional spectral theorem states that a Hermitian $A$ has an orthonormal eigenbasis: $A=Q\Lambda Q^*$, where $\Lambda$ is diagonal and $Q$ is unitary. This theorem is used here without proof; the differential analogue needs boundary conditions ([eigenfunction theory](../03-pdes/eigenfunctions.qmd)).
+Thus $\lambda$ is real. Applying the same identity to eigenvectors with eigenvalues $\lambda$ and $\eta$ gives $(\lambda-\eta)\langle\mathbf v,\mathbf w\rangle=0$; distinct eigenvalues have orthogonal eigenvectors. $\square$
+:::
 
-For orthonormal $\mathbf e_j$, the projection onto their span is $P\mathbf u=\sum_j\langle\mathbf u,\mathbf e_j\rangle\mathbf e_j$. The remainder is orthogonal to every retained basis vector. Hence for any vector $\mathbf v$ in that span,
+::: {.tb-result #obj-1-12}
+**Result M1.12 - Finite-dimensional spectral theorem (quoted)**
+
+Every Hermitian matrix has an orthonormal eigenbasis: $A=Q\Lambda Q^*$, where $Q$ is unitary and $\Lambda$ is a real diagonal matrix [@ArfkenWeber2005, Sections 3.5-3.6]. The differential analogue will need boundary conditions in [eigenfunction theory](../03-pdes/eigenfunctions.qmd).
+:::
+
+::: {.tb-definition #obj-1-13}
+**Definition M1.13 - Orthogonal projection**
+
+For orthonormal $\mathbf e_j$, the projection onto their span is $P\mathbf u=\sum_j\langle\mathbf u,\mathbf e_j\rangle\mathbf e_j$.
+:::
+
+::: {.tb-result #obj-1-14}
+**Result M1.14 - Projection gives the best squared-error approximation**
+
+For an orthonormal family $\mathbf e_j$, let $P$ project onto its span. For every $\mathbf u$ and every $\mathbf v$ in that span,
 
 $$
 \|\mathbf u-\mathbf v\|^2
@@ -66,20 +157,57 @@ $$
 \tag{M1.4}
 $$
 
-Projection therefore minimizes squared error. This argument will apply unchanged to functions.
+Consequently $P\mathbf u$ minimizes the error over that span.
+:::
 
-For invertible $A$, define $\sup$ as the least upper bound of a set of real numbers. Its induced norm is $\|A\|=\sup_{\mathbf v\ne0}\|A\mathbf v\|/\|\mathbf v\|$ and condition number $\operatorname{cond}(A)=\|A\|\|A^{-1}\|$. If $A\mathbf u=\mathbf b$ and only the right side changes by $\delta\mathbf b$, then $A\delta\mathbf u=\delta\mathbf b$ and
+::: {.tb-proof}
+**Proof of Result M1.14**
+
+The residual $\mathbf u-P\mathbf u$ is orthogonal to each $\mathbf e_j$, hence to $P\mathbf u-\mathbf v$. Expand the squared norm of their sum; both cross terms vanish. This proves (M1.4), and its second term is nonnegative. $\square$
+:::
+
+::: {.tb-definition #obj-1-15}
+**Definition M1.15 - Induced norm and condition number**
+
+For invertible $A$, define $\sup$ as the least upper bound of a set of real numbers. Its induced norm is $\|A\|=\sup_{\mathbf v\ne0}\|A\mathbf v\|/\|\mathbf v\|$ and condition number $\operatorname{cond}(A)=\|A\|\|A^{-1}\|$.
+:::
+
+::: {.tb-result #obj-1-16}
+**Result M1.16 - Sensitivity to right-hand-side errors**
+
+Let $A$ be invertible, $A\mathbf u=\mathbf b$ with $\mathbf b\ne0$, and let $A(\mathbf u+\delta\mathbf u)=\mathbf b+\delta\mathbf b$. Then
 
 $$
 \frac{\|\delta\mathbf u\|}{\|\mathbf u\|}
 \le\operatorname{cond}(A)\frac{\|\delta\mathbf b\|}{\|\mathbf b\|}.
 \tag{M1.5}
 $$
+:::
+
+::: {.tb-proof}
+**Proof of Result M1.16**
+
+Subtract the equations to get $\delta\mathbf u=A^{-1}\delta\mathbf b$. The induced norm gives $\|\delta\mathbf u\|\le\|A^{-1}\|\|\delta\mathbf b\|$ and $\|\mathbf b\|\le\|A\|\|\mathbf u\|$. Combine these bounds and divide by the nonzero norms. $\square$
+:::
+
+::: {.tb-example #obj-1-17}
+**Example M1.17 - A small eigenvalue amplifies noise**
 
 For $A=\operatorname{diag}(1,\varepsilon)$ with $0<\varepsilon\ll1$, noise in the second component is amplified by $1/\varepsilon$. A zero eigenvalue requires a compatibility condition and an additional choice fixing the nullspace component; division by zero is not an inversion method.
+:::
 
-## Chapter summary and self-test
+::: {.tb-exercise #ex-1-3}
+**Exercise M1.3 - Project onto a line**
 
-**Main results and terms.** A field has a domain, value type, and units. A basis defines coefficients; a linear map acts on vectors; its nullspace controls uniqueness. Complex conjugation defines a positive inner product. Hermitian matrices have real eigenvalues and orthonormal eigenbases. Orthogonal projection minimizes squared error by (M1.4). Conditioning measures sensitivity through (M1.5).
+*Application.* Project $(2,1)$ onto the span of $(1,1)/\sqrt2$. Verify (M1.4) with comparison vector $(1,1)$.
+:::
 
-**Self-test.** Why does multiplying a complex Fourier coefficient by $e^{i\alpha}$ preserve its squared modulus? What prevents a unique solution of $\operatorname{diag}(1,0)\mathbf u=(1,1)$? Answers are in the mathematical companion document linked from the foundations reading map.
+## Chapter summary
+
+A field has a domain, value type, and units. A basis defines coefficients; a linear map acts on vectors; its nullspace controls uniqueness. Complex conjugation defines a positive inner product. Hermitian matrices have real eigenvalues and orthonormal eigenbases. Orthogonal projection minimizes squared error by (M1.4). Conditioning measures sensitivity through (M1.5).
+
+::: {.tb-exercise #ex-1-4}
+**Exercise M1.4 - Connect the chapter results**
+
+*Synthesis.* Why does multiplying a complex Fourier coefficient by $e^{i\alpha}$ preserve its squared modulus? What prevents a unique solution of $\operatorname{diag}(1,0)\mathbf u=(1,1)$?
+:::

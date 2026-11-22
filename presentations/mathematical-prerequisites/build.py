@@ -19,12 +19,11 @@ def assemble(check=False):
     for text in chapters:
         title, anchor = re.match(r'# (.*?) \{#(.*?)\}', text).groups()
         toc.append(f'<li><a href="#{anchor}">{title}</a></li>')
-    toc += ['<li><a href="#answers">Self-test answers</a></li>',
-            '<li><a href="#references">References</a></li>', '</ul>', '</nav>']
+    toc += ['<li><a href="#references">References</a></li>', '</ul>', '</nav>']
     metadata = '''---
 title: "Mathematical prerequisites"
 subtitle: "From fields and conservation to spherical analysis and operator maps"
-date: "21 November 2026"
+date: "22 November 2026"
 lang: en-US
 documentclass: report
 classoption: [oneside, openany]
@@ -52,7 +51,6 @@ header-includes:
     assembled = (metadata + '\n'.join(toc) + '\n\n' +
                       (ROOT / 'preface.md').read_text() + '\n' +
                       '\n'.join(chapters) + '\n' +
-                      (ROOT / 'answers.md').read_text() + '\n' +
                       (ROOT / 'repository-map.md').read_text() + references)
     if check:
         assert SOURCE.read_text() == assembled, 'Assembled Markdown is out of sync'
@@ -72,15 +70,32 @@ def main():
             text = path.read_text()
             assert text.isascii(), path
             assert text.count('$$') % 2 == 0, path
+            assert '\u2014' not in text, path
+            assert '## Chapter summary' in text, path
+            object_numbers = re.findall(r'^\*\*(?:Definition|Assumption|Model|Law|Postulate|Result|Example|Counterexample|Remark) (\d+\.\d+) - ', text, re.M)
+            chapter_number = int(path.name[:2])
+            assert object_numbers == [f'{chapter_number}.{i}' for i in range(1,len(object_numbers)+1)], path
+            previous_result = None
+            for match in re.finditer(r'^\*\*(Result (\d+\.\d+) - [^\n]+|(?:Proof|Derivation) of Result (\d+\.\d+))\*\*', text, re.M):
+                if match[2]: previous_result = match[2]
+                else: assert match[3] == previous_result, (path,'Proof target',match[3],previous_result)
+            exercises = re.findall(r'^\*\*Exercise (\d+\.\d+) - ', text, re.M)
+            assert exercises == [f'{chapter_number}.{i}' for i in range(1,len(exercises)+1)], path
             for heading, body in re.findall(r'^## ([^\n]+)\n(.*?)(?=^## |\Z)', text, re.M | re.S):
-                if heading != 'Chapter summary and self-test':
-                    assert body.lstrip().startswith('**Result and motivation.**'), (path, heading)
-            assert '## Chapter summary and self-test' in text, path
+                assert '**Exercise ' in body, (path,heading)
+                if heading != 'Chapter summary':
+                    first = body.strip().split('\n\n',1)[0]
+                    assert not first.startswith((':::', '**Definition', '**Result')), (path,heading)
+            for target in re.findall(r'\*\*(?:Proof|Derivation) of Result (\d+\.\d+)\*\*', text):
+                assert re.search(r'^\*\*Result '+re.escape(target)+r' - ', text,re.M), (path,target)
         tags = re.findall(r'\\tag\{([^}]+)\}', '\n'.join(p.read_text() for p in CHAPTERS))
         assert len(tags) == len(set(tags)), 'Duplicate equation tags'
         for number, path in enumerate(CHAPTERS, 1):
             actual = re.findall(r'\\tag\{([^}]+)\}', path.read_text())
             assert actual == [f'{number}.{i}' for i in range(1, len(actual)+1)], path
+        prompts = set(re.findall(r'^\*\*Exercise (\d+\.\d+) - ', '\n'.join(p.read_text() for p in CHAPTERS), re.M))
+        answers = re.findall(r'^\*\*Solution to Exercise (\d+\.\d+) - ', (ROOT/'instructor-solutions.md').read_text(), re.M)
+        assert len(answers) == len(set(answers)) and prompts == set(answers), 'Exercise/key mismatch'
         sync(check=True)
         assemble(check=True)
         print(f'Checked {len(CHAPTERS)} chapters, {len(tags)} unique sequential equations, and book source parity.')
@@ -95,7 +110,7 @@ def main():
         pdf_input = re.sub(r'<nav.*?</nav>', '', source.read_text(), flags=re.S)
         subprocess.run(['pandoc', '-', '--from=markdown', '--standalone', '--citeproc',
                         '--number-sections', '--toc', '--top-level-division=chapter',
-                        '--include-in-header=header.tex', '--lua-filter=headers.lua', '--to=latex',
+                        '--include-in-header=header.tex', '--lua-filter=headers.lua', '--lua-filter=objects.lua', '--to=latex',
                         '--output=' + str(tex)], cwd=ROOT, check=True, input=pdf_input, text=True)
         tex.write_text(tex.read_text().replace(r'\maketitle', r'\maketitle' + '\n' + r'\setcounter{page}{2}'))
         for _ in range(3):
@@ -108,19 +123,25 @@ def main():
         (ROOT / 'mathematical-prerequisites.pdf').write_bytes(
             tex.with_suffix('.pdf').read_bytes())
         repo = ROOT.parents[1]
-        inputs = [SOURCE, ROOT/'header.tex', ROOT/'headers.lua', Path(__file__), repo/'book/references.bib']
+        inputs = [SOURCE, ROOT/'header.tex', ROOT/'headers.lua', ROOT/'objects.lua', Path(__file__), repo/'book/references.bib']
         evidence = [repo/'papers'/name for name in (
             'methods-of-mathemacial-for-physicists.pdf',
             'atmospheric-and-oceanic-fluid-dymamics.pdf', 'fno.pdf', 'sfno.pdf')]
         digest = lambda path: hashlib.sha256(path.read_bytes()).hexdigest()
-        record = {'date': '2026-11-21',
+        record = {'date': '2026-11-22',
                   'input_sha256': {str(p.relative_to(repo)): digest(p) for p in inputs},
                   'evidence_sha256': {str(p.relative_to(repo)): digest(p) for p in evidence},
                   'pdf_sha256': digest(ROOT/'mathematical-prerequisites.pdf'),
                   'repository_revision_at_build': subprocess.check_output(['git','rev-parse','HEAD'], cwd=repo, text=True).strip(),
                   'pandoc': subprocess.check_output(['pandoc','--version'], text=True).splitlines()[0],
                   'engine': 'XeLaTeX; three passes; report; A4; 11pt',
-                  'book_equations': 'M prefix, source chapter numbering; physical companion owns fluid sequence'}
+                  'book_equations': 'M prefix on equations, objects, and exercises; physical companion owns fluid sequence',
+                  'editorial_skill': '/Users/tal.glanzman/own/dotfiles/agent/skills/tg-make-textbook/SKILL.md',
+                  'student_edition': True,
+                  'teaching_objects': len(re.findall(r'^\*\*(?:Definition|Assumption|Model|Law|Postulate|Result|Example|Counterexample|Remark) \d+\.\d+ - ', source.read_text(), re.M)),
+                  'exercises': len(re.findall(r'^\*\*Exercise \d+\.\d+ - ', source.read_text(), re.M)),
+                  'instructor_key_sha256': digest(ROOT/'instructor-solutions.md'),
+                  'skill_sha256': digest(Path('/Users/tal.glanzman/own/dotfiles/agent/skills/tg-make-textbook/SKILL.md'))}
         (ROOT/'build-record.json').write_text(json.dumps(record, indent=2)+'\n')
         print(ROOT / 'mathematical-prerequisites.pdf')
 

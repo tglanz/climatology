@@ -7,12 +7,12 @@ then connect physical averages to learned maps.
 
 These chapters share their source with the
 [mathematical-prerequisites companion](https://github.com/tglanz/climatology/blob/main/presentations/mathematical-prerequisites/mathematical-prerequisites.md),
-which also supplies a linked PDF, chapter summaries, self-tests, and answers.
+which also supplies a linked PDF, chapter summaries, section exercises, and a separate instructor key.
 Arfken and Weber's sixth edition, abbreviated AW, is the principal source @ArfkenWeber2005;
 Hunter defines the weak-solution notation @HunterPDE, and NIST gives the explicit
 Gaussian quadrature rule @NISTDLMFQuadrature.
 
-Equations prefixed **M** retain the companion's chapter-equation numbers, independently
+Equations, teaching objects, and exercises prefixed **M** retain the companion's chapter-equation numbers, independently
 of the book's chapter order. Equations prefixed **P** belong to the physical
 companion. Guide chapter numbers in plural cross-references refer to the companion;
 linked concept names refer to their owning book chapter. The mathematical

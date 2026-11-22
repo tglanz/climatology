@@ -39,6 +39,6 @@ python3 presentations/mathematical-prerequisites/build.py --sync-book
 python3 presentations/mathematical-prerequisites/build.py --check
 ```
 
-The book uses an M prefix on the companion's equation numbers. The existing
+The book uses an M prefix on the companion's equation, object, and exercise numbers. The existing
 physical companion continues to own the fluid-dynamics sequence. Short legacy
 pages retain their URLs and cross-reference the owning mathematical treatment.

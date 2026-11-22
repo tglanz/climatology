@@ -51,5 +51,6 @@ book:
 format:
   html:
     theme: cosmo
+    css: textbook.css
 
 bibliography: references.bib
