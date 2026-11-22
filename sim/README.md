@@ -22,9 +22,28 @@ caffeinate -i parallel -j 4 conda run -n isca_env python -m sim.scanner \
 
 `sim/scanner.py` is the main entry point. It accepts one or more values per stirring
 parameter and runs all combinations. Each param combo is identified by a 6-character
-hash code; simulations are named `<code>-<index>` under a shared experiment directory.
+hash code; simulations are named `<code>-<index>` directly under the output directory.
+The default is `./output/simulations/barotropic_stirring-T<harmonics>`.
+Set `--output-dir PATH` to use a relative or absolute directory instead.
+Each simulation stores its own `namelist.json` and segment files.
 
-A `sweep.json` is written at the experiment root mapping each code to its param dict.
+```bash
+conda run -n isca_env python -m sim.scanner --output-dir /data/simulations --index 0
+```
+
+Output layout:
+
+```text
+<output-dir>/
+  <code>-<index>/
+    namelist.json
+    run0001/atmos_daily.nc
+    ...
+  crashed-sims.txt          # Only when all retries for a simulation fail
+```
+
+Changing the default does not move existing simulation data. To resume an older
+collection, pass its directory containing `<code>-<index>` folders to `--output-dir`.
 
 Re-runs are safe: each `(code, index)` checks for the last segment file and skips if
 it already completed.
@@ -50,7 +69,7 @@ caffeinate -i parallel -j 4 conda run -n isca_env python -m sim.scanner \
 ```
 
 This produces 500 simulations (5 configs x 100 replicates) under
-`output/barotropic_stirring-T85/simulations/`.
+`output/simulations/barotropic_stirring-T85/`.
 
 ### Sweeping multiple parameters
 
@@ -71,3 +90,12 @@ Produces 6 configs x 100 replicates = 600 simulations.
 conda run --no-capture-output -n isca_env python -m sim.scanner \
     --stirring-lat0 45 --index 0
 ```
+
+## Tests
+
+```bash
+conda run -n isca_env python -m pytest sim/tests
+```
+
+The CLI tests use temporary directories and mock simulation execution; they do
+not compile or run Isca.

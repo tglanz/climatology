@@ -14,12 +14,34 @@ from ml.training.loss import create_loss_fn
 from ml.training import baselines
 from ml.diagnostics.grid import gaussian_latitude_weights
 from ml.training.info import TrainingSummary, list_training_summaries
+from ml.usecases.purge_simulations import run as run_purge_simulations
 
 
 @click.group()
 def util():
     """Utility commands."""
     pass
+
+
+@util.command("purge-simulations")
+@click.option(
+    "--output-dir",
+    required=True,
+    type=click.Path(exists=True, file_okay=False, path_type=Path),
+    help="Simulation output directory containing <code>-<index> directories.",
+)
+@click.option(
+    "--lat0",
+    type=float,
+    multiple=True,
+    help="Filter by stirring latitude. Repeat to select multiple latitudes.",
+)
+@click.option("--dry-run", is_flag=True, help="Preview deletions without deleting.")
+def purge_simulations(output_dir: Path, lat0: tuple[float, ...], dry_run: bool):
+    """Delete simulation outputs, optionally filtered by forcing latitude."""
+    run_purge_simulations(
+        output_dir, lat0, dry_run, confirm=click.confirm, emit=click.echo
+    )
 
 
 @util.command("model-info")

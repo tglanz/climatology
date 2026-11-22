@@ -85,7 +85,8 @@ normalization procedure, loss, and trunk settings.
 | `diagnostics/` | Physical calculations and numerical metrics |
 | `inference.py` | Checkpoint loading, device preparation, batched prediction |
 | `training/` | Models, losses, optimizers, stopping, run artifacts |
-| `usecases/` | Preparation, evaluation, analysis, and read-only summaries |
+| `usecases/` | Preparation, evaluation, analysis, and utility workflows |
+| `services/` | Filesystem operations used by use cases |
 | `visualization/` | Figures and animation |
 | `cmd/` | Command arguments and output presentation |
 
@@ -136,3 +137,20 @@ The [sample contract](../docs/pre-processing.md), [grids](../docs/grids.md), and
 and its [verification results](../action-items/03-pipeline-results.md).
 The [compaction results](../action-items/01-compaction-results.md) remain the
 historical verification record for phase 01.
+
+## Remove simulation outputs
+
+Preview matching simulations before deleting:
+
+```bash
+uv run --project ml --all-groups ml util purge-simulations \
+  --output-dir output/simulations/barotropic_stirring-T85 --lat0 30 --dry-run
+```
+
+Repeat `--lat0` to select multiple latitudes. Omit it to select all simulations.
+The command reads each simulation's `namelist.json`; it does not require
+`sweep.json`. Omit `--dry-run` to delete the listed simulation directories after
+interactive confirmation. This utility explicitly modifies the simulation source.
+
+The purge command follows `cmd/util.py` -> `usecases/purge_simulations.py` ->
+`services/simulations.py`: CLI arguments, cleanup workflow, then filesystem access.

@@ -104,7 +104,7 @@ are not necessarily enabled in this table.
 ## Inspecting output
 
 The scanner writes
-`output/<experiment>/simulations/<code>-<replica>/runNNNN/atmos_daily.nc`
+`output/simulations/barotropic_stirring-T85/<code>-<replica>/runNNNN/atmos_daily.nc`
 and stores each simulation's namelist beside its segments. See the
 [ncdump reference](ncdump-cheatsheet.md) for file inspection commands.
 
@@ -113,7 +113,7 @@ Use the ML reader to handle Isca's nonstandard time metadata:
 ```python
 from ml.data.isca_segment import read_segments
 
-ds = read_segments("output/<experiment>/simulations/<code>-<replica>/run*/atmos_daily.nc",
+ds = read_segments("output/simulations/barotropic_stirring-T85/<code>-<replica>/run*/atmos_daily.nc",
                    decode_time=True)
 print(ds)
 ds.close()
