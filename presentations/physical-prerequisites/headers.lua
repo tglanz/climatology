@@ -1,5 +1,11 @@
 -- Unnumbered chapters also own their running headers.
 function Header(h)
+  if FORMAT:match('latex') and h.level == 2 and pandoc.utils.stringify(h.content) == 'Exercises' then
+    return {pandoc.RawBlock('latex', '\\Needspace{16\\baselineskip}'), h}
+  end
+  if FORMAT:match('latex') and h.level == 3 then
+    return {pandoc.RawBlock('latex', '\\Needspace{12\\baselineskip}'), h}
+  end
   if h.level == 1 and h.classes:includes('unnumbered') and FORMAT:match('latex') then
     local title = pandoc.utils.stringify(h.content):gsub('[{}]', ''):gsub('&', '\\&')
     return {h, pandoc.RawBlock('latex', '\\markboth{' .. title .. '}{' .. title .. '}')}

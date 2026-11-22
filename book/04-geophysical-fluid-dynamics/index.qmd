@@ -4,7 +4,9 @@ The sequence derives the stochastically stirred barotropic vorticity equation
 from continuum mass and momentum conservation. It introduces rotating frames,
 absolute circulation, layer potential vorticity, constant-depth reduction,
 spherical inversion, energy and enstrophy, damping, and finite-memory forcing.
-The assumptions of each reduction are stated separately.
+The assumptions of each reduction are stated separately. Numbered models and
+physical laws are distinguished from definitions and derived results. Worked
+examples apply the methods; chapter exercises follow the summaries.
 
 The mathematical prerequisites are [vector calculus](../01-vector-calculus/index.qmd),
 [orthogonal expansions](../02-harmonic-analysis/index.qmd), and
@@ -15,7 +17,7 @@ These chapters share a source with the
 [physical-prerequisites document](https://github.com/tglanz/climatology/blob/main/presentations/physical-prerequisites/physical-prerequisites.md).
 The book includes the parcel-kinematics and transport derivations, while
 cross-referencing its vector-calculus chapters for the shared operator theory.
-It retains the general fluid theory and excludes the companion's implementation appendix. Equation labels prefixed P
+It retains the general fluid theory and excludes the companion's implementation appendix. Teaching-object, exercise, and equation labels prefixed P
 refer to the companion document's stable chapter-equation numbers, independently
 of the book's chapter ordering.
 

@@ -1,5 +1,5 @@
 {
-  "manuscript_sha256": "af54212c0ddd4dcc4f510b1b0dc2afb2ca55a9f3f41dc7eca68f7d504f3aa5ec",
+  "manuscript_sha256": "fab0ddd0d6deb3d161fde4d4f61cb43c7b51bef891c2521cdb4863b20b6dbf4f",
   "evidence_sha256": {
     "papers/atmospheric-and-oceanic-fluid-dymamics.pdf": "f4760570d419a46756f987c1667dcdb184a818435e1399d0b1daba013cf909b3",
     "papers/barotropic.pdf": "34f639f55bdbb8297473cd216d28f87a0c32f181bacd48829670d8a4a176c28e",
@@ -10,10 +10,21 @@
     "submodules/isca/src/atmos_spectral_barotropic/stirring.F90": "34dc1b34403da36754436a41ed7ef8dbee4232e4f6b8eb04c2c3fda3bf0ed346",
     "submodules/isca/src/atmos_spectral/model/spectral_damping.F90": "64574f69384bea9d2bcb2a48cd1e81d95df497e4b6da682df955084323a86c75"
   },
-  "repository_revision_at_build": "d4e3594261929178b066afd223da3d44307e1fbc",
+  "repository_revision_at_build": "b575e989aa3f00232f448d35df75dd34e92720dc",
   "isca_revision": "a290bc376d84d0ee83adbb80eb374b9f629c3534",
   "isca_worktree_status": " M src/extra/python/isca/templates/compile.sh\n M src/extra/python/isca/templates/run.sh\n M src/shared/memutils/memutils.F90\n M src/shared/mosaic/create_xgrid.c\n M src/shared/mpp/affinity.c\n M src/shared/mpp/mpp_memutils.F90\n?? isca\n",
   "pandoc": "pandoc 3.12.1",
   "engine": "XeLaTeX, three passes; header.tex; report, A4, 11pt",
-  "equation_numbering": "Explicit chapter-equation tags; book uses P prefix"
+  "equation_numbering": "Preserved 49 chapter-equation tags; book uses P prefix",
+  "rendering_sha256": {
+    "build.py": "4a7d1b510a7eba325f442ca9c6aa062aad9d5e7a033e5fc6e6da9f397a11c0ff",
+    "header.tex": "82883bc0e12942b6c6f949d302dd10ccc6bcae8f0054730832bd6e6be913fc44",
+    "headers.lua": "fe15d2411ab68a48fb978c3650b9f8ffed652b06df4cc1086ad8b4484ffeea26",
+    "objects.lua": "b27987dc911ef6a94c5009929b90eac6dbe698f1a45c77fd0dcd0f3934019478",
+    "textbook.css": "2cb43809641882a63478ba5dd0abe464cef9c61c45ea94f6457952c6f95d8f11"
+  },
+  "editorial_style": "tg-make-textbook; physics primary, mathematical support; graduate audience",
+  "teaching_objects": 140,
+  "exercises": 30,
+  "instructor_solutions_sha256": "da24bc636b26ee1e0279f199ef634181219335beea1e0c0065355ca0704bb0a8"
 }

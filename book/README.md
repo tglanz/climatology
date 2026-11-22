@@ -25,7 +25,10 @@ python3 presentations/physical-prerequisites/build.py --check
 
 This synchronizes general theory only. The repository-specific implementation
 chapter stays in the companion document. The companion's explicitly numbered
-equations receive a P prefix in the book so their source numbering is unambiguous.
+teaching objects, exercises, and equations receive a P prefix in the book so
+their source numbering is unambiguous. Instructor solutions remain separate from
+the student-facing chapters. The synchronization also copies their dedicated
+HTML teaching-object stylesheet.
 Shared bibliography metadata lives in `references.bib`.
 
 ## Mathematical prerequisites

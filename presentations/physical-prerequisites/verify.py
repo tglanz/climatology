@@ -23,6 +23,13 @@ missing = [tag for tag in re.findall(r'\\tag\{([^}]+)\}', manuscript)
 assert not missing, f'Missing numbered equations: {missing}'
 assert '[@' not in text, 'Unprocessed citation'
 assert reader.outline, 'Missing PDF bookmarks'
+labels = re.findall(r'^\*\*((?:Definition|Assumption|Model|Law|Postulate|Result|Example|Counterexample|Remark|Exercise) \d+\.\d+) - ', manuscript, re.M)
+compact_text = re.sub(r'\s+', ' ', text)
+assert all(label in compact_text for label in labels), 'Missing teaching-object or exercise label in PDF'
+solutions = (HERE / 'instructor-solutions.md').read_text()
+student_ids = re.findall(r'^\*\*Exercise (\d+\.\d+) - ', manuscript, re.M)
+solution_ids = re.findall(r'^## Solution to Exercise (\d+\.\d+) - ', solutions, re.M)
+assert student_ids == solution_ids, 'Instructor solutions do not match student exercises'
 names = reader.named_destinations
 links = 0
 for page_number, page in enumerate(reader.pages, 1):
@@ -44,6 +51,7 @@ for page_number, page in enumerate(reader.pages, 1):
 assert links >= 60, f'Too few internal links: {links}'
 report = {'pages': len(reader.pages), 'internal_links': links,
           'named_destinations': len(names), 'numbered_equations': len(re.findall(r'\\tag\{', manuscript)),
+          'teaching_objects': len(labels) - len(student_ids), 'exercises': len(student_ids),
           'headers': [{'pdf_page': i + 1, 'lines': p.extract_text().splitlines()[:2]}
                       for i, p in enumerate(reader.pages)]}
 qa = HERE / 'qa'
