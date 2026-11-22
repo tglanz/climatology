@@ -82,10 +82,11 @@ def validate_simulations(
 
 @preprocess.command("create-sweep-file")
 @click.option(
-    "--experiment-dir",
-    "experiment_dir",
+    "-c",
+    "--config",
+    "config_path",
     required=True,
-    type=click.Path(file_okay=False, path_type=Path),
+    type=click.Path(exists=True, dir_okay=False, path_type=Path),
 )
 @click.option(
     "--key",
@@ -94,8 +95,8 @@ def validate_simulations(
     required=True,
     help="alias=nml.path, e.g. stirring_lat0=stirring_nml.lat0. Repeat for multiple keys.",
 )
-def create_sweep_file(experiment_dir: Path, keys: tuple[str, ...]):
-    """Build sweep.json from completed simulation namelist.json files."""
+def create_sweep_file(config_path: Path, keys: tuple[str, ...]):
+    """Build experiment sweep.json from the configured simulations' namelists."""
     from ml.usecases.create_sweep_file import run
 
     key_specs = []
@@ -105,7 +106,7 @@ def create_sweep_file(experiment_dir: Path, keys: tuple[str, ...]):
         alias, path = key.split("=", 1)
         key_specs.append((alias, path.split(".")))
 
-    run(experiment_dir, key_specs)
+    run(config_path, key_specs)
 
 
 @preprocess.command("generate-splits")

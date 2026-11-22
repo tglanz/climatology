@@ -136,9 +136,30 @@ class SplitConfig:
 
 
 @dataclass
-class IscaDataConfig:
-    simulation_pattern: str
+class SimulationsConfig:
+    dir: Path
+    pattern: str
     segment_pattern: str
+
+    def __post_init__(self):
+        _require(
+            isinstance(self.dir, (str, Path)) and bool(str(self.dir).strip()),
+            "simulations.dir must be a nonempty path",
+        )
+        self.dir = Path(self.dir)
+        for name in ("pattern", "segment_pattern"):
+            value = getattr(self, name)
+            _require(
+                isinstance(value, str)
+                and bool(value.strip())
+                and not Path(value).is_absolute()
+                and ".." not in Path(value).parts,
+                f"simulations.{name} must be a nonempty relative glob within its source",
+            )
+
+
+@dataclass
+class IscaDataConfig:
     x_vars: list[str]
     y_vars: list[str]
     split: SplitConfig
@@ -417,6 +438,7 @@ class ModelConfig:
 
 @dataclass
 class Config:
+    simulations: SimulationsConfig
     data: IscaDataConfig
     model: ModelConfig
     training: TrainingConfig
@@ -461,6 +483,7 @@ def _parse_split_config(s: dict) -> SplitConfig:
 
 @dataclass
 class PreparationConfig:
+    simulations: SimulationsConfig
     data: IscaDataConfig
     logging: LoggingConfig
     paths: PathsConfig
@@ -471,14 +494,17 @@ def read_raw(path: Path) -> dict:
     with path.open("rb") as handle:
         raw = tomllib.load(handle)
     if "data_config" in raw:
-        if "data" in raw:
-            raise ValueError("use either data_config or [data], not both")
+        if "data" in raw or "simulations" in raw:
+            raise ValueError("use either data_config or [simulations]/[data], not both")
         with (path.parent / raw.pop("data_config")).open("rb") as handle:
             source = tomllib.load(handle)
         if "data_config" in source:
             raise ValueError(
                 "data_config must reference a standalone preparation recipe"
             )
+        if "simulations" not in source:
+            raise ValueError("data_config must include [simulations]")
+        raw["simulations"] = source["simulations"]
         raw["data"] = source["data"]
         raw["paths"] = source.get("paths", {}) | raw.get("paths", {})
     return raw
@@ -503,9 +529,27 @@ def load_data(path: Path) -> PreparationConfig:
     return load(path, data_only=True)
 
 
+def _parse_simulations(raw: dict) -> SimulationsConfig:
+    if "simulations" not in raw:
+        raise ValueError(
+            "[simulations] with dir, pattern, and segment_pattern is required; "
+            "move source layout out of [data] and set dir explicitly"
+        )
+    source = raw["simulations"]
+    for key in ("dir", "pattern", "segment_pattern"):
+        _require(key in source, f"[simulations.{key}] is required")
+    _require(
+        not ({"simulation_pattern", "segment_pattern"} & raw["data"].keys()),
+        "move data.simulation_pattern and data.segment_pattern to "
+        "simulations.pattern and simulations.segment_pattern",
+    )
+    return SimulationsConfig(**source)
+
+
 def load(path: Path, *, data_only: bool = False) -> Config | PreparationConfig:
     raw = read_raw(path)
 
+    simulations = _parse_simulations(raw)
     d = raw["data"]
     if "windows" not in d:
         raise ValueError(
@@ -513,8 +557,6 @@ def load(path: Path, *, data_only: bool = False) -> Config | PreparationConfig:
             "for the configuration surface."
         )
     data = IscaDataConfig(
-        simulation_pattern=d["simulation_pattern"],
-        segment_pattern=d["segment_pattern"],
         x_vars=list(d["x_vars"]),
         y_vars=list(d["y_vars"]),
         split=_parse_split_config(d["split"]),
@@ -559,7 +601,7 @@ def load(path: Path, *, data_only: bool = False) -> Config | PreparationConfig:
         paths.splits_dir = paths.experiment_dir / "splits"
 
     if data_only:
-        return PreparationConfig(data, logging_cfg, paths)
+        return PreparationConfig(simulations, data, logging_cfg, paths)
 
     model_raw = raw["model"]
     architecture = model_raw["architecture"]
@@ -656,5 +698,10 @@ def load(path: Path, *, data_only: bool = False) -> Config | PreparationConfig:
     )
 
     return Config(
-        data=data, model=model, training=training, logging=logging_cfg, paths=paths
+        simulations=simulations,
+        data=data,
+        model=model,
+        training=training,
+        logging=logging_cfg,
+        paths=paths,
     )

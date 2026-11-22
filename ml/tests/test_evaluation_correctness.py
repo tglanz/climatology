@@ -201,8 +201,12 @@ def test_prepared_mean_uses_one_profile_per_simulation(
     expected = torch.from_numpy(
         np.mean(
             [
-                read_simulation(paths[0].parent.parent, cfg.data).truth_profile,
-                read_simulation(second, cfg.data).truth_profile,
+                read_simulation(
+                    paths[0].parent.parent, cfg.data, cfg.simulations.segment_pattern
+                ).truth_profile,
+                read_simulation(
+                    second, cfg.data, cfg.simulations.segment_pattern
+                ).truth_profile,
             ],
             axis=0,
         )

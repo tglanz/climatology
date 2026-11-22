@@ -92,19 +92,27 @@ def simulation(gaussian_coordinates, tmp_path):
         scheduler=SchedulerConfig(kind="none"),
         early_stopping=EarlyStoppingConfig(),
     )
-    training_dir = tmp_path / "training"
+    experiment = tmp_path / "ml-experiment"
+    training_dir = experiment / "training"
     paths_cfg = PathsConfig(
-        experiment_dir=tmp_path,
-        preprocessed_dir=tmp_path / "data",
+        experiment_dir=experiment,
+        preprocessed_dir=experiment / "data",
         training_dir=training_dir,
         checkpoint_dir=training_dir,
         training_info_file=training_dir / "training.json",
         epoch_metrics_file=training_dir / "epoch-metrics.csv",
         metrics_file=training_dir / "metrics.h5",
-        splits_dir=tmp_path / "splits",
+        splits_dir=experiment / "splits",
     )
     return (
         paths,
         values,
-        replace(base, data=data, model=model, training=training, paths=paths_cfg),
+        replace(
+            base,
+            simulations=replace(base.simulations, dir=tmp_path / "simulations"),
+            data=data,
+            model=model,
+            training=training,
+            paths=paths_cfg,
+        ),
     )

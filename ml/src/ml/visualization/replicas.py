@@ -1,9 +1,10 @@
 """Target-aware figures for predicted and observed replicate variability."""
 
-from pathlib import Path
 import numpy as np
 import matplotlib.pyplot as plt
 
+from ml.config import Config, PreparationConfig
+from ml.services.simulations import list_simulation_dirs
 from ml.data.climatology import diagnostic_for
 from ml.data.simulation_data import SimulationSamples, try_read_simulation
 from ml.data.sweep_file import SweepFile
@@ -43,14 +44,20 @@ def plot_code(label: str, results: list[SimulationSamples]):
 
 
 def plot_replicate_variability(
-    codes: list[str], experiment_dir: Path, data_cfg, ncols: int = 3
+    codes: list[str], cfg: Config | PreparationConfig, ncols: int = 3
 ):
-    sweep = SweepFile.from_experiment_dir(experiment_dir)
+    sweep = SweepFile.from_experiment_dir(cfg.paths.experiment_dir)
+    directories = list_simulation_dirs(cfg.simulations)
+    data_cfg = cfg.data
     groups = {}
     for code in codes:
         results = []
-        for path in sorted((experiment_dir / "simulations").glob(f"{code}-*")):
-            outcome = try_read_simulation(path, data_cfg)
+        for path in directories:
+            if path.name.rsplit("-", 1)[0] != code:
+                continue
+            outcome = try_read_simulation(
+                path, data_cfg, cfg.simulations.segment_pattern
+            )
             if outcome.samples is not None:
                 results.append(outcome.samples)
         if results:

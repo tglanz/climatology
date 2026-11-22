@@ -6,7 +6,7 @@ from tqdm import tqdm
 
 from ml.config import load_data as load_config
 from ml.data.simulation_data import open_simulation, select_samples
-from ml.data.isca_preprocessing import list_simulation_dirs, list_segment_files
+from ml.services.simulations import list_simulation_dirs, list_segment_files
 
 
 @dataclass
@@ -26,10 +26,12 @@ def _validate_one(
     validate_climatology: bool,
 ) -> SimResult:
     cfg = load_config(config_path)
-    n_runs = len(list_segment_files(sim_dir, cfg.data))
+    n_runs = len(list_segment_files(sim_dir, cfg.simulations.segment_pattern))
     n_samples = 0
     try:
-        with open_simulation(sim_dir, cfg.data) as source:
+        with open_simulation(
+            sim_dir, cfg.data, cfg.simulations.segment_pattern
+        ) as source:
             n_samples = source.length
             if n_samples < cfg.data.windows.length:
                 raise ValueError("timeline is shorter than one input window")
@@ -52,7 +54,7 @@ def run(
     if workers < 0:
         raise ValueError("worker count must be nonnegative")
     cfg = load_config(config_path)
-    sim_dirs = list_simulation_dirs(cfg.data, cfg.paths.experiment_dir)
+    sim_dirs = list_simulation_dirs(cfg.simulations)
     n_invalid = 0
 
     if workers == 0:

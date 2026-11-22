@@ -46,8 +46,10 @@ class SimulationLoadReport:
     excluded: list[SimulationOutcome]
 
 
-def _load_one_sim(sim_dir: Path, data_cfg: IscaDataConfig) -> SimulationSamples | None:
-    outcome = try_read_simulation(sim_dir, data_cfg)
+def _load_one_sim(
+    sim_dir: Path, data_cfg: IscaDataConfig, segment_pattern: str
+) -> SimulationSamples | None:
+    outcome = try_read_simulation(sim_dir, data_cfg, segment_pattern)
     if outcome.samples is None:
         log.warning("excluded %s: %s", sim_dir, outcome.reason)
     return outcome.samples
@@ -56,15 +58,25 @@ def _load_one_sim(sim_dir: Path, data_cfg: IscaDataConfig) -> SimulationSamples 
 def load_all_sims(
     sim_dirs: list[Path],
     data_cfg: IscaDataConfig,
+    segment_pattern: str,
     max_workers: int = 8,
 ) -> SimulationLoadReport:
     if max_workers < 0:
         raise ValueError("worker count must be nonnegative")
     if max_workers == 0:
-        outcomes = [try_read_simulation(path, data_cfg) for path in sim_dirs]
+        outcomes = [
+            try_read_simulation(path, data_cfg, segment_pattern) for path in sim_dirs
+        ]
     else:
         with ProcessPoolExecutor(max_workers=max_workers) as pool:
-            outcomes = list(pool.map(try_read_simulation, sim_dirs, repeat(data_cfg)))
+            outcomes = list(
+                pool.map(
+                    try_read_simulation,
+                    sim_dirs,
+                    repeat(data_cfg),
+                    repeat(segment_pattern),
+                )
+            )
     report = SimulationLoadReport(
         [o.samples for o in outcomes if o.samples is not None],
         [o for o in outcomes if o.samples is None],

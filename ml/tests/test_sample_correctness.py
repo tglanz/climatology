@@ -25,7 +25,9 @@ def test_same_windows_targets_and_channel_order(simulation, monkeypatch):
     paths, values, cfg = simulation
     monkeypatch.setattr(isca_preprocessing, "load_config", lambda _: cfg)
     x, y = isca_preprocessing.process_one_sim(paths[0].parent.parent, Path("unused"))
-    result = _load_one_sim(paths[0].parent.parent, cfg.data)
+    result = _load_one_sim(
+        paths[0].parent.parent, cfg.data, cfg.simulations.segment_pattern
+    )
     np.testing.assert_array_equal(x, result.x_windows)
     np.testing.assert_array_equal(y, result.y_windows)
     assert y.shape == (4, 2, 4)
@@ -54,10 +56,15 @@ def test_nonconvergence_has_one_rejection_policy(simulation, monkeypatch):
     monkeypatch.setattr(
         simulation_data, "find_zonal_mean_convergence_time", lambda *a, **kw: None
     )
-    outcome = try_read_simulation(paths[0].parent.parent, data)
+    outcome = try_read_simulation(
+        paths[0].parent.parent, data, cfg.simulations.segment_pattern
+    )
     assert outcome.samples is None
     assert "convergence" in outcome.reason
-    assert _load_one_sim(paths[0].parent.parent, data) is None
+    assert (
+        _load_one_sim(paths[0].parent.parent, data, cfg.simulations.segment_pattern)
+        is None
+    )
 
 
 def test_cache_reuses_and_owner_closes(simulation):
@@ -90,12 +97,22 @@ def test_segment_gap_and_units_are_rejected(simulation):
     ds["time"] = ds.time + 1
     ds.time.attrs = {"units": "days since 2000-01-01", "calendar": "360_day"}
     ds.to_netcdf(paths[1], mode="w")
-    assert "timeline" in try_read_simulation(paths[0].parent.parent, cfg.data).reason
+    assert (
+        "timeline"
+        in try_read_simulation(
+            paths[0].parent.parent, cfg.data, cfg.simulations.segment_pattern
+        ).reason
+    )
     with xr.open_dataset(paths[0], decode_times=False) as source:
         ds = source.load()
     ds.vor.attrs["units"] = "m/s"
     ds.to_netcdf(paths[0], mode="w")
-    assert "units" in try_read_simulation(paths[0].parent.parent, cfg.data).reason
+    assert (
+        "units"
+        in try_read_simulation(
+            paths[0].parent.parent, cfg.data, cfg.simulations.segment_pattern
+        ).reason
+    )
 
 
 def test_spinup_is_unit_invariant_and_rounds_hold_up():
@@ -176,8 +193,10 @@ def test_arbitrary_input_units_cannot_change_or_disappear(simulation, second_uni
         ds["temp"] = ds.ucomp.copy()
         ds.temp.attrs["units"] = "K" if index == 0 else second_units
         ds.to_netcdf(path, mode="w")
-    cfg = replace(cfg.data, x_vars=["temp"])
-    outcome = try_read_simulation(paths[0].parent.parent, cfg)
+    data = replace(cfg.data, x_vars=["temp"])
+    outcome = try_read_simulation(
+        paths[0].parent.parent, data, cfg.simulations.segment_pattern
+    )
     assert outcome.samples is None
     assert "unit" in outcome.reason
 
@@ -193,7 +212,11 @@ def test_input_units_are_part_of_saved_identity(simulation):
             ds["temp"] = ds.ucomp.copy()
             ds.temp.attrs["units"] = units
             ds.to_netcdf(path, mode="w")
-        metadata.append(read_simulation(paths[0].parent.parent, data).metadata)
+        metadata.append(
+            read_simulation(
+                paths[0].parent.parent, data, cfg.simulations.segment_pattern
+            ).metadata
+        )
     assert metadata[0].input_units == ("K",)
     assert not metadata[0].matches(metadata[1])
     assert not DataMetadata.from_dict(metadata[0].to_dict()).matches(metadata[1])
@@ -205,7 +228,9 @@ def test_window_averaging_reference_uses_exact_input_times(simulation):
     import xarray as xr
 
     paths, _, cfg = simulation
-    samples = read_simulation(paths[0].parent.parent, cfg.data)
+    samples = read_simulation(
+        paths[0].parent.parent, cfg.data, cfg.simulations.segment_pattern
+    )
     with xr.open_mfdataset(paths, decode_times=False) as dataset:
         expected = np.stack(
             [

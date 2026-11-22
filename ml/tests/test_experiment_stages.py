@@ -34,7 +34,7 @@ def test_prepared_reuse_raw_removal_and_relocation(tmp_path):
     )
     original = verify(directory / "prepared")
     # No later stage may rely on raw trajectories or the input recipe.
-    shutil.rmtree(directory / "simulations")
+    shutil.rmtree(load_data(directory / "prepare.toml").simulations.dir)
     for name in ("run", "run-wide"):
         invoke("train", "-c", str(directory / f"{name}.toml"), "--device", "cpu")
         invoke(
@@ -99,6 +99,8 @@ def test_saved_configuration_is_standalone_and_paths_are_resolved(simulation, tm
     snapshot = tmp_path / "saved.toml"
     save(cfg, snapshot)
     restored = load(snapshot)
+    assert restored.simulations == cfg.simulations
+    assert restored.simulations.dir.is_absolute()
     assert restored.data == cfg.data
     assert restored.model == cfg.model
     assert restored.paths.preprocessed_dir.is_absolute()
@@ -129,13 +131,16 @@ def test_failed_preparation_does_not_publish_partial_data(tmp_path):
     assert "no usable training samples" in str(result.exception)
     assert not (directory / "prepared").exists()
     assert not list(directory.glob(".prepared-*"))
-    assert (directory / "simulations/train-0/atmos_daily.nc").exists()
+    assert (load_data(config).simulations.dir / "train-0/atmos_daily.nc").exists()
 
 
 def test_excluded_validation_is_saved_and_evaluated_without_raw_reads(tmp_path):
     directory = tmp_path / "smoke"
     create(directory)
-    (directory / "simulations/validation-0/atmos_daily.nc").unlink()
+    (
+        load_data(directory / "prepare.toml").simulations.dir
+        / "validation-0/atmos_daily.nc"
+    ).unlink()
     invoke(
         "preprocess",
         "training-data",
@@ -144,7 +149,7 @@ def test_excluded_validation_is_saved_and_evaluated_without_raw_reads(tmp_path):
         "--split",
         str(directory / "splits/fixed.json"),
     )
-    shutil.rmtree(directory / "simulations")
+    shutil.rmtree(load_data(directory / "prepare.toml").simulations.dir)
     invoke("train", "-c", str(directory / "run.toml"), "--device", "cpu")
     invoke(
         "evaluate",

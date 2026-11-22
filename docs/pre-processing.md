@@ -11,6 +11,32 @@ detectors, intervals, windows, and targets. Preparation and exploratory by-code 
 evaluation uses saved prepared arrays and validates their metadata and hashes.
 The [pipeline overview](pipeline.md) specifies artifact schemas, stages, and commands.
 
+## Source configuration
+
+```toml
+[simulations]
+dir = "./output/simulations/barotropic_stirring-T85"
+pattern = "*"
+segment_pattern = "run*/atmos_daily.nc"
+
+[paths]
+experiment_dir = "./output/experiments/my-experiment"
+```
+
+Discovery applies `simulations.pattern` under `simulations.dir`, then
+`simulations.segment_pattern` within each selected simulation. Raw source layout
+is separate from `[data]`, which defines sample selection and targets. ML writes
+its index, splits, prepared data, and model runs to its configured output paths.
+Source settings are recorded in saved configurations; they are not part of the
+prepared numerical sample identity. Legacy metadata containing the old globs
+remains readable; only those obsolete layout fields are ignored when comparing
+numerical sample settings. Training and saved-data evaluation do not
+require the raw source to remain available.
+
+Existing configs must add `[simulations]` and move the old data-level patterns
+there. No fallback to `paths.experiment_dir` is applied. Split assignments must
+select from the configured source; regenerate stale splits after changing it.
+
 ## Coordinates and acceptance
 
 Segments must have matching full Gaussian coordinates, declared compatible units,

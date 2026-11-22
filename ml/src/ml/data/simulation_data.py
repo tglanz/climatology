@@ -7,6 +7,7 @@ from pathlib import Path
 import numpy as np
 
 from ml.config import IscaDataConfig
+from ml.services.simulations import list_segment_files
 from ml.data.climatology import compute_climatology, nc_var_for, resolve_window
 from ml.data.isca_segment import (
     SegmentReader,
@@ -84,13 +85,9 @@ class SimulationSource:
         return self.fields[name]
 
 
-def list_segment_files(sim_dir: Path, cfg: IscaDataConfig) -> list[Path]:
-    return sorted(sim_dir.glob(cfg.segment_pattern))
-
-
 @contextmanager
-def open_simulation(sim_dir: Path, cfg: IscaDataConfig):
-    paths = list_segment_files(sim_dir, cfg)
+def open_simulation(sim_dir: Path, cfg: IscaDataConfig, segment_pattern: str):
+    paths = list_segment_files(sim_dir, segment_pattern)
     if not paths:
         raise ValueError("no segments matching segment_pattern")
     variables = list(
@@ -212,8 +209,10 @@ def select_samples(source: SimulationSource, cfg: IscaDataConfig):
     return starts, interval, t_s, t_c
 
 
-def read_simulation(sim_dir: Path, cfg: IscaDataConfig) -> SimulationSamples:
-    with open_simulation(sim_dir, cfg) as source:
+def read_simulation(
+    sim_dir: Path, cfg: IscaDataConfig, segment_pattern: str
+) -> SimulationSamples:
+    with open_simulation(sim_dir, cfg, segment_pattern) as source:
         starts, (a, b), t_s, t_c = select_samples(source, cfg)
         target = np.stack(
             [
@@ -255,9 +254,13 @@ def read_simulation(sim_dir: Path, cfg: IscaDataConfig) -> SimulationSamples:
         )
 
 
-def try_read_simulation(sim_dir: Path, cfg: IscaDataConfig) -> SimulationOutcome:
+def try_read_simulation(
+    sim_dir: Path, cfg: IscaDataConfig, segment_pattern: str
+) -> SimulationOutcome:
     try:
-        return SimulationOutcome(sim_dir.resolve(), read_simulation(sim_dir, cfg))
+        return SimulationOutcome(
+            sim_dir.resolve(), read_simulation(sim_dir, cfg, segment_pattern)
+        )
     except (ValueError, OSError, KeyError) as exc:
         return SimulationOutcome(sim_dir.resolve(), None, str(exc))
 

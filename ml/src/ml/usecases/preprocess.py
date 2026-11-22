@@ -18,12 +18,13 @@ from ml.data.climatology import diagnostic_for
 from ml.data.metadata import DataMetadata
 from ml.data.simulation_data import try_read_simulation
 from ml.data.splits import Splits
+from ml.services.simulations import list_simulation_dirs
 
 log = logging.getLogger(__name__)
 
 
 def _extract_pairs(
-    exp_dirs: list[Path],
+    sim_dirs: list[Path],
     config_path: Path,
     output_path: Path,
     n_workers: int,
@@ -32,12 +33,20 @@ def _extract_pairs(
     cfg = load_config(config_path)
     if n_workers < 0:
         raise ValueError("worker count must be nonnegative")
-    paths = sorted(exp_dirs)
+    paths = sorted(sim_dirs)
     executor = ProcessPoolExecutor(max_workers=n_workers) if n_workers else None
     results = (
-        executor.map(try_read_simulation, paths, repeat(cfg.data))
+        executor.map(
+            try_read_simulation,
+            paths,
+            repeat(cfg.data),
+            repeat(cfg.simulations.segment_pattern),
+        )
         if executor
-        else (try_read_simulation(path, cfg.data) for path in paths)
+        else (
+            try_read_simulation(path, cfg.data, cfg.simulations.segment_pattern)
+            for path in paths
+        )
     )
     written, exclusions = 0, []
     simulation_paths, simulation_targets = [], []
@@ -153,6 +162,15 @@ def run(config_path: Path, split_path: Path, n_workers: int = 0) -> None:
     out_dir = cfg.paths.preprocessed_dir
     if out_dir.exists():
         raise FileExistsError("prepared output exists; choose a fresh preprocessed_dir")
+    available = {path.resolve() for path in list_simulation_dirs(cfg.simulations)}
+    assigned = {
+        path.resolve() for path in splits.train + splits.validation + splits.test
+    }
+    if assigned - available:
+        raise ValueError(
+            "split assignments do not match the configured simulations source: "
+            + ", ".join(str(path) for path in sorted(assigned - available))
+        )
     out_dir.parent.mkdir(parents=True, exist_ok=True)
     staging = Path(tempfile.mkdtemp(prefix=f".{out_dir.name}-", dir=out_dir.parent))
     try:

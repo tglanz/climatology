@@ -1,12 +1,9 @@
-# TODO: theres some inconsistency / inaccurate terminology wrt "data".
-# first of all, is "data" what lives in the experiment/data dir?
-# if so, simulations are not "data".
-# second of all, the experiment_dir should not be under "data".
-# need to think - but i think we could have "[data] + [simulation]" sections and also extract the "experiment_dir" into [path].
-# not sure if we need a "[experiment]". however, now that i think of it, maybe the best thing to do is to replace [path] with [experiment].
-[data]
-simulation_pattern = "simulations/*"
+[simulations]
+dir = "./output/simulations/barotropic_stirring-T85"
+pattern = "*"
 segment_pattern = "run*/atmos_daily.nc"
+
+[data]
 x_vars = ["vor"]
 y_vars = ["time_mean_zonal_mean_ucomp"]
 
@@ -123,6 +120,4 @@ level = "INFO"
 stdout = true
 
 [paths]
-experiment_dir = "./output/barotropic_stirring-T85"
-training_dir = "./output/barotropic_stirring-T85/training-lat0-extra-low"
-preprocessed_dir = "./output/barotropic_stirring-T85/data-lat0-extra-low"
+experiment_dir = "./output/experiments/lat0-extra-low-hold-out"

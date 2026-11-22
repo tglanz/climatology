@@ -4,6 +4,7 @@ import json
 from pathlib import Path
 
 from ml.training.normalization import Normalization
+from ml.services.simulations import list_simulation_dirs
 
 from ml.data.simulation_data import try_read_simulation
 from ml.data.climatology import diagnostic_for
@@ -19,8 +20,10 @@ def code_label(code: str, sim_root: Path) -> str:
     return f"{code} lat0={stirring['lat0']} amp={stirring['amplitude']:.2e} widthy={stirring['widthy']}"
 
 
-def find_replicates(code: str, sim_root: Path) -> list[Path]:
-    dirs = sorted(p for p in sim_root.glob(f"{code}-*") if p.is_dir())
+def find_replicates(code: str, simulations) -> list[Path]:
+    dirs = [
+        p for p in list_simulation_dirs(simulations) if p.name.rsplit("-", 1)[0] == code
+    ]
     if not dirs:
         raise ValueError(f"no simulations found for code {code!r}")
     return dirs
@@ -28,7 +31,7 @@ def find_replicates(code: str, sim_root: Path) -> list[Path]:
 
 def evaluate_sim(sim_dir: Path, cfg, model, norm):
     norm = Normalization.from_dict(norm) if isinstance(norm, dict) else norm
-    outcome = try_read_simulation(sim_dir, cfg.data)
+    outcome = try_read_simulation(sim_dir, cfg.data, cfg.simulations.segment_pattern)
     if outcome.samples is None:
         return None
     result = outcome.samples
@@ -39,13 +42,13 @@ def evaluate_sim(sim_dir: Path, cfg, model, norm):
     return result
 
 
-def collect(codes, sim_root, cfg, model, norm):
+def collect(codes, cfg, model, norm):
     return {
         code: (
-            code_label(code, sim_root),
+            code_label(code, find_replicates(code, cfg.simulations)[0].parent),
             [
                 result
-                for path in find_replicates(code, sim_root)
+                for path in find_replicates(code, cfg.simulations)
                 if (result := evaluate_sim(path, cfg, model, norm)) is not None
             ],
         )

@@ -4,9 +4,9 @@ from pathlib import Path
 
 import numpy as np
 
-from ml.config import load as load_config
+from ml.config import load_data as load_config
 from ml.data.evaluation import load_all_sims
-from ml.data.isca_preprocessing import list_simulation_dirs
+from ml.services.simulations import list_simulation_dirs
 from ml.diagnostics.errors import ScoreSummary, profile_relative_l2_values
 
 
@@ -31,7 +31,10 @@ def _within_group_loss(
 def run(config_path: Path, n_workers: int = 0) -> None:
     cfg = load_config(config_path)
     loaded = load_all_sims(
-        list_simulation_dirs(cfg.data, cfg.paths.experiment_dir), cfg.data, n_workers
+        list_simulation_dirs(cfg.simulations),
+        cfg.data,
+        cfg.simulations.segment_pattern,
+        n_workers,
     )
     for channel, name in enumerate(cfg.data.y_vars):
         print(f"Observed replicate relative deviation: {name}")

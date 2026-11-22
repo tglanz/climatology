@@ -1,64 +1,20 @@
 """Read-only numerical fingerprints and simulation summaries."""
 
 import hashlib
-import json
 from pathlib import Path
 import h5py
 import numpy as np
-from ml.config import load as load_config
+from ml.config import load as load_config, load_data
 from ml.diagnostics.spectra import zonal_power_spectrum
 from ml.diagnostics.enstrophy import mean_enstrophy
+from ml.services.simulations import summarize_simulations as summarize_source
 
 
 def summarize_simulations(config_path: Path, segments: int):
     """Collect progress counts and percentages from the simulation directories."""
-    cfg = load_config(config_path)
-    experiment_dir = cfg.paths.experiment_dir
-    sim_dir = experiment_dir / "simulations"
-    sweep_path = experiment_dir / "sweep.json"
-
-    if not sim_dir.exists():
-        return dict(exists=False, experiment_dir=experiment_dir, sim_dir=sim_dir)
-
-    total_codes = None
-    if sweep_path.exists():
-        total_codes = len(json.loads(sweep_path.read_text()))
-
-    by_code: dict[str, list[tuple[str, str, bool]]] = {}
-    for d in sim_dir.iterdir():
-        parts = d.name.rsplit("-", 1)
-        if len(parts) != 2:
-            continue
-        code, idx = parts
-        runs = sorted(
-            [x.name for x in d.iterdir() if x.name.startswith("run")], reverse=True
-        )
-        last = runs[0] if runs else ""
-        done = last == f"run{segments:04d}"
-        by_code.setdefault(code, []).append((idx, last, done))
-
-    total_sims = sum(len(v) for v in by_code.values())
-    done_sims = sum(sum(x[2] for x in v) for v in by_code.values())
-    complete_codes = sum(1 for v in by_code.values() if all(x[2] for x in v))
-
-    in_progress = []
-    for code, reps in by_code.items():
-        for idx, last, done in reps:
-            if last and not done:
-                pct = int(last[3:]) / segments * 100
-                in_progress.append((f"{code}-{idx}", last, pct))
-    in_progress.sort(key=lambda x: -x[2])
-
-    return dict(
-        exists=True,
-        experiment_dir=experiment_dir,
-        sim_dir=sim_dir,
-        total_codes=total_codes,
-        total_sims=total_sims,
-        done_sims=done_sims,
-        complete_codes=complete_codes,
-        in_progress=in_progress,
-        not_started=(total_codes - len(by_code)) if total_codes else 0,
+    cfg = load_data(config_path)
+    return summarize_source(
+        cfg.simulations, segments, cfg.paths.experiment_dir / "sweep.json"
     )
 
 

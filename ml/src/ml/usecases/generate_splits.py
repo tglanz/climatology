@@ -2,7 +2,7 @@ import logging
 from pathlib import Path
 
 from ml.config import load_data as load_config
-from ml.data.isca_preprocessing import list_simulation_dirs
+from ml.services.simulations import list_simulation_dirs
 from ml.data.splits import generate
 from ml.data.sweep_file import SweepFile
 
@@ -14,7 +14,7 @@ def run(config_path: Path, name: str, description: str) -> Path:
     data_cfg = cfg.data
     split_config = data_cfg.split
 
-    sim_dirs = list_simulation_dirs(data_cfg, cfg.paths.experiment_dir)
+    sim_dirs = list_simulation_dirs(cfg.simulations)
 
     sweep = None
     if split_config.test_hold_out is not None:

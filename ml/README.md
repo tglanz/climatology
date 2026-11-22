@@ -17,6 +17,33 @@ The training group uses the pinned, editable neuraloperator submodule.
 The `inference` group supports model loading; the full CLI also needs the
 training group. HDF5 is a base dependency used during preparation.
 
+## Simulation source and ML outputs
+
+Configure these independently:
+
+```toml
+[simulations]
+dir = "./output/simulations/barotropic_stirring-T85"
+pattern = "*"
+segment_pattern = "run*/atmos_daily.nc"
+
+[paths]
+experiment_dir = "./output/experiments/my-experiment"
+```
+
+`pattern` selects simulation directories relative to `dir`. `segment_pattern`
+selects NetCDF files relative to each simulation. Both patterns are relative globs.
+`[data]` specifies variables, windows, detectors, targets, and split policy.
+Relative paths resolve from the repository root when running the commands here.
+Prepared data, splits, and training default to `data/`, `splits/`, and `training/`
+inside `experiment_dir`. Source paths are never inferred from that directory.
+
+`[simulations]` is required. For older configs, move `data.simulation_pattern` to
+`simulations.pattern` and `data.segment_pattern` to `simulations.segment_pattern`.
+Set `simulations.dir` explicitly and make the pattern relative to it. For the
+existing legacy layout, use `dir = "./output/barotropic_stirring-T85/simulations"`
+and `pattern = "*"`. No simulation data is moved by loading a config.
+
 ## Current commands
 
 ```bash
@@ -41,7 +68,8 @@ uv run --project ml --all-groups ml train -c output/experiment-smoke/run.toml --
 uv run --project ml --all-groups ml evaluate model --training-dir output/experiment-smoke/run --device cpu --n-workers 0
 ```
 
-Preparation accepts a data-only TOML recipe. A model recipe can reference it with
+Preparation accepts a TOML recipe with `[simulations]`, `[data]`, and `[paths]`.
+A model recipe can inherit both its simulation source and data settings with
 `data_config="prepare.toml"`, then declare model/training settings and its own
 `paths.training_dir`. Training saves a standalone effective configuration,
 checkpoint, normalization, split snapshot, prepared-file hashes, and run metadata.
@@ -50,12 +78,27 @@ Existing prepared and run directories are rejected. Choose fresh paths to rerun.
 Prepared data and checkpoints carry versioned coordinates, channel identities,
 input units, and normalization conventions. The corrected loader rejects
 unversioned or incompatible artifacts. Preserve saved originals; regenerate data
-and retrain into fresh directories for the corrected path. Old configurations
-with `data.experiment_dir` also need the current `paths.experiment_dir` field.
+and retrain into fresh directories for the corrected path. Legacy source fields
+must be migrated to `[simulations]` as described above.
 
 Training and evaluation accept `--device cpu` for bounded checks. Training uses
 the saved `training.seed` (default zero). Prepared splits retain one target per
 simulation so baseline fitting weights simulations equally.
+
+Create the experiment's configuration index before parameter-based splitting:
+
+```bash
+uv run --project ml --all-groups ml preprocess create-sweep-file -c prepare.toml \
+  --key stirring_lat0=stirring_nml.lat0 \
+  --key stirring_amplitude=stirring_nml.amplitude \
+  --key stirring_widthy=stirring_nml.widthy
+```
+
+This reads selected simulations' `namelist.json` files and writes
+`<experiment_dir>/sweep.json`. The explicit keys select namelist fields.
+`ml util summarize-simulations -c prepare.toml --segments 150` uses that same
+source and optional experiment index. It counts matching segment files; use
+`preprocess validate-simulations` for full scientific validity checks.
 
 ## Output heads
 

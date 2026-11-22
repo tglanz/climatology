@@ -26,9 +26,13 @@ REAL_CODES = ("10bb40-0", "0f0ad6-0", "021787-0")  # train, validation, test
 def create(directory: Path, real_root: Path | None = None):
     directory = directory.resolve()
     base = load(Path(__file__).resolve().parents[3] / "configs" / "default.toml")
-    source = real_root.resolve() if real_root else directory
+    source = (
+        real_root.resolve()
+        if real_root
+        else directory.with_name(directory.name + "-simulations")
+    )
     names = REAL_CODES if real_root else ("train-0", "validation-0", "test-0")
-    paths = [source / "simulations" / n for n in names]
+    paths = [source / n for n in names]
     if real_root and not all(p.is_dir() for p in paths):
         raise ValueError(f"fixed real subset missing: {paths}")
     directory.mkdir(parents=True, exist_ok=False)
@@ -56,22 +60,36 @@ def create(directory: Path, real_root: Path | None = None):
             ds.vor.attrs["units"], ds.ucomp.attrs["units"] = "1/s", "m/s"
             ds.to_netcdf(path / "atmos_daily.nc")
             ds.close()
+            (path / "namelist.json").write_text(
+                json.dumps({"stirring_nml": {"lat0": 10.0 * (index + 1)}}),
+                encoding="utf-8",
+            )
         data = replace(
             base.data,
-            segment_pattern="atmos_daily.nc",
             spinup=None,
             convergence=None,
             windows=WindowsConfig("beginning", "end", 2, 3, 3),
             climatology=ClimatologyConfig(end_at="end", length=12),
         )
     data = replace(data, split=SplitConfig(validation_ratio=0.2, test_ratio=0.2))
+    simulations = replace(
+        base.simulations,
+        dir=source,
+        pattern="*",
+        segment_pattern=(
+            base.simulations.segment_pattern if real_root else "atmos_daily.nc"
+        ),
+    )
     paths_cfg = PathsConfig(
-        source,
+        directory,
         preprocessed_dir=directory / "prepared",
         training_dir=directory / "run",
         splits_dir=directory / "splits",
     )
-    save(PreparationConfig(data, base.logging, paths_cfg), directory / "prepare.toml")
+    save(
+        PreparationConfig(simulations, data, base.logging, paths_cfg),
+        directory / "prepare.toml",
+    )
     Splits([paths[2]], [paths[1]], [paths[0]]).save(
         directory / "splits", "fixed", "Fixed experiment iteration subset", data.split
     )
@@ -134,6 +152,10 @@ if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--directory", required=True, type=Path)
-    parser.add_argument("--real-root", type=Path)
+    parser.add_argument(
+        "--real-root",
+        type=Path,
+        help="Directory directly containing simulation folders.",
+    )
     args = parser.parse_args()
     create(args.directory, args.real_root)

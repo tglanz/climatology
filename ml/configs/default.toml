@@ -1,6 +1,9 @@
-[data]
-simulation_pattern = "simulations/*"
+[simulations]
+dir = "./output/simulations/barotropic_stirring-T85"
+pattern = "*"
 segment_pattern = "run*/atmos_daily.nc"
+
+[data]
 x_vars = ["vor"]
 y_vars = ["time_mean_zonal_mean_ucomp"]
 
@@ -122,6 +125,4 @@ level = "INFO"
 stdout = true
 
 [paths]
-experiment_dir = "./output/barotropic_stirring-T85"
-training_dir = "./output/barotropic_stirring-T85/training-extra-hi"
-preprocessed_dir = "./output/barotropic_stirring-T85/data-extra-hi"
+experiment_dir = "./output/experiments/default"

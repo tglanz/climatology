@@ -305,26 +305,27 @@ def _fmt_params(n: int | None) -> str:
 @click.option(
     "--segments",
     default=150,
+    type=click.IntRange(min=1),
     show_default=True,
     help="Total number of segments per simulation.",
 )
 def summarize_simulations(config_path: Path, segments: int):
+    """Summarize the configured simulation source and optional experiment index."""
     from ml.usecases.fingerprints import summarize_simulations as collect
 
     summary = collect(config_path, segments)
     if not summary["exists"]:
         print(f"no simulations directory at {summary['sim_dir']}")
         return
-    experiment_dir = summary["experiment_dir"]
     total_sims, done_sims = summary["total_sims"], summary["done_sims"]
     total_codes, complete_codes = summary["total_codes"], summary["complete_codes"]
     not_started, in_progress = summary["not_started"], summary["in_progress"]
     codes_str = (
         f"{complete_codes}/{total_codes}" if total_codes else str(complete_codes)
     )
-    print(f"experiment:  {experiment_dir.name}")
+    print(f"simulations: {summary['sim_dir']}")
     print(f"sims done:   {done_sims}/{total_sims}")
-    print(f"codes done:  {codes_str}  (all replicates complete)")
+    print(f"codes done:  {codes_str}  (all observed replicates complete)")
     if total_codes:
         print(f"not started: {not_started}")
 

@@ -65,16 +65,21 @@ class DataMetadata:
             raise ValueError(
                 "incompatible or unversioned data; regenerate with correctness preprocessing"
             )
+        # Earlier snapshots included source globs, which do not identify numerical samples.
+        data_config = dict(values["data_config"])
+        data_config.pop("simulation_pattern", None)
+        data_config.pop("segment_pattern", None)
         return cls(
             GaussianGrid.from_dict(values["grid"]),
-            values["data_config"],
+            data_config,
             tuple(values["input_units"]),
         )
 
     def validate_config(self, cfg: IscaDataConfig) -> None:
         if self.data_config != asdict(cfg):
             raise ValueError(
-                "prepared data settings differ from the configuration; regenerate or use the original settings"
+                "prepared data settings differ from the configuration; "
+                "regenerate or use the original settings"
             )
 
     def matches(self, other: "DataMetadata") -> bool:

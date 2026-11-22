@@ -46,25 +46,36 @@ relative vorticity `vor` in `1/s` and wind `ucomp` in `m/s`. Latitude is a full
 Gaussian grid. Longitude is uniform over one period without a duplicate endpoint.
 Segments must form one chronological, uniformly sampled trajectory.
 
-`simulations/<configuration-code>-<replica>/` identifies one trajectory.
-`sweep.json` is JSON mapping configuration codes to parameter objects, for example
+`<simulations.dir>/<configuration-code>-<replica>/` identifies one trajectory
+when `simulations.pattern="*"`. Raw output is shared independently of ML experiments.
+The experiment-owned `sweep.json` maps configuration codes to parameter objects,
+for example
 `{"021787": {"stirring_lat0": 30.0}}`. All replicas of one configuration stay in
 one split. [Simulation operation](../sim/README.md) describes compilation and runs.
 
 ### 2. Preparation recipe and assignments
 
-`prepare.toml` is TOML with `[data]`, `[paths]`, and optional `[logging]`.
-`[data]` declares source patterns, input and target variables, windows, optional
-detectors, target averaging, and split policy. `[paths]` selects the raw
-`experiment_dir`, `preprocessed_dir`, and `splits_dir`. Preparation does not parse
-or require model or training settings.
+`prepare.toml` contains `[simulations]`, `[data]`, `[paths]`, and optional `[logging]`.
+`[simulations]` declares `dir`, `pattern`, and `segment_pattern`. The directory is
+independent of ML outputs. Patterns select simulation folders under that directory
+and segment files under each simulation, respectively.
+`[data]` declares input/target variables, windows, optional detectors, target
+averaging, and split policy. `[paths]` selects the ML `experiment_dir`,
+`preprocessed_dir`, and `splits_dir`. Prepared/training/split paths default under
+`experiment_dir`. Preparation does not require model or training settings.
+
+`preprocess create-sweep-file -c prepare.toml --key alias=nml.path` reads selected
+simulations' namelists and writes `<experiment_dir>/sweep.json`. Repeat `--key` to
+select each parameter explicitly. Parameter-based splitting reads this index;
+preprocessing copies it into the prepared artifact for later evaluation.
 
 A split JSON contains `train`, `validation`, and `test` arrays of simulation paths
 relative to the JSON's directory. `meta` records description, timestamp, and split
 policy. Assignments must be disjoint, including configuration replicas. `preprocess generate-splits` creates assignments using the configured policy.
 `preprocess training-data --split PATH` uses those assignments or an explicit
-fixed subset. Ratio assignment sorts configuration
-codes deterministically. It does not randomize individual windows.
+fixed subset of the configured simulation source. Stale assignments that point
+outside that selection fail before preparation. Ratio assignment sorts
+configuration codes deterministically. It does not randomize individual windows.
 
 ### 3. Prepared dataset
 
@@ -113,15 +124,17 @@ I/O proportional to artifact size.
 
 `run.toml` can reference a preparation recipe through the top-level
 `data_config="prepare.toml"`; this reference resolves beside the run recipe.
-It supplies `[model]`, `[training]`, optional `[logging]`, and
+It inherits `[simulations]`, `[data]`, and preparation paths, then supplies
+`[model]`, `[training]`, optional `[logging]`, and
 `[paths.training_dir]`. A combined standalone configuration remains supported.
-Paths inside `[paths]` resolve against the invocation's working directory, so
+Relative paths in `[simulations]` and `[paths]` resolve against the invocation's
+working directory, so
 commands and wrappers run from the repository root. Saved snapshots use absolute
 paths. Referenced preparation recipes cannot chain other references.
 
 | Run artifact | Format and important fields |
 |---|---|
-| `config.toml` | Standalone effective configuration; includes model architecture, channels, modes, training seed and settings, and data contract |
+| `config.toml` | Standalone effective configuration; includes model architecture, channels, modes, training seed and settings, data contract, and simulation source |
 | `prepared.json` | JSON `directory` and complete `manifest`; binds this run to exact prepared bytes |
 | `splits.json` | Training assignment snapshot with paths relative to this file |
 | `parameters.pt` | PyTorch state dictionary; best validation checkpoint, or latest epoch when no validation split exists |
@@ -168,6 +181,7 @@ Run from the repository root after `uv sync --project ml --all-groups`.
 The flow is `preprocess`, `train`, then `evaluate`. Each command owns one stage.
 
 ```bash
+uv run --project ml --all-groups ml preprocess create-sweep-file -c prepare.toml --key stirring_lat0=stirring_nml.lat0
 uv run --project ml --all-groups ml preprocess generate-splits -c prepare.toml --name fixed
 uv run --project ml --all-groups ml preprocess training-data -c prepare.toml --split PATH/TO/splits/fixed.json
 uv run --project ml --all-groups ml train -c run.toml --device cpu --track-metrics
@@ -194,7 +208,9 @@ uv run --project ml --all-groups ml train -c output/experiment-smoke/run.toml --
 uv run --project ml --all-groups ml evaluate model --training-dir output/experiment-smoke/run --device cpu --n-workers 0
 ```
 
-Add `--real-root output/barotropic_stirring-T85` to the example module invocation
+The synthetic example writes raw fixtures to a sibling `<directory>-simulations/`
+directory. Its ML directory contains only configuration and derived assets.
+Add `--real-root output/simulations/barotropic_stirring-T85` to the example module invocation
 for a fixed real subset. Use a fresh destination. Its trajectories are
 `10bb40-0` (train), `0f0ad6-0` (validation), and `021787-0` (test).
 The real recipe retains the default detectors, target rules, and window length,
