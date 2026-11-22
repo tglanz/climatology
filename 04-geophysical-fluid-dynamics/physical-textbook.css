@@ -1,0 +1,19 @@
+/* Role-specific rules supplement labels; no color is required. */
+.tb-definition, .tb-assumption, .tb-model, .tb-law {
+  border-left: 2px solid currentColor;
+  padding: .35rem .7rem;
+  margin: 1rem 0;
+}
+.tb-result {
+  border: 1px solid currentColor;
+  background: #f7f7f7;
+  padding: .6rem .7rem;
+  margin: 1rem 0;
+}
+.tb-example, .tb-counterexample {
+  border-top: 1px solid #777;
+  padding-top: .5rem;
+  margin: 1rem 0;
+}
+.tb-proof, .tb-derivation { margin: .6rem 0 1rem; }
+.tb-exercise { margin: 1rem 0; }
